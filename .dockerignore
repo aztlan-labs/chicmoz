@@ -1,0 +1,29 @@
+*
+
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+!.pnp.*
+!.yarnrc.yml
+!yarn.lock
+!k8s
+
+!package.json
+
+# workaround for wildcards not working in exclusions (requires docker engine >23 https://docs.docker.com/engine/release-notes/23.0/#bug-fixes-and-enhancements-1)
+# find . -name 'package.json' -not -path './.yarn/*' -not -path './packages/*' -maxdepth 3 | sed -e 's/^.\//!/'
+!services/auth/package.json
+!services/dummy-node/package.json
+!services/aztec-listener/package.json
+!services/explorer-api/package.json
+!services/explorer-ui/package.json
+# find . -name 'package.json' -not -path './.yarn/*' -not -path './services/*' -maxdepth 3 | sed -e 's/^.\//!/'
+!packages/logger-server
+!packages/message-bus
+!packages/message-registry
+!packages/types
+!packages/error-middleware
+!packages/auth0-middleware

@@ -1,0 +1,123 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /*  AZTEC COLORS  */
+    --white: hsl(0 0% 100%);
+    --grey-dark: hsl(0, 0%, 73%); /* #bbbbbb */
+    --grey-light: hsl(255, 12%, 94%); /* #EEEDF1 */
+    --blue: hsl(227, 92%, 62%); /* #456cf7 */
+    --green: hsl(158, 54%, 42%); /* #31A67B */
+    --red: hsl(7, 100%, 70%); /* #FF7764 */
+    --yellow: hsl(49, 100%, 72%); /* #FFE471 */
+    --purple-dark: hsl(262, 36%, 21%); /* #302249 */
+    --purple-light: hsl(251, 45%, 56%); /* #715EC2 */
+
+    --background: var(--grey-light);
+    --foreground: var(--purple-dark);
+    --card: var(--white);
+    --card-foreground: var(--purple-dark); /* font of card */
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: var(--purple-dark);
+    --primary: var(--purple-light);
+    --primary-foreground: hsl(210 40% 98%);
+    --secondary: hsl(210 40% 96.1%);
+    --secondary-foreground: var(--purple-dark);
+    --muted: hsl(210 40% 96.1%);
+    --muted-foreground: hsl(215.4 16.3% 46.9%);
+    --accent: var(--grey-light);
+    --accent-foreground: var(--purple-dark);
+    --destructive: var(--red);
+    --destructive-foreground: hsl(210 40% 98%);
+    --border: hsl(214.3 31.8% 91.4%);
+    --input: hsl(214.3 31.8% 91.4%);
+
+    --ring: var(--purple-dark);
+
+    --chart-1: hsl(12 76% 61%);
+    --chart-2: hsl(173 58% 39%);
+    --chart-3: hsl(197 37% 24%);
+    --chart-4: hsl(43 74% 66%);
+    --chart-5: hsl(27 87% 67%);
+
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: hsl(222.2 84% 4.9%);
+    --foreground: hsl(210 40% 98%);
+    --card: hsl(222.2 84% 4.9%);
+    --card-foreground: hsl(210 40% 98%);
+    --popover: hsl(222.2 84% 4.9%);
+    --popover-foreground: hsl(210 40% 98%);
+    --primary: hsl(210 40% 98%);
+    --primary-foreground: hsl(222.2 47.4% 11.2%);
+    --secondary: hsl(217.2 32.6% 17.5%);
+    --secondary-foreground: hsl(210 40% 98%);
+    --muted: hsl(217.2 32.6% 17.5%);
+    --muted-foreground: hsl(215 20.2% 65.1%);
+    --accent: hsl(217.2 32.6% 17.5%);
+    --accent-foreground: hsl(210 40% 98%);
+    --destructive: hsl(0 62.8% 30.6%);
+    --destructive-foreground: hsl(210 40% 98%);
+    --border: hsl(217.2 32.6% 17.5%);
+    --input: hsl(217.2 32.6% 17.5%);
+    --ring: hsl(212.7 26.8% 83.9%);
+    --chart-1: hsl(220 70% 50%);
+    --chart-2: hsl(160 60% 45%);
+    --chart-3: hsl(30 80% 55%);
+    --chart-4: hsl(280 65% 60%);
+    --chart-5: hsl(340 75% 55%);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-default;
+    /* background-color: #FFFFFF; */
+    background-image: url('data:image/svg+xml,<svg width="100%" height="100%" viewBox="0 0 1800 237" fill="none" xmlns="http://www.w3.org/2000/svg"><path opacity="0.4" d="M0 0L1800 101.41L0 202.696V0Z" fill="%23715EC2"/><path fill-rule="evenodd" clip-rule="evenodd" d="M0 141.849L1800 63.7258V141.849V219.973V236.875H0V141.849Z" fill="%23715EC2"/><path opacity="1.0" fill-rule="evenodd" clip-rule="evenodd" d="M1.25 224.105L1800 89.5167V224.105V237H0V224.23V224.105H1.25Z" fill="%23EEEDF1"/></svg>');
+    background-attachment: fixed;
+    /* background-size: auto | cover | contain | 500px 250px; */
+    background-position: center;
+    /*| right 30px bottom 15px*/
+    background-repeat: no-repeat;
+    /* background-origin: border-box | padding-box | content-box; */
+    /* background-clip: border-box | padding-box | content-box; */
+    /* background-blend-mode: multiply | screen | overlay; */
+  }
+}
+
+/*************************** TYPOGRAPHY *************************/
+@layer base {
+  h1,
+  h2 {
+    @apply font-heading;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  h1 {
+    @apply scroll-m-20 text-[55px] tracking-normal lg:text-[65px] text-purple-light;
+  }
+
+  h2 {
+    @apply scroll-m-20 text-[40px] lg:text-[45px];
+  }
+
+  h3 {
+    @apply scroll-m-20 text-[25px] font-default lg:text-[30px];
+  }
+
+  h4 {
+    @apply scroll-m-20 text-[20px] font-default lg:text-[24px];
+  }
+}

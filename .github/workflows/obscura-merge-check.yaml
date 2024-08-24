@@ -1,0 +1,52 @@
+name: Obscura Merge Check
+# TODO
+
+on:
+  pull_request:
+    branches:
+      - master
+      - develop
+  merge_group:
+    types: [checks_requested]
+
+jobs:
+  attempt_build:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Create LFS file list
+        run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+
+      - name: Restore LFS cache
+        uses: actions/cache@v3
+        id: lfs-cache
+        with:
+          path: .git/lfs
+
+          key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}-v1-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}-v1-${{ github.sha }}
+            ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}-v1-
+
+      - name: Git LFS Pull
+        run: git lfs pull
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - run: yarn install
+      - run: yarn build
+      - run: yarn lint
+
+      - name: Store LFS cache
+        uses: actions/cache/save@v3
+        if: always()
+        with:
+          path: .git/lfs
+          key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}-v1-${{ github.sha }}

@@ -1,0 +1,44 @@
+{
+  "name": "chicmoz",
+  "version": "1.0.0",
+  "repository": "git@github.com:aztlan-labs/chicmoz.git",
+  "license": "UNLICENSED",
+  "packageManager": "yarn@4.0.1",
+  "workspaces": [
+    "services/*",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "6.11.0",
+    "@typescript-eslint/parser": "6.11.0",
+    "eslint": "8.53.0",
+    "eslint-config-prettier": "9.0.0",
+    "eslint-plugin-import": "2.29.0",
+    "husky": "8.0.3",
+    "lint-staged": "15.1.0",
+    "prettier": "3.1.0",
+    "prettier-plugin-organize-imports": "3.2.4",
+    "prettier-plugin-sort-json": "3.1.0",
+    "typescript": "5.2.2"
+  },
+  "scripts": {
+    "build:packages": "yarn workspaces foreach --parallel --all --topological-dev --verbose --include '@chicmoz-pkg/*' run build",
+    "lint:packages": "yarn workspaces foreach --parallel --all --topological-dev --verbose --include '@chicmoz-pkg/*' run lint",
+    "build": "yarn workspaces foreach --parallel --all --topological-dev --verbose run build",
+    "lint": "yarn workspaces foreach --parallel --all --topological-dev --verbose run lint",
+    "g:lint": "cd $INIT_CWD && eslint --fix",
+    "postinstall": "husky install",
+    "prepare": "husky install"
+  },
+  "dependenciesMeta": {
+    "prettier-plugin-organize-imports@3.2.4": {
+      "unplugged": true
+    },
+    "prettier-plugin-sort-json@3.1.0": {
+      "unplugged": true
+    },
+    "tslib@2.6.3": {
+      "unplugged": true
+    }
+  }
+}

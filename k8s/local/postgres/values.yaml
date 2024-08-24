@@ -1,0 +1,176 @@
+primary:
+  initdb:
+    scripts:
+      init.sql: |
+        SELECT 'CREATE DATABASE auth'
+        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'auth')\gexec
+        \c auth
+        CREATE TABLE public."auth_api-keys" (
+            id integer NOT NULL,
+            "apiKey" uuid NOT NULL,
+            "createdAt" timestamp with time zone NOT NULL,
+            "updatedAt" timestamp with time zone NOT NULL
+        );
+
+        CREATE SEQUENCE public."auth_api-keys_id_seq"
+            AS integer
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+        ALTER SEQUENCE public."auth_api-keys_id_seq" OWNED BY public."auth_api-keys".id;
+
+        ALTER TABLE ONLY public."auth_api-keys" ALTER COLUMN id SET DEFAULT nextval('public."auth_api-keys_id_seq"'::regclass);
+
+        COPY public."auth_api-keys" (id, "apiKey", "createdAt", "updatedAt") FROM stdin;
+        1	d1e2083a-660c-4314-a6f2-1d42f4b944f4	2023-11-02 12:22:48.82+00	2023-11-02 12:22:48.82+00
+        \.
+        SELECT pg_catalog.setval('public."auth_api-keys_id_seq"', 1, true);
+        ALTER TABLE ONLY public."auth_api-keys"
+            ADD CONSTRAINT "auth_api-keys_pkey" PRIMARY KEY (id);
+        CREATE UNIQUE INDEX "auth_api-keys_api_key" ON public."auth_api-keys" USING btree ("apiKey");
+
+        SELECT 'CREATE DATABASE apikey'
+        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'apikey')\gexec
+        \c apikey
+        CREATE TABLE public."api-key_api-keys" (
+            id integer NOT NULL,
+            "apiKey" uuid NOT NULL,
+            "userId" character varying(255),
+            "createdAt" timestamp with time zone NOT NULL,
+            "updatedAt" timestamp with time zone NOT NULL
+        );
+
+        CREATE SEQUENCE public."api-key_api-keys_id_seq"
+            AS integer
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+        ALTER SEQUENCE public."api-key_api-keys_id_seq" OWNED BY public."api-key_api-keys".id;
+
+        ALTER TABLE ONLY public."api-key_api-keys" ALTER COLUMN id SET DEFAULT nextval('public."api-key_api-keys_id_seq"'::regclass);
+
+        COPY public."api-key_api-keys" (id, "apiKey", "userId", "createdAt", "updatedAt") FROM stdin;
+        1	d1e2083a-660c-4314-a6f2-1d42f4b944f4	\N	2023-11-02 12:22:48.82+00	2023-11-02 12:22:48.82+00
+        \.
+        SELECT pg_catalog.setval('public."api-key_api-keys_id_seq"', 67, true);
+        ALTER TABLE ONLY public."api-key_api-keys"
+            ADD CONSTRAINT "api-key_api-keys_pkey" PRIMARY KEY (id);
+        CREATE UNIQUE INDEX "api-key_api-keys_api_key" ON public."api-key_api-keys" USING btree ("apiKey");
+
+        SELECT 'CREATE DATABASE metrics' 
+        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'metrics')\gexec
+
+        SELECT 'CREATE DATABASE discordbot' 
+        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'discordbot')\gexec
+        \c discordbot
+        CREATE TABLE public."discord-bot_api-keys" (
+            id integer NOT NULL,
+            "apiKey" uuid NOT NULL,
+            "discordId" character varying(255),
+            "createdAt" timestamp with time zone NOT NULL,
+            "updatedAt" timestamp with time zone NOT NULL
+        );
+
+        CREATE SEQUENCE public."discord-bot_api-keys_id_seq"
+            AS integer
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+        ALTER SEQUENCE public."discord-bot_api-keys_id_seq" OWNED BY public."discord-bot_api-keys".id;
+
+        ALTER TABLE ONLY public."discord-bot_api-keys" ALTER COLUMN id SET DEFAULT nextval('public."discord-bot_api-keys_id_seq"'::regclass);
+
+        COPY public."discord-bot_api-keys" (id, "apiKey", "discordId", "createdAt", "updatedAt") FROM stdin;
+        1	d1e2083a-660c-4314-a6f2-1d42f4b944f4	\N	2023-11-02 12:22:48.82+00	2023-11-02 12:22:48.82+00
+        2	4aedfbf7-4d0f-4033-9bc8-50443d5be2cd	307976422721585152	2023-11-03 09:44:33.623+00	2023-11-03 09:44:33.623+00
+        3	c58b4a8d-ab41-49e0-b1cb-e3161bfc1634	882635580045942824	2023-11-03 09:47:59.447+00	2023-11-03 09:47:59.447+00
+        4	dcec5e57-870d-4ef3-a2cd-f5494b4a2afb	503514641146839050	2023-11-06 10:23:13.122+00	2023-11-06 10:23:13.122+00
+        5	71528864-ff6d-4320-a909-16c39f3152e2	232848490043015168	2023-11-09 15:57:37.621+00	2023-11-09 15:57:37.621+00
+        6	0731dee1-a8b1-468a-961f-0174e0774b19	356859623241678869	2023-11-15 09:36:14.022+00	2023-11-15 09:36:14.022+00
+        7	b613509e-533b-460b-8a30-ed81a96fa125	418492902088507403	2023-11-15 15:15:48.132+00	2023-11-15 15:15:48.132+00
+        8	ab776fa7-2a1f-49c4-bdd8-1fb42cbd8407	409291790496169985	2023-11-15 15:16:17.531+00	2023-11-15 15:16:17.531+00
+        9	7cd00a85-8c8b-46d4-b698-bbff5189721b	341638922809507841	2023-11-15 15:17:04.259+00	2023-11-15 15:17:04.259+00
+        10	704ad7b3-3247-43b8-a61b-d3b4bf57bc7d	335401151711412224	2023-11-15 15:18:10.531+00	2023-11-15 15:18:10.531+00
+        11	6a5fccfb-5dea-45af-9098-42e85615bfb0	899370577163337808	2023-11-15 15:18:33.232+00	2023-11-15 15:18:33.232+00
+        12	de5ff961-a680-491d-b571-853bf945863a	321813155649159171	2023-11-15 15:19:25.022+00	2023-11-15 15:19:25.022+00
+        13	123568c7-295d-4bc7-955f-bd176491328a	492754182940655616	2023-11-15 15:19:26.821+00	2023-11-15 15:19:26.821+00
+        14	34b27fed-e67b-45ba-a329-4220e31414f1	227018155799609344	2023-11-15 15:20:29.62+00	2023-11-15 15:20:29.62+00
+        15	f0a61948-c86b-46d7-9626-5c52bee1e767	951147923939414016	2023-11-15 15:20:31.82+00	2023-11-15 15:20:31.82+00
+        16	c4b3b1b7-96a7-49b3-b0b7-8b49d01be153	430900203537563648	2023-11-15 15:20:44.124+00	2023-11-15 15:20:44.124+00
+        17	85c8d379-abc9-4d1c-b5f0-e1c11b7797de	738552464004874242	2023-11-15 15:20:49.998+00	2023-11-15 15:20:49.998+00
+        18	a781a19c-108a-4c46-bd26-e8e9483bec27	523873885465083904	2023-11-15 15:21:58.821+00	2023-11-15 15:21:58.821+00
+        19	21c77726-6543-426a-ba49-b03d11fba1c5	329889139271139348	2023-11-15 15:22:10.24+00	2023-11-15 15:22:10.24+00
+        20	385beabb-6cf5-43ce-9a34-638feb76599f	176030773290336256	2023-11-15 15:22:27.432+00	2023-11-15 15:22:27.432+00
+        21	aa06893f-5ac8-4ce4-a8c8-5699c0de2c60	145329450630774784	2023-11-15 15:22:44.932+00	2023-11-15 15:22:44.932+00
+        22	aafa936e-c278-4070-a1b3-97223f94dacc	398884205355859970	2023-11-15 15:23:07.258+00	2023-11-15 15:23:07.258+00
+        23	95899e2e-2d3e-44c6-8745-41f7311e1ae5	277701353915154435	2023-11-15 15:23:17.849+00	2023-11-15 15:23:17.849+00
+        24	15645fe3-b443-4879-ba19-2db129ddd10b	607936720310370319	2023-11-15 15:23:22.722+00	2023-11-15 15:23:22.722+00
+        25	caf21ca4-11d0-4f61-aef5-11d71aa453e8	143373802452025344	2023-11-15 15:23:49.258+00	2023-11-15 15:23:49.258+00
+        26	4bd7758a-7266-4bf4-a65b-1627a4d3ed73	691707415212720279	2023-11-15 15:24:26.121+00	2023-11-15 15:24:26.121+00
+        27	d99f9dce-eb76-4f1d-89e8-20d0b87d14d4	635939190177267713	2023-11-15 15:24:34.068+00	2023-11-15 15:24:34.068+00
+        28	b9a8799f-3ccf-4314-aac8-f30c3c686649	920056343849750599	2023-11-15 15:24:37.561+00	2023-11-15 15:24:37.561+00
+        29	9ecd5010-00d2-45ec-a6db-7b1499f8227e	787743079435206698	2023-11-15 15:25:35.621+00	2023-11-15 15:25:35.621+00
+        30	ecb4f93d-e86f-4d28-afe4-fc8024148dcf	422775982240563200	2023-11-15 15:28:13.121+00	2023-11-15 15:28:13.121+00
+        31	fade989e-7d84-4add-9e52-c6da8d87b774	543687615090524160	2023-11-15 15:28:30.433+00	2023-11-15 15:28:30.433+00
+        32	873d7453-a6c2-4a51-ad6d-1350093baffd	987312517455966230	2023-11-15 15:28:56.031+00	2023-11-15 15:28:56.031+00
+        33	07d71316-ca9f-410a-82c7-00e12cce716f	387174801799643136	2023-11-15 15:33:20.332+00	2023-11-15 15:33:20.332+00
+        34	4d77d862-3e2f-4948-85f5-da40ec3fe20a	1077142989341741096	2023-11-15 16:00:57.421+00	2023-11-15 16:00:57.421+00
+        35	4d5a0212-8c5a-4125-a763-133d4466b481	1156574841743351851	2023-11-15 16:31:09.221+00	2023-11-15 16:31:09.221+00
+        36	fe20b48c-b203-4a0b-a068-c3d40a4c2252	294522593350778881	2023-11-15 20:04:59.032+00	2023-11-15 20:04:59.032+00
+        37	201d4fc4-8194-4462-90dd-6f31d8e278c4	584965916731768842	2023-11-15 22:25:22.221+00	2023-11-15 22:25:22.221+00
+        38	142b8cd4-b358-4803-b228-669cada7ec63	1047423811433271346	2023-11-15 22:35:11.758+00	2023-11-15 22:35:11.758+00
+        39	57a1635a-9e50-4055-a7fd-d10a2362c5b0	705821159802929152	2023-11-16 09:05:35.74+00	2023-11-16 09:05:35.74+00
+        40	4d102ff0-9ad6-4263-a8d0-0671e95c17b3	329218663922008066	2023-11-16 14:23:36.24+00	2023-11-16 14:23:36.24+00
+        41	8908a379-2d7f-43a8-a67e-f5e9fdb0d394	358263564236226561	2023-11-19 18:44:40.64+00	2023-11-19 18:44:40.64+00
+        42	26abc02f-e55a-4f0c-9257-168ac8c160d8	411015993691734017	2023-11-21 16:15:30.14+00	2023-11-21 16:15:30.14+00
+        43	2332d2ad-79bf-4322-9447-7c6f55b5d44a	884638884804313130	2023-11-25 17:16:30.132+00	2023-11-25 17:16:30.132+00
+        44	9226437a-3106-4332-97a8-d53127de43a4	792502396219162654	2023-11-25 19:36:31.158+00	2023-11-25 19:36:31.158+00
+        45	0bf9354b-d157-44f8-a61a-d68793d9e179	828273727800213504	2023-11-25 21:12:48.44+00	2023-11-25 21:12:48.44+00
+        46	e3163f03-548e-4b6f-8546-5871d4ff1369	730828331330830427	2023-11-26 01:33:07.757+00	2023-11-26 01:33:07.757+00
+        47	42cc6545-d80e-4d71-bbb0-e9f57e89239d	618862820712382515	2023-11-26 10:31:03.539+00	2023-11-26 10:31:03.539+00
+        48	764a09d1-4f9e-4aba-b2f1-a6efadc0ebad	835870347021647942	2023-11-26 12:56:09.921+00	2023-11-26 12:56:09.921+00
+        49	0b7bd52a-2753-4dbf-8772-ca74542a94fd	434743648362430474	2023-11-26 13:19:13.859+00	2023-11-26 13:19:13.859+00
+        50	615b4f6c-e470-4b96-bd71-5e8654adcef7	839440669525147708	2023-11-27 05:08:06.721+00	2023-11-27 05:08:06.721+00
+        51	395d45ed-52a3-4b31-8d00-14c14f69aae8	945324935700676618	2023-11-27 05:16:47.13+00	2023-11-27 05:16:47.13+00
+        52	4eef0c38-b3aa-4a6b-a228-b04c2080f98e	953511752530821190	2023-11-27 05:18:29.647+00	2023-11-27 05:18:29.647+00
+        53	81c4d0e3-bdbb-45d3-9226-01ed97a5e20b	877571283779465317	2023-11-27 13:41:15.02+00	2023-11-27 13:41:15.02+00
+        54	4848edfd-5611-4711-ae2e-980906770aa0	870207586375450664	2023-11-28 10:22:34.235+00	2023-11-28 10:22:34.235+00
+        55	9493e12c-abfe-4393-8382-e6b08d32e434	1107691614358474833	2023-12-01 14:05:54.924+00	2023-12-01 14:05:54.924+00
+        56	73251144-c032-4e6b-8b3f-aaa9c2a091fc	804463108952817687	2023-12-04 20:06:13.421+00	2023-12-04 20:06:13.421+00
+        57	5fd3f3f6-4dec-412c-852a-d3fcca34667b	791641278215356416	2023-12-07 09:18:28.334+00	2023-12-07 09:18:28.334+00
+        58	b5092785-9703-4206-846f-0691b8b46ac9	796451845597823017	2023-12-07 09:55:21.62+00	2023-12-07 09:55:21.62+00
+        59	5c1c6a6f-fba9-4c16-8602-4cba59dfb7f5	887659577624117268	2023-12-08 10:59:21.565+00	2023-12-08 10:59:21.565+00
+        60	82d87a31-296b-4c98-931a-137123ea29b7	397111557655363584	2023-12-11 17:40:23.661+00	2023-12-11 17:40:23.661+00
+        61	4bed3be4-fd86-4fc1-a08a-dbf1f4fd691a	1172108355385434173	2023-12-14 10:31:42.323+00	2023-12-14 10:31:42.323+00
+        62	9c7a6170-3427-4544-9f92-86081aa38c6d	403373201503289347	2023-12-22 18:22:28.72+00	2023-12-22 18:22:28.72+00
+        63	7153089c-5825-4768-9ff2-56c5a20fe667	913363078794592266	2024-01-09 13:46:01.328+00	2024-01-09 13:46:01.328+00
+        64	825496d8-4391-4a30-810d-f40ffec58893	384623604618231809	2024-01-10 08:45:05.72+00	2024-01-10 08:45:05.72+00
+        65	27133865-54c5-4dd8-a240-ba6785107573	227032448867762177	2024-01-10 11:47:47.52+00	2024-01-10 11:47:47.52+00
+        66	122fb291-7f20-49fa-999c-2e01d6d5624c	393508212055474178	2024-01-10 12:49:13.52+00	2024-01-10 12:49:13.52+00
+        67	9166c7db-e86b-42f1-9ed2-49b932d8fd5d	776098611376947210	2024-01-13 17:20:53.53+00	2024-01-13 17:20:53.53+00
+        \.
+        SELECT pg_catalog.setval('public."discord-bot_api-keys_id_seq"', 67, true);
+        ALTER TABLE ONLY public."discord-bot_api-keys"
+            ADD CONSTRAINT "discord-bot_api-keys_pkey" PRIMARY KEY (id);
+        CREATE UNIQUE INDEX "discord-bot_api-keys_api_key" ON public."discord-bot_api-keys" USING btree ("apiKey");
+
+        SELECT 'CREATE DATABASE aleolistener'
+        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'aleolistener')\gexec
+        \c aleolistener
+        CREATE TABLE public."chain-indexers-latest-processed-height" (
+            "networkId" string PRIMARY KEY,
+            "height" integer NOT NULL,
+            "createdAt" timestamp with time zone NOT NULL,
+            "updatedAt" timestamp with time zone NOT NULL
+        );
+        SELECT 'CREATE DATABASE azteclistener'
+        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'azteclistener')\gexec
