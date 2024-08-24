@@ -1,13 +1,3 @@
-## General
-
-### Git LFS
-
-TODO: is this needed?
-
-Git LFS (Large File Storage) is used to commit and push large files and do it more efficiently. We use Git LFS for the Yarn PnP packages.
-
-Install Git LFS here: <https://github.com/git-lfs/git-lfs?utm_source=gitlfs_site&utm_medium=installation_link&utm_campaign=gitlfs#installing>
-
 ## Deploying on AWS
 
 TODO: is this needed?
