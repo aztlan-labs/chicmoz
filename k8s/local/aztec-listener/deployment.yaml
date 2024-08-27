@@ -49,5 +49,5 @@ spec:
             - name: NETWORK_NAME
               value: ""
             - name: AZTEC_RPC
-              value: "http://localhost:8080"
+              value: "http://host.minikube.internal:8080"
 status: {}

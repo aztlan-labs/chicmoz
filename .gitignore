@@ -9,3 +9,10 @@ set_local_env.sh
 decodeKeys.js
 
 ignore/
+
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
