@@ -70,9 +70,9 @@ const startup = async () => {
     dialect: "postgres",
     host: POSTGRES_IP,
     port: POSTGRES_PORT,
-    logging: (sql: string) => {
-      logger.info(`SQL: ${sql}`);
-    },
+//    logging: (sql: string) => {
+//      logger.info(`SQL: ${sql}`);
+//    },
   });
 
   await sequelize.authenticate();

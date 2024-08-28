@@ -1,7 +1,7 @@
 import { Logger } from "@chicmoz-pkg/logger-server";
 import autoBind from "auto-bind";
 import { BSON } from "bson";
-import kafkaJS, { Consumer, Kafka, KafkaConfig, logLevel, Message, Producer, SASLOptions } from "kafkajs";
+import kafkaJS, { Consumer, Kafka, KafkaConfig, Message, Producer, SASLOptions } from "kafkajs";
 
 export { SASLOptions } from "kafkajs";
 
@@ -22,27 +22,21 @@ export class MessageBus {
   #producer: Producer | undefined;
   #consumers: Record<string, MBConsumer | undefined>;
   #shutdown = false;
+  logger: Logger;
 
   constructor(options: MBOptions) {
+    this.logger = options.logger;
     const kafkaConfig: KafkaConfig = {
       clientId: options.clientId,
       brokers: options.connection.split(","),
       sasl: options.saslConfig,
-      logCreator: (level) => {
-        const levelToLogger = (level: logLevel) => {
-          switch (level) {
-            case logLevel.ERROR:
-              return options.logger.error.bind(this);
-            case logLevel.WARN:
-              return options.logger.warn.bind(this);
-            default:
-              return options.logger.info.bind(this);
-          }
-        };
+      logCreator: () => {
         return ({ log }) => {
-          const logger = levelToLogger(level);
-          const { message } = log;
-          logger(message);
+          const { message, error, stack, retryCount } = log;
+          const msg = `Kafka: ${message}`;
+          if (error || stack) this.logger.error(msg);
+          else if (retryCount) this.logger.warn(msg);
+          else this.logger.info(msg);
         };
       },
     };
@@ -85,8 +79,10 @@ export class MessageBus {
 
   // TODO: https://kafka.js.org/docs/consuming; probably need to look into manually committing instead in future
   async subscribe<T>(groupId: string, topic: string, cb: ((event: T) => Promise<void>) | ((event: T) => void)) {
+    this.logger.info(`Kafka: connecting to consumer group ${groupId}`);
     if (!this.#consumers[groupId]) await this.connectConsumer(groupId);
 
+    this.logger.info(`Kafka: subscribing to topic ${topic}`);
     await this.#consumers[groupId]!.consumer.subscribe({ topic, fromBeginning: true });
     this.#consumers[groupId]!.topicCallbacks = {
       ...this.#consumers[groupId]?.topicCallbacks,
