@@ -30,6 +30,10 @@ spec:
               value: "2000"
             - name: BATCH_SIZE
               value: "50"
+            - name: CHAIN_NAME
+              value: "AZTEC"
+            - name: NETWORK_NAME
+              value: "SANDBOX"
             - name: MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS
               value: "50"
             - name: LISTEN_FOR_BLOCKS
@@ -46,8 +50,6 @@ spec:
               value: "admin"
             - name: POSTGRES_PASSWORD
               value: "secret-local-password"
-            - name: NETWORK_NAME
-              value: ""
             - name: AZTEC_RPC
               value: "http://host.minikube.internal:8080"
 status: {}
