@@ -18,9 +18,10 @@ export class EventHandler {
 
   onBlock = async (block: L2Block) => {
     const height = Number(block.header.globalVariables.blockNumber);
-    this.logger.info(`Publishing block ${height} to kafka`);
+    const topic = generateAztecTopicName(this.networkId, "NEW_BLOCK_EVENT");
+    this.logger.info(`Publishing block ${height} to topic ${topic}`);
 
-    await this.mb.publish<AZTEC_MESSAGES["NEW_BLOCK_EVENT"]>(generateAztecTopicName(this.networkId, "NEW_BLOCK_EVENT"), {
+    await this.mb.publish<AZTEC_MESSAGES["NEW_BLOCK_EVENT"]>(topic, {
       block,
     });
   };

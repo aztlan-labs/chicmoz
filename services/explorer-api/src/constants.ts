@@ -19,7 +19,7 @@ export const BLOCK_DB_VALIDATION_ENABLED = process.env.BLOCK_DB_VALIDATION_ENABL
 export const BLOCK_INTERVAL_MS = Number(process.env.BLOCK_INTERVAL_MS) || 2000;
 export const BLOCK_DB_VALIDATION_INTERVAL = Number(process.env.BLOCK_DB_VALIDATION_INTERVAL) || 50;
 export const BLOCK_BD_VALIDATION_OFFSET = Number(process.env.BLOCK_DB_VALIDATION_OFFSET) || 50;
-export const SERVICE_NAME = process.env.SERVICE_NAME ?? `explorer-ui`;
+export const SERVICE_NAME = process.env.SERVICE_NAME ?? `explorer-api`;
 
 export const MAXIMUM_BLOCK_HEIGHT_DIFFERENCE = 1000;
 export const GSI_PARTITION_KEY_HEIGHT_BATCH_SIZE = 10000;

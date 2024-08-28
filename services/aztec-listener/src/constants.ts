@@ -8,7 +8,7 @@ export const CATCHUP_END = Number(process.env.CATCHUP_END) || undefined;
 export const NODE_ENV = process.env.NODE_ENV ?? "development";
 
 export const AZTEC_RPC = process.env.AZTEC_RPC ?? "http://localhost:8080";
-export const CHAIN_NAME = "";
+export const CHAIN_NAME = process.env.CHAIN_NAME ?? "";
 export const NETWORK_NAME = process.env.NETWORK_NAME ?? "";
 
 export const KAFKA_CONNECTION = process.env.KAFKA_CONNECTION ?? "kafka:9092";
@@ -26,3 +26,5 @@ export const POSTGRES_ADMIN = process.env.POSTGRES_ADMIN ?? "admin";
 export const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD ?? "secret-local-password";
 
 export const SERVICE_NAME = process.env.SERVICE_NAME ?? `aztec-listener`;
+
+export const IGNORE_PROCESSED_HEIGHT = process.env.IGNORE_PROCESSED_HEIGHT === "true";

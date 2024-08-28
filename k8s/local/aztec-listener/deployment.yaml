@@ -52,4 +52,6 @@ spec:
               value: "secret-local-password"
             - name: AZTEC_RPC
               value: "http://host.minikube.internal:8080"
+            - name: IGNORE_PROCESSED_HEIGHT
+              value: "true"
 status: {}

@@ -23,9 +23,8 @@ export class Core {
     autoBind(this);
   }
 
-  onBlockEvent = (_blockEvent: AZTEC_MESSAGES["NEW_BLOCK_EVENT"]) => {
-    // TODO: Implement logic for handling new aztec blocks
-    // Probably will be calling directly the onBlock method of the event-handler class
+  onBlockEvent = (blockEvent: AZTEC_MESSAGES["NEW_BLOCK_EVENT"]) => {
+    this.logger.info(JSON.stringify(blockEvent));
     return;
   };
 

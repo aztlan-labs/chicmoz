@@ -3,7 +3,7 @@ import { Logger } from "@chicmoz-pkg/logger-server";
 import autoBind from "auto-bind";
 import { IBackOffOptions, backOff } from "exponential-backoff";
 import { AztecNetworkClient } from "./aztec-network-client.js";
-import { MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS } from "./constants.js";
+import { IGNORE_PROCESSED_HEIGHT, MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS } from "./constants.js";
 import { DB } from "./db.js";
 
 export class AztecEvents {
@@ -98,7 +98,7 @@ export class AztecEvents {
     const missedBlocks = latestHeight - this.latestHeightPublished > 1;
 
     // Skip processed blocks
-    if (alreadyProcessed) {
+    if (alreadyProcessed && !IGNORE_PROCESSED_HEIGHT) {
       this.logger.info(`🐯 block ${latestHeight} has already been processed, skipping...`);
       return;
     }
