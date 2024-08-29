@@ -1,39 +1,4 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
-
-const LatestBlockData = () => {
-  return (
-    <div className="bg-gray-100 p-6 rounded-lg shadow-md mt-8">
-      <h2 className="text-2xl font-bold mb-4">Latest Block Data</h2>
-      <ul className="space-y-2">
-        <li><strong>Block Number:</strong> {parseInt(blockData.header.globalVariables.blockNumber, 16)}</li>
-        <li><strong>Timestamp:</strong> {new Date(parseInt(blockData.header.globalVariables.timestamp, 16) * 1000).toLocaleString()}</li>
-        <li><strong>Number of Transactions:</strong> {parseInt(blockData.header.contentCommitment.numTxs.value, 16)}</li>
-        <li><strong>Total Fees:</strong> {parseInt(blockData.header.totalFees.value, 16)} (wei)</li>
-        <li><strong>State Root:</strong> {blockData.header.state.partial.noteHashTree.root.value}</li>
-      </ul>
-    </div>
-  );
-};
-
-export const Route = createLazyFileRoute("/")({
-  component: Index,
-});
-
-function Index() {
-  return (
-    <div className="mx-auto px-[70px] max-w-[1440px]">
-      <h1 className="text-center mt-16">{text.exploreThePrivacyOnAztec}</h1>
-      <LatestBlockData />
-    </div>
-  );
-}
-
-
-const text = {
-  exploreThePrivacyOnAztec: "Explore the power of privacy on Aztec",
-}
-
-const mockBlockData = {
+{
   "archive": {
     "root": {
       "type": "Fr",
@@ -295,6 +260,4 @@ const mockBlockData = {
       }
     ]
   }
-};
-
-const blockData = mockBlockData;
+}
