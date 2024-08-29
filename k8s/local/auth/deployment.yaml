@@ -44,8 +44,6 @@ spec:
               value: "redis-master"
             - name: REDIS_PORT
               value: "6379"
-            - name: KAFKA_CONNECTION
-              value: "kafka:9092"
             - name: NODE_ENV
               value: "development"
           readinessProbe:

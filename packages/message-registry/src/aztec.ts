@@ -12,7 +12,6 @@ type NEW_BLOCK_EVENT = {
 };
 
 export function generateAztecTopicName(networkId: string, topic: keyof AZTEC_MESSAGES): string {
-  // TODO: this function should be moved and shared with future chains like Mina
   return `${networkId}_${topic}`;
 }
 

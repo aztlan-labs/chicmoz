@@ -4,7 +4,7 @@ import { createErrorMiddleware } from "@chicmoz-pkg/error-middleware";
 import express from "express";
 import request from "supertest";
 
-import { BODY_LIMIT, NODE_ENV, PARAMETER_LIMIT } from "../constants";
+import { BODY_LIMIT, NODE_ENV, PARAMETER_LIMIT } from "../../environment.js";
 import { expressConfig } from "../express-config";
 import { newRouter } from "./route";
 
