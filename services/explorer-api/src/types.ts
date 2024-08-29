@@ -35,7 +35,6 @@ const blockSchema = z.object({
   ethTxHash: z.optional(z.string()),
   mined: z.date(),
   day: z.number(),
-  batched_height: z.number(),
 });
 
 export type Block = z.infer<typeof blockSchema>;

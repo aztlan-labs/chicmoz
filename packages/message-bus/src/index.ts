@@ -1,7 +1,14 @@
 import { Logger } from "@chicmoz-pkg/logger-server";
 import autoBind from "auto-bind";
 import { BSON } from "bson";
-import kafkaJS, { Consumer, Kafka, KafkaConfig, Message, Producer, SASLOptions } from "kafkajs";
+import kafkaJS, {
+  Consumer,
+  Kafka,
+  KafkaConfig,
+  Message,
+  Producer,
+  SASLOptions,
+} from "kafkajs";
 
 export { SASLOptions } from "kafkajs";
 
@@ -49,11 +56,16 @@ export class MessageBus {
   }
 
   private shouldRestart(error: Error): boolean {
-    const isNonRetriableError = error instanceof kafkaJS.KafkaJSNonRetriableError;
-    const isNumberOfRetriesExceeded = error instanceof kafkaJS.KafkaJSNumberOfRetriesExceeded;
-    const isCoordinatorError = error instanceof kafkaJS.KafkaJSGroupCoordinatorNotFound;
+    const isNonRetriableError =
+      error instanceof kafkaJS.KafkaJSNonRetriableError;
+    const isNumberOfRetriesExceeded =
+      error instanceof kafkaJS.KafkaJSNumberOfRetriesExceeded;
+    const isCoordinatorError =
+      error instanceof kafkaJS.KafkaJSGroupCoordinatorNotFound;
 
-    return isNonRetriableError && !isNumberOfRetriesExceeded && !isCoordinatorError;
+    return (
+      isNonRetriableError && !isNumberOfRetriesExceeded && !isCoordinatorError
+    );
   }
 
   private async connectProducer() {
@@ -62,7 +74,10 @@ export class MessageBus {
   }
 
   private async connectConsumer(groupId: string) {
-    this.#consumers[groupId] = { consumer: this.#client.consumer({ groupId }), topicCallbacks: {} };
+    this.#consumers[groupId] = {
+      consumer: this.#client.consumer({ groupId }),
+      topicCallbacks: {},
+    };
     await this.#consumers[groupId]!.consumer.connect();
   }
 
@@ -72,18 +87,26 @@ export class MessageBus {
     if (!this.#producer) await this.connectProducer();
 
     const kafkaMessages: Message[] = [];
-    for (const m of messages) kafkaMessages.push({ value: Buffer.from(BSON.serialize({ data: m })) }); // double check
+    for (const m of messages)
+      kafkaMessages.push({ value: Buffer.from(BSON.serialize({ data: m })) }); // double check
 
     await this.#producer!.send({ topic, messages: kafkaMessages });
   }
 
   // TODO: https://kafka.js.org/docs/consuming; probably need to look into manually committing instead in future
-  async subscribe<T>(groupId: string, topic: string, cb: ((event: T) => Promise<void>) | ((event: T) => void)) {
+  async subscribe<T>(
+    groupId: string,
+    topic: string,
+    cb: ((event: T) => Promise<void>) | ((event: T) => void)
+  ) {
     this.logger.info(`Kafka: connecting to consumer group ${groupId}`);
     if (!this.#consumers[groupId]) await this.connectConsumer(groupId);
 
     this.logger.info(`Kafka: subscribing to topic ${topic}`);
-    await this.#consumers[groupId]!.consumer.subscribe({ topic, fromBeginning: true });
+    await this.#consumers[groupId]!.consumer.subscribe({
+      topic,
+      fromBeginning: true,
+    });
     this.#consumers[groupId]!.topicCallbacks = {
       ...this.#consumers[groupId]?.topicCallbacks,
       [topic]: cb as unknown as (event: object) => Promise<void>,
@@ -106,8 +129,12 @@ export class MessageBus {
           await this.connectConsumer(groupId);
           await Promise.all(
             Object.keys(currentTopics).map(async (topicName) => {
-              await this.subscribe(groupId, topicName, currentTopics[topicName]);
-            }),
+              await this.subscribe(
+                groupId,
+                topicName,
+                currentTopics[topicName]
+              );
+            })
           );
           await this.runConsumer(groupId);
         }, 5000);
@@ -116,18 +143,34 @@ export class MessageBus {
   }
 
   async runConsumer(groupId: string) {
-    if (!this.#consumers[groupId]) throw new Error(`No consumer exists with groupId: ${groupId}`);
+    if (!this.#consumers[groupId])
+      throw new Error(`No consumer exists with groupId: ${groupId}`);
 
     this.nonRetriableWrapper(groupId);
 
     await this.#consumers[groupId]!.consumer.run({
       eachMessage: async ({ topic, message }) => {
+        this.logger.info(
+          `Kafka: received message from topic ${topic} in group ${groupId}`
+        );
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const data = BSON.deserialize(message.value!).data;
         const cb = this.#consumers[groupId]?.topicCallbacks[topic];
-        if (cb)
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          await cb(data);
+        if (cb) {
+          try {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            await cb(data);
+          } catch (e) {
+            if (e instanceof Error) {
+              this.logger.error(
+                `Provided callback for topic ${topic} failed: ${e.stack}`
+              );
+            } else {
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              this.logger.warn(`Provided callback for topic ${topic} failed with non-Error: ${e}`);
+            }
+          }
+        }
       },
     });
   }
@@ -135,6 +178,7 @@ export class MessageBus {
   async disconnect() {
     this.#shutdown = true;
     await this.#producer?.disconnect();
-    for (const consumer of Object.values(this.#consumers)) await consumer?.consumer.disconnect();
+    for (const consumer of Object.values(this.#consumers))
+      await consumer?.consumer.disconnect();
   }
 }

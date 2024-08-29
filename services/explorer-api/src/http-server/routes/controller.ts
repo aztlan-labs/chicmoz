@@ -1,7 +1,9 @@
 import { Logger } from "@chicmoz-pkg/logger-server";
 import autoBind from "auto-bind";
 import { RequestHandler } from "express";
+import { getLatestBlock } from "../../database/index.js";
 
+// TODO: remove use of class
 export class Controller {
   logger: Logger;
 
@@ -11,18 +13,17 @@ export class Controller {
     autoBind(this);
   }
 
-  // GET_BLOCK: RequestHandler = async (req, res) => {
-  //   const {
-  //     params: { heightOrHash },
-  //     query: { useIndex },
-  //   } = getBlockSchema.parse(req);
-  //   let block;
-  //   if (isNaN(Number(heightOrHash))) {
-  //     if (useIndex) block = await this.db.block.getByHash(heightOrHash);
-  //     else block = await this.db.block.getByHashWithoutIndex(heightOrHash);
-  //   } else {
-  //     block = await this.db.block.getByHeight(Number(heightOrHash));
-  //   }
+  //GET_BLOCK: RequestHandler = async (req, res) => {
+  //  const {
+  //    params: { heightOrHash },
+  //  } = getBlockSchema.parse(req);
+  //  let block;
+  //  if (isNaN(Number(heightOrHash))) {
+  //    if (useIndex) block = await this.db.block.getByHash(heightOrHash);
+  //    else block = await this.db.block.getByHashWithoutIndex(heightOrHash);
+  //  } else {
+  //    block = await this.db.block.getByHeight(Number(heightOrHash));
+  //  }
 
   //   if (!block) throw new NotFoundError("Block not found");
   //   res.status(200).send(JSONbig.stringify(block));
@@ -79,20 +80,10 @@ export class Controller {
   //   return;
   // };
 
-  // GET_LATEST_BLOCK: RequestHandler = async (req, res) => {
-  //   const latestHeight = this.db.block.getBlockHeight();
-  //   if (latestHeight === -1) throw new Error("No blocks exist");
-  //   const cachedBlock = await this.caching.getCachedValue(req.path);
-  //   if (cachedBlock) {
-  //     const block = blockSchema.parse(JSONbig.parse(cachedBlock));
-  //     const isCachedBlockLatest = block.header.metadata.height === latestHeight;
-  //     if (isCachedBlockLatest) return res.status(200).send(JSONbig.stringify(block));
-  //   }
-  //   const block = await this.db.block.getByHeight(latestHeight);
-  //   if (!block) throw new NotFoundError("Latest block not found");
-  //   await this.caching.setCachedValue(req.path, block);
-  //   res.status(200).send(JSONbig.stringify(block));
-  // };
+  GET_LATEST_BLOCK: RequestHandler = async (req, res) => {
+    const latestBlock = await getLatestBlock();
+    res.status(200).send(JSON.stringify(latestBlock));
+  };
 
   GET_HEALTH: RequestHandler = (_req, res) => {
     res.sendStatus(200);

@@ -63,15 +63,17 @@ export class Controller {
       return;
     }
 
+    const overrideLimitsForNow = true;
+
     const isSecLimitReached = await this.core.checkRequestLimitReached("seconds", apiKey);
-    if (isSecLimitReached) {
+    if (isSecLimitReached && !overrideLimitsForNow) {
       this.logger.info("Reached request limit per second");
       res.status(403).send("Reached request limit per second");
       return;
     }
 
     const isMonthLimitReached = await this.core.checkRequestLimitReached("month", apiKey);
-    if (isMonthLimitReached) {
+    if (isMonthLimitReached && !overrideLimitsForNow) {
       this.logger.info("Reached request limit per month");
       res.status(403).send("Reached request limit per month");
       return;

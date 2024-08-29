@@ -1,6 +1,3 @@
-import { L2Block } from "@aztec/aztec.js";
-
-// TODO: adjust based on Aztec data
 export type NewBlockEvent = {
   blockHash: string;
   nbrOfTransactions: number;
@@ -8,7 +5,7 @@ export type NewBlockEvent = {
 };
 
 type NEW_BLOCK_EVENT = {
-  block?: L2Block;
+  block?: string;
 };
 
 export function generateAztecTopicName(networkId: string, topic: keyof AZTEC_MESSAGES): string {

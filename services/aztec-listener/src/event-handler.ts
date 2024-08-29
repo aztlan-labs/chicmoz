@@ -21,8 +21,10 @@ export class EventHandler {
     const topic = generateAztecTopicName(this.networkId, "NEW_BLOCK_EVENT");
     this.logger.info(`Publishing block ${height} to topic ${topic}`);
 
+    this.logger.info(block.toString());
     await this.mb.publish<AZTEC_MESSAGES["NEW_BLOCK_EVENT"]>(topic, {
-      block,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      block: block.toString(),
     });
   };
 }

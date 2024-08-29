@@ -1,7 +1,7 @@
-import { logger } from "../logger.js";
-import { Block } from "../types.js";
+import { L2Block } from "@aztec/aztec.js";
+import { storeBlock } from "../database/index.js";
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export const onBlock = async (block: Block) => {
-  logger.info(`Received block ${JSON.stringify(block, null, 2)}`);
+export const onBlock = async ({ block }: { block: string }) => {
+  const b = L2Block.fromString(block);
+  await storeBlock(b);
 };
