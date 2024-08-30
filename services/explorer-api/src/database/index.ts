@@ -24,8 +24,6 @@ export const init = async () => {
 
   await block.init(sequelize);
 
-  // TODO: sync models
-  // TODO: log if starting with an empty DB
   return {
     shutdownDb: async () => {
       await sequelize.close();

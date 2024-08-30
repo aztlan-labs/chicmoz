@@ -31,6 +31,8 @@ export const init = async (seq: Sequelize) => {
   );
   if (process.env.NODE_ENV === "development") {
     await m.sync({ force: true });
+    const count = await m.count();
+    if (count === 0) logger.warn("WARNING! starting with an empty Block DB.");
   } else {
     logger.warn(
       "WARNING! since we are not in development mode, we are not forcing the sync of the model."
