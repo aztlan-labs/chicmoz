@@ -1,12 +1,15 @@
 import { API_URL, aztecExplorer } from "./constants";
 
+const defaultHeaders = {
+  "Content-Type": "application/json",
+  "Access-Control-Allow-Credentials": "true",
+};
+
 export const getLatestHeight = async () => {
   const url = `${API_URL}/${aztecExplorer.getLatestHeight}`;
   const response = await fetch(url, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: defaultHeaders,
   });
   const result = await response.json();
 
@@ -16,13 +19,24 @@ export const getLatestHeight = async () => {
   return result;
 };
 
+export const getLatestBlock = async () => {
+  const url = `${API_URL}/${aztecExplorer.getLatestBlock}`;
+  const response = await fetch(url, {
+    method: "GET",
+    headers: defaultHeaders,
+  });
+  const result = await response.json();
+
+  if (response.status !== 200) throw new Error(`An error occurred while fetching latest height: ${result}`);
+
+  return result;
+};
+
 export const getBlockByHeight = async (height: number) => {
   const url = `${API_URL}/${aztecExplorer.getBlockByHeight}`;
   const response = await fetch(url, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: defaultHeaders,
     body: JSON.stringify({ height }),
   });
   const result = await response.json();
@@ -37,9 +51,7 @@ export const getBlocksByHeightRange = async (start: number, end: number) => {
   const url = `${API_URL}/${aztecExplorer.getBlocksByHeightRange}`;
   const response = await fetch(url, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: defaultHeaders,
     body: JSON.stringify({ start, end }),
   });
   const result = await response.json();
@@ -54,9 +66,7 @@ export const getBlocksByHash = async (hash: string) => {
   const url = `${API_URL}/${aztecExplorer.getBlockByHash}`;
   const response = await fetch(url, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: defaultHeaders,
     body: JSON.stringify({ hash }),
   });
   const result = await response.json();
@@ -71,9 +81,7 @@ export const getTransactionById = async (id: string) => {
   const url = `${API_URL}/${aztecExplorer.getTransactionById}`;
   const response = await fetch(url, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: defaultHeaders,
     body: JSON.stringify({ id }),
   });
   const result = await response.json();
@@ -88,9 +96,7 @@ export const getTransactionsByHeight = async (height: number) => {
   const url = `${API_URL}/${aztecExplorer.getTransactionsByHeight}`;
   const response = await fetch(url, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: defaultHeaders,
     body: JSON.stringify({ height }),
   });
   const result = await response.json();
@@ -105,9 +111,7 @@ export const getTransactionsByHeightRange = async (start: number, end: number) =
   const url = `${API_URL}/${aztecExplorer.getTransactionsByHeightRange}`;
   const response = await fetch(url, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: defaultHeaders,
     body: JSON.stringify({ start, end }),
   });
   const result = await response.json();

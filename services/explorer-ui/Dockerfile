@@ -8,6 +8,9 @@ ENV SKIP_ENV_VALIDATION true
 ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 
+ARG VITE_API_URL
+ENV VITE_API_URL $VITE_API_URL
+
 RUN yarn workspaces focus @chicmoz/explorer-ui
 
 FROM deps as build

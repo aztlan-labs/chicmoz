@@ -3046,6 +3046,7 @@ __metadata:
   resolution: "@chicmoz/explorer-api@workspace:services/explorer-api"
   dependencies:
     "@aws-sdk/credential-providers": "npm:3.525.0"
+    "@aztec/aztec.js": "npm:0.50.1"
     "@chicmoz-pkg/error-middleware": "workspace:^"
     "@chicmoz-pkg/logger-server": "workspace:^"
     "@chicmoz-pkg/message-bus": "workspace:^"
@@ -3097,6 +3098,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@chicmoz/explorer-ui@workspace:services/explorer-ui"
   dependencies:
+    "@aztec/aztec.js": "npm:0.50.1"
     "@radix-ui/react-accordion": "npm:1.1.2"
     "@radix-ui/react-alert-dialog": "npm:1.1.1"
     "@radix-ui/react-checkbox": "npm:1.0.4"

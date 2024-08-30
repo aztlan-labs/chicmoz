@@ -21,6 +21,7 @@ build:
         dockerfile: Dockerfile
         buildArgs:
           NODE_ENV: "development"
+          VITE_API_URL: "http://explorer-api.localhost:80/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4"
       requires:
         - image: chicmoz-base
           alias: BASE

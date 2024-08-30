@@ -1,6 +1,7 @@
 // TODO: update url values
 export const aztecExplorer = {
   getLatestHeight: "",
+  getLatestBlock: "latest/block",
   getBlockByHash: "",
   getBlockByHeight: "",
   getBlocksByHeightRange: "",
@@ -9,4 +10,4 @@ export const aztecExplorer = {
   getTransactionsByHeightRange: "",
 };
 
-export const API_URL = "";
+export const API_URL = import.meta.env.VITE_API_URL;
