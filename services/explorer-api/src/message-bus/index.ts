@@ -56,6 +56,8 @@ export const init = async () => {
 
   mb = new MessageBus(mbConfig);
 
+  // TODO: find out and log if message-bus is not empty (or at least if there are a lot of messages)
+
   return {
     shutdownMb: gracefulShutdown,
   };

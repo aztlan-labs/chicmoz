@@ -1,7 +1,7 @@
 import { Logger } from "@chicmoz-pkg/logger-server";
 import autoBind from "auto-bind";
 import { RequestHandler } from "express";
-import { getLatestBlock } from "../../database/index.js";
+import { blockDB } from "../../database/index.js";
 
 // TODO: remove use of class
 export class Controller {
@@ -81,7 +81,7 @@ export class Controller {
   // };
 
   GET_LATEST_BLOCK: RequestHandler = async (req, res) => {
-    const latestBlock = await getLatestBlock();
+    const latestBlock = await blockDB.getLatest();
     res.status(200).send(JSON.stringify(latestBlock));
   };
 

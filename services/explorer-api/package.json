@@ -6,6 +6,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@aws-sdk/credential-providers": "3.525.0",
+    "@aztec/aztec.js": "0.50.1",
     "@chicmoz-pkg/error-middleware": "workspace:^",
     "@chicmoz-pkg/logger-server": "workspace:^",
     "@chicmoz-pkg/message-bus": "workspace:^",
@@ -22,6 +23,7 @@
     "json-bigint": "1.0.0",
     "morgan": "1.10.0",
     "pg": "8.11.3",
+    "sequelize": "6.33.0",
     "ts-jest": "29.1.1",
     "ws": "8.16.0",
     "zod": "3.22.4"

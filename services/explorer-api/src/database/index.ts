@@ -1,27 +1,40 @@
-import { L2Block } from "@aztec/aztec.js";
-import { logger } from "../logger.js";
+import { Sequelize } from "sequelize";
+import {
+  POSTGRES_ADMIN,
+  POSTGRES_DB_NAME,
+  POSTGRES_IP,
+  POSTGRES_PASSWORD,
+  POSTGRES_PORT,
+} from "../environment.js";
+import * as block from "./models/block.js";
 
-// TODO: type only part of L2Block
-let latestBlock: Partial<L2Block>;
-
-// eslint-disable-next-line @typescript-eslint/require-await
 export const init = async () => {
-  logger.info("DB: TODO");
+  const sequelize = new Sequelize(
+    POSTGRES_DB_NAME,
+    POSTGRES_ADMIN,
+    POSTGRES_PASSWORD,
+    {
+      dialect: "postgres",
+      host: POSTGRES_IP,
+      port: POSTGRES_PORT,
+      //    logging: (sql: string) => {
+      //      logger.info(`SQL: ${sql}`);
+      //    },
+    }
+  );
+  await sequelize.authenticate();
+
+  await block.init(sequelize);
+
+  // TODO: sync models
+  // TODO: log if starting with an empty DB
   return {
-    // eslint-disable-next-line @typescript-eslint/require-await
     shutdownDb: async () => {
-      logger.info("DB: TODO");
+      await sequelize.close();
     },
   };
 };
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export const getLatestBlock = async () => {
-  return latestBlock;
-}
-
-// eslint-disable-next-line @typescript-eslint/require-await
-export const storeBlock = async (block: L2Block) => {
-  logger.info(`Storing block ${block.number}`);
-  latestBlock = block;
-}
+export const blockDB = {
+  ...block.publicFunctions,
+};

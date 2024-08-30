@@ -3084,6 +3084,7 @@ __metadata:
     json-bigint: "npm:1.0.0"
     morgan: "npm:1.10.0"
     pg: "npm:8.11.3"
+    sequelize: "npm:6.33.0"
     supertest: "npm:6.3.3"
     ts-jest: "npm:29.1.1"
     typescript: "npm:5.2.2"

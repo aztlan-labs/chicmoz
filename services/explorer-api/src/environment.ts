@@ -18,6 +18,12 @@ export const KAFKA_MSK_SECRET_KEY =
 export const KAFKA_MSK_USER_ID = process.env.KAFKA_MSK_USER_ID ?? "userId";
 export const KAFKA_MSK_REGION = process.env.KAFKA_MSK_REGION ?? "local";
 
+export const POSTGRES_IP = process.env.POSTGRES_IP ?? "localhost";
+export const POSTGRES_PORT = Number(process.env.POSTGRES_PORT) || 5432;
+export const POSTGRES_DB_NAME = process.env.POSTGRES_DB_NAME ?? "explorer-api";
+export const POSTGRES_ADMIN = process.env.POSTGRES_ADMIN ?? "admin";
+export const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD ?? "secret-local-password";
+
 export const ENABLE_CONSUMED_CAPACITY_TRACKING =
   process.env.ENABLE_CONSUMED_CAPACITY_TRACKING === "true";
 export const BLOCK_DB_VALIDATION_ENABLED =
