@@ -1,34 +1,26 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { jest } from "@jest/globals";
-import { createErrorMiddleware } from "@chicmoz-pkg/error-middleware";
 import express from "express";
 import request from "supertest";
-
-import { BODY_LIMIT, NODE_ENV, PARAMETER_LIMIT } from "../../environment.js";
-import { expressConfig } from "../express-config";
-import { newRouter } from "./route";
+import { BODY_LIMIT, NODE_ENV, PARAMETER_LIMIT } from "../../environment";
+import { setup } from "../express-config";
 
 let app: express.Express;
 
-jest.unstable_mockModule("@chicmoz-pkg/logger-server", () => ({
-  Logger: jest.fn().mockImplementation(() => ({
+jest.mock("../../logger.js", () => ({
+  logger: {
     error: jest.fn(),
-  })),
+    info: jest.fn(),
+    warn: jest.fn(),
+  },
 }));
 
-beforeAll(async () => {
-  const { Logger } = await import("@chicmoz-pkg/logger-server");
-
+beforeAll(() => {
   app = express();
-  expressConfig(app, {
+  setup(app, {
     BODY_LIMIT,
     PARAMETER_LIMIT,
     NODE_ENV,
   });
-  const logger = new Logger("test");
-  app.use(newRouter({ logger }));
-  const errorMiddleware = createErrorMiddleware(logger);
-  app.use(errorMiddleware);
 });
 
 test("/health", async () => {
