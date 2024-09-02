@@ -1,3 +1,26 @@
+## running locally
+
+terminal 1:
+
+```sh
+minikube start --kubernetes-version=v1.25.3 --cpus max --memory max && skaffold run
+```
+
+terminal 2:
+
+```sh
+minikube tunnel --bind-address 127.0.0.1
+```
+
+terminal 3:
+
+```sh
+cd services/explorer-ui && yarn dev
+```
+
+UI: http://localhost:5173
+API: https://explorer-api.localhost:443
+
 ## Deploying on AWS
 
 TODO: is this needed?
