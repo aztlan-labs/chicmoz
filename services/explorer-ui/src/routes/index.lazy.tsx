@@ -3,22 +3,22 @@ import { useCallback, useEffect, useState } from "react";
 import { getLatestBlock } from "~/service/api";
 
 const formatTimeSince = (seconds: number) => {
-    const intervals = [
-        { label: 'day', seconds: 86400 },
-        { label: 'hour', seconds: 3600 },
-        { label: 'minute', seconds: 60 },
-        { label: 'second', seconds: 1 }
-    ];
+  const intervals = [
+    { label: "day", seconds: 86400 },
+    { label: "hour", seconds: 3600 },
+    { label: "minute", seconds: 60 },
+    { label: "second", seconds: 1 },
+  ];
 
-    for (let i = 0; i < intervals.length; i++) {
-        const interval = intervals[i];
-        const count = Math.floor(seconds / interval.seconds);
-        if (count >= 1) {
-            return `${count} ${interval.label}${count > 1 ? 's' : ''} ago`;
-        }
+  for (let i = 0; i < intervals.length; i++) {
+    const interval = intervals[i];
+    const count = Math.floor(seconds / interval.seconds);
+    if (count >= 1) {
+      return `${count} ${interval.label}${count > 1 ? "s" : ""} ago`;
     }
-    return 'just now';
-}
+  }
+  return "just now";
+};
 
 const LatestBlockData = () => {
   const [latestBlockData, setLatestBlockData] = useState<any | null>(null);
@@ -47,11 +47,18 @@ const LatestBlockData = () => {
     return () => clearInterval(intervalId); // Clean up on unmount
   }, [fetchLatestBlock]);
 
-  let timeSince = 'no timestamp';
+  let timeSince = "no timestamp";
   if (latestBlockData) {
-    timeSince = formatTimeSince(Math.round((new Date().getTime() - new Date(parseInt(latestBlockData.header.globalVariables.timestamp, 16)).getTime()) / 1000));
+    timeSince = formatTimeSince(
+      Math.round(
+        (new Date().getTime() -
+          new Date(
+            parseInt(latestBlockData.header.globalVariables.timestamp, 16)
+          ).getTime()) /
+          1000
+      )
+    );
   }
-
 
   return (
     <div className="bg-gray-100 p-6 rounded-lg shadow-md mt-8">
@@ -65,8 +72,7 @@ const LatestBlockData = () => {
             {parseInt(latestBlockData.header.globalVariables.blockNumber, 16)}
           </li>
           <li>
-            <strong>Time since:</strong>{" "}
-              {timeSince}
+            <strong>Time since:</strong> {timeSince}
           </li>
           <li>
             <strong>Number of Transactions:</strong>{" "}

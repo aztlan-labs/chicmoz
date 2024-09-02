@@ -4,7 +4,10 @@ const config = {
   parser: "@typescript-eslint/parser",
   env: { browser: true, es2020: true },
   parserOptions: {
-    project: true,
+    ecmaVersion: "latest",
+    sourceType: "module",
+    project: ["./tsconfig.json", "./tsconfig.node.json", "./tsconfig.app.json"],
+    tsconfigRootDir: __dirname,
   },
   extends: [
     "eslint:recommended",
@@ -28,7 +31,10 @@ const config = {
     curly: ["warn", "multi-or-nest", "consistent"],
     "import/no-cycle": "off",
     "import/no-default-export": "off",
-    "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+    "react-refresh/only-export-components": [
+      "warn",
+      { allowConstantExport: true },
+    ],
     "@typescript-eslint/consistent-type-imports": [
       "warn",
       {
