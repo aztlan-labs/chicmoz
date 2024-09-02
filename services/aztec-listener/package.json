@@ -5,7 +5,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@aws-sdk/credential-providers": "3.525.0",
-    "@aztec/aztec.js": "0.50.1",
+    "@aztec/aztec.js": "0.52.0",
     "@chicmoz-pkg/logger-server": "workspace:^",
     "@chicmoz-pkg/message-bus": "workspace:^",
     "@chicmoz-pkg/message-registry": "workspace:^",

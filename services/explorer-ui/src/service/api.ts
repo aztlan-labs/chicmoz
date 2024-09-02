@@ -13,7 +13,6 @@ export const getLatestHeight = async () => {
   });
   const result = await response.json();
 
-  console.info(`GET ${url}: `, response.status);
   if (response.status !== 200) throw new Error(`An error occurred while fetching latest height: ${result}`);
 
   return result;

@@ -43,7 +43,7 @@ const LatestBlockData = () => {
 
   useEffect(() => {
     fetchLatestBlock(); // Fetch immediately on mount
-    const intervalId = setInterval(fetchLatestBlock, 3000); // Poll every 3 seconds
+    const intervalId = setInterval(fetchLatestBlock, 5000); // Poll every 3 seconds
     return () => clearInterval(intervalId); // Clean up on unmount
   }, [fetchLatestBlock]);
 

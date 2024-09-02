@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@aztec/aztec.js": "0.50.1",
+    "@aztec/aztec.js": "0.51.0",
+    "@aztec/bb.js": "0.51.0",
+    "@aztec/circuits.js": "patch:@aztec/circuits.js@npm%3A0.51.0#~/.yarn/patches/@aztec-circuits.js-npm-0.51.0-af6b64acb8.patch",
     "@radix-ui/react-accordion": "1.1.2",
     "@radix-ui/react-alert-dialog": "1.1.1",
     "@radix-ui/react-checkbox": "1.0.4",
@@ -68,6 +70,8 @@
     "tailwindcss-animate": "1.0.7",
     "typescript": "5.2.2",
     "vite": "5.3.4",
+    "vite-plugin-node-polyfills": "^0.22.0",
+    "vite-plugin-resolve": "^2.5.2",
     "vite-plugin-svgr": "4.2.0"
   }
 }

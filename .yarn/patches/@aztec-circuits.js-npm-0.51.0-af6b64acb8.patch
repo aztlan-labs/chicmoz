@@ -1,0 +1,21 @@
+diff --git a/dest/scripts/constants.in.js b/dest/scripts/constants.in.js
+index 4e255d732dab8a9bef3c905fdc5eff00d21395d2..7a05596fbb9f189c5fc603944238374d80653d8d 100644
+--- a/dest/scripts/constants.in.js
++++ b/dest/scripts/constants.in.js
+@@ -1,4 +1,4 @@
+-import * as fs from 'fs';
++// import * as fs from 'fs';
+ import { dirname, join } from 'path';
+ import { fileURLToPath } from 'url';
+ const NOIR_CONSTANTS_FILE = '../../../../noir-projects/noir-protocol-circuits/crates/types/src/constants.nr';
+diff --git a/dest/structs/client_ivc_proof.js b/dest/structs/client_ivc_proof.js
+index 813f31d48efe306df16aeb80f60ab9abb753b6a5..66a2c415ed0a6eaaaafd48f70ed7f02eb1e224c9 100644
+--- a/dest/structs/client_ivc_proof.js
++++ b/dest/structs/client_ivc_proof.js
+@@ -1,5 +1,5 @@
+ import { BufferReader, serializeToBuffer } from '@aztec/foundation/serialize';
+-import * as fs from 'fs/promises';
++// import * as fs from 'fs/promises';
+ import path from 'path';
+ /**
+  * TODO(https://github.com/AztecProtocol/aztec-packages/issues/7370) refactory this to

@@ -40,5 +40,8 @@
     "tslib@2.6.3": {
       "unplugged": true
     }
+  },
+  "resolutions": {
+    "@aztec/circuits.js@npm:0.51.0": "patch:@aztec/circuits.js@npm%3A0.51.0#~/.yarn/patches/@aztec-circuits.js-npm-0.51.0-af6b64acb8.patch"
   }
 }
