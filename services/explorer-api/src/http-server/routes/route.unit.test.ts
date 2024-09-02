@@ -1,8 +1,8 @@
 import { jest } from "@jest/globals";
 import express from "express";
 import request from "supertest";
-import { BODY_LIMIT, NODE_ENV, PARAMETER_LIMIT } from "../../environment";
-import { setup } from "../express-config";
+import { BODY_LIMIT, NODE_ENV, PARAMETER_LIMIT } from "../../environment.js";
+import { setup } from "../express-config.js";
 
 let app: express.Express;
 

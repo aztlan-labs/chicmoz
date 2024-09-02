@@ -1,5 +1,5 @@
-import { blockDB } from "../../database/index.js";
 import asyncHandler from "express-async-handler";
+import { blockDB } from "../../database/index.js";
 
 export const GET_LATEST_HEIGHT = asyncHandler(async (_req, res) => {
   const latestBlock = await blockDB.getLatest();
