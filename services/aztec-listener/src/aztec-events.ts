@@ -37,7 +37,7 @@ export class AztecEvents {
         const blockRes = await this.networkClient.getBlock(i);
         if (blockRes instanceof Error) throw new Error(`🦆 error fetching block ${i}`);
         if (!blockRes)
-          throw new Error("🐯 We didn't receive any block. This should never happen and is really fishy");
+          throw new Error("🐯 We didn't receive any block. - Is the node running?");
         this.logger.info(`🦆 found 1 old block: ${i}`);
         await onBlockCB(blockRes);
         const height = Number(blockRes.header.globalVariables.blockNumber);
@@ -105,7 +105,7 @@ export class AztecEvents {
 
     // Fetch latests block
     const blockRes = await backOff(async () => {
-      return await this.networkClient.getBlock(latestHeight);
+      return this.networkClient.getBlock(latestHeight);
     }, this.backOffOptions);
     if (blockRes instanceof Error) throw blockRes;
     if (!blockRes)

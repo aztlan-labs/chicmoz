@@ -1,4 +1,5 @@
-import { Sequelize } from "sequelize";
+import { drizzle } from "drizzle-orm/node-postgres";
+import pg from "pg";
 import {
   POSTGRES_ADMIN,
   POSTGRES_DB_NAME,
@@ -6,31 +7,29 @@ import {
   POSTGRES_PASSWORD,
   POSTGRES_PORT,
 } from "../environment.js";
-import * as block from "./models/block.js";
+import * as schema from "./schema/index.js";
+
+let db: ReturnType<typeof drizzle>;
 
 export const init = async () => {
-  const sequelize = new Sequelize(
-    POSTGRES_DB_NAME,
-    POSTGRES_ADMIN,
-    POSTGRES_PASSWORD,
-    {
-      dialect: "postgres",
-      host: POSTGRES_IP,
-      port: POSTGRES_PORT,
-      logging: false,
-    }
-  );
-  await sequelize.authenticate();
+  const client = new pg.Client({
+    host: POSTGRES_IP,
+    port: POSTGRES_PORT,
+    user: POSTGRES_ADMIN,
+    password: POSTGRES_PASSWORD,
+    database: POSTGRES_DB_NAME,
+  });
 
-  await block.init(sequelize);
+  db = drizzle(client, { schema });
+
+  await client.connect();
 
   return {
     shutdownDb: async () => {
-      await sequelize.close();
+      await client.end();
     },
   };
 };
 
-export const blockDB = {
-  ...block.publicFunctions,
-};
+export const getDb = () => db;
+export * as controllers from "./controllers/index.js";

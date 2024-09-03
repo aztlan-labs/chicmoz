@@ -53,7 +53,7 @@ const LatestBlockData = () => {
 
     const now = new Date().getTime();
     const blockTime = new Date(
-      parseInt(latestBlockData.timestamp * 1000)
+      parseInt(latestBlockData.timestamp) * 1000
     ).getTime();
     timeSince = formatTimeSince(
       Math.round(

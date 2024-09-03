@@ -1,15 +1,15 @@
 import asyncHandler from "express-async-handler";
-import { blockDB } from "../../database/index.js";
+import { controllers as db } from "../../database/index.js";
 
 export const GET_LATEST_HEIGHT = asyncHandler(async (_req, res) => {
-  const latestBlock = await blockDB.getLatest();
+  const latestBlock = await db.block.getLatest();
   if (latestBlock && latestBlock.number > 0)
     res.status(200).send(JSON.stringify(latestBlock.number));
   else throw new Error("Latest height not found");
 });
 
 export const GET_LATEST_BLOCK = asyncHandler(async (_req, res) => {
-  const latestBlock = await blockDB.getLatest();
+  const latestBlock = await db.block.getLatest();
   res.status(200).send(JSON.stringify(latestBlock));
 });
 
