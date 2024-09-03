@@ -18,6 +18,12 @@ terminal 3:
 cd services/explorer-ui && yarn dev
 ```
 
+terminal 4 (you need to have [aztec-cli](https://docs.aztec.network/guides/developer_guides/getting_started/quickstart) installed):
+
+```sh
+aztec start --sandbox
+```
+
 UI: http://localhost:5173
 API: https://explorer-api.localhost:443
 
