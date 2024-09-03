@@ -14,8 +14,8 @@ const getLatest = async () => {
 };
 
 const store = async (block: L2Block) => {
-  logger.info(`Storing block ${block.number}...`);
-  const hash = block?.hash()?.toBigInt() as bigint;
+  const hash = block?.hash()?.toString() as string;
+  logger.info(`📦 Storing block ${block.number} hash: ${hash}`);
   if (!hash) throw new Error(`Block ${block.number} hash is not a bigint`);
   return db().insert(l2Block).values({
     number: block.number,
@@ -24,7 +24,7 @@ const store = async (block: L2Block) => {
     archive: block.archive,
     header: block.header,
     body: block.body,
-  });
+  }).onConflictDoNothing();
 };
 
 export const block = {

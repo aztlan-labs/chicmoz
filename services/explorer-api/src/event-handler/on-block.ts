@@ -8,6 +8,6 @@ export const onBlock = async ({ block }: { block: string }) => {
     await controllers.block.store(b);
   } catch (e) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    logger.error(`Failed to store block ${b.number}: ${e}`);
+    logger.error(`Failed to store block ${b.number}: ${(e as Error)?.stack ?? e}`);
   }
 };
