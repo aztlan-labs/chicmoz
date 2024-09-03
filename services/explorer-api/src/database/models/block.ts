@@ -19,7 +19,7 @@ export const init = async (seq: Sequelize) => {
     {
       hash: { type: DataTypes.BLOB, primaryKey: true },
       number: { type: DataTypes.INTEGER },
-      timestamp: { type: DataTypes.DATE },
+      timestamp: { type: DataTypes.INTEGER },
       archive: { type: DataTypes.JSONB },
       header: { type: DataTypes.JSONB },
       body: { type: DataTypes.JSONB },

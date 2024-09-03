@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { getLatestBlock } from "~/service/api";
 
 const formatTimeSince = (seconds: number) => {
+
   const intervals = [
     { label: "day", seconds: 86400 },
     { label: "hour", seconds: 3600 },
@@ -28,8 +29,8 @@ const LatestBlockData = () => {
   const fetchLatestBlock = useCallback(async () => {
     try {
       const block = await getLatestBlock();
-      console.log("Latest block data:", block);
       if (!block || latestBlockData?.number === block.number) return;
+
       setLatestBlockData(block);
       setError(null);
     } catch (err) {
@@ -39,7 +40,7 @@ const LatestBlockData = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [latestBlockData?.number]);
 
   useEffect(() => {
     fetchLatestBlock(); // Fetch immediately on mount
@@ -49,13 +50,14 @@ const LatestBlockData = () => {
 
   let timeSince = "no timestamp";
   if (latestBlockData) {
+
+    const now = new Date().getTime();
+    const blockTime = new Date(
+      parseInt(latestBlockData.timestamp * 1000)
+    ).getTime();
     timeSince = formatTimeSince(
       Math.round(
-        (new Date().getTime() -
-          new Date(
-            parseInt(latestBlockData.header.globalVariables.timestamp, 16)
-          ).getTime()) /
-          1000
+        (now - blockTime) / 1000
       )
     );
   }
