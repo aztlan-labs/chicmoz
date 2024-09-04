@@ -7,6 +7,7 @@
   "dependencies": {
     "@aws-sdk/credential-providers": "3.525.0",
     "@aztec/aztec.js": "0.50.1",
+    "@aztec/circuits.js": "0.50.1",
     "@chicmoz-pkg/error-middleware": "workspace:^",
     "@chicmoz-pkg/logger-server": "workspace:^",
     "@chicmoz-pkg/message-bus": "workspace:^",
@@ -27,6 +28,7 @@
     "pg": "8.11.3",
     "sequelize": "6.33.0",
     "ts-jest": "29.1.1",
+    "uuid": "^10.0.0",
     "ws": "8.16.0",
     "zod": "3.22.4"
   },
@@ -44,6 +46,7 @@
     "@types/pg": "8.11.8",
     "@types/sequelize": "4.28.16",
     "@types/supertest": "6.0.2",
+    "@types/uuid": "^10.0.0",
     "@types/ws": "8.5.10",
     "@typescript-eslint/eslint-plugin": "6.11.0",
     "@typescript-eslint/parser": "6.11.0",
@@ -68,6 +71,7 @@
     "generate": "drizzle-kit generate",
     "migrate": "yarn node build/scripts/migrate.js",
     "start": "yarn node --unhandled-rejections=strict --enable-source-maps build/src/index.js",
+    "aztec-playground": "yarn node build/scripts/aztec_playground.js",
     "lint": "yarn run lint-base --ext .ts .",
     "lint-base": "yarn run g:lint",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
