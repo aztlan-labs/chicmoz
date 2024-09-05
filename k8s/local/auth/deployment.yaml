@@ -39,7 +39,7 @@ spec:
             - name: POSTGRES_ADMIN
               value: "admin"
             - name: POSTGRES_PASSWORD
-              value: "secret-local-password" # TODO: change to env-var
+              value: "secret-local-password"
             - name: REDIS_HOST
               value: "redis-master"
             - name: REDIS_PORT
