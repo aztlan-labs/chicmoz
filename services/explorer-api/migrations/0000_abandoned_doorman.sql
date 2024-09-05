@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS "archive" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"root" text NOT NULL,
+	"root" varchar(66) NOT NULL,
 	"next_available_leaf_index" integer NOT NULL
 );
 --> statement-breakpoint
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS "body_to_tx_effects" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "content_commitment" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"num_txs" text NOT NULL,
+	"num_txs" varchar(66) NOT NULL,
 	"txs_effects_hash" jsonb NOT NULL,
 	"in_hash" jsonb NOT NULL,
 	"out_hash" jsonb NOT NULL
@@ -23,13 +23,13 @@ CREATE TABLE IF NOT EXISTS "content_commitment" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "global_variables" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"chain_id" varchar NOT NULL,
-	"version" varchar NOT NULL,
-	"block_number" text NOT NULL,
-	"slot_number" text NOT NULL,
-	"timestamp" text NOT NULL,
-	"coinbase" text NOT NULL,
-	"fee_recipient" varchar NOT NULL,
+	"chain_id" varchar(66) NOT NULL,
+	"version" varchar(66) NOT NULL,
+	"block_number" varchar(66) NOT NULL,
+	"slot_number" varchar(66) NOT NULL,
+	"timestamp" varchar(66) NOT NULL,
+	"coinbase" varchar(42) NOT NULL,
+	"fee_recipient" varchar(66) NOT NULL,
 	"gas_fees" jsonb NOT NULL
 );
 --> statement-breakpoint
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS "header" (
 	"content_commitment_id" uuid NOT NULL,
 	"state_id" uuid NOT NULL,
 	"global_variables_id" uuid NOT NULL,
-	"total_fees" text NOT NULL
+	"total_fees" varchar(66) NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l2Block" (
@@ -59,14 +59,14 @@ CREATE TABLE IF NOT EXISTS "tx_effect" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"index" integer NOT NULL,
 	"revert_code" jsonb NOT NULL,
-	"transaction_fee" text NOT NULL,
+	"transaction_fee" varchar(66) NOT NULL,
 	"note_hashes" jsonb NOT NULL,
 	"nullifiers" jsonb NOT NULL,
 	"l2_to_l1_msgs" jsonb NOT NULL,
 	"public_data_writes" jsonb NOT NULL,
-	"note_encrypted_logs_length" text NOT NULL,
-	"encrypted_logs_length" text NOT NULL,
-	"unencrypted_logs_length" text NOT NULL,
+	"note_encrypted_logs_length" varchar(66) NOT NULL,
+	"encrypted_logs_length" varchar(66) NOT NULL,
+	"unencrypted_logs_length" varchar(66) NOT NULL,
 	"note_encrypted_logs" jsonb NOT NULL,
 	"encrypted_logs" jsonb NOT NULL,
 	"unencrypted_logs" jsonb NOT NULL

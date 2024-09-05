@@ -1,7 +1,7 @@
 import { defineConfig } from "drizzle-kit";
-import { dbCredentials } from "./src/environment.js";
+import { dbCredentials } from "./build/src/environment.js";
 
-// NOTE: this file is, and should be, used by migrations only
+// NOTE: this file is only used by the `drizzle-kit` CLI
 
 // eslint-disable-next-line import/no-default-export
 export default defineConfig({

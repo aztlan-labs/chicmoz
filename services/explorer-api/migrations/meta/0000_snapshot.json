@@ -1,5 +1,5 @@
 {
-  "id": "cfe9eced-3f6e-4355-838a-7023a80dc4d3",
+  "id": "ce57baaf-80d9-466e-a393-25849369eadf",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -17,7 +17,7 @@
         },
         "root": {
           "name": "root",
-          "type": "text",
+          "type": "varchar(66)",
           "primaryKey": false,
           "notNull": true
         },
@@ -104,7 +104,7 @@
         },
         "num_txs": {
           "name": "num_txs",
-          "type": "text",
+          "type": "varchar(66)",
           "primaryKey": false,
           "notNull": true
         },
@@ -145,43 +145,43 @@
         },
         "chain_id": {
           "name": "chain_id",
-          "type": "varchar",
+          "type": "varchar(66)",
           "primaryKey": false,
           "notNull": true
         },
         "version": {
           "name": "version",
-          "type": "varchar",
+          "type": "varchar(66)",
           "primaryKey": false,
           "notNull": true
         },
         "block_number": {
           "name": "block_number",
-          "type": "text",
+          "type": "varchar(66)",
           "primaryKey": false,
           "notNull": true
         },
         "slot_number": {
           "name": "slot_number",
-          "type": "text",
+          "type": "varchar(66)",
           "primaryKey": false,
           "notNull": true
         },
         "timestamp": {
           "name": "timestamp",
-          "type": "text",
+          "type": "varchar(66)",
           "primaryKey": false,
           "notNull": true
         },
         "coinbase": {
           "name": "coinbase",
-          "type": "text",
+          "type": "varchar(42)",
           "primaryKey": false,
           "notNull": true
         },
         "fee_recipient": {
           "name": "fee_recipient",
-          "type": "varchar",
+          "type": "varchar(66)",
           "primaryKey": false,
           "notNull": true
         },
@@ -234,7 +234,7 @@
         },
         "total_fees": {
           "name": "total_fees",
-          "type": "text",
+          "type": "varchar(66)",
           "primaryKey": false,
           "notNull": true
         }
@@ -388,7 +388,7 @@
         },
         "transaction_fee": {
           "name": "transaction_fee",
-          "type": "text",
+          "type": "varchar(66)",
           "primaryKey": false,
           "notNull": true
         },
@@ -418,19 +418,19 @@
         },
         "note_encrypted_logs_length": {
           "name": "note_encrypted_logs_length",
-          "type": "text",
+          "type": "varchar(66)",
           "primaryKey": false,
           "notNull": true
         },
         "encrypted_logs_length": {
           "name": "encrypted_logs_length",
-          "type": "text",
+          "type": "varchar(66)",
           "primaryKey": false,
           "notNull": true
         },
         "unencrypted_logs_length": {
           "name": "unencrypted_logs_length",
-          "type": "text",
+          "type": "varchar(66)",
           "primaryKey": false,
           "notNull": true
         },

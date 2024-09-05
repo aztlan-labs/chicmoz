@@ -8,7 +8,7 @@ import {
 import { relations } from "drizzle-orm";
 
 const generateFrColumn = (name: string) =>
-  varchar(name, { length: 64 }).notNull();
+  varchar(name, { length: 66 }).notNull();
 
 export const l2Block = pgTable("l2Block", {
   hash: varchar("hash").primaryKey().notNull(),
@@ -111,9 +111,9 @@ export const globalVariables = pgTable("global_variables", {
   blockNumber: generateFrColumn("block_number"),
   slotNumber: generateFrColumn("slot_number"),
   timestamp: generateFrColumn("timestamp"),
-  coinbase: varchar("coinbase", { length: 40 }).notNull(),
+  coinbase: varchar("coinbase", { length: 42 }).notNull(),
   // NOTE: feeRecipient is referred to as "Aztec address" and not Fr (although it is(?) a Fr)
-  feeRecipient: varchar("fee_recipient", { length: 64 }).notNull(),
+  feeRecipient: varchar("fee_recipient", { length: 66 }).notNull(),
   gasFees: jsonb("gas_fees").notNull(),
 });
 

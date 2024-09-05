@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import type { Fr as FrType, L2Block } from "@aztec/aztec.js";
 import { asc, desc, eq, getTableColumns } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
@@ -124,11 +125,14 @@ declare module "@aztec/aztec.js" {
   }
 }
 
-const frValue = (f: FrType): string => f.toString();
+const frValue = (f: FrType): string => {
+  return f.toString();
+}
 
 export const store = async (block: L2Block) => {
   const hash = block?.hash()?.toString();
   logger.info(`📦 Storing block ${block.number} hash: ${hash}`);
+
   if (!hash) throw new Error(`Block ${block.number} could not find hash`);
 
   return await db().transaction(async (tx) => {
@@ -181,8 +185,10 @@ export const store = async (block: L2Block) => {
         blockNumber: frValue(block.header.globalVariables.blockNumber as FrType),
         slotNumber: frValue(block.header.globalVariables.slotNumber as FrType),
         timestamp: frValue(block.header.globalVariables.timestamp as FrType),
-        coinbase: block.header.globalVariables.coinbase as string,
-        feeRecipient: block.header.globalVariables.feeRecipient as string,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        coinbase: block.header.globalVariables.coinbase.toString() as string,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        feeRecipient: block.header.globalVariables.feeRecipient.toString() as string,
         gasFees: block.header.globalVariables.gasFees,
       })
       .onConflictDoNothing();
