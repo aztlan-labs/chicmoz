@@ -29,6 +29,7 @@ const LatestBlockData = () => {
   const fetchLatestBlock = useCallback(async () => {
     try {
       const block = await getLatestBlock();
+      console.log("block", block);
       if (!block || latestBlockData?.header?.globalVariables?.blockNumber === block?.header?.globalVariables?.blockNumber) return;
 
       setLatestBlockData(block);

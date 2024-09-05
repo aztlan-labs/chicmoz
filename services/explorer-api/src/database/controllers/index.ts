@@ -1,9 +1,4 @@
-// TODO: avoid using eslint-disable
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-import { Fr, L2Block } from "@aztec/aztec.js";
+import type { Fr as FrType, L2Block } from "@aztec/aztec.js";
 import { asc, desc, eq, getTableColumns } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 import { logger } from "../../logger.js";
@@ -67,13 +62,16 @@ export const getLatest = async () => {
   const block = res[0];
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { id, ...txEffectColumns } = getTableColumns(txEffectTable);
+  const { index, ...txEffectColumns } = getTableColumns(txEffectTable);
 
   // NOTE: Fetch txEffects separately to avoid a potentially large join
   const txEffects = await db()
     .select(txEffectColumns)
     .from(txEffectTable)
-    .innerJoin(bodyToTxEffects, eq(txEffectTable.id, bodyToTxEffects.txEffectId))
+    .innerJoin(
+      bodyToTxEffects,
+      eq(txEffectTable.id, bodyToTxEffects.txEffectId)
+    )
     .where(eq(bodyToTxEffects.bodyId, block.bodyId))
     .orderBy(asc(txEffectTable.index))
     .execute();
@@ -114,10 +112,22 @@ export const getLatest = async () => {
   };
 };
 
-const frValue = (f: Fr) => f.toString();
+declare module "@aztec/aztec.js" {
+  const Fr: {
+    fromString(val: string): FrType;
+  };
+  interface Fr {
+    toString(): string;
+  }
+  interface L2Block {
+    hash(): Fr;
+  }
+}
+
+const frValue = (f: FrType): string => f.toString();
 
 export const store = async (block: L2Block) => {
-  const hash = block?.hash()?.toString() as string;
+  const hash = block?.hash()?.toString();
   logger.info(`📦 Storing block ${block.number} hash: ${hash}`);
   if (!hash) throw new Error(`Block ${block.number} could not find hash`);
 
@@ -134,7 +144,7 @@ export const store = async (block: L2Block) => {
       .insert(archive)
       .values({
         id: archiveId,
-        root: frValue(block.archive.root),
+        root: frValue(block.archive.root as FrType),
         nextAvailableLeafIndex: block.archive.nextAvailableLeafIndex,
       })
       .onConflictDoNothing();
@@ -144,7 +154,7 @@ export const store = async (block: L2Block) => {
       .insert(contentCommitment)
       .values({
         id: contentCommitmentId,
-        numTxs: frValue(block.header.contentCommitment.numTxs),
+        numTxs: frValue(block.header.contentCommitment.numTxs as FrType),
         txsEffectsHash: block.header.contentCommitment.txsEffectsHash,
         inHash: block.header.contentCommitment.inHash,
         outHash: block.header.contentCommitment.outHash,
@@ -166,13 +176,13 @@ export const store = async (block: L2Block) => {
       .insert(globalVariables)
       .values({
         id: globalVariablesId,
-        chainId: block.header.globalVariables.chainId,
-        version: block.header.globalVariables.version,
-        blockNumber: frValue(block.header.globalVariables.blockNumber),
-        slotNumber: frValue(block.header.globalVariables.slotNumber),
-        timestamp: frValue(block.header.globalVariables.timestamp),
-        coinbase: block.header.globalVariables.coinbase,
-        feeRecipient: block.header.globalVariables.feeRecipient,
+        chainId: frValue(block.header.globalVariables.chainId as FrType),
+        version: frValue(block.header.globalVariables.version as FrType),
+        blockNumber: frValue(block.header.globalVariables.blockNumber as FrType),
+        slotNumber: frValue(block.header.globalVariables.slotNumber as FrType),
+        timestamp: frValue(block.header.globalVariables.timestamp as FrType),
+        coinbase: block.header.globalVariables.coinbase as string,
+        feeRecipient: block.header.globalVariables.feeRecipient as string,
         gasFees: block.header.globalVariables.gasFees,
       })
       .onConflictDoNothing();
@@ -186,7 +196,7 @@ export const store = async (block: L2Block) => {
         contentCommitmentId,
         stateId,
         globalVariablesId,
-        totalFees: frValue(block.header.totalFees),
+        totalFees: frValue(block.header.totalFees as FrType),
       })
       .onConflictDoNothing();
 
@@ -208,14 +218,14 @@ export const store = async (block: L2Block) => {
           id: txEffectId,
           index: Number(i),
           revertCode: txEffect.revertCode,
-          transactionFee: frValue(txEffect.transactionFee),
+          transactionFee: frValue(txEffect.transactionFee as FrType),
           noteHashes: txEffect.noteHashes,
           nullifiers: txEffect.nullifiers,
           l2ToL1Msgs: txEffect.l2ToL1Msgs,
           publicDataWrites: txEffect.publicDataWrites,
-          noteEncryptedLogsLength: frValue(txEffect.noteEncryptedLogsLength),
-          encryptedLogsLength: frValue(txEffect.encryptedLogsLength),
-          unencryptedLogsLength: frValue(txEffect.unencryptedLogsLength),
+          noteEncryptedLogsLength: frValue(txEffect.noteEncryptedLogsLength as FrType),
+          encryptedLogsLength: frValue(txEffect.encryptedLogsLength as FrType),
+          unencryptedLogsLength: frValue(txEffect.unencryptedLogsLength as FrType),
           noteEncryptedLogs: txEffect.noteEncryptedLogs,
           encryptedLogs: txEffect.encryptedLogs,
           unencryptedLogs: txEffect.unencryptedLogs,

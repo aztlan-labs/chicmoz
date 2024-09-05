@@ -1,35 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-import { z } from "zod";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Fr } from "@aztec/aztec.js";
-import { logger } from "./logger.js";
-
-// Utility function to recursively apply .partial() to a Zod schema
-function deepPartial(schema: z.ZodType<any, any>): z.ZodType<any, any> {
-  if (schema instanceof z.ZodObject) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const shape = schema.shape;
-    const newShape: Record<string, z.ZodType<any, any>> = {};
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    for (const key in shape) newShape[key] = deepPartial(shape[key]);
-
-    return z.object(newShape).partial();
-  } else if (schema instanceof z.ZodArray) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    return z.array(deepPartial(schema.element));
-  } else if (
-    schema instanceof z.ZodOptional ||
-    schema instanceof z.ZodNullable
-  ) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    return deepPartial(schema._def.innerType).optional();
-  } else {
-    return schema.optional();
-  }
-}
+import { z } from "zod";
+import { logger } from "../logger.js";
+import { deepPartial } from "./utils.js";
 
 const FrSchema = z
   .preprocess(
@@ -42,7 +16,7 @@ const FrSchema = z
       value: z.string(),
     })
   )
-  .transform((val, ctx) => {
+  .transform((val, ctx): Fr => {
     try {
       return Fr.fromString(val.value);
     } catch (e) {
@@ -159,5 +133,7 @@ export const blockSchema = z.object({
   }),
 });
 
-export const partialBlockSchema = deepPartial(blockSchema);
 export type Block = z.infer<typeof blockSchema>;
+
+// NOTE: for testing purposes only
+export const partialBlockSchema = deepPartial(blockSchema);

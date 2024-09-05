@@ -3,10 +3,12 @@ import {
   integer,
   jsonb,
   varchar,
-  text,
   uuid,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+
+const generateFrColumn = (name: string) =>
+  varchar(name, { length: 64 }).notNull();
 
 export const l2Block = pgTable("l2Block", {
   hash: varchar("hash").primaryKey().notNull(),
@@ -38,7 +40,7 @@ export const l2BlockRelations = relations(l2Block, ({ one }) => ({
 
 export const archive = pgTable("archive", {
   id: uuid("id").primaryKey().defaultRandom(),
-  root: text("root").notNull(),
+  root: generateFrColumn("root"),
   nextAvailableLeafIndex: integer("next_available_leaf_index").notNull(),
 });
 
@@ -58,7 +60,7 @@ export const header = pgTable("header", {
   globalVariablesId: uuid("global_variables_id")
     .notNull()
     .references(() => globalVariables.id),
-  totalFees: text("total_fees").notNull(),
+  totalFees: generateFrColumn("total_fees"),
 });
 
 export const headerRelations = relations(header, ({ one }) => ({
@@ -79,7 +81,7 @@ export const headerRelations = relations(header, ({ one }) => ({
 
 export const contentCommitment = pgTable("content_commitment", {
   id: uuid("id").primaryKey().defaultRandom(),
-  numTxs: text("num_txs").notNull(),
+  numTxs: generateFrColumn("num_txs"),
   txsEffectsHash: jsonb("txs_effects_hash").notNull(),
   inHash: jsonb("in_hash").notNull(),
   outHash: jsonb("out_hash").notNull(),
@@ -104,13 +106,14 @@ export const stateRelations = relations(state, ({ one }) => ({
 
 export const globalVariables = pgTable("global_variables", {
   id: uuid("id").primaryKey().defaultRandom(),
-  chainId: varchar("chain_id").notNull(),
-  version: varchar("version").notNull(),
-  blockNumber: text("block_number").notNull(),
-  slotNumber: text("slot_number").notNull(),
-  timestamp: text("timestamp").notNull(),
-  coinbase: text("coinbase").notNull(),
-  feeRecipient: varchar("fee_recipient").notNull(),
+  chainId: generateFrColumn("chain_id"),
+  version: generateFrColumn("version"),
+  blockNumber: generateFrColumn("block_number"),
+  slotNumber: generateFrColumn("slot_number"),
+  timestamp: generateFrColumn("timestamp"),
+  coinbase: varchar("coinbase", { length: 40 }).notNull(),
+  // NOTE: feeRecipient is referred to as "Aztec address" and not Fr (although it is(?) a Fr)
+  feeRecipient: varchar("fee_recipient", { length: 64 }).notNull(),
   gasFees: jsonb("gas_fees").notNull(),
 });
 
@@ -134,14 +137,14 @@ export const txEffect = pgTable("tx_effect", {
   id: uuid("id").primaryKey().defaultRandom(),
   index: integer("index").notNull(),
   revertCode: jsonb("revert_code").notNull(),
-  transactionFee: text("transaction_fee").notNull(),
+  transactionFee: generateFrColumn("transaction_fee"),
   noteHashes: jsonb("note_hashes").notNull(),
   nullifiers: jsonb("nullifiers").notNull(),
   l2ToL1Msgs: jsonb("l2_to_l1_msgs").notNull(),
   publicDataWrites: jsonb("public_data_writes").notNull(),
-  noteEncryptedLogsLength: text("note_encrypted_logs_length").notNull(),
-  encryptedLogsLength: text("encrypted_logs_length").notNull(),
-  unencryptedLogsLength: text("unencrypted_logs_length").notNull(),
+  noteEncryptedLogsLength: generateFrColumn("note_encrypted_logs_length"),
+  encryptedLogsLength: generateFrColumn("encrypted_logs_length"),
+  unencryptedLogsLength: generateFrColumn("unencrypted_logs_length"),
   noteEncryptedLogs: jsonb("note_encrypted_logs").notNull(),
   encryptedLogs: jsonb("encrypted_logs").notNull(),
   unencryptedLogs: jsonb("unencrypted_logs").notNull(),
