@@ -23,7 +23,6 @@ export class EventHandler {
 
     this.logger.info(block.toString());
     await this.mb.publish<AZTEC_MESSAGES["NEW_BLOCK_EVENT"]>(topic, {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       block: block.toString(),
     });
   };
