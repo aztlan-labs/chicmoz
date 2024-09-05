@@ -10,11 +10,15 @@ import { relations } from "drizzle-orm";
 
 export const l2Block = pgTable("l2Block", {
   hash: varchar("hash").primaryKey().notNull(),
-  number: integer("number").notNull(),
-  timestamp: integer("timestamp").notNull(),
-  archiveId: uuid("archive_id").notNull().references(() => archive.id),
-  headerId: uuid("header_id").notNull().references(() => header.id),
-  bodyId: uuid("body_id").notNull().references(() => body.id),
+  archiveId: uuid("archive_id")
+    .notNull()
+    .references(() => archive.id),
+  headerId: uuid("header_id")
+    .notNull()
+    .references(() => header.id),
+  bodyId: uuid("body_id")
+    .notNull()
+    .references(() => body.id),
 });
 
 export const l2BlockRelations = relations(l2Block, ({ one }) => ({
@@ -45,9 +49,15 @@ export const archiveRelations = relations(archive, ({ one }) => ({
 export const header = pgTable("header", {
   id: uuid("id").primaryKey().defaultRandom(),
   lastArchive: jsonb("last_archive").notNull(),
-  contentCommitmentId: uuid("content_commitment_id").notNull().references(() => contentCommitment.id),
-  stateId: uuid("state_id").notNull().references(() => state.id),
-  globalVariablesId: uuid("global_variables_id").notNull().references(() => globalVariables.id),
+  contentCommitmentId: uuid("content_commitment_id")
+    .notNull()
+    .references(() => contentCommitment.id),
+  stateId: uuid("state_id")
+    .notNull()
+    .references(() => state.id),
+  globalVariablesId: uuid("global_variables_id")
+    .notNull()
+    .references(() => globalVariables.id),
   totalFees: text("total_fees").notNull(),
 });
 
@@ -117,12 +127,12 @@ export const body = pgTable("body", {
 
 export const bodyRelations = relations(body, ({ one, many }) => ({
   l2Block: one(l2Block),
-  txEffects: many(txEffect),
+  bodyToTxEffects: many(bodyToTxEffects),
 }));
 
 export const txEffect = pgTable("tx_effect", {
   id: uuid("id").primaryKey().defaultRandom(),
-  bodyId: uuid("body_id").notNull().references(() => body.id),
+  index: integer("index").notNull(),
   revertCode: jsonb("revert_code").notNull(),
   transactionFee: text("transaction_fee").notNull(),
   noteHashes: jsonb("note_hashes").notNull(),
@@ -138,8 +148,22 @@ export const txEffect = pgTable("tx_effect", {
 });
 
 export const txEffectRelations = relations(txEffect, ({ one }) => ({
-  body: one(body, {
-    fields: [txEffect.bodyId],
-    references: [body.id],
-  }),
+  bodyToTxEffects: one(bodyToTxEffects),
 }));
+
+export const bodyToTxEffects = pgTable("body_to_tx_effects", {
+  bodyId: uuid("body_id")
+    .notNull()
+    .references(() => body.id),
+  txEffectId: uuid("tx_effect_id")
+    .notNull()
+    .references(() => txEffect.id),
+});
+
+export const bodyToTxEffectsRelations = relations(
+  bodyToTxEffects,
+  ({ one }) => ({
+    body: one(body),
+    txEffect: one(txEffect),
+  })
+);

@@ -8,6 +8,11 @@ CREATE TABLE IF NOT EXISTS "body" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "body_to_tx_effects" (
+	"body_id" uuid NOT NULL,
+	"tx_effect_id" uuid NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "content_commitment" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"num_txs" text NOT NULL,
@@ -39,8 +44,6 @@ CREATE TABLE IF NOT EXISTS "header" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l2Block" (
 	"hash" varchar PRIMARY KEY NOT NULL,
-	"number" integer NOT NULL,
-	"timestamp" integer NOT NULL,
 	"archive_id" uuid NOT NULL,
 	"header_id" uuid NOT NULL,
 	"body_id" uuid NOT NULL
@@ -54,7 +57,7 @@ CREATE TABLE IF NOT EXISTS "state" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tx_effect" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"body_id" uuid NOT NULL,
+	"index" integer NOT NULL,
 	"revert_code" jsonb NOT NULL,
 	"transaction_fee" text NOT NULL,
 	"note_hashes" jsonb NOT NULL,
@@ -68,6 +71,18 @@ CREATE TABLE IF NOT EXISTS "tx_effect" (
 	"encrypted_logs" jsonb NOT NULL,
 	"unencrypted_logs" jsonb NOT NULL
 );
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "body_to_tx_effects" ADD CONSTRAINT "body_to_tx_effects_body_id_body_id_fk" FOREIGN KEY ("body_id") REFERENCES "public"."body"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "body_to_tx_effects" ADD CONSTRAINT "body_to_tx_effects_tx_effect_id_tx_effect_id_fk" FOREIGN KEY ("tx_effect_id") REFERENCES "public"."tx_effect"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "header" ADD CONSTRAINT "header_content_commitment_id_content_commitment_id_fk" FOREIGN KEY ("content_commitment_id") REFERENCES "public"."content_commitment"("id") ON DELETE no action ON UPDATE no action;
@@ -101,12 +116,6 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "l2Block" ADD CONSTRAINT "l2Block_body_id_body_id_fk" FOREIGN KEY ("body_id") REFERENCES "public"."body"("id") ON DELETE no action ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "tx_effect" ADD CONSTRAINT "tx_effect_body_id_body_id_fk" FOREIGN KEY ("body_id") REFERENCES "public"."body"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

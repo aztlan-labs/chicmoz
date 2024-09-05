@@ -1,5 +1,5 @@
 {
-  "id": "c30b83d3-e764-4e6d-a1bb-e28bc357d4a8",
+  "id": "cfe9eced-3f6e-4355-838a-7023a80dc4d3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -47,6 +47,47 @@
       },
       "indexes": {},
       "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.body_to_tx_effects": {
+      "name": "body_to_tx_effects",
+      "schema": "",
+      "columns": {
+        "body_id": {
+          "name": "body_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tx_effect_id": {
+          "name": "tx_effect_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "body_to_tx_effects_body_id_body_id_fk": {
+          "name": "body_to_tx_effects_body_id_body_id_fk",
+          "tableFrom": "body_to_tx_effects",
+          "tableTo": "body",
+          "columnsFrom": ["body_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "body_to_tx_effects_tx_effect_id_tx_effect_id_fk": {
+          "name": "body_to_tx_effects_tx_effect_id_tx_effect_id_fk",
+          "tableFrom": "body_to_tx_effects",
+          "tableTo": "tx_effect",
+          "columnsFrom": ["tx_effect_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -241,18 +282,6 @@
           "primaryKey": true,
           "notNull": true
         },
-        "number": {
-          "name": "number",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "timestamp": {
-          "name": "timestamp",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
         "archive_id": {
           "name": "archive_id",
           "type": "uuid",
@@ -345,9 +374,9 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "body_id": {
-          "name": "body_id",
-          "type": "uuid",
+        "index": {
+          "name": "index",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -425,17 +454,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "tx_effect_body_id_body_id_fk": {
-          "name": "tx_effect_body_id_body_id_fk",
-          "tableFrom": "tx_effect",
-          "tableTo": "body",
-          "columnsFrom": ["body_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }

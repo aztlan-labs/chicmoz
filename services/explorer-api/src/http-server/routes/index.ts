@@ -9,7 +9,7 @@ export const init = ({
   router.get(`/health`, controller.GET_HEALTH);
 
   router.get(`/latest/block`, controller.GET_LATEST_BLOCK);
-  router.get(`/latest/height`, controller.GET_LATEST_HEIGHT);
+  //router.get(`/latest/height`, controller.GET_LATEST_HEIGHT);
   // router.get(`/block/:heightOrHash`, controller.GET_BLOCK);
   // router.get(`/blocks`, controller.GET_BLOCKS);
   return router;
