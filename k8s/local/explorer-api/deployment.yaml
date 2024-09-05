@@ -32,7 +32,7 @@ spec:
             - name: POSTGRES_ADMIN
               value: "admin"
             - name: POSTGRES_PASSWORD
-              value: "secret-local-password" # TODO: change to env-var
+              value: "secret-local-password"
       containers:
         - image: explorer-api:latest
           resources:
@@ -60,7 +60,9 @@ spec:
             - name: POSTGRES_ADMIN
               value: "admin"
             - name: POSTGRES_PASSWORD
-              value: "secret-local-password" # TODO: change to env-var
+              value: "secret-local-password"
+            - name: BLOCK_INTERVAL_MS
+              value: "2000"
             - name: BLOCK_DB_VALIDATION_ENABLED
               value: "false"
             - name: BLOCK_DB_VALIDATION_INTERVAL
