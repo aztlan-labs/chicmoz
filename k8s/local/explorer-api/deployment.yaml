@@ -16,6 +16,23 @@ spec:
       labels:
         app: explorer-api
     spec:
+      initContainers:
+        - name: run-migrations
+          image: explorer-api:latest
+          command: ["yarn", run, "migrate"]
+          env:
+            - name: NODE_ENV
+              value: "development"
+            - name: POSTGRES_IP
+              value: "postgresql"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DB_NAME
+              value: "explorer_api"
+            - name: POSTGRES_ADMIN
+              value: "admin"
+            - name: POSTGRES_PASSWORD
+              value: "secret-local-password"
       containers:
         - image: explorer-api:latest
           resources:
@@ -39,11 +56,11 @@ spec:
             - name: POSTGRES_PORT
               value: "5432"
             - name: POSTGRES_DB_NAME
-              value: "auth"
+              value: "explorer_api"
             - name: POSTGRES_ADMIN
               value: "admin"
             - name: POSTGRES_PASSWORD
-              value: "secret-local-password" # TODO: change to env-var
+              value: "secret-local-password"
             - name: BLOCK_INTERVAL_MS
               value: "2000"
             - name: BLOCK_DB_VALIDATION_ENABLED
@@ -60,4 +77,3 @@ spec:
               port: 80
             initialDelaySeconds: 15
             periodSeconds: 10
-status: {}

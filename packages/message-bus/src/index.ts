@@ -150,9 +150,9 @@ export class MessageBus {
 
     await this.#consumers[groupId]!.consumer.run({
       eachMessage: async ({ topic, message }) => {
-        this.logger.info(
-          `Kafka: received message from topic ${topic} in group ${groupId}`
-        );
+        // this.logger.info(
+        //   `Kafka: received message from topic ${topic} in group ${groupId}`
+        // );
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const data = BSON.deserialize(message.value!).data;
         const cb = this.#consumers[groupId]?.topicCallbacks[topic];

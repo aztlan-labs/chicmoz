@@ -51,7 +51,7 @@ manifests:
     - k8s/local/common/namespace.yaml
     # - k8s/local/explorer-ui/ingress.yaml
     # - k8s/local/explorer-ui/deployment.yaml
-    - k8s/local/explorer-ui/service.yaml
+    # - k8s/local/explorer-ui/service.yaml
     - k8s/local/explorer-api/ingress.yaml
     - k8s/local/explorer-api/deployment.yaml
     - k8s/local/explorer-api/service.yaml
@@ -83,9 +83,9 @@ manifests:
         valuesFiles:
           - k8s/local/postgres/values.yaml
         setValues:
-          global.postgresql.auth.postgresPassword: "secret-local-password" # TODO: change to env-var
+          global.postgresql.auth.postgresPassword: "secret-local-password"
           global.postgresql.auth.username: "admin"
-          global.postgresql.auth.password: "secret-local-password" # TODO: change to env-var
+          global.postgresql.auth.password: "secret-local-password"
           image.debug: true
         namespace: chicmoz
         createNamespace: false
