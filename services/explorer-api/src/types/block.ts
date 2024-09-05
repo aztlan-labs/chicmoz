@@ -1,9 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Fr } from "@aztec/aztec.js";
+import { Fr as FrType } from "@aztec/aztec.js";
 import { z } from "zod";
-import { logger } from "../logger.js";
 import { deepPartial } from "./utils.js";
+
+
+declare module "@aztec/aztec.js" {
+  const Fr: {
+    fromString(val: string): FrType;
+  };
+  interface Fr {
+    toString(): string;
+  }
+  interface L2Block {
+    hash(): Fr;
+  }
+}
 
 const FrSchema = z
   .preprocess(
@@ -16,11 +28,10 @@ const FrSchema = z
       value: z.string(),
     })
   )
-  .transform((val, ctx): Fr => {
+  .transform((val, ctx): FrType => {
     try {
-      return Fr.fromString(val.value);
+      return FrType.fromString(val.value);
     } catch (e) {
-      logger.info(`!!!!!! ${val.value}`);
       let errorMessage = (e as string) || "Failed to do something exceptional";
       if (e instanceof Error) errorMessage = e.message;
       ctx.addIssue({

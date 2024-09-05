@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import type { Fr as FrType, L2Block } from "@aztec/aztec.js";
+import type { Fr, L2Block } from "@aztec/aztec.js";
 import { asc, desc, eq, getTableColumns } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 import { logger } from "../../logger.js";
@@ -16,7 +16,7 @@ import {
   txEffect as txEffectTable,
 } from "../schema/index.js";
 
-export const getLatest = async () => {
+const getLatest = async () => {
   logger.info(`Getting latest block...`);
   const res = await db()
     .select({
@@ -113,19 +113,7 @@ export const getLatest = async () => {
   };
 };
 
-declare module "@aztec/aztec.js" {
-  const Fr: {
-    fromString(val: string): FrType;
-  };
-  interface Fr {
-    toString(): string;
-  }
-  interface L2Block {
-    hash(): Fr;
-  }
-}
-
-const frValue = (f: FrType): string => {
+const frValue = (f: Fr): string => {
   return f.toString();
 }
 
@@ -148,7 +136,7 @@ export const store = async (block: L2Block) => {
       .insert(archive)
       .values({
         id: archiveId,
-        root: frValue(block.archive.root as FrType),
+        root: frValue(block.archive.root as Fr),
         nextAvailableLeafIndex: block.archive.nextAvailableLeafIndex,
       })
       .onConflictDoNothing();
@@ -158,7 +146,7 @@ export const store = async (block: L2Block) => {
       .insert(contentCommitment)
       .values({
         id: contentCommitmentId,
-        numTxs: frValue(block.header.contentCommitment.numTxs as FrType),
+        numTxs: frValue(block.header.contentCommitment.numTxs as Fr),
         txsEffectsHash: block.header.contentCommitment.txsEffectsHash,
         inHash: block.header.contentCommitment.inHash,
         outHash: block.header.contentCommitment.outHash,
@@ -180,11 +168,11 @@ export const store = async (block: L2Block) => {
       .insert(globalVariables)
       .values({
         id: globalVariablesId,
-        chainId: frValue(block.header.globalVariables.chainId as FrType),
-        version: frValue(block.header.globalVariables.version as FrType),
-        blockNumber: frValue(block.header.globalVariables.blockNumber as FrType),
-        slotNumber: frValue(block.header.globalVariables.slotNumber as FrType),
-        timestamp: frValue(block.header.globalVariables.timestamp as FrType),
+        chainId: frValue(block.header.globalVariables.chainId as Fr),
+        version: frValue(block.header.globalVariables.version as Fr),
+        blockNumber: frValue(block.header.globalVariables.blockNumber as Fr),
+        slotNumber: frValue(block.header.globalVariables.slotNumber as Fr),
+        timestamp: frValue(block.header.globalVariables.timestamp as Fr),
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         coinbase: block.header.globalVariables.coinbase.toString() as string,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -202,7 +190,7 @@ export const store = async (block: L2Block) => {
         contentCommitmentId,
         stateId,
         globalVariablesId,
-        totalFees: frValue(block.header.totalFees as FrType),
+        totalFees: frValue(block.header.totalFees as Fr),
       })
       .onConflictDoNothing();
 
@@ -224,14 +212,14 @@ export const store = async (block: L2Block) => {
           id: txEffectId,
           index: Number(i),
           revertCode: txEffect.revertCode,
-          transactionFee: frValue(txEffect.transactionFee as FrType),
+          transactionFee: frValue(txEffect.transactionFee as Fr),
           noteHashes: txEffect.noteHashes,
           nullifiers: txEffect.nullifiers,
           l2ToL1Msgs: txEffect.l2ToL1Msgs,
           publicDataWrites: txEffect.publicDataWrites,
-          noteEncryptedLogsLength: frValue(txEffect.noteEncryptedLogsLength as FrType),
-          encryptedLogsLength: frValue(txEffect.encryptedLogsLength as FrType),
-          unencryptedLogsLength: frValue(txEffect.unencryptedLogsLength as FrType),
+          noteEncryptedLogsLength: frValue(txEffect.noteEncryptedLogsLength as Fr),
+          encryptedLogsLength: frValue(txEffect.encryptedLogsLength as Fr),
+          unencryptedLogsLength: frValue(txEffect.unencryptedLogsLength as Fr),
           noteEncryptedLogs: txEffect.noteEncryptedLogs,
           encryptedLogs: txEffect.encryptedLogs,
           unencryptedLogs: txEffect.unencryptedLogs,
