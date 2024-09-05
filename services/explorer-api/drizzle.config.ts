@@ -1,4 +1,11 @@
 import { defineConfig } from "drizzle-kit";
+import {
+  POSTGRES_IP,
+  POSTGRES_PORT,
+  POSTGRES_ADMIN,
+  POSTGRES_PASSWORD,
+  POSTGRES_DB_NAME,
+} from "./src/environment.js";
 
 // NOTE: this file is, and should be, used by migrations only
 
@@ -7,11 +14,11 @@ export default defineConfig({
   schema: "./src/database/schema",
   out: "./migrations",
   dbCredentials: {
-    host:  process.env.POSTGRES_IP!,
-    port: Number(process.env.POSTGRES_PORT),
-    user: process.env.POSTGRES_ADMIN,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DB_NAME!,
+    host: POSTGRES_IP,
+    port: POSTGRES_PORT,
+    user: POSTGRES_ADMIN,
+    password: POSTGRES_PASSWORD,
+    database: POSTGRES_DB_NAME,
   },
   dialect: "postgresql",
   verbose: true,
