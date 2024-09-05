@@ -4,14 +4,9 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import pg from "pg";
 import { backOff } from "exponential-backoff";
+import { dbCredentials } from "../src/environment.js";
 
-const pool = new pg.Pool({
-    host:  process.env.POSTGRES_IP!,
-    port: Number(process.env.POSTGRES_PORT),
-    user: process.env.POSTGRES_ADMIN,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DB_NAME!,
-  });
+const pool = new pg.Pool(dbCredentials);
 
 const db = drizzle(pool);
 
@@ -28,7 +23,9 @@ async function runMigrations() {
     numOfAttempts: retries,
     retry: (e, attemptNumber: number) => {
       if (e.code === "ECONNREFUSED") {
-        console.log(`Could not connect to DB with ${process.env.POSTGRES_IP}:${process.env.POSTGRES_PORT}.`);
+        console.log(
+          `Could not connect to DB with ${dbCredentials.host}:${dbCredentials.port}`
+        );
         console.log(`Retrying attempt ${attemptNumber} of ${retries}...`);
         return true;
       }
