@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { deepPartial } from "./utils.js";
 
 // TODO: unknowns
 // TODO: separate type for transaction?
@@ -12,17 +13,20 @@ type StringifiedAztecFr = {
   value: string;
 };
 
-const bigIntFrProcess = z.preprocess((val) => {
-  if (typeof val === "string" && val.startsWith("0x")) return BigInt(val);
-  else if ((val as AztecFr).toString)
-    return BigInt((val as AztecFr).toString());
-  else if ((val as StringifiedAztecFr).value)
-    return BigInt((val as StringifiedAztecFr).value);
-  else return BigInt((val as number)); ;
-  // TODO: perhaps should be `0xstring`?
-}, z.bigint());
+const bigIntFrProcess = z.preprocess(
+  (val) => {
+    if ((val as StringifiedAztecFr).value)
+      return (val as StringifiedAztecFr).value;
+    else if ((val as AztecFr).toString) return (val as AztecFr).toString();
+    else return val;
+  },
+  z
+    .string()
+    .length(66)
+    .regex(/^0x[0-9a-fA-F]+$/)
+);
 
-export const blockSchema = z.object({
+export const chicmozL2BlockSchema = z.object({
   archive: z.object({
     root: bigIntFrProcess,
     nextAvailableLeafIndex: z.number(),
@@ -124,4 +128,7 @@ export const blockSchema = z.object({
   }),
 });
 
-export type Block = z.infer<typeof blockSchema>;
+export type ChicmozL2Block = z.infer<typeof chicmozL2BlockSchema>;
+
+// NOTE: for testing purposes onlyk
+export const partialChicmozL2BlockSchema = deepPartial(chicmozL2BlockSchema);

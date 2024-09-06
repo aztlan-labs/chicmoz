@@ -7,7 +7,11 @@ import { CHICMOZ_ERRORS } from "./errors.js";
 
 export const createErrorMiddleware = (logger: Logger): ErrorRequestHandler => {
   return (err, _req, res, _next) => {
-    logger.error(err);
+    if ((err as Error).stack) 
+      logger.error((err as Error).stack);
+     else 
+      logger.error(err);
+    
 
     if (err instanceof UnauthorizedError || err instanceof InsufficientScopeError) {
       res.status(err.status).header(err.headers).send(err.message);

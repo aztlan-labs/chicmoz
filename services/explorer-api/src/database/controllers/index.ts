@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import type { Fr, L2Block } from "@aztec/aztec.js";
+import { ChicmozL2Block, chicmozL2BlockSchema } from "@chicmoz-pkg/types";
 import { asc, desc, eq, getTableColumns } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 import { logger } from "../../logger.js";
@@ -16,8 +17,7 @@ import {
   txEffect as txEffectTable,
 } from "../schema/index.js";
 
-const getLatest = async () => {
-  logger.info(`Getting latest block...`);
+const getLatest = async (): Promise<ChicmozL2Block | null> => {
   const res = await db()
     .select({
       hash: l2Block.hash,
@@ -77,7 +77,7 @@ const getLatest = async () => {
     .orderBy(asc(txEffectTable.index))
     .execute();
 
-  return {
+  const b = {
     hash: block.hash,
     archive: {
       root: block.archiveRoot,
@@ -111,13 +111,15 @@ const getLatest = async () => {
       txEffects: txEffects,
     },
   };
+  logger.info(JSON.stringify(b));
+  return chicmozL2BlockSchema.parse(b);
 };
 
 const frValue = (f: Fr): string => {
   return f.toString();
-}
+};
 
-export const store = async (block: L2Block) => {
+const store = async (block: L2Block) => {
   const hash = block?.hash()?.toString();
   logger.info(`📦 Storing block ${block.number} hash: ${hash}`);
 
@@ -175,8 +177,9 @@ export const store = async (block: L2Block) => {
         timestamp: frValue(block.header.globalVariables.timestamp as Fr),
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         coinbase: block.header.globalVariables.coinbase.toString() as string,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        feeRecipient: block.header.globalVariables.feeRecipient.toString() as string,
+        feeRecipient:
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          block.header.globalVariables.feeRecipient.toString() as string,
         gasFees: block.header.globalVariables.gasFees,
       })
       .onConflictDoNothing();
@@ -217,7 +220,9 @@ export const store = async (block: L2Block) => {
           nullifiers: txEffect.nullifiers,
           l2ToL1Msgs: txEffect.l2ToL1Msgs,
           publicDataWrites: txEffect.publicDataWrites,
-          noteEncryptedLogsLength: frValue(txEffect.noteEncryptedLogsLength as Fr),
+          noteEncryptedLogsLength: frValue(
+            txEffect.noteEncryptedLogsLength as Fr
+          ),
           encryptedLogsLength: frValue(txEffect.encryptedLogsLength as Fr),
           unencryptedLogsLength: frValue(txEffect.unencryptedLogsLength as Fr),
           noteEncryptedLogs: txEffect.noteEncryptedLogs,

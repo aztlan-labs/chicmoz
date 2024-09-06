@@ -50,6 +50,7 @@ export const archiveRelations = relations(archive, ({ one }) => ({
 
 export const header = pgTable("header", {
   id: uuid("id").primaryKey().defaultRandom(),
+  // TODO: this is referring to last archive. Can we asume it's always stored, and if so can we reference it?
   lastArchive: jsonb("last_archive").notNull(),
   contentCommitmentId: uuid("content_commitment_id")
     .notNull()

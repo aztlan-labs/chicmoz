@@ -1,4 +1,5 @@
 import { API_URL, aztecExplorer } from "./constants";
+import { type ChicmozL2Block, chicmozL2BlockSchema } from "@chicmoz-pkg/types";
 
 const defaultHeaders = {
   "Content-Type": "application/json",
@@ -19,7 +20,7 @@ export const getLatestHeight = async () => {
   return result;
 };
 
-export const getLatestBlock = async () => {
+export const getLatestBlock = async (): Promise<ChicmozL2Block> => {
   const url = `${API_URL}/${aztecExplorer.getLatestBlock}`;
   const response = await fetch(url, {
     method: "GET",
@@ -27,9 +28,11 @@ export const getLatestBlock = async () => {
   });
   const result = await response.json();
 
+  const res = chicmozL2BlockSchema.parse(result);
+
   if (response.status !== 200) throw new Error(`An error occurred while fetching latest height: ${result}`);
 
-  return result;
+  return res;
 };
 
 export const getBlockByHeight = async (height: number) => {

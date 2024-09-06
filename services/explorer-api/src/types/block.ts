@@ -2,8 +2,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Fr as FrType } from "@aztec/aztec.js";
 import { z } from "zod";
-import { deepPartial } from "./utils.js";
-
 
 declare module "@aztec/aztec.js" {
   const Fr: {
@@ -42,7 +40,7 @@ const FrSchema = z
     }
   });
 
-export const blockSchema = z.object({
+export const reconstructedL2BlockSchema = z.object({
   archive: z.object({
     root: FrSchema,
     nextAvailableLeafIndex: z.number(),
@@ -144,7 +142,4 @@ export const blockSchema = z.object({
   }),
 });
 
-export type Block = z.infer<typeof blockSchema>;
-
-// NOTE: for testing purposes only
-export const partialBlockSchema = deepPartial(blockSchema);
+export type ReconstructedL2Block = z.infer<typeof reconstructedL2BlockSchema>;

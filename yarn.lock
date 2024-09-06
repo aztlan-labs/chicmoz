@@ -3105,7 +3105,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@chicmoz/explorer-ui@workspace:services/explorer-ui"
   dependencies:
-    "@aztec/aztec.js": "npm:0.50.1"
+    "@chicmoz-pkg/types": "workspace:^"
     "@radix-ui/react-accordion": "npm:1.1.2"
     "@radix-ui/react-alert-dialog": "npm:1.1.1"
     "@radix-ui/react-checkbox": "npm:1.0.4"
