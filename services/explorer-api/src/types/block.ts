@@ -107,8 +107,8 @@ export const reconstructedL2BlockSchema = z.object({
         transactionFee: FrSchema,
         noteHashes: z.array(FrSchema),
         nullifiers: z.array(FrSchema),
-        l2ToL1Msgs: z.array(z.unknown()),
-        publicDataWrites: z.array(z.unknown()),
+        l2ToL1Msgs: z.array(FrSchema),
+        publicDataWrites: z.array(FrSchema),
         noteEncryptedLogsLength: FrSchema,
         encryptedLogsLength: FrSchema,
         unencryptedLogsLength: FrSchema,
@@ -126,14 +126,24 @@ export const reconstructedL2BlockSchema = z.object({
         encryptedLogs: z.object({
           functionLogs: z.array(
             z.object({
-              logs: z.array(z.unknown()),
+              logs: z.array(
+                z.object({
+                  data: z.string(),
+                  maskedContractAddress: FrSchema,
+                })
+              ),
             })
           ),
         }),
         unencryptedLogs: z.object({
           functionLogs: z.array(
             z.object({
-              logs: z.array(z.unknown()),
+              logs: z.array(
+                z.object({
+                  data: z.string(),
+                  contractAddress: z.string(),
+                })
+              ),
             })
           ),
         }),

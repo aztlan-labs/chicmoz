@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { deepPartial } from "./utils.js";
 
-// TODO: unknowns
 // TODO: separate type for transaction?
 
 type AztecFr = {
@@ -93,8 +92,10 @@ export const chicmozL2BlockSchema = z.object({
         transactionFee: bigIntFrProcess,
         noteHashes: z.array(bigIntFrProcess),
         nullifiers: z.array(bigIntFrProcess),
-        l2ToL1Msgs: z.array(z.unknown()),
-        publicDataWrites: z.array(z.unknown()),
+        l2ToL1Msgs: z.array(bigIntFrProcess),
+        publicDataWrites: z.array(
+          z.object({ leafIndex: bigIntFrProcess, newValue: bigIntFrProcess })
+        ),
         noteEncryptedLogsLength: bigIntFrProcess,
         encryptedLogsLength: bigIntFrProcess,
         unencryptedLogsLength: bigIntFrProcess,
@@ -112,14 +113,24 @@ export const chicmozL2BlockSchema = z.object({
         encryptedLogs: z.object({
           functionLogs: z.array(
             z.object({
-              logs: z.array(z.unknown()),
+              logs: z.array(
+                z.object({
+                  data: z.string(),
+                  maskedContractAddress: bigIntFrProcess,
+                })
+              ),
             })
           ),
         }),
         unencryptedLogs: z.object({
           functionLogs: z.array(
             z.object({
-              logs: z.array(z.unknown()),
+              logs: z.array(
+                z.object({
+                  data: z.string(),
+                  contractAddress: bigIntFrProcess,
+                })
+              ),
             })
           ),
         }),
@@ -130,5 +141,5 @@ export const chicmozL2BlockSchema = z.object({
 
 export type ChicmozL2Block = z.infer<typeof chicmozL2BlockSchema>;
 
-// NOTE: for testing purposes onlyk
+// NOTE: for testing purposes only
 export const partialChicmozL2BlockSchema = deepPartial(chicmozL2BlockSchema);
