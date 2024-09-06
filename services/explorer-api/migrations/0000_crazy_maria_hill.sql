@@ -16,9 +16,9 @@ CREATE TABLE IF NOT EXISTS "body_to_tx_effects" (
 CREATE TABLE IF NOT EXISTS "content_commitment" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"num_txs" varchar(66) NOT NULL,
-	"txs_effects_hash" jsonb NOT NULL,
-	"in_hash" jsonb NOT NULL,
-	"out_hash" jsonb NOT NULL
+	"txs_effects_hash" "bytea" NOT NULL,
+	"in_hash" "bytea" NOT NULL,
+	"out_hash" "bytea" NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "global_variables" (

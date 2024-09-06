@@ -1,5 +1,5 @@
 {
-  "id": "ce57baaf-80d9-466e-a393-25849369eadf",
+  "id": "97e15296-0ae7-4794-9bd3-70a223d29863",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -110,19 +110,19 @@
         },
         "txs_effects_hash": {
           "name": "txs_effects_hash",
-          "type": "jsonb",
+          "type": "bytea",
           "primaryKey": false,
           "notNull": true
         },
         "in_hash": {
           "name": "in_hash",
-          "type": "jsonb",
+          "type": "bytea",
           "primaryKey": false,
           "notNull": true
         },
         "out_hash": {
           "name": "out_hash",
-          "type": "jsonb",
+          "type": "bytea",
           "primaryKey": false,
           "notNull": true
         }

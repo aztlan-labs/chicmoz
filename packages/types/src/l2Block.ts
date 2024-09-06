@@ -12,7 +12,7 @@ type StringifiedAztecFr = {
   value: string;
 };
 
-const bigIntFrProcess = z.preprocess(
+const frSchema = z.preprocess(
   (val) => {
     if ((val as StringifiedAztecFr).value)
       return (val as StringifiedAztecFr).value;
@@ -25,47 +25,42 @@ const bigIntFrProcess = z.preprocess(
     .regex(/^0x[0-9a-fA-F]+$/)
 );
 
+const bufferSchema = z.custom<Buffer>((value) => {
+  return value instanceof Buffer;
+}, { message: "Expected a Buffer" });
+
 export const chicmozL2BlockSchema = z.object({
   archive: z.object({
-    root: bigIntFrProcess,
+    root: frSchema,
     nextAvailableLeafIndex: z.number(),
   }),
   header: z.object({
     lastArchive: z.object({
-      root: bigIntFrProcess,
+      root: frSchema,
       nextAvailableLeafIndex: z.number(),
     }),
     contentCommitment: z.object({
-      numTxs: bigIntFrProcess,
-      txsEffectsHash: z.object({
-        type: z.literal("Buffer"),
-        data: z.array(z.number()),
-      }),
-      inHash: z.object({
-        type: z.literal("Buffer"),
-        data: z.array(z.number()),
-      }),
-      outHash: z.object({
-        type: z.literal("Buffer"),
-        data: z.array(z.number()),
-      }),
+      numTxs: frSchema,
+      txsEffectsHash: bufferSchema,
+      inHash: bufferSchema,
+      outHash: bufferSchema,
     }),
     state: z.object({
       l1ToL2MessageTree: z.object({
-        root: bigIntFrProcess,
+        root: frSchema,
         nextAvailableLeafIndex: z.number(),
       }),
       partial: z.object({
         noteHashTree: z.object({
-          root: bigIntFrProcess,
+          root: frSchema,
           nextAvailableLeafIndex: z.number(),
         }),
         nullifierTree: z.object({
-          root: bigIntFrProcess,
+          root: frSchema,
           nextAvailableLeafIndex: z.number(),
         }),
         publicDataTree: z.object({
-          root: bigIntFrProcess,
+          root: frSchema,
           nextAvailableLeafIndex: z.number(),
         }),
       }),
@@ -73,32 +68,32 @@ export const chicmozL2BlockSchema = z.object({
     globalVariables: z.object({
       chainId: z.string(),
       version: z.string(),
-      blockNumber: bigIntFrProcess,
-      slotNumber: bigIntFrProcess,
-      timestamp: bigIntFrProcess,
+      blockNumber: frSchema,
+      slotNumber: frSchema,
+      timestamp: frSchema,
       coinbase: z.string(),
       feeRecipient: z.string(),
       gasFees: z.object({
-        feePerDaGas: z.string(),
-        feePerL2Gas: z.string(),
+        feePerDaGas: frSchema,
+        feePerL2Gas: frSchema,
       }),
     }),
-    totalFees: bigIntFrProcess,
+    totalFees: frSchema,
   }),
   body: z.object({
     txEffects: z.array(
       z.object({
         revertCode: z.object({ code: z.number() }),
-        transactionFee: bigIntFrProcess,
-        noteHashes: z.array(bigIntFrProcess),
-        nullifiers: z.array(bigIntFrProcess),
-        l2ToL1Msgs: z.array(bigIntFrProcess),
+        transactionFee: frSchema,
+        noteHashes: z.array(frSchema),
+        nullifiers: z.array(frSchema),
+        l2ToL1Msgs: z.array(frSchema),
         publicDataWrites: z.array(
-          z.object({ leafIndex: bigIntFrProcess, newValue: bigIntFrProcess })
+          z.object({ leafIndex: frSchema, newValue: frSchema })
         ),
-        noteEncryptedLogsLength: bigIntFrProcess,
-        encryptedLogsLength: bigIntFrProcess,
-        unencryptedLogsLength: bigIntFrProcess,
+        noteEncryptedLogsLength: frSchema,
+        encryptedLogsLength: frSchema,
+        unencryptedLogsLength: frSchema,
         noteEncryptedLogs: z.object({
           functionLogs: z.array(
             z.object({
@@ -116,7 +111,7 @@ export const chicmozL2BlockSchema = z.object({
               logs: z.array(
                 z.object({
                   data: z.string(),
-                  maskedContractAddress: bigIntFrProcess,
+                  maskedContractAddress: frSchema,
                 })
               ),
             })
@@ -128,7 +123,7 @@ export const chicmozL2BlockSchema = z.object({
               logs: z.array(
                 z.object({
                   data: z.string(),
-                  contractAddress: bigIntFrProcess,
+                  contractAddress: frSchema,
                 })
               ),
             })

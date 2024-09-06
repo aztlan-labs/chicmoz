@@ -4,11 +4,22 @@ import {
   jsonb,
   varchar,
   uuid,
+  customType,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
 const generateFrColumn = (name: string) =>
   varchar(name, { length: 66 }).notNull();
+
+const bufferType = customType<{
+  data: Buffer
+  default: false
+}>({
+  dataType() {
+    return 'bytea'
+  },
+})
+
 
 export const l2Block = pgTable("l2Block", {
   hash: varchar("hash").primaryKey().notNull(),
@@ -83,9 +94,9 @@ export const headerRelations = relations(header, ({ one }) => ({
 export const contentCommitment = pgTable("content_commitment", {
   id: uuid("id").primaryKey().defaultRandom(),
   numTxs: generateFrColumn("num_txs"),
-  txsEffectsHash: jsonb("txs_effects_hash").notNull(),
-  inHash: jsonb("in_hash").notNull(),
-  outHash: jsonb("out_hash").notNull(),
+  txsEffectsHash: bufferType("txs_effects_hash").notNull(),
+  inHash: bufferType("in_hash").notNull(),
+  outHash: bufferType("out_hash").notNull(),
 });
 
 export const contentCommitmentRelations = relations(
