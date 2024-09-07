@@ -30,6 +30,7 @@ const bufferSchema = z.custom<Buffer>((value) => {
 }, { message: "Expected a Buffer" });
 
 export const chicmozL2BlockSchema = z.object({
+  hash: z.string(),
   archive: z.object({
     root: frSchema,
     nextAvailableLeafIndex: z.number(),

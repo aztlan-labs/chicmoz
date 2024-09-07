@@ -40,6 +40,10 @@ const FrSchema = z
     }
   });
 
+const bufferSchema = z.custom<Buffer>((value) => {
+  return value instanceof Buffer;
+}, { message: "Expected a Buffer" });
+
 export const reconstructedL2BlockSchema = z.object({
   archive: z.object({
     root: FrSchema,
@@ -52,18 +56,9 @@ export const reconstructedL2BlockSchema = z.object({
     }),
     contentCommitment: z.object({
       numTxs: FrSchema,
-      txsEffectsHash: z.object({
-        type: z.literal("Buffer"),
-        data: z.array(z.number()),
-      }),
-      inHash: z.object({
-        type: z.literal("Buffer"),
-        data: z.array(z.number()),
-      }),
-      outHash: z.object({
-        type: z.literal("Buffer"),
-        data: z.array(z.number()),
-      }),
+      txsEffectsHash: bufferSchema,
+      inHash: bufferSchema,
+      outHash: bufferSchema,
     }),
     state: z.object({
       l1ToL2MessageTree: z.object({
