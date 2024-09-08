@@ -29,6 +29,24 @@ const bufferSchema = z.custom<Buffer>((value) => {
   return value instanceof Buffer;
 }, { message: "Expected a Buffer" });
 
+export const noteEncryptedLogEntrySchema = z.object({
+  data: z.string(),
+});
+
+export const encryptedLogEntrySchema = z.object({
+  data: z.string(),
+  maskedContractAddress: frSchema,
+});
+
+export const unencryptedLogEntrySchema = z.object({
+  data: z.string(),
+  contractAddress: z.string(),
+});
+
+export type NoteEncryptedLogEntry = z.infer<typeof noteEncryptedLogEntrySchema>;
+export type EncryptedLogEntry = z.infer<typeof encryptedLogEntrySchema>;
+export type UnencryptedLogEntry = z.infer<typeof unencryptedLogEntrySchema>;
+
 export const chicmozL2BlockSchema = z.object({
   hash: z.string(),
   archive: z.object({
@@ -99,9 +117,7 @@ export const chicmozL2BlockSchema = z.object({
           functionLogs: z.array(
             z.object({
               logs: z.array(
-                z.object({
-                  data: z.string(),
-                })
+                noteEncryptedLogEntrySchema
               ),
             })
           ),
@@ -110,10 +126,7 @@ export const chicmozL2BlockSchema = z.object({
           functionLogs: z.array(
             z.object({
               logs: z.array(
-                z.object({
-                  data: z.string(),
-                  maskedContractAddress: frSchema,
-                })
+                encryptedLogEntrySchema
               ),
             })
           ),
@@ -122,10 +135,7 @@ export const chicmozL2BlockSchema = z.object({
           functionLogs: z.array(
             z.object({
               logs: z.array(
-                z.object({
-                  data: z.string(),
-                  contractAddress: frSchema,
-                })
+                unencryptedLogEntrySchema
               ),
             })
           ),
