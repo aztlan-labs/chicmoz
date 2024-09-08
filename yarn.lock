@@ -3136,6 +3136,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:7.15.0"
     "@vitejs/plugin-react": "npm:4.3.1"
     autoprefixer: "npm:10.4.19"
+    buffer: "npm:^6.0.3"
     class-variance-authority: "npm:0.7.0"
     clsx: "npm:2.1.1"
     cmdk: "npm:1.0.0"

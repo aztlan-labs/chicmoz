@@ -1,5 +1,5 @@
+import {ChicmozL2Block, chicmozL2BlockSchema} from "@chicmoz-pkg/types";
 import { API_URL, aztecExplorer } from "./constants";
-import { type ChicmozL2Block, chicmozL2BlockSchema } from "@chicmoz-pkg/types";
 
 const defaultHeaders = {
   "Content-Type": "application/json",
@@ -27,6 +27,8 @@ export const getLatestBlock = async (): Promise<ChicmozL2Block> => {
     headers: defaultHeaders,
   });
   const result = await response.json();
+
+  console.log(result);
 
   const res = chicmozL2BlockSchema.parse(result);
 

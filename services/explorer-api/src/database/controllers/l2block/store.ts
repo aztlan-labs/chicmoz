@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { v4 as uuidv4 } from "uuid";
-import { logger } from "../../../logger.js";
 import { getDb as db } from "../../../database/index.js";
 import {
   archive,
@@ -34,9 +33,6 @@ import {
 import { HexString } from "../../schema/utils.js";
 
 export const store = async (block: ChicmozL2Block): Promise<void> => {
-  logger.info(
-    `📦 Storing block ${block.header.globalVariables.blockNumber} hash: ${block.hash}`
-  );
 
   return await db().transaction(async (tx) => {
     const archiveId = uuidv4();

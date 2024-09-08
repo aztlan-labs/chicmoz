@@ -20,7 +20,7 @@ export const onBlock = async ({ block }: { block: string }) => {
     return;
   }
   try {
-    logger.info(`🧢 Storing block ${b.number}`);
+    logger.info(`🧢 Storing block ${b.number} (hash: ${parsedBlock.hash})`);
     await controllers.l2Block.store(parsedBlock);
   } catch (e) {
     logger.error(

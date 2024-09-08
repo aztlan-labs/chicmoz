@@ -159,9 +159,9 @@ export const txEffectRelations = relations(txEffect, ({ one, many }) => ({
 
 export const txEffectToPublicDataWriteRelations = relations(
   txEffectToPublicDataWrite,
-  ({ one }) => ({
+  ({ one, many }) => ({
     txEffect: one(txEffect),
-    publicDataWrite: one(publicDataWrite),
+    publicDataWrite: many(publicDataWrite),
   })
 );
 

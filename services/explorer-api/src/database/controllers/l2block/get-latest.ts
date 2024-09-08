@@ -1,5 +1,11 @@
-import { ChicmozL2Block, chicmozL2BlockSchema } from "@chicmoz-pkg/types";
-import { asc, desc, eq, getTableColumns } from "drizzle-orm";
+import {
+  ChicmozL2Block,
+  EncryptedLogEntry,
+  NoteEncryptedLogEntry,
+  UnencryptedLogEntry,
+  chicmozL2BlockSchema,
+} from "@chicmoz-pkg/types";
+import { asc, desc, eq, getTableColumns, sql } from "drizzle-orm";
 import { getDb as db } from "../../../database/index.js";
 import {
   archive,
@@ -24,6 +30,46 @@ import {
   txEffectToLogs,
   txEffectToPublicDataWrite,
 } from "../../../database/schema/l2block/index.js";
+
+const logSubquery = (logType: string) =>
+  sql<{
+    functionLogsObj: [
+      {
+        json_build_object: {
+          logsObj: {
+            logs:
+              | EncryptedLogEntry
+              | UnencryptedLogEntry
+              | NoteEncryptedLogEntry;
+          }[];
+        };
+      },
+    ];
+  }>`(
+      SELECT json_build_object(
+        'functionLogsObj', (
+          SELECT coalesce(json_agg(function_log_data), '[]'::json)
+          FROM (
+            SELECT json_build_object(
+              'logsObj', (
+                SELECT coalesce(json_agg(log_data), '[]'::json)
+                FROM (
+                  SELECT ${logs}
+                  FROM ${logs}
+                  WHERE ${logs.id} = ${txEffectToLogs.logId}
+                    AND ${logs.type} = ${logType}
+                ) AS log_data
+              )
+            )
+            FROM ${functionLogs}
+            WHERE ${functionLogs.id} = ${txEffectToLogs.functionLogId}
+          ) AS function_log_data
+        )
+      )
+      FROM ${txEffectToLogs}
+      WHERE ${txEffectToLogs.txEffectId} = ${txEffect.id}
+      LIMIT 1
+    )`;
 
 export const getLatest = async (): Promise<ChicmozL2Block | null> => {
   const res = await db()
@@ -93,13 +139,13 @@ export const getLatest = async (): Promise<ChicmozL2Block | null> => {
 
   const dbRes = res[0];
 
-  // Fetch txEffects and related data
   const txEffectsData = await db()
     .select({
       txEffect: getTableColumns(txEffect),
-      publicDataWrite: getTableColumns(publicDataWrite),
-      logs: getTableColumns(logs),
-      functionLogs: getTableColumns(functionLogs),
+      publicDataWrites: getTableColumns(publicDataWrite),
+      noteEncryptedLogs: logSubquery("noteEncrypted"),
+      encryptedLogs: logSubquery("encrypted"),
+      unencryptedLogs: logSubquery("unencrypted"),
     })
     .from(bodyToTxEffects)
     .innerJoin(txEffect, eq(bodyToTxEffects.txEffectId, txEffect.id))
@@ -111,19 +157,37 @@ export const getLatest = async (): Promise<ChicmozL2Block | null> => {
       publicDataWrite,
       eq(txEffectToPublicDataWrite.publicDataWriteId, publicDataWrite.id)
     )
-    .leftJoin(txEffectToLogs, eq(txEffect.id, txEffectToLogs.txEffectId))
-    .leftJoin(logs, eq(txEffectToLogs.logId, logs.id))
-    .leftJoin(functionLogs, eq(txEffectToLogs.functionLogId, functionLogs.id))
     .where(eq(bodyToTxEffects.bodyId, dbRes.bodyId))
     .orderBy(asc(txEffect.index))
     .execute();
 
-  const txEffects = txEffectsData.map((data) => ({
-    ...data.txEffect,
-    publicDataWrites: data.publicDataWrite ? [data.publicDataWrite] : [],
-    logs: data.logs ? [data.logs] : [],
-    functionLogs: data.functionLogs ? [data.functionLogs] : [],
-  }));
+  const txEffects = txEffectsData.map((data) => {
+    return {
+      ...data.txEffect,
+      publicDataWrites: data.publicDataWrites ? [data.publicDataWrites] : [],
+      noteEncryptedLogs: {
+        functionLogs: data.noteEncryptedLogs.functionLogsObj.map((x) => {
+          return {
+            logs: x.json_build_object.logsObj.map((y) => y.logs),
+          };
+        }),
+      },
+      encryptedLogs: {
+        functionLogs: data.encryptedLogs.functionLogsObj.map((x) => {
+          return {
+            logs: x.json_build_object.logsObj.map((y) => y.logs),
+          };
+        }),
+      },
+      unencryptedLogs: {
+        functionLogs: data.unencryptedLogs.functionLogsObj.map((x) => {
+          return {
+            logs: x.json_build_object.logsObj.map((y) => y.logs),
+          };
+        }),
+      },
+    };
+  });
 
   const blockData = {
     hash: dbRes.hash,

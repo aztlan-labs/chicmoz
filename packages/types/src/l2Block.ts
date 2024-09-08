@@ -25,9 +25,24 @@ const frSchema = z.preprocess(
     .regex(/^0x[0-9a-fA-F]+$/)
 );
 
-const bufferSchema = z.custom<Buffer>((value) => {
-  return value instanceof Buffer;
-}, { message: "Expected a Buffer" });
+type StringifiedBuffer = {
+  type: "Buffer";
+  data: number[];
+};
+
+const bufferSchema = z.preprocess(
+  (val) => {
+    if ((val as StringifiedBuffer).data)
+      return Buffer.from((val as StringifiedBuffer).data);
+    return val;
+  },
+  z.custom<Buffer>(
+    (value) => {
+      return value instanceof Buffer;
+    },
+    { message: "Expected a Buffer" }
+  )
+);
 
 export const noteEncryptedLogEntrySchema = z.object({
   data: z.string(),
@@ -102,7 +117,13 @@ export const chicmozL2BlockSchema = z.object({
   body: z.object({
     txEffects: z.array(
       z.object({
-        revertCode: z.object({ code: z.number() }),
+        revertCode: z.preprocess(
+          (val) => {
+            if (typeof val === "number") return { code: val };
+            return val;
+          },
+          z.object({ code: z.number() })
+        ),
         transactionFee: frSchema,
         noteHashes: z.array(frSchema),
         nullifiers: z.array(frSchema),
@@ -116,27 +137,21 @@ export const chicmozL2BlockSchema = z.object({
         noteEncryptedLogs: z.object({
           functionLogs: z.array(
             z.object({
-              logs: z.array(
-                noteEncryptedLogEntrySchema
-              ),
+              logs: z.array(noteEncryptedLogEntrySchema),
             })
           ),
         }),
         encryptedLogs: z.object({
           functionLogs: z.array(
             z.object({
-              logs: z.array(
-                encryptedLogEntrySchema
-              ),
+              logs: z.array(encryptedLogEntrySchema),
             })
           ),
         }),
         unencryptedLogs: z.object({
           functionLogs: z.array(
             z.object({
-              logs: z.array(
-                unencryptedLogEntrySchema
-              ),
+              logs: z.array(unencryptedLogEntrySchema),
             })
           ),
         }),

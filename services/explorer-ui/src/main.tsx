@@ -2,6 +2,9 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "~/styles/global.css";
+// NOTE: these two lines are necessary for proper parsing of ChicmozL2Block
+import { Buffer } from "buffer";
+window.Buffer = window.Buffer || Buffer;
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";

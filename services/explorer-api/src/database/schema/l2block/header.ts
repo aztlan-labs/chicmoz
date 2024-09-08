@@ -16,14 +16,14 @@ export const header = pgTable("header", {
   globalVariablesId: uuid("global_variables_id")
     .notNull()
     .references(() => globalVariables.id),
-  totalFees: generateFrColumn("total_fees"),
+  totalFees: generateFrColumn("total_fees").notNull(),
 });
 
 export const lastArchive = generateTreeTable("last_archive");
 
 export const contentCommitment = pgTable("content_commitment", {
   id: uuid("id").primaryKey().defaultRandom(),
-  numTxs: generateFrColumn("num_txs"),
+  numTxs: generateFrColumn("num_txs").notNull(),
   txsEffectsHash: bufferType("txs_effects_hash").notNull(),
   inHash: bufferType("in_hash").notNull(),
   outHash: bufferType("out_hash").notNull(),

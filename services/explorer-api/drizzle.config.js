@@ -5,7 +5,7 @@ import { dbCredentials } from "./build/src/environment.js";
 
 // eslint-disable-next-line import/no-default-export
 export default defineConfig({
-  schema: "./src/database/schema/**/*.ts",
+  schema: "./build/src/database/schema/**/*.js",
   out: "./migrations",
   dbCredentials,
   dialect: "postgresql",
