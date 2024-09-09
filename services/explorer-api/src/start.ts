@@ -7,7 +7,9 @@ export const start = async () => {
   const { shutdownDb } = await initDb();
   const { shutdownHttpServer } = await initHttpServer();
   const { shutdownMb } = await initMb();
-  await startSubscribe(blockHandler);
+  await startSubscribe(blockHandler, () => {
+    process.kill(process.pid, "SIGTERM");
+  });
   return {
     shutdownDb,
     shutdownMb,
