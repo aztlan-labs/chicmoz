@@ -2,6 +2,9 @@ name: CI/CD Obscura Prod
 # TODO
 
 on:
+  push:
+    branches:
+      - "devops/create-develop-skaffold"
   pull_request:
     branches:
       - production

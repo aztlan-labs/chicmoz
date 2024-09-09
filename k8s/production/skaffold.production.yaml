@@ -4,16 +4,16 @@ metadata:
   name: chicmoz-prod
 build:
   artifacts:
-    - image: cregistry.digitalocean.com/aztlan-containers/chicmoz-base
+    - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
       context: .
       docker:
         dockerfile: Dockerfile
-    - image: dregistry.digitalocean.com/aztlan-containers/dummy-node
+    - image: registry.digitalocean.com/aztlan-containers/dummy-node
       context: services/dummy-node
       docker:
         dockerfile: Dockerfile
       requires:
-        - image: cregistry.digitalocean.com/aztlan-containers/chicmoz-base
+        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
           alias: BASE
     - image: explorer-ui
       context: services/explorer-ui
@@ -23,28 +23,28 @@ build:
           NODE_ENV: "development"
           VITE_API_URL: "http://explorer-api.localhost:80/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4"
       requires:
-        - image: cregistry.digitalocean.com/aztlan-containers/chicmoz-base
+        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
           alias: BASE
-    - image: aregistry.digitalocean.com/aztlan-containers/auth
+    - image: registry.digitalocean.com/aztlan-containers/auth
       context: services/auth
       docker:
         dockerfile: Dockerfile
       requires:
-        - image: cregistry.digitalocean.com/aztlan-containers/chicmoz-base
+        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
           alias: BASE
     - image: registry.digitalocean.com/aztlan-containers/aztec-listener
       context: services/aztec-listener
       docker:
         dockerfile: Dockerfile
       requires:
-        - image: cregistry.digitalocean.com/aztlan-containers/chicmoz-base
+        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
           alias: BASE
     - image: registry.digitalocean.com/aztlan-containers/explorer-api
       context: services/explorer-api
       docker:
         dockerfile: Dockerfile
       requires:
-        - image: cregistry.digitalocean.com/aztlan-containers/chicmoz-base
+        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
           alias: BASE
 manifests:
   rawYaml:
