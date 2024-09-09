@@ -3105,7 +3105,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@chicmoz/explorer-ui@workspace:services/explorer-ui"
   dependencies:
-    "@aztec/aztec.js": "npm:0.50.1"
+    "@chicmoz-pkg/types": "workspace:^"
     "@radix-ui/react-accordion": "npm:1.1.2"
     "@radix-ui/react-alert-dialog": "npm:1.1.1"
     "@radix-ui/react-checkbox": "npm:1.0.4"
@@ -3136,6 +3136,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:7.15.0"
     "@vitejs/plugin-react": "npm:4.3.1"
     autoprefixer: "npm:10.4.19"
+    buffer: "npm:^6.0.3"
     class-variance-authority: "npm:0.7.0"
     clsx: "npm:2.1.1"
     cmdk: "npm:1.0.0"

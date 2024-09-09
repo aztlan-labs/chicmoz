@@ -1,9 +1,9 @@
+import { ChicmozL2Block } from "@chicmoz-pkg/types";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { getLatestBlock } from "~/service/api";
 
 const formatTimeSince = (seconds: number) => {
-
   const intervals = [
     { label: "day", seconds: 86400 },
     { label: "hour", seconds: 3600 },
@@ -22,7 +22,9 @@ const formatTimeSince = (seconds: number) => {
 };
 
 const LatestBlockData = () => {
-  const [latestBlockData, setLatestBlockData] = useState<any | null>(null);
+  const [latestBlockData, setLatestBlockData] = useState<ChicmozL2Block | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,7 +32,12 @@ const LatestBlockData = () => {
     try {
       const block = await getLatestBlock();
       console.log("block", block);
-      if (!block || latestBlockData?.header?.globalVariables?.blockNumber === block?.header?.globalVariables?.blockNumber) return;
+      if (
+        !block ||
+        latestBlockData?.header?.globalVariables?.blockNumber ===
+          block?.header?.globalVariables?.blockNumber
+      )
+        return;
 
       setLatestBlockData(block);
       setError(null);
@@ -41,7 +48,7 @@ const LatestBlockData = () => {
     } finally {
       setLoading(false);
     }
-  }, [latestBlockData?.number]);
+  }, [latestBlockData?.header?.globalVariables?.blockNumber]);
 
   useEffect(() => {
     fetchLatestBlock(); // Fetch immediately on mount
@@ -51,16 +58,11 @@ const LatestBlockData = () => {
 
   let timeSince = "no timestamp";
   if (latestBlockData) {
-
     const now = new Date().getTime();
     const blockTime = new Date(
-      parseInt(latestBlockData.timestamp) * 1000
+      parseInt(latestBlockData.header.globalVariables.timestamp, 16) * 1000
     ).getTime();
-    timeSince = formatTimeSince(
-      Math.round(
-        (now - blockTime) / 1000
-      )
-    );
+    timeSince = formatTimeSince(Math.round((now - blockTime) / 1000));
   }
 
   return (
@@ -79,10 +81,7 @@ const LatestBlockData = () => {
           </li>
           <li>
             <strong>Number of Transactions:</strong>{" "}
-            {parseInt(
-              latestBlockData.header.contentCommitment.numTxs,
-              16
-            )}
+            {parseInt(latestBlockData.header.contentCommitment.numTxs, 16)}
           </li>
           <li>
             <strong>Total Fees:</strong>{" "}
@@ -90,7 +89,7 @@ const LatestBlockData = () => {
           </li>
           <li>
             <strong>State Root:</strong>{" "}
-            {latestBlockData.header.state.partial.noteHashTree.root.value}
+            {latestBlockData.header.state.partial.publicDataTree.root}
           </li>
         </ul>
       )}

@@ -2,8 +2,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Fr as FrType } from "@aztec/aztec.js";
 import { z } from "zod";
-import { deepPartial } from "./utils.js";
-
 
 declare module "@aztec/aztec.js" {
   const Fr: {
@@ -42,7 +40,11 @@ const FrSchema = z
     }
   });
 
-export const blockSchema = z.object({
+const bufferSchema = z.custom<Buffer>((value) => {
+  return value instanceof Buffer;
+}, { message: "Expected a Buffer" });
+
+export const reconstructedL2BlockSchema = z.object({
   archive: z.object({
     root: FrSchema,
     nextAvailableLeafIndex: z.number(),
@@ -54,18 +56,9 @@ export const blockSchema = z.object({
     }),
     contentCommitment: z.object({
       numTxs: FrSchema,
-      txsEffectsHash: z.object({
-        type: z.literal("Buffer"),
-        data: z.array(z.number()),
-      }),
-      inHash: z.object({
-        type: z.literal("Buffer"),
-        data: z.array(z.number()),
-      }),
-      outHash: z.object({
-        type: z.literal("Buffer"),
-        data: z.array(z.number()),
-      }),
+      txsEffectsHash: bufferSchema,
+      inHash: bufferSchema,
+      outHash: bufferSchema,
     }),
     state: z.object({
       l1ToL2MessageTree: z.object({
@@ -109,8 +102,8 @@ export const blockSchema = z.object({
         transactionFee: FrSchema,
         noteHashes: z.array(FrSchema),
         nullifiers: z.array(FrSchema),
-        l2ToL1Msgs: z.array(z.unknown()),
-        publicDataWrites: z.array(z.unknown()),
+        l2ToL1Msgs: z.array(FrSchema),
+        publicDataWrites: z.array(FrSchema),
         noteEncryptedLogsLength: FrSchema,
         encryptedLogsLength: FrSchema,
         unencryptedLogsLength: FrSchema,
@@ -128,14 +121,24 @@ export const blockSchema = z.object({
         encryptedLogs: z.object({
           functionLogs: z.array(
             z.object({
-              logs: z.array(z.unknown()),
+              logs: z.array(
+                z.object({
+                  data: z.string(),
+                  maskedContractAddress: FrSchema,
+                })
+              ),
             })
           ),
         }),
         unencryptedLogs: z.object({
           functionLogs: z.array(
             z.object({
-              logs: z.array(z.unknown()),
+              logs: z.array(
+                z.object({
+                  data: z.string(),
+                  contractAddress: z.string(),
+                })
+              ),
             })
           ),
         }),
@@ -144,7 +147,4 @@ export const blockSchema = z.object({
   }),
 });
 
-export type Block = z.infer<typeof blockSchema>;
-
-// NOTE: for testing purposes only
-export const partialBlockSchema = deepPartial(blockSchema);
+export type ReconstructedL2Block = z.infer<typeof reconstructedL2BlockSchema>;
