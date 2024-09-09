@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: explorer-ui
+  name: explorer-ui
+  namespace: chicmoz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: explorer-ui
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: explorer-ui
+    spec:
+      containers:
+        - image: explorer-ui:latest
+          resources:
+            limits:
+              memory: 500Mi
+              cpu: 200m
+          ports:
+            - name: http-app
+              containerPort: 3000
+              protocol: TCP
+          name: explorer-ui
+status: {}

@@ -25,23 +25,12 @@ jobs:
           sudo install skaffold /usr/local/bin/
         shell: bash
 
-      - name: Configure Digital Ocean CLI
-        run: |
-          echo $DOC_ACCESS_KEY_ID
-          echo $DOC_SECRET_ACCESS_KEY
-          echo $DOC_DEFAULT_REGION
-          aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name obscura-prod
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.DOC_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.DOC_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: eu-west-3
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Login to Amazon ECR
-        run: |
-          aws ecr get-login-password --region eu-west-3 | docker login --username AWS --password-stdin 097733725684.dkr.ecr.eu-west-3.amazonaws.com
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Login tt
 
       - name: Build and push Docker images
         run: |
