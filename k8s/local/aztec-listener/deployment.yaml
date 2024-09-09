@@ -27,7 +27,7 @@ spec:
             - name: NODE_ENV
               value: "development"
             - name: BLOCK_INTERVAL_MS
-              value: "10000"
+              value: "2000"
             - name: BATCH_SIZE
               value: "50"
             - name: CHAIN_NAME

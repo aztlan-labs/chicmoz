@@ -1,12 +1,10 @@
 import { createPXEClient } from "@aztec/aztec.js";
 import { logger } from "../src/logger.js";
-import { blockSchema } from "../src/types/block.js";
+import { reconstructedL2BlockSchema } from "../src/types/block.js";
 
 const AZTEC_NODE_URL = "http://localhost:8080";
 
-const testType = (dbBlock: unknown) => {
-  const b = blockSchema.parse(dbBlock);
-  const nbr = parseInt(b.header.globalVariables.blockNumber.toString());
+const testType = (dbBlock: unknown) => { const b = reconstructedL2BlockSchema.parse(dbBlock); const nbr = parseInt(b.header.globalVariables.blockNumber.toString());
   logger.info(nbr);
 };
 
