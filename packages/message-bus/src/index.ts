@@ -121,6 +121,7 @@ export class MessageBus {
         this.logger.error(`FATAL: not recoverable error: ${JSON.stringify(payload.payload.error)}`);
         // NOTE: this is potentially solving `https://github.com/aztlan-labs/chicmoz/issues/6`
         if (crashCallback) crashCallback();
+        // TODO: this could potentially just be a `process.kill(process.pid, "SIGTERM")`
       }
 
       const currentTopics = this.#consumers[groupId]!.topicCallbacks;
