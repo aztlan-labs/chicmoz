@@ -4,8 +4,9 @@ import {
   NoteEncryptedLogEntry,
   UnencryptedLogEntry,
   chicmozL2BlockSchema,
+  noteEncryptedLogEntrySchema,
 } from "@chicmoz-pkg/types";
-import { asc, desc, eq, getTableColumns, sql } from "drizzle-orm";
+import { asc, desc, eq, getTableColumns } from "drizzle-orm";
 import { getDb as db } from "../../../database/index.js";
 import {
   archive,
@@ -30,50 +31,12 @@ import {
   txEffectToLogs,
   txEffectToPublicDataWrite,
 } from "../../../database/schema/l2block/index.js";
-
-const logSubquery = (logType: string) =>
-  sql<{
-    functionLogsObj: [
-      {
-        json_build_object: {
-          logsObj: {
-            logs:
-              | EncryptedLogEntry
-              | UnencryptedLogEntry
-              | NoteEncryptedLogEntry;
-          }[];
-        };
-      },
-    ];
-  }>`(
-      SELECT json_build_object(
-        'functionLogsObj', (
-          SELECT coalesce(json_agg(function_log_data), '[]'::json)
-          FROM (
-            SELECT json_build_object(
-              'logsObj', (
-                SELECT coalesce(json_agg(log_data), '[]'::json)
-                FROM (
-                  SELECT ${logs}
-                  FROM ${logs}
-                  WHERE ${logs.id} = ${txEffectToLogs.logId}
-                    AND ${logs.type} = ${logType}
-                ) AS log_data
-              )
-            )
-            FROM ${functionLogs}
-            WHERE ${functionLogs.id} = ${txEffectToLogs.functionLogId}
-          ) AS function_log_data
-        )
-      )
-      FROM ${txEffectToLogs}
-      WHERE ${txEffectToLogs.txEffectId} = ${txEffect.id}
-      LIMIT 1
-    )`;
+import { logger } from "../../../logger.js";
 
 export const getLatest = async (): Promise<ChicmozL2Block | null> => {
   const res = await db()
     .select({
+      // TODO: can this be simplified using getTableColumns?
       hash: l2Block.hash,
       archiveRoot: archive.root,
       archiveNextAvailableLeafIndex: archive.nextAvailableLeafIndex,
@@ -131,6 +94,7 @@ export const getLatest = async (): Promise<ChicmozL2Block | null> => {
     )
     .innerJoin(gasFees, eq(globalVariables.gasFeesId, gasFees.id))
     .innerJoin(body, eq(l2Block.bodyId, body.id))
+    // TODO: is it more efficient to order and limit before joining?
     .orderBy(desc(globalVariables.blockNumber))
     .limit(1)
     .execute();
@@ -143,9 +107,6 @@ export const getLatest = async (): Promise<ChicmozL2Block | null> => {
     .select({
       txEffect: getTableColumns(txEffect),
       publicDataWrites: getTableColumns(publicDataWrite),
-      noteEncryptedLogs: logSubquery("noteEncrypted"),
-      encryptedLogs: logSubquery("encrypted"),
-      unencryptedLogs: logSubquery("unencrypted"),
     })
     .from(bodyToTxEffects)
     .innerJoin(txEffect, eq(bodyToTxEffects.txEffectId, txEffect.id))
@@ -161,33 +122,93 @@ export const getLatest = async (): Promise<ChicmozL2Block | null> => {
     .orderBy(asc(txEffect.index))
     .execute();
 
-  const txEffects = txEffectsData.map((data) => {
-    return {
-      ...data.txEffect,
-      publicDataWrites: data.publicDataWrites ? [data.publicDataWrites] : [],
-      noteEncryptedLogs: {
-        functionLogs: data.noteEncryptedLogs.functionLogsObj.map((x) => {
-          return {
-            logs: x.json_build_object.logsObj.map((y) => y.logs),
-          };
-        }),
-      },
-      encryptedLogs: {
-        functionLogs: data.encryptedLogs.functionLogsObj.map((x) => {
-          return {
-            logs: x.json_build_object.logsObj.map((y) => y.logs),
-          };
-        }),
-      },
-      unencryptedLogs: {
-        functionLogs: data.unencryptedLogs.functionLogsObj.map((x) => {
-          return {
-            logs: x.json_build_object.logsObj.map((y) => y.logs),
-          };
-        }),
-      },
-    };
-  });
+  // TODO: might be better to do this async
+  const txEffects = await Promise.all(
+    txEffectsData.map(async (data) => {
+      const mixedLogs = await db()
+        .select({
+          functionLogIndex: functionLogs.index,
+          ...getTableColumns(logs),
+        })
+        .from(txEffectToLogs)
+        .innerJoin(logs, eq(txEffectToLogs.logId, logs.id))
+        .innerJoin(
+          functionLogs,
+          eq(txEffectToLogs.functionLogId, functionLogs.id)
+        )
+        .where(eq(txEffectToLogs.txEffectId, data.txEffect.id))
+        .orderBy(asc(functionLogs.index), asc(logs.index))
+        .execute();
+
+      const {
+        heigestIndexNoteEncryptedLogs,
+        heigestIndexEncryptedLogs,
+        heigestIndexUnencryptedLogs,
+      } = mixedLogs.reduce(
+        (acc, { functionLogIndex }) => {
+          if (functionLogIndex > acc.heigestIndexNoteEncryptedLogs)
+            acc.heigestIndexNoteEncryptedLogs = functionLogIndex;
+          if (functionLogIndex > acc.heigestIndexEncryptedLogs)
+            acc.heigestIndexEncryptedLogs = functionLogIndex;
+          if (functionLogIndex > acc.heigestIndexUnencryptedLogs)
+            acc.heigestIndexUnencryptedLogs = functionLogIndex;
+
+          return acc;
+        },
+        {
+          heigestIndexNoteEncryptedLogs: -1,
+          heigestIndexEncryptedLogs: -1,
+          heigestIndexUnencryptedLogs: -1,
+        }
+      );
+      const initialLogs = {
+        noteEncryptedLogs: {
+          functionLogs: new Array<{ logs: NoteEncryptedLogEntry[] }>(
+            heigestIndexNoteEncryptedLogs + 1
+          ).fill({ logs: [] }),
+        },
+        encryptedLogs: {
+          functionLogs: new Array<{ logs: EncryptedLogEntry[] }>(
+            heigestIndexEncryptedLogs + 1
+          ).fill({ logs: [] }),
+        },
+        unencryptedLogs: {
+          functionLogs: new Array<{ logs: UnencryptedLogEntry[] }>(
+            heigestIndexUnencryptedLogs + 1
+          ).fill({ logs: [] }),
+        },
+      } as {
+        noteEncryptedLogs: ChicmozL2Block["body"]["txEffects"][0]["noteEncryptedLogs"];
+        encryptedLogs: ChicmozL2Block["body"]["txEffects"][0]["encryptedLogs"];
+        unencryptedLogs: ChicmozL2Block["body"]["txEffects"][0]["unencryptedLogs"];
+      };
+      const { noteEncryptedLogs, encryptedLogs, unencryptedLogs } =
+        mixedLogs.reduce((acc, log, index) => {
+          logger.info(index, JSON.stringify(log));
+          if (log.type === "noteEncrypted") {
+            acc.noteEncryptedLogs.functionLogs[log.functionLogIndex].logs.push(
+              noteEncryptedLogEntrySchema.parse(log)
+            );
+          } else if (log.type === "encrypted") {
+            acc.encryptedLogs.functionLogs[log.functionLogIndex].logs.push(
+              log as EncryptedLogEntry
+            );
+          } else if (log.type === "unencrypted") {
+            acc.unencryptedLogs.functionLogs[log.functionLogIndex].logs.push(
+              log as UnencryptedLogEntry
+            );
+          }
+          return acc;
+        }, initialLogs);
+      return {
+        ...data.txEffect,
+        publicDataWrites: data.publicDataWrites ? [data.publicDataWrites] : [],
+        noteEncryptedLogs,
+        encryptedLogs,
+        unencryptedLogs,
+      };
+    })
+  );
 
   const blockData = {
     hash: dbRes.hash,

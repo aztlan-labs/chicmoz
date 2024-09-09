@@ -50,6 +50,7 @@ export const txEffectToPublicDataWrite = pgTable(
 
 export const publicDataWrite = pgTable("public_data_write", {
   id: uuid("id").primaryKey().defaultRandom(),
+  // TODO: should there be an index here?
   leafIndex: generateFrColumn("leaf_index").notNull(),
   newValue: generateFrColumn("new_value").notNull(),
 });
@@ -66,19 +67,17 @@ export const logs = pgTable("logs", {
 
 export const functionLogs = pgTable("function_logs", {
   id: uuid("id").primaryKey().defaultRandom(),
-  txEffectId: uuid("tx_effect_id")
-    .notNull()
-    .references(() => txEffect.id),
+  index: integer("index").notNull(),
 });
 
 export const txEffectToLogs = pgTable("tx_effect_to_logs", {
   txEffectId: uuid("tx_effect_id")
     .notNull()
     .references(() => txEffect.id),
-  logId: uuid("log_id")
-    .notNull()
-    .references(() => logs.id),
   functionLogId: uuid("function_log_id")
     .notNull()
     .references(() => functionLogs.id),
+  logId: uuid("log_id")
+    .notNull()
+    .references(() => logs.id),
 });

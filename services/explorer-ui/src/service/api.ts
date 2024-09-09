@@ -1,4 +1,4 @@
-import {ChicmozL2Block, chicmozL2BlockSchema} from "@chicmoz-pkg/types";
+import { type ChicmozL2Block, chicmozL2BlockSchema } from "@chicmoz-pkg/types";
 import { API_URL, aztecExplorer } from "./constants";
 
 const defaultHeaders = {

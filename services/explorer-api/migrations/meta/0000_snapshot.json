@@ -1,5 +1,5 @@
 {
-  "id": "5aa6ce16-9640-4224-8db5-d13093433a5b",
+  "id": "27bcf267-5474-4400-9b07-8597e50bffe2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -164,25 +164,15 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "tx_effect_id": {
-          "name": "tx_effect_id",
-          "type": "uuid",
+        "index": {
+          "name": "index",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "function_logs_tx_effect_id_tx_effect_id_fk": {
-          "name": "function_logs_tx_effect_id_tx_effect_id_fk",
-          "tableFrom": "function_logs",
-          "tableTo": "tx_effect",
-          "columnsFrom": ["tx_effect_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -343,14 +333,14 @@
           "primaryKey": false,
           "notNull": true
         },
-        "log_id": {
-          "name": "log_id",
+        "function_log_id": {
+          "name": "function_log_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "function_log_id": {
-          "name": "function_log_id",
+        "log_id": {
+          "name": "log_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -367,20 +357,20 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "tx_effect_to_logs_log_id_logs_id_fk": {
-          "name": "tx_effect_to_logs_log_id_logs_id_fk",
-          "tableFrom": "tx_effect_to_logs",
-          "tableTo": "logs",
-          "columnsFrom": ["log_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
         "tx_effect_to_logs_function_log_id_function_logs_id_fk": {
           "name": "tx_effect_to_logs_function_log_id_function_logs_id_fk",
           "tableFrom": "tx_effect_to_logs",
           "tableTo": "function_logs",
           "columnsFrom": ["function_log_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "tx_effect_to_logs_log_id_logs_id_fk": {
+          "name": "tx_effect_to_logs_log_id_logs_id_fk",
+          "tableFrom": "tx_effect_to_logs",
+          "tableTo": "logs",
+          "columnsFrom": ["log_id"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"

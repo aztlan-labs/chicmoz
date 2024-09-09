@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS "body_to_tx_effects" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "function_logs" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"tx_effect_id" uuid NOT NULL
+	"index" integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "logs" (
@@ -55,8 +55,8 @@ CREATE TABLE IF NOT EXISTS "tx_effect" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tx_effect_to_logs" (
 	"tx_effect_id" uuid NOT NULL,
-	"log_id" uuid NOT NULL,
-	"function_log_id" uuid NOT NULL
+	"function_log_id" uuid NOT NULL,
+	"log_id" uuid NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tx_effect_to_public_data_write" (
@@ -173,25 +173,19 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "function_logs" ADD CONSTRAINT "function_logs_tx_effect_id_tx_effect_id_fk" FOREIGN KEY ("tx_effect_id") REFERENCES "public"."tx_effect"("id") ON DELETE no action ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
  ALTER TABLE "tx_effect_to_logs" ADD CONSTRAINT "tx_effect_to_logs_tx_effect_id_tx_effect_id_fk" FOREIGN KEY ("tx_effect_id") REFERENCES "public"."tx_effect"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "tx_effect_to_logs" ADD CONSTRAINT "tx_effect_to_logs_log_id_logs_id_fk" FOREIGN KEY ("log_id") REFERENCES "public"."logs"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "tx_effect_to_logs" ADD CONSTRAINT "tx_effect_to_logs_function_log_id_function_logs_id_fk" FOREIGN KEY ("function_log_id") REFERENCES "public"."function_logs"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "tx_effect_to_logs" ADD CONSTRAINT "tx_effect_to_logs_function_log_id_function_logs_id_fk" FOREIGN KEY ("function_log_id") REFERENCES "public"."function_logs"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "tx_effect_to_logs" ADD CONSTRAINT "tx_effect_to_logs_log_id_logs_id_fk" FOREIGN KEY ("log_id") REFERENCES "public"."logs"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

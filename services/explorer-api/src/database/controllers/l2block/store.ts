@@ -33,7 +33,6 @@ import {
 import { HexString } from "../../schema/utils.js";
 
 export const store = async (block: ChicmozL2Block): Promise<void> => {
-
   return await db().transaction(async (tx) => {
     const archiveId = uuidv4();
     const headerId = uuidv4();
@@ -242,22 +241,23 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
           .onConflictDoNothing();
       }
 
-      // Insert logs
-      const functionLogId = uuidv4();
-      await tx
-        .insert(functionLogs)
-        .values({
-          id: functionLogId,
-          txEffectId: txEffectId,
-        })
-        .onConflictDoNothing();
-
-      for (const [logType, functionLogs] of Object.entries({
+      for (const [logType, fLogs] of Object.entries({
         noteEncrypted: txEff.noteEncryptedLogs.functionLogs,
         encrypted: txEff.encryptedLogs.functionLogs,
         unencrypted: txEff.unencryptedLogs.functionLogs,
       })) {
-        for (const functionLog of functionLogs) {
+        for (const [functionLogIndex, functionLog] of Object.entries(
+          fLogs
+        )) {
+          // Insert logs
+          const functionLogId = uuidv4();
+          await tx
+            .insert(functionLogs)
+            .values({
+              id: functionLogId,
+              index: Number(functionLogIndex),
+            })
+            .onConflictDoNothing();
           for (const [index, log] of Object.entries(
             functionLog.logs as Array<
               NoteEncryptedLogEntry | EncryptedLogEntry | UnencryptedLogEntry

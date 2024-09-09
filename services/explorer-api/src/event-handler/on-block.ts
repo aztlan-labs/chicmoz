@@ -21,6 +21,7 @@ export const onBlock = async ({ block }: { block: string }) => {
   }
   try {
     logger.info(`🧢 Storing block ${b.number} (hash: ${parsedBlock.hash})`);
+    // logger.info(JSON.stringify(parsedBlock));
     await controllers.l2Block.store(parsedBlock);
   } catch (e) {
     logger.error(
