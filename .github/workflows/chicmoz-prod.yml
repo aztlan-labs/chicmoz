@@ -30,16 +30,11 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Login tt
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 600
 
-      - name: Build and push Docker images
-        run: |
-          echo $AWS_ACCESS_KEY_ID
-          echo $AWS_SECRET_ACCESS_KEY
-          echo $AWS_DEFAULT_REGION
-          skaffold run --filename k8s/production/skaffold.prod.yaml
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: eu-west-3
-        shell: bash
+      - name: Save DigitalOcean kubeconfig
+        run: doctl kubernetes cluster kubeconfig save chicmoz-prod
+
+      - name: Deploy to cluster with Skaffold
+        run: skaffold run --filename k8s/production/skaffold.production.yaml
