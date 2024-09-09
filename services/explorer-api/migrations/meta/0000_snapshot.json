@@ -1,9 +1,277 @@
 {
-  "id": "fe8e671f-846b-44a4-baef-610047b405ee",
+  "id": "ce57baaf-80d9-466e-a393-25849369eadf",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.archive": {
+      "name": "archive",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "root": {
+          "name": "root",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "next_available_leaf_index": {
+          "name": "next_available_leaf_index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.body": {
+      "name": "body",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.body_to_tx_effects": {
+      "name": "body_to_tx_effects",
+      "schema": "",
+      "columns": {
+        "body_id": {
+          "name": "body_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tx_effect_id": {
+          "name": "tx_effect_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "body_to_tx_effects_body_id_body_id_fk": {
+          "name": "body_to_tx_effects_body_id_body_id_fk",
+          "tableFrom": "body_to_tx_effects",
+          "tableTo": "body",
+          "columnsFrom": ["body_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "body_to_tx_effects_tx_effect_id_tx_effect_id_fk": {
+          "name": "body_to_tx_effects_tx_effect_id_tx_effect_id_fk",
+          "tableFrom": "body_to_tx_effects",
+          "tableTo": "tx_effect",
+          "columnsFrom": ["tx_effect_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.content_commitment": {
+      "name": "content_commitment",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "num_txs": {
+          "name": "num_txs",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "txs_effects_hash": {
+          "name": "txs_effects_hash",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "in_hash": {
+          "name": "in_hash",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "out_hash": {
+          "name": "out_hash",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.global_variables": {
+      "name": "global_variables",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "chain_id": {
+          "name": "chain_id",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "version": {
+          "name": "version",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "block_number": {
+          "name": "block_number",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slot_number": {
+          "name": "slot_number",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "coinbase": {
+          "name": "coinbase",
+          "type": "varchar(42)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fee_recipient": {
+          "name": "fee_recipient",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gas_fees": {
+          "name": "gas_fees",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.header": {
+      "name": "header",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "last_archive": {
+          "name": "last_archive",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content_commitment_id": {
+          "name": "content_commitment_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "state_id": {
+          "name": "state_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "global_variables_id": {
+          "name": "global_variables_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_fees": {
+          "name": "total_fees",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "header_content_commitment_id_content_commitment_id_fk": {
+          "name": "header_content_commitment_id_content_commitment_id_fk",
+          "tableFrom": "header",
+          "tableTo": "content_commitment",
+          "columnsFrom": ["content_commitment_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "header_state_id_state_id_fk": {
+          "name": "header_state_id_state_id_fk",
+          "tableFrom": "header",
+          "tableTo": "state",
+          "columnsFrom": ["state_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "header_global_variables_id_global_variables_id_fk": {
+          "name": "header_global_variables_id_global_variables_id_fk",
+          "tableFrom": "header",
+          "tableTo": "global_variables",
+          "columnsFrom": ["global_variables_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.l2Block": {
       "name": "l2Block",
       "schema": "",
@@ -14,32 +282,172 @@
           "primaryKey": true,
           "notNull": true
         },
-        "number": {
-          "name": "number",
-          "type": "integer",
+        "archive_id": {
+          "name": "archive_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "timestamp": {
-          "name": "timestamp",
-          "type": "integer",
+        "header_id": {
+          "name": "header_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "archive": {
-          "name": "archive",
+        "body_id": {
+          "name": "body_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "l2Block_archive_id_archive_id_fk": {
+          "name": "l2Block_archive_id_archive_id_fk",
+          "tableFrom": "l2Block",
+          "tableTo": "archive",
+          "columnsFrom": ["archive_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "l2Block_header_id_header_id_fk": {
+          "name": "l2Block_header_id_header_id_fk",
+          "tableFrom": "l2Block",
+          "tableTo": "header",
+          "columnsFrom": ["header_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "l2Block_body_id_body_id_fk": {
+          "name": "l2Block_body_id_body_id_fk",
+          "tableFrom": "l2Block",
+          "tableTo": "body",
+          "columnsFrom": ["body_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.state": {
+      "name": "state",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "l1_to_l2_message_tree": {
+          "name": "l1_to_l2_message_tree",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
         },
-        "header": {
-          "name": "header",
+        "partial": {
+          "name": "partial",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.tx_effect": {
+      "name": "tx_effect",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "index": {
+          "name": "index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "revert_code": {
+          "name": "revert_code",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
         },
-        "body": {
-          "name": "body",
+        "transaction_fee": {
+          "name": "transaction_fee",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "note_hashes": {
+          "name": "note_hashes",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nullifiers": {
+          "name": "nullifiers",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "l2_to_l1_msgs": {
+          "name": "l2_to_l1_msgs",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_data_writes": {
+          "name": "public_data_writes",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "note_encrypted_logs_length": {
+          "name": "note_encrypted_logs_length",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "encrypted_logs_length": {
+          "name": "encrypted_logs_length",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unencrypted_logs_length": {
+          "name": "unencrypted_logs_length",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "note_encrypted_logs": {
+          "name": "note_encrypted_logs",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "encrypted_logs": {
+          "name": "encrypted_logs",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unencrypted_logs": {
+          "name": "unencrypted_logs",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true

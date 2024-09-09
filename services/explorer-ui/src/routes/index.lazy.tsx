@@ -29,7 +29,8 @@ const LatestBlockData = () => {
   const fetchLatestBlock = useCallback(async () => {
     try {
       const block = await getLatestBlock();
-      if (!block || latestBlockData?.number === block.number) return;
+      console.log("block", block);
+      if (!block || latestBlockData?.header?.globalVariables?.blockNumber === block?.header?.globalVariables?.blockNumber) return;
 
       setLatestBlockData(block);
       setError(null);
@@ -79,13 +80,13 @@ const LatestBlockData = () => {
           <li>
             <strong>Number of Transactions:</strong>{" "}
             {parseInt(
-              latestBlockData.header.contentCommitment.numTxs.value,
+              latestBlockData.header.contentCommitment.numTxs,
               16
             )}
           </li>
           <li>
             <strong>Total Fees:</strong>{" "}
-            {parseInt(latestBlockData.header.totalFees.value, 16)} (wei)
+            {parseInt(latestBlockData.header.totalFees, 16)} (wei)
           </li>
           <li>
             <strong>State Root:</strong>{" "}

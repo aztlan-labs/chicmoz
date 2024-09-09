@@ -3,8 +3,9 @@ import { controllers as db } from "../../database/index.js";
 
 export const GET_LATEST_HEIGHT = asyncHandler(async (_req, res) => {
   const latestBlock = await db.block.getLatest();
-  if (latestBlock && latestBlock.number > 0)
-    res.status(200).send(JSON.stringify(latestBlock.number));
+  const nbr = latestBlock ? parseInt(latestBlock?.header.globalVariables.blockNumber) : 0;
+  if (nbr > 0)
+    res.status(200).send(nbr);
   else throw new Error("Latest height not found");
 });
 
