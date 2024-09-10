@@ -20,6 +20,7 @@ const TransactionsLazyImport = createFileRoute('/transactions')()
 const ContractsLazyImport = createFileRoute('/contracts')()
 const BlocksLazyImport = createFileRoute('/blocks')()
 const IndexLazyImport = createFileRoute('/')()
+const BlocksBlockNumberLazyImport = createFileRoute('/blocks/$blockNumber')()
 
 // Create/Update Routes
 
@@ -42,6 +43,13 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const BlocksBlockNumberLazyRoute = BlocksBlockNumberLazyImport.update({
+  path: '/$blockNumber',
+  getParentRoute: () => BlocksLazyRoute,
+} as any).lazy(() =>
+  import('./routes/blocks.$blockNumber.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -75,6 +83,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TransactionsLazyImport
       parentRoute: typeof rootRoute
     }
+    '/blocks/$blockNumber': {
+      id: '/blocks/$blockNumber'
+      path: '/$blockNumber'
+      fullPath: '/blocks/$blockNumber'
+      preLoaderRoute: typeof BlocksBlockNumberLazyImport
+      parentRoute: typeof BlocksLazyImport
+    }
   }
 }
 
@@ -82,7 +97,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
-  BlocksLazyRoute,
+  BlocksLazyRoute: BlocksLazyRoute.addChildren({ BlocksBlockNumberLazyRoute }),
   ContractsLazyRoute,
   TransactionsLazyRoute,
 })
@@ -105,13 +120,20 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "index.lazy.tsx"
     },
     "/blocks": {
-      "filePath": "blocks.lazy.tsx"
+      "filePath": "blocks.lazy.tsx",
+      "children": [
+        "/blocks/$blockNumber"
+      ]
     },
     "/contracts": {
       "filePath": "contracts.lazy.tsx"
     },
     "/transactions": {
       "filePath": "transactions.lazy.tsx"
+    },
+    "/blocks/$blockNumber": {
+      "filePath": "blocks.$blockNumber.lazy.tsx",
+      "parent": "/blocks"
     }
   }
 }
