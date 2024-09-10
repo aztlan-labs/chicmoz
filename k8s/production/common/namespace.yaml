@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: chicmoz
+  name: chicmoz-prod
   labels:
-    name: chicmoz
+    name: chicmoz-prod
 ---
 apiVersion: v1
 kind: Namespace

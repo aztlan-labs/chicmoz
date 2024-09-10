@@ -4,7 +4,7 @@ metadata:
   labels:
     app: aztec-listener
   name: aztec-listener
-  namespace: chicmoz
+  namespace: chicmoz-prod
 spec:
   replicas: 1
   selector:

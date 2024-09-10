@@ -4,7 +4,7 @@ metadata:
   labels:
     app: explorer-api
   name: explorer-api
-  namespace: chicmoz
+  namespace: chicmoz-prod
 spec:
   replicas: 1
   selector:
