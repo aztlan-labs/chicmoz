@@ -19,7 +19,13 @@ function Block() {
       <ul className="list-disc list-inside pl-4">
         {displayItems.map((item, index) => (
           <li key={index}>
-            {typeof item === "object" ? JSON.stringify(item, null, 2) : item}
+            {typeof item === "object" ? (
+              <pre className="bg-gray-100 p-2 rounded-md overflow-x-auto max-h-40">
+                <code>{JSON.stringify(item, null, 2)}</code>
+              </pre>
+            ) : (
+              item
+            )}
           </li>
         ))}
         {items.length > maxItems && (
