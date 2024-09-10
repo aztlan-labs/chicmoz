@@ -1,4 +1,4 @@
-import { Outlet, createLazyFileRoute, useMatch } from "@tanstack/react-router";
+import { Outlet, createLazyFileRoute, useParams } from "@tanstack/react-router";
 import { BlocksTable } from "~/components/blocks/blocks-table.tsx";
 
 export const Route = createLazyFileRoute("/blocks")({
@@ -6,7 +6,12 @@ export const Route = createLazyFileRoute("/blocks")({
 });
 
 function Blocks() {
-  const isIndex = useMatch("/blocks");
+  const params = useParams("/blocks");
+  const isIndex = !params.blockNumber;
+
+  const text = {
+    title: isIndex ? "All blocks" : "Block Details",
+  };
 
   return (
     <div className="mx-auto px-[70px] max-w-[1440px]">
@@ -14,8 +19,4 @@ function Blocks() {
       {isIndex ? <BlocksTable /> : <Outlet />}
     </div>
   );
-}
-
-const text = {
-  title: "All blocks",
 }

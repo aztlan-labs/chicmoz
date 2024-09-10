@@ -5,19 +5,16 @@ export const Route = createLazyFileRoute("/blocks/$blockNumber")({
 });
 
 function Block() {
-  const { blockNumber } = Route.useParams()
-  console.log("blockNumber", blockNumber)
-  // TODO: HELP MAURO, I can't see this page!
+  const { blockNumber } = Route.useParams();
+  console.log("blockNumber", blockNumber);
+
+  let bn;
+  if (blockNumber === "latest") bn = "latest";
+  else if (parseInt(blockNumber)) bn = parseInt(blockNumber);
+
   return (
-    <div className="mx-auto px-[70px] max-w-[1440px]">
-      <h1 className="mt-16">{text.title}</h1>
-      <p>Block Number: {blockNumber}</p>
-      {/* TODO: Fetch and display block data */}
+    <div className="bg-card p-4">
+      {bn ? <p>Block {bn}</p> : <p>Block not found</p>}
     </div>
   );
 }
-
-const text = {
-  title: "Title TODO",
-}
-
