@@ -3,7 +3,6 @@ import { useCallback, useEffect, useState } from "react";
 import { getLatestBlock } from "~/service/api";
 
 const formatTimeSince = (seconds: number) => {
-
   const intervals = [
     { label: "day", seconds: 86400 },
     { label: "hour", seconds: 3600 },
@@ -50,16 +49,11 @@ const LatestBlockData = () => {
 
   let timeSince = "no timestamp";
   if (latestBlockData) {
-
     const now = new Date().getTime();
     const blockTime = new Date(
-      parseInt(latestBlockData.timestamp * 1000)
+      Number(latestBlockData.timestamp as string) * 1000,
     ).getTime();
-    timeSince = formatTimeSince(
-      Math.round(
-        (now - blockTime) / 1000
-      )
-    );
+    timeSince = formatTimeSince(Math.round((now - blockTime) / 1000));
   }
 
   return (
@@ -80,7 +74,7 @@ const LatestBlockData = () => {
             <strong>Number of Transactions:</strong>{" "}
             {parseInt(
               latestBlockData.header.contentCommitment.numTxs.value,
-              16
+              16,
             )}
           </li>
           <li>
