@@ -14,7 +14,17 @@ function Block() {
 
   return (
     <div className="bg-card p-4">
-      {bn ? <p>Block {bn}</p> : <p>Block not found</p>}
+      {bn ? (
+        <div>
+          <h2>Block "{bn}"</h2>
+          <p>Block details here</p>
+        </div>
+      ) : (
+        <div>
+          <h2>Invalid Block Number</h2>
+          <p>Block {blockNumber} not found</p>
+        </div>
+      )}
     </div>
   );
 }
