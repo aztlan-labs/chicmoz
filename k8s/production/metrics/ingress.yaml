@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress-metrics
-  namespace: chicmoz
+  namespace: chicmoz-prod
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /_external/$2
     nginx.ingress.kubernetes.io/limit-rps: "100"

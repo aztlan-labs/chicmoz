@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: kafka-ui-helm-values
-  namespace: chicmoz
+  namespace: chicmoz-prod
 data:
   DYNAMIC_CONFIG_ENABLED: "true"
 # To connect to kafka set the following from the dashboard

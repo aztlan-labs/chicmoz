@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: kafka-ui-configmap
-  namespace: chicmoz
+  namespace: chicmoz-prod
 data:
   config.yml: |-
     kafka:
