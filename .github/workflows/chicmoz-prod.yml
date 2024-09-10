@@ -36,8 +36,10 @@ jobs:
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
 
-      - name: Remove all old images
-        run: if [ ! -z "$(doctl registry repository list | grep "$(echo $IMAGE_NAME)")" ]; then doctl registry repository delete-manifest $(echo $IMAGE_NAME) $(doctl registry repository list-tags $(echo $IMAGE_NAME) | grep -o "sha.*") --force; else echo "No repository"; fi
+      - name: Cleanup old images
+        run: |
+          chmod +x "./cleanup-script.sh"
+          "./cleanup-script.sh"
 
       - name: Save DigitalOcean kubeconfig
         run: doctl kubernetes cluster kubeconfig save chicmoz-prod
