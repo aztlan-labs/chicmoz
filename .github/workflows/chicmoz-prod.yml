@@ -34,7 +34,7 @@ jobs:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
-        run: doctl registry login --expiry-seconds 600
+        run: doctl registry login --expiry-seconds 1800
 
       - name: Cleanup old images
         run: |
