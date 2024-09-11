@@ -4,8 +4,8 @@ import {
   getLatestHeight,
   init as initNetworkClient,
 } from "./network-client.js";
-import { CATCHUP_ENABLED } from "../constants.js";
-import {startPolling, stopPolling} from "./poller.js";
+import { CATCHUP_ENABLED, LISTEN_FOR_BLOCKS } from "../constants.js";
+import { startPolling, stopPolling } from "./poller.js";
 
 export const init = async () => {
   // TODO: why unsafe?
@@ -13,16 +13,14 @@ export const init = async () => {
   const res: NodeInfo = await initNetworkClient();
   logger.info(`AZTEC: initialized: ${JSON.stringify(res)}`);
   const currentHeight = await getLatestHeight();
-  if (CATCHUP_ENABLED) 
-    logger.info("TODO: need to fix catchup-logic");
-    // startCatchup({ untilHeight: currentHeight });
-    // Should it be blocking?
-  
+  if (CATCHUP_ENABLED) logger.info("TODO: need to fix catchup-logic");
+  // startCatchup({ untilHeight: currentHeight });
+  // Should it be blocking?
 
-  await startPolling({ fromHeight: currentHeight });
+  if (LISTEN_FOR_BLOCKS) await startPolling({ fromHeight: currentHeight });
 
   return {
-    shutDownAztec: () => {
+    shutdownAztec: () => {
       stopPolling();
     },
   };

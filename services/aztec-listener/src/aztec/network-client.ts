@@ -1,5 +1,5 @@
 import { PXE, createPXEClient } from "@aztec/aztec.js";
-import { AZTEC_RPC } from "../constants";
+import { AZTEC_RPC } from "../constants.js";
 
 let pxe: PXE;
 

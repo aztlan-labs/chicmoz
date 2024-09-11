@@ -68,20 +68,10 @@ const fetchAndPublishLatestBlockReoccurring = async () => {
       "FATAL: Poller received no block, eventhough receiveing height from network."
     );
   }
-  logger.info(
-    `🦊 latest block received! height: ${blockRes.header.globalVariables.blockNumber}`
-  );
-
   await onBlock(blockRes);
 
   if (missedBlocks)
     await catchUpOnMissedBlocks(latestProcessedHeight + 1, networkLatestHeight);
-
-  logger.info(blockRes.header.globalVariables.blockNumber);
-  logger.info(blockRes.header.globalVariables.blockNumber.toString());
-  logger.info(
-    parseInt(blockRes.header.globalVariables.blockNumber.toString(), 16)
-  );
 
   await setLatestProcessedHeight(
     Number(blockRes.header.globalVariables.blockNumber)

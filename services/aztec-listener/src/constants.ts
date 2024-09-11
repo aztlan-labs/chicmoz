@@ -22,7 +22,7 @@ export const KAFKA_MSK_REGION = process.env.KAFKA_MSK_REGION ?? "local";
 
 export const POSTGRES_IP = process.env.POSTGRES_IP ?? "localhost";
 export const POSTGRES_PORT = Number(process.env.POSTGRES_PORT) || 5432;
-export const POSTGRES_DB_NAME = process.env.POSTGRES_DB_NAME ?? "azteclistener";
+export const POSTGRES_DB_NAME = process.env.POSTGRES_DB_NAME ?? "aztec_listener";
 export const POSTGRES_ADMIN = process.env.POSTGRES_ADMIN ?? "admin";
 export const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD ?? "secret-local-password";
 
