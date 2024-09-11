@@ -31,8 +31,10 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Log in to DigitalOcean Container Registry with short-lived credentials
-        run: doctl registry login --expiry-seconds 1800
+      - name: Set up Docker authentication
+        run: |
+          mkdir -p ${{ env.DOCKER_CONFIG }}
+          docker login registry.digitalocean.com -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} --password-stdin <<< "${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}"
 
       - name: Cleanup old images
         run: |
@@ -43,4 +45,18 @@ jobs:
         run: doctl kubernetes cluster kubeconfig save "chicmoz-prod"
 
       - name: Deploy to cluster with Skaffold
-        run: skaffold run --filename "k8s/production/skaffold.production.yaml"
+        run: |
+          MAX_RETRIES=3
+          RETRY_DELAY=10
+
+          for i in $(seq 1 $MAX_RETRIES); do
+            if skaffold run --filename "k8s/production/skaffold.production.yaml" --default-repo=registry.digitalocean.com/aztlan-containers; then
+              echo "Deployment successful"
+              exit 0
+            fi
+            echo "Attempt $i failed. Retrying in $RETRY_DELAY seconds..."
+            sleep $RETRY_DELAY
+          done
+
+          echo "Deployment failed after $MAX_RETRIES attempts"
+          exit 1
