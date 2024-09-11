@@ -28,3 +28,13 @@ export const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD ?? "secret-local-
 export const SERVICE_NAME = process.env.SERVICE_NAME ?? `aztec-listener`;
 
 export const IGNORE_PROCESSED_HEIGHT = process.env.IGNORE_PROCESSED_HEIGHT === "true";
+
+export const NETWORK_ID = `${CHAIN_NAME}_${NETWORK_NAME}`;
+
+export const dbCredentials = {
+  host: POSTGRES_IP,
+  port: POSTGRES_PORT,
+  user: POSTGRES_ADMIN,
+  password: POSTGRES_PASSWORD,
+  database: POSTGRES_DB_NAME,
+};
