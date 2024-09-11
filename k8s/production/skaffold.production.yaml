@@ -15,7 +15,7 @@ build:
       requires:
         - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
           alias: BASE
-    - image: explorer-ui
+    - image: registry.digitalocean.com/aztlan-containers/explorer-ui
       context: services/explorer-ui
       docker:
         dockerfile: Dockerfile
