@@ -28,8 +28,6 @@ export const getLatestBlock = async (): Promise<ChicmozL2Block> => {
   });
   const result = await response.json();
 
-  console.log(result);
-
   const res = chicmozL2BlockSchema.parse(result);
 
   if (response.status !== 200) throw new Error(`An error occurred while fetching latest height: ${result}`);

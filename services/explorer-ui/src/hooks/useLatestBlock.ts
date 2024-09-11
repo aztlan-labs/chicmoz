@@ -20,6 +20,31 @@ const formatTimeSince = (seconds: number) => {
   return "just now";
 };
 
+const logLogs = (txEffects: ChicmozL2Block["body"]["txEffects"]) => {
+  for (const [txI, tx] of Object.entries(txEffects)) {
+    for (const [fLogI, fLog] of Object.entries(
+      tx.unencryptedLogs.functionLogs
+    )) {
+      for (const [logI, log] of Object.entries(fLog.logs)) {
+        console.log(`tx ${txI} fLog ${fLogI} log ${logI}: `, log);
+      }
+    }
+  }
+};
+
+const logPublicWrites = (txEffects: ChicmozL2Block["body"]["txEffects"]) => {
+  for (const [txI, tx] of Object.entries(txEffects)) {
+    for (const [pubWriteI, pubWrite] of Object.entries(tx.publicDataWrites)) {
+      console.log(`tx ${txI} pubWrite ${pubWriteI}: `, pubWrite);
+      for (const [logI, log] of Object.entries(
+        tx.unencryptedLogs.functionLogs[Number(pubWriteI)].logs
+      )) {
+        console.log(`\tlog ${logI}: `, log);
+      }
+    }
+  }
+};
+
 export const useLatestBlock = () => {
   const [latestBlockData, setLatestBlockData] = useState<ChicmozL2Block | null>(
     null
@@ -30,7 +55,7 @@ export const useLatestBlock = () => {
   const fetchLatestBlock = useCallback(async () => {
     try {
       const block = await getLatestBlock();
-      console.log("block", block);
+      //console.log("block", block);
       if (
         !block ||
         latestBlockData?.header?.globalVariables?.blockNumber ===
@@ -38,6 +63,8 @@ export const useLatestBlock = () => {
       )
         return;
 
+      console.log("new block!");
+      logPublicWrites(block.body.txEffects);
       setLatestBlockData(block);
       setError(null);
     } catch (err) {
@@ -70,4 +97,4 @@ export const useLatestBlock = () => {
     error,
     timeSince,
   };
-}
+};
