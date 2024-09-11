@@ -11,6 +11,7 @@ import {
 import { logger } from "../logger.js";
 import { storeHeight } from "../database/latestProcessedHeight.controller.js";
 import { getBlock, getBlocks, getLatestHeight } from "./network-client.js";
+import { onBlock } from "../event-handler/index.js";
 
 const backOffOptions: Partial<IBackOffOptions> = {
   numOfAttempts: 3,
@@ -71,7 +72,7 @@ const fetchAndPublishLatestBlockReoccurring = async () => {
     `🦊 latest block received! height: ${blockRes.header.globalVariables.blockNumber}`
   );
 
-  // TODO: await onBlockCB(blockRes);
+  await onBlock(blockRes);
 
   if (missedBlocks)
     await catchUpOnMissedBlocks(latestProcessedHeight + 1, networkLatestHeight);
@@ -100,7 +101,7 @@ const catchUpOnMissedBlocks = async (start: number, end: number) => {
     const missedBlocks = await getBlocks(start, end);
 
     const processBlocks = missedBlocks.map((block) => {
-      // TODO if (block) return onBlockCB(block);
+      if (block) return onBlock(block);
     });
     await Promise.allSettled(processBlocks);
 
