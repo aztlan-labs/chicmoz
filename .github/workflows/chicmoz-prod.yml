@@ -1,4 +1,4 @@
-name: CI/CD Obscura Prod
+name: CI/CD Chicmoz Prod
 # TODO
 
 on:
@@ -19,8 +19,6 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-        with:
-          lfs: "true"
 
       - name: Install Skaffold
         run: |
