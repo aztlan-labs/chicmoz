@@ -10,6 +10,8 @@ on:
       - production
     types:
       - closed
+env:
+  DOCKER_CONFIG: ${{ github.workspace }}/.docker
 
 jobs:
   build_and_deploy:
