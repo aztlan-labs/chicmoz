@@ -1,4 +1,5 @@
 name: CI/CD Chicmoz Prod
+# TODO
 
 on:
   push:
@@ -10,12 +11,11 @@ on:
     types:
       - closed
 
-env:
-  DOCKER_CONFIG: ${{ github.workspace }}/.docker
-
 jobs:
   build_and_deploy:
-    runs-on: ubuntu-latest
+    runs-on:
+      labels: ubuntu-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -31,55 +31,16 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Set up Docker authentication
-        run: |
-          mkdir -p ${{ env.DOCKER_CONFIG }}
-          echo '{"auths":{"registry.digitalocean.com":{"auth":"'$(echo -n ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} | base64)'"}}}' > ${{ env.DOCKER_CONFIG }}/config.json
-
-      - name: Build and Push Images
-        run: |
-          MAX_RETRIES=3
-          RETRY_DELAY=10
-
-          build_and_push() {
-            for i in $(seq 1 $MAX_RETRIES); do
-              if DOCKER_CONFIG=${{ env.DOCKER_CONFIG }} skaffold build --filename "k8s/production/skaffold.production.yaml" --default-repo=registry.digitalocean.com/aztlan-containers; then
-                return 0
-              fi
-              echo "Attempt $i failed. Retrying in $RETRY_DELAY seconds..."
-              sleep $RETRY_DELAY
-            done
-            return 1
-          }
-
-          if build_and_push; then
-            echo "Build and push successful"
-          else
-            echo "Build and push failed after $MAX_RETRIES attempts"
-            exit 1
-          fi
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 1800
 
       - name: Cleanup old images
         run: |
           chmod +x "./cleanup-script.sh"
-          ./cleanup-script.sh
+          bash -x "./cleanup-script.sh"
 
       - name: Save DigitalOcean kubeconfig
         run: doctl kubernetes cluster kubeconfig save "chicmoz-prod"
 
       - name: Deploy to cluster with Skaffold
-        run: |
-          MAX_RETRIES=3
-          RETRY_DELAY=10
-
-          for i in $(seq 1 $MAX_RETRIES); do
-            if DOCKER_CONFIG=${{ env.DOCKER_CONFIG }} skaffold run --filename "k8s/production/skaffold.production.yaml" --default-repo=registry.digitalocean.com/aztlan-containers; then
-              echo "Deployment successful"
-              exit 0
-            fi
-            echo "Attempt $i failed. Retrying in $RETRY_DELAY seconds..."
-           sleep $RETRY_DELAY
-          done
-
-          echo "Deployment failed after $MAX_RETRIES attempts"
-          exit 1
+        run: skaffold run --filename "k8s/production/skaffold.production.yaml"
