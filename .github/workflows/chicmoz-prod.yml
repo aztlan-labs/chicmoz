@@ -36,8 +36,8 @@ jobs:
 
       - name: Cleanup old images
         run: |
-          chmod +x "./cleanup-script.sh"
-          bash -x "./cleanup-script.sh"
+          chmod +x ".github/workflows/cleanup-script.sh"
+          bash -x ".github/workflows/cleanup-script.sh"
 
       - name: Save DigitalOcean kubeconfig
         run: doctl kubernetes cluster kubeconfig save "chicmoz-prod"
