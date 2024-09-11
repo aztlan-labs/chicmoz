@@ -41,8 +41,45 @@ jobs:
           chmod +x ".github/workflows/cleanup-script.sh"
           bash -x ".github/workflows/cleanup-script.sh"
 
+      - name: Build and Push Images
+        run: |
+          MAX_RETRIES=3
+          RETRY_DELAY=10
+
+          build_and_push() {
+            for i in $(seq 1 $MAX_RETRIES); do
+              if skaffold build --filename "k8s/production/skaffold.production.yaml"; then
+                return 0
+              fi
+              echo "Attempt $i failed. Retrying in $RETRY_DELAY seconds..."
+              sleep $RETRY_DELAY
+            done
+            return 1
+          }
+
+          if build_and_push; then
+            echo "Build and push successful"
+          else
+            echo "Build and push failed after $MAX_RETRIES attempts"
+            exit 1
+          fi
+
       - name: Save DigitalOcean kubeconfig
-        run: doctl kubernetes cluster kubeconfig save chicmoz-prod
+        run: doctl kubernetes cluster kubeconfig save "chicmoz-prod"
 
       - name: Deploy to cluster with Skaffold
-        run: skaffold run --filename k8s/production/skaffold.production.yaml
+        run: |
+          MAX_RETRIES=3
+          RETRY_DELAY=10
+
+          for i in $(seq 1 $MAX_RETRIES); do
+            if skaffold run --filename "k8s/production/skaffold.production.yaml"; then
+              echo "Deployment successful"
+              exit 0
+            fi
+            echo "Attempt $i failed. Retrying in $RETRY_DELAY seconds..."
+            sleep $RETRY_DELAY
+          done
+
+          echo "Deployment failed after $MAX_RETRIES attempts"
+          exit 1
