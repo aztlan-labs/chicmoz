@@ -1,20 +1,15 @@
 import { SERVICE_NAME } from "./constants.js";
 import { logger } from "./logger.js";
 
-// TODO: use types from relevant files
-export type ShutdownCallbacks = {
-  shutdownMb: () => Promise<void>;
-  shutdownHttpServer: () => Promise<void>;
-  shutdownDb: () => Promise<void>;
+const registeredShutdownCallbacks: (() => Promise<void>)[] = [];
+
+export const registerShutdownCallback = (callback: () => Promise<void>) => {
+  registeredShutdownCallbacks.push(callback);
 };
 
-const _gracefulShutdown = async (callbacks: ShutdownCallbacks) => {
+const _gracefulShutdown = async () => {
   try {
-    await Promise.all([
-      await callbacks.shutdownHttpServer(),
-      await callbacks.shutdownMb(),
-    ]);
-    await callbacks.shutdownDb();
+    for (const callback of registeredShutdownCallbacks) await callback();
   } catch (e) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     logger.error(`during shutdown of ${SERVICE_NAME}: ${e}`);
@@ -22,8 +17,8 @@ const _gracefulShutdown = async (callbacks: ShutdownCallbacks) => {
   }
 };
 
-export const gracefulShutdown = (callbacks: ShutdownCallbacks) => async () => {
+export const gracefulShutdown = () => async () => {
   logger.info("Starting graceful shutdown...");
-  await _gracefulShutdown(callbacks);
+  await _gracefulShutdown();
   logger.info("Graceful shutdown complete.");
 };

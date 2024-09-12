@@ -65,23 +65,30 @@ export const init = async () => {
 
 const tryStartSubscribe = async (
   cb: (arg0: unknown) => Promise<void>,
-  topic: string
+  topic: string,
+  crashCallback: () => void
 ) => {
+  logger.info(`Subscribing to topic ${topic}...`);
   await mb.subscribe(SERVICE_NAME, topic, cb);
-  await mb.runConsumer(SERVICE_NAME);
+  logger.info(`Started consuming from topic ${topic}`);
+  await mb.runConsumer(SERVICE_NAME, crashCallback);
+  logger.info(`Started consuming from topic ${topic}`);
 };
 
-export const startSubscribe = async ({
-  cb,
-  topicBase,
-}: {
-  cb: (arg0: unknown) => Promise<void>;
-  topicBase: keyof AZTEC_MESSAGES;
-}) => {
+export const startSubscribe = async (
+  {
+    cb,
+    topicBase,
+  }: {
+    cb: (arg0: unknown) => Promise<void>;
+    topicBase: keyof AZTEC_MESSAGES;
+  },
+  crashCallback: () => void
+) => {
   if (!mb) throw new Error("Message bus not initialized");
 
   const tryIt = async () =>
-    tryStartSubscribe(cb, generateAztecTopicName(NETWORK_ID, topicBase));
+    tryStartSubscribe(cb, generateAztecTopicName(NETWORK_ID, topicBase), crashCallback);
 
   await backOff(tryIt, {
     maxDelay: 10000,
