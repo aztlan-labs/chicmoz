@@ -61,7 +61,7 @@ manifests:
       - name: ingress-nginx
         remoteChart: ingress-nginx
         repo: https://kubernetes.github.io/ingress-nginx
-        namespace: chicmoz
+        namespace: chicmoz-prod
         createNamespace: false
         recreatePods: false
         skipBuildDependencies: false
@@ -78,7 +78,7 @@ manifests:
           global.postgresql.auth.username: "admin"
           global.postgresql.auth.password: "secret-local-password" # TODO: change to env-var
           image.debug: true
-        namespace: chicmoz
+        namespace: chicmoz-prod
         createNamespace: false
         recreatePods: false
         skipBuildDependencies: false
@@ -88,7 +88,7 @@ manifests:
         version: 18.17.1
         remoteChart: redis
         repo: https://charts.bitnami.com/bitnami
-        namespace: chicmoz
+        namespace: chicmoz-prod
         createNamespace: false
         recreatePods: false
         skipBuildDependencies: false
@@ -100,7 +100,7 @@ manifests:
         version: 26.4.2
         remoteChart: kafka
         repo: https://charts.bitnami.com/bitnami
-        namespace: chicmoz
+        namespace: chicmoz-prod
         setValues:
           sasl.enabledMechanisms: plain
           sasl.controllerMechanism: plain
