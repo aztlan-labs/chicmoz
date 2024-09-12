@@ -16,6 +16,8 @@ spec:
       labels:
         app: aztec-listener
     spec:
+      imagePullSecrets:
+        - name: do-registry
       containers:
         - image: registry.digitalocean.com/aztlan-containers/aztec-listener:latest
           resources:
