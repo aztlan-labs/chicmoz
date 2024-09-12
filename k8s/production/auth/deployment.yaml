@@ -16,10 +16,10 @@ spec:
       labels:
         app: auth
     spec:
-      imagePullSecrets:
-        - name: do-registry
       containers:
         - image: registry.digitalocean.com/aztlan-containers/auth:latest
+          imagePullSecrets:
+            - name: do-registry
           resources:
             limits:
               memory: 500Mi
