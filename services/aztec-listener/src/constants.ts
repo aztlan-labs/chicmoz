@@ -3,6 +3,7 @@ export const BLOCK_INTERVAL_MS = Number(process.env.BLOCK_INTERVAL_MS) || 2000;
 export const MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS = Number(process.env.MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS) || 50;
 export const LISTEN_FOR_BLOCKS = process.env.LISTEN_FOR_BLOCKS === "true";
 export const CATCHUP_ENABLED = process.env.CATCHUP_ENABLED === "true";
+export const DISABLE_AZTEC = process.env.DISABLE_AZTEC === "true";
 
 export const CATCHUP_START = Number(process.env.CATCHUP_START) || undefined;
 export const CATCHUP_END = Number(process.env.CATCHUP_END) || undefined;
