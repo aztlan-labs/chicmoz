@@ -65,12 +65,14 @@ manifests:
         wait: false
         setValues:
           controller.allowSnippetAnnotations: false
-          controller.config:
-            enable-real-ip: "true"
-            proxy-add-original-uri-header: "true"
-            real-ip-header: proxy_protocol
-            use-forwarded-headers: "true"
-            use-proxy-protocol: "true"
+          controller.config.enable-real-ip: "true"
+          controller.config.proxy-add-original-uri-header: "true"
+          controller.config.real-ip-header: "proxy_protocol"
+          controller.config.use-forwarded-headers: "true"
+          controller.config.use-proxy-protocol: "true"
+          controller.config.set-real-ip-from: "0.0.0.0/0"
+          controller.service.annotations.service\.beta\.kubernetes\.io/do-loadbalancer-protocol: "tcp"
+          controller.service.annotations.service\.beta\.kubernetes\.io/do-loadbalancer-enable-proxy-protocol: "true"
       - name: postgresql
         version: 12.10.0
         remoteChart: postgresql
