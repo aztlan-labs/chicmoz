@@ -4,7 +4,7 @@ name: CI/CD Chicmoz Prod
 on:
   push:
     branches:
-      - "devops/create-develop-skaffold"
+      - production
   pull_request:
     branches:
       - production
