@@ -40,10 +40,10 @@ export class MessageBus {
       logCreator: () => {
         return ({ log }) => {
           const { message, error, stack, retryCount } = log;
-          const msg = `Kafka: ${message}`;
-          if (error || stack) this.logger.error(msg);
-          else if (retryCount) this.logger.warn(msg);
-          else this.logger.info(msg);
+          if (stack) this.logger.error(`Kafka: ${stack}`);
+          else if (error) this.logger.error(`Kafka: ${error} (message: ${message})`);
+          else if (retryCount) this.logger.warn(`Kafka: ${message} (retrying ${retryCount}...)`);
+          else this.logger.info(`Kafka: ${message}`);
         };
       },
     };
@@ -113,11 +113,16 @@ export class MessageBus {
     };
   }
 
-  private nonRetriableWrapper(groupId: string) {
+  private nonRetriableWrapper(groupId: string, crashCallback?: () => void) {
     // TODO: we should do this without promise
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.#consumers[groupId]!.consumer.on("consumer.crash", async (payload) => {
-      if (!this.shouldRestart(payload.payload.error)) return;
+      if (!this.shouldRestart(payload.payload.error)) {
+        this.logger.error(`FATAL: not recoverable error: ${JSON.stringify(payload.payload.error)}`);
+        // NOTE: this is potentially solving `https://github.com/aztlan-labs/chicmoz/issues/6`
+        if (crashCallback) crashCallback();
+        // TODO: this could potentially just be a `process.kill(process.pid, "SIGTERM")`
+      }
 
       const currentTopics = this.#consumers[groupId]!.topicCallbacks;
       try {
@@ -142,11 +147,11 @@ export class MessageBus {
     });
   }
 
-  async runConsumer(groupId: string) {
+  async runConsumer(groupId: string, crashCallback?: () => void) {
     if (!this.#consumers[groupId])
       throw new Error(`No consumer exists with groupId: ${groupId}`);
 
-    this.nonRetriableWrapper(groupId);
+    this.nonRetriableWrapper(groupId, crashCallback);
 
     await this.#consumers[groupId]!.consumer.run({
       eachMessage: async ({ topic, message }) => {
