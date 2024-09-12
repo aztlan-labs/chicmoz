@@ -8,13 +8,6 @@ build:
       context: .
       docker:
         dockerfile: Dockerfile
-    - image: registry.digitalocean.com/aztlan-containers/dummy-node
-      context: services/dummy-node
-      docker:
-        dockerfile: Dockerfile
-      requires:
-        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
-          alias: BASE
     - image: registry.digitalocean.com/aztlan-containers/explorer-ui
       context: services/explorer-ui
       docker:
@@ -57,9 +50,6 @@ manifests:
     - k8s/local/explorer-api/service.yaml
     - k8s/local/auth/deployment.yaml
     - k8s/local/auth/service.yaml
-    - k8s/local/dummy-node/ingress.yaml
-    - k8s/local/dummy-node/deployment.yaml
-    - k8s/local/dummy-node/service.yaml
     - k8s/local/aztec-listener/deployment.yaml
     - k8s/local/aztec-listener/service.yaml
     - k8s/local/kafka-ui/configmap.yaml
