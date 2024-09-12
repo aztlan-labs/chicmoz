@@ -2,7 +2,6 @@ apiVersion: skaffold/v4beta6
 kind: Config
 metadata:
   name: chicmoz-prod
-  namespace: chicmoz-prod
 build:
   artifacts:
     - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
