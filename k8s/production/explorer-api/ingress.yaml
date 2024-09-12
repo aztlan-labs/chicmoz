@@ -11,7 +11,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: explorer-api.localhost
+    - host: api.sugarpeanut.com
       http:
         paths:
           - path: /v1/([^/]+)/(.*)
