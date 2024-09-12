@@ -9,6 +9,30 @@ function Block() {
   const { blockNumber } = Route.useParams();
   console.log("blockNumber", blockNumber);
 
+  // TODO: these messages should perhaps be diplayed?
+  // console.log("Extracted messages:");
+  // const txEffects = latestBlockData?.body.txEffects;
+  // if (txEffects && txEffects.length > 0) {
+  //   for (let i = 0; i < txEffects.length; i++) {
+  //     const functionLogs = txEffects[i]?.unencryptedLogs.functionLogs;
+  //     if (functionLogs && functionLogs.length > 0) {
+  //       for (let j = 0; j < functionLogs.length; j++) {
+  //         const logs = functionLogs[j]?.logs;
+  //         if (logs && logs.length > 0) {
+  //           for (let k = 0; k < logs.length; k++) {
+  //             const cleanedMessage = Buffer.from(logs[k].data, "hex")
+  //               .toString("utf8")
+  //               .split("")
+  //               .filter((char) => char.charCodeAt(0) > 31)
+  //               .join("");
+  //             console.log(`[${i}][${j}][${k}]: ${cleanedMessage}`);
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+
   let bn;
   if (blockNumber === "latest") bn = "latest";
   else if (parseInt(blockNumber)) bn = parseInt(blockNumber);
