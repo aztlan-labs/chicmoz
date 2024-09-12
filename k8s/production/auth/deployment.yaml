@@ -17,7 +17,7 @@ spec:
         app: auth
     spec:
       containers:
-        - image: auth:latest
+        - image: registry.digitalocean.com/aztlan-containers/auth:latest
           resources:
             limits:
               memory: 500Mi

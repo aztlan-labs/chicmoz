@@ -10,8 +10,6 @@ on:
       - production
     types:
       - closed
-env:
-  DOCKER_CONFIG: ${{ github.workspace }}/.docker
 
 jobs:
   build_and_deploy:
@@ -33,10 +31,8 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Set up Docker authentication
-        run: |
-          mkdir -p ${{ env.DOCKER_CONFIG }}
-          docker login registry.digitalocean.com -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} --password-stdin <<< "${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}"
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 1200
 
       - name: Cleanup old images
         run: |

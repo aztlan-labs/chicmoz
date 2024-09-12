@@ -17,7 +17,7 @@ spec:
         app: explorer-ui
     spec:
       containers:
-        - image: explorer-ui:latest
+        - image: registry.digitalocean.com/aztlan-containers/explorer-ui:latest
           resources:
             limits:
               memory: 500Mi

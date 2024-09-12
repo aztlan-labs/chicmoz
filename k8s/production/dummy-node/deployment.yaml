@@ -17,7 +17,7 @@ spec:
         app: dummy-node
     spec:
       containers:
-        - image: dummy-node:latest
+        - image: registry.digitalocean.com/aztlan-containers/dummy-node:latest
           resources:
             limits:
               memory: 500Mi
