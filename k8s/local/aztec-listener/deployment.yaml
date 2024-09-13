@@ -16,6 +16,23 @@ spec:
       labels:
         app: aztec-listener
     spec:
+      initContainers:
+        - name: run-migrations
+          image: aztec-listener:latest
+          command: ["yarn", run, "migrate"]
+          env:
+            - name: NODE_ENV
+              value: "development"
+            - name: POSTGRES_IP
+              value: "postgresql"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DB_NAME
+              value: "aztec_listener"
+            - name: POSTGRES_ADMIN
+              value: "admin"
+            - name: POSTGRES_PASSWORD
+              value: "secret-local-password"
       containers:
         - image: aztec-listener:latest
           resources:
@@ -32,6 +49,8 @@ spec:
               value: "50"
             - name: CHAIN_NAME
               value: "AZTEC"
+            - name: DISABLE_AZTEC
+              value: "false"
             - name: NETWORK_NAME
               value: "SANDBOX"
             - name: MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS
@@ -45,13 +64,11 @@ spec:
             - name: POSTGRES_PORT
               value: "5432"
             - name: POSTGRES_DB_NAME
-              value: "azteclistener"
+              value: "aztec_listener"
             - name: POSTGRES_ADMIN
               value: "admin"
             - name: POSTGRES_PASSWORD
               value: "secret-local-password"
-            - name: AZTEC_RPC
-              value: "http://host.minikube.internal:8080"
             - name: IGNORE_PROCESSED_HEIGHT
-              value: "true"
+              value: "false"
 status: {}
