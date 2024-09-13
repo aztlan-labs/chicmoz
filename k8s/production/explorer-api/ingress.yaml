@@ -11,7 +11,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: api.sugarpeanut.com
+    - host: api.sugarpeanut.com # TODO: change to env-var "DOMAIN"
       http:
         paths:
           - path: /v1/([^/]+)/(.*)
