@@ -50,7 +50,7 @@ spec:
             - name: CHAIN_NAME
               value: "AZTEC"
             - name: DISABLE_AZTEC
-              value: "false"
+              value: "true"
             - name: NETWORK_NAME
               value: "SANDBOX"
             - name: MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS
