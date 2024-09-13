@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-explorer-ui
+  namespace: chicmoz-prod
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: sugarpeanut.com # TODO: change to env-var "DOMAIN"
+      http:
+        paths:
+          - backend:
+              service:
+                name: explorer-ui
+                port:
+                  name: http-app
+            path: /
+            pathType: Prefix
+status:
+  loadBalancer: {}

@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-explorer-api
+  namespace: chicmoz-prod
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/auth-url: http://auth.chicmoz.svc.cluster.local
+    nginx.ingress.kubernetes.io/auth-response-headers: x-api-key
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: api.sugarpeanut.com # TODO: change to env-var "DOMAIN"
+      http:
+        paths:
+          - path: /v1/([^/]+)/(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: explorer-api
+                port:
+                  name: http-app
+status:
+  loadBalancer: {}
