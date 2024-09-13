@@ -38,6 +38,8 @@ spec:
               value: "SANDBOX"
             - name: MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS
               value: "50"
+            - name: DISABLE_AZTEC
+              value: "true"
             - name: LISTEN_FOR_BLOCKS
               value: "true"
             - name: CATCHUP_ENABLED
