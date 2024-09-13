@@ -16,6 +16,23 @@ spec:
       labels:
         app: aztec-listener
     spec:
+      initContainers:
+        - name: run-migrations
+          image: aztec-listener:latest
+          command: ["yarn", run, "migrate"]
+          env:
+            - name: NODE_ENV
+              value: "development"
+            - name: POSTGRES_IP
+              value: "postgresql"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DB_NAME
+              value: "aztec_listener"
+            - name: POSTGRES_ADMIN
+              value: "admin"
+            - name: POSTGRES_PASSWORD
+              value: "secret-local-password"
       containers:
         - image: aztec-listener:latest
           resources:
@@ -36,6 +53,8 @@ spec:
               value: "SANDBOX"
             - name: MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS
               value: "50"
+            - name: DISABLE_AZTEC
+              value: "false"
             - name: LISTEN_FOR_BLOCKS
               value: "true"
             - name: CATCHUP_ENABLED
@@ -45,7 +64,7 @@ spec:
             - name: POSTGRES_PORT
               value: "5432"
             - name: POSTGRES_DB_NAME
-              value: "azteclistener"
+              value: "aztec_listener"
             - name: POSTGRES_ADMIN
               value: "admin"
             - name: POSTGRES_PASSWORD

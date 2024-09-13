@@ -1,10 +1,7 @@
-export type NewBlockEvent = {
-  blockHash: string;
-  nbrOfTransactions: number;
-  index: number;
-};
+import { NodeInfoAlias } from '@chicmoz-pkg/types';
 
-type NEW_BLOCK_EVENT = {
+export type NewBlockEvent = {
+  nodeInfo: NodeInfoAlias;
   block?: string;
 };
 
@@ -13,5 +10,5 @@ export function generateAztecTopicName(networkId: string, topic: keyof AZTEC_MES
 }
 
 export type AZTEC_MESSAGES = {
-  NEW_BLOCK_EVENT: NEW_BLOCK_EVENT;
+  NEW_BLOCK_EVENT: NewBlockEvent
 };

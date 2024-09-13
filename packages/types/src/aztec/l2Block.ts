@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { deepPartial } from "./utils.js";
+import { deepPartial } from "../utils.js";
 
 // TODO: separate type for transaction?
 

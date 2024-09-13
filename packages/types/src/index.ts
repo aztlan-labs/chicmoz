@@ -1,2 +1,2 @@
 export * from "./events.js";
-export * from "./l2Block.js";
+export * from "./aztec/index.js";

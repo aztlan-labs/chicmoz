@@ -1,7 +1,9 @@
+// TODO: rename BLOCK_INTERVAL_MS to BLOCK_POLL_INTERVAL_MS
 export const BLOCK_INTERVAL_MS = Number(process.env.BLOCK_INTERVAL_MS) || 2000;
 export const MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS = Number(process.env.MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS) || 50;
 export const LISTEN_FOR_BLOCKS = process.env.LISTEN_FOR_BLOCKS === "true";
 export const CATCHUP_ENABLED = process.env.CATCHUP_ENABLED === "true";
+export const DISABLE_AZTEC = process.env.DISABLE_AZTEC === "true";
 
 export const CATCHUP_START = Number(process.env.CATCHUP_START) || undefined;
 export const CATCHUP_END = Number(process.env.CATCHUP_END) || undefined;
@@ -21,10 +23,20 @@ export const KAFKA_MSK_REGION = process.env.KAFKA_MSK_REGION ?? "local";
 
 export const POSTGRES_IP = process.env.POSTGRES_IP ?? "localhost";
 export const POSTGRES_PORT = Number(process.env.POSTGRES_PORT) || 5432;
-export const POSTGRES_DB_NAME = process.env.POSTGRES_DB_NAME ?? "azteclistener";
+export const POSTGRES_DB_NAME = process.env.POSTGRES_DB_NAME ?? "aztec_listener";
 export const POSTGRES_ADMIN = process.env.POSTGRES_ADMIN ?? "admin";
 export const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD ?? "secret-local-password";
 
 export const SERVICE_NAME = process.env.SERVICE_NAME ?? `aztec-listener`;
 
 export const IGNORE_PROCESSED_HEIGHT = process.env.IGNORE_PROCESSED_HEIGHT === "true";
+
+export const NETWORK_ID = `${CHAIN_NAME}_${NETWORK_NAME}`;
+
+export const dbCredentials = {
+  host: POSTGRES_IP,
+  port: POSTGRES_PORT,
+  user: POSTGRES_ADMIN,
+  password: POSTGRES_PASSWORD,
+  database: POSTGRES_DB_NAME,
+};
