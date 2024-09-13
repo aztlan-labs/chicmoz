@@ -1,5 +1,9 @@
 import { MBOptions, MessageBus } from "@chicmoz-pkg/message-bus";
 import {
+  AZTEC_MESSAGES,
+  generateAztecTopicName,
+} from "@chicmoz-pkg/message-registry";
+import {
   KAFKA_CONNECTION,
   KAFKA_SASL_PASSWORD,
   KAFKA_SASL_USERNAME,
@@ -7,7 +11,6 @@ import {
   SERVICE_NAME,
 } from "../constants.js";
 import { logger } from "../logger.js";
-import {AZTEC_MESSAGES, generateAztecTopicName} from "@chicmoz-pkg/message-registry";
 
 let mb: MessageBus;
 
@@ -38,7 +41,10 @@ export const init = async () => {
   };
 };
 
-export const publishMessage = async <T>(eventType: keyof AZTEC_MESSAGES, message: T) => {
+export const publishMessage = async <T>(
+  eventType: keyof AZTEC_MESSAGES,
+  message: T
+) => {
   const topic = generateAztecTopicName(NETWORK_ID, eventType);
   if (!mb) throw new Error("MessageBus is not initialized");
   await mb.publish<T>(topic, message);
