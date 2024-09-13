@@ -27,6 +27,16 @@ export const routes = {
   blocks: {
     route: "/blocks",
     title: "Blocks",
+    children: {
+      index: {
+        route: "/",
+        title: "All blocks",
+      },
+      blockNumber: {
+        route: "/$blockNumber",
+        title: "Block Details",
+      },
+    },
   },
   transactions: {
     route: "/transactions",
@@ -47,9 +57,8 @@ export const routes = {
   termsAndConditions: {
     route: "/terms-and-conditions",
     title: "Terms and Conditions",
-  }
+  },
 };
-
 
 function notFoundComponent() {
   return (
@@ -62,5 +71,5 @@ function notFoundComponent() {
 
 const text = {
   title: "404... page not found",
-  description: "Page does not exist or has been moved"
-}
+  description: "Page does not exist or has been moved",
+};
