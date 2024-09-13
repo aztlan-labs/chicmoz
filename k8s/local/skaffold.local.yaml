@@ -97,7 +97,7 @@ manifests:
         version: 18.17.1
         remoteChart: redis
         repo: https://charts.bitnami.com/bitnami
-        namespace: ch cmoz
+        namespace: chicmoz
         createNamespace: false
         recreatePods: false
         skipBuildDependencies: false
