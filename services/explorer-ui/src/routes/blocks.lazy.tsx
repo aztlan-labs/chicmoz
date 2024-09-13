@@ -6,8 +6,14 @@ export const Route = createLazyFileRoute("/blocks")({
 });
 
 function Blocks() {
-  const params = useParams({ from: "/blocks/$blockNumber" });
-  const isIndex = !params.blockNumber;
+  let isIndex = true;
+  try {
+    const params = useParams({ from: "/blocks/$blockNumber" });
+    isIndex = !params.blockNumber;
+  } catch (e) {
+    console.error(e);
+    isIndex = true;
+  }
 
   const text = {
     title: isIndex ? "All blocks" : "Block Details",
