@@ -31,7 +31,6 @@ import {
   txEffectToLogs,
   txEffectToPublicDataWrite,
 } from "../../../database/schema/l2block/index.js";
-import { logger } from "../../../logger.js";
 
 export const getLatest = async (): Promise<ChicmozL2Block | null> => {
   const res = await db()
@@ -183,8 +182,7 @@ export const getLatest = async (): Promise<ChicmozL2Block | null> => {
         unencryptedLogs: ChicmozL2Block["body"]["txEffects"][0]["unencryptedLogs"];
       };
       const { noteEncryptedLogs, encryptedLogs, unencryptedLogs } =
-        mixedLogs.reduce((acc, log, index) => {
-          logger.info(index, JSON.stringify(log));
+        mixedLogs.reduce((acc, log) => {
           if (log.type === "noteEncrypted") {
             acc.noteEncryptedLogs.functionLogs[log.functionLogIndex].logs.push(
               noteEncryptedLogEntrySchema.parse(log)
