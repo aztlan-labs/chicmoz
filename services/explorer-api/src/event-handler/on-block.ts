@@ -10,7 +10,7 @@ export const onBlock = async ({ block }: NewBlockEvent) => {
     logger.error("🚫 Block is empty");
     return;
   }
-  const b = L2Block.fromString(block );
+  const b = L2Block.fromString(block);
   let parsedBlock: ChicmozL2Block;
   try {
     logger.info(`👓 Parsing block ${b.number}`);
