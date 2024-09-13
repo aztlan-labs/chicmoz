@@ -1,5 +1,4 @@
 name: CI/CD Chicmoz Prod
-# TODO
 
 on:
   push:
