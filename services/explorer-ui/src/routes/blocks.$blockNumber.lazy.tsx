@@ -37,11 +37,13 @@ function Block() {
   if (blockNumber === "latest") bn = "latest";
   else if (parseInt(blockNumber)) bn = parseInt(blockNumber);
 
-  const renderList = (items, maxItems = 10) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const renderList = (items: any[], maxItems = 10) => {
     const displayItems = items.slice(0, maxItems);
     return (
       <ul className="list-disc list-inside pl-4">
-        {displayItems.map((item, index) => (
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        {displayItems.map((item: any, index: number) => (
           <li key={index}>
             {typeof item === "object" ? (
               <pre className="bg-gray-100 p-2 rounded-md overflow-x-auto max-h-40">

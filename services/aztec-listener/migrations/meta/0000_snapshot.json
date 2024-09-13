@@ -1,0 +1,38 @@
+{
+  "id": "bafd02d5-ae3f-4c5d-8299-4d27cda33fac",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.latest_processed_height": {
+      "name": "latest_processed_height",
+      "schema": "",
+      "columns": {
+        "networkId": {
+          "name": "networkId",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "height": {
+          "name": "height",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
