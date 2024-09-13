@@ -6,8 +6,7 @@ export const Route = createLazyFileRoute("/blocks")({
 });
 
 function Blocks() {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-  const params = useParams("/blocks") as { blockNumber?: string };
+  const params = useParams({ from: "/blocks/$blockNumber" });
   const isIndex = !params.blockNumber;
 
   const text = {
