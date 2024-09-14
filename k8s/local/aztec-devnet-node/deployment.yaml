@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: aztec-devnet-node
+  name: aztec-devnet-node
+  namespace: chicmoz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aztec-devnet-node
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: aztec-devnet-node
+    spec:
+      containers:
+        - image: aztecprotocol/aztec:devnet
+          name: aztec-devnet-node
+          resources:
+            limits:
+              memory: 4096Mi
+              cpu: 250m
+          # args: ["start", "--pxe", "--pxe.network", "devnet", "--pxe.apiKey=xF4vCY9uuwFMEfk8mR3AQ6JJ8JCX26vo"]
+          args:
+            - start
+            - --pxe
+            - --pxe.network
+            - devnet
+            - --pxe.apiKey=xF4vCY9uuwFMEfk8mR3AQ6JJ8JCX26vo
+          env:
+            - name: DEBUG
+              value: "aztec:*"
+            # HOST_WORKDIR: "${PWD}" # Loaded from the user shell to show log files absolute path in host
+            - name: ETHEREUM_HOST
+              value: "https://devnet-mainnet-fork.aztec.network:8545/xF4vCY9uuwFMEfk8mR3AQ6JJ8JCX26vo" # TODO: WARNING! We need to have this as env-var
+            - name: L1_CHAIN_ID
+              value: "677692"
+            - name: ARCHIVER_POLLING_INTERVAL_MS
+              value: "50"
+            - name: P2P_BLOCK_CHECK_INTERVAL_MS
+              value: "50"
+            - name: SEQ_TX_POLLING_INTERVAL_MS
+              value: "50"
+            - name: WS_BLOCK_CHECK_INTERVAL_MS
+              value: "50"
+            - name: PXE_BLOCK_POLLING_INTERVAL_MS
+              value: "50"
+            - name: ARCHIVER_VIEM_POLLING_INTERVAL_MS
+              value: "500"
+            - name: PXE_PORT
+              value: "8080"
+            # - name: PORT
+            #   value: 8080
+            - name: FAUCET_ENDPOINT
+              value: "https://api.aztec.network/devnet/aztec-faucet/xF4vCY9uuwFMEfk8mR3AQ6JJ8JCX26vo"
+            - name: PRIVATE_KEY
+              value: "5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a"
+            - name: ETH_ADDRESS
+              value: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
+            - name: L1_DEV_COIN
+              value: "0x917b94eda07c1e159b88ca23ddbc73f337f7600b"
+            - name: DEV_COIN_PORTAL
+              value: "0x3a2a4bca32841dddcf5ba4a2988efae0b23a835a"
+            - name: L1_FEE_JUICE
+              value: "0x611ffae40ce7251094244e58073d4e88c14da7e6"
+status: {}
