@@ -50,6 +50,8 @@ spec:
               value: "500"
             - name: PXE_PORT
               value: "8080"
+            - name: AZTEC_PORT
+              value: "8080"
             - name: FAUCET_ENDPOINT
               value: "https://api.aztec.network/devnet/aztec-faucet/xF4vCY9uuwFMEfk8mR3AQ6JJ8JCX26vo"
             - name: PRIVATE_KEY
