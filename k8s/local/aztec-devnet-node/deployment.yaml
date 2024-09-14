@@ -23,7 +23,6 @@ spec:
             limits:
               memory: 4096Mi
               cpu: 250m
-          # args: ["start", "--pxe", "--pxe.network", "devnet", "--pxe.apiKey=xF4vCY9uuwFMEfk8mR3AQ6JJ8JCX26vo"]
           args:
             - start
             - --pxe
@@ -33,7 +32,6 @@ spec:
           env:
             - name: DEBUG
               value: "aztec:*"
-            # HOST_WORKDIR: "${PWD}" # Loaded from the user shell to show log files absolute path in host
             - name: ETHEREUM_HOST
               value: "https://devnet-mainnet-fork.aztec.network:8545/xF4vCY9uuwFMEfk8mR3AQ6JJ8JCX26vo" # TODO: WARNING! We need to have this as env-var
             - name: L1_CHAIN_ID
@@ -52,8 +50,6 @@ spec:
               value: "500"
             - name: PXE_PORT
               value: "8080"
-            # - name: PORT
-            #   value: 8080
             - name: FAUCET_ENDPOINT
               value: "https://api.aztec.network/devnet/aztec-faucet/xF4vCY9uuwFMEfk8mR3AQ6JJ8JCX26vo"
             - name: PRIVATE_KEY
