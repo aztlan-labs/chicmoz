@@ -1,0 +1,3 @@
+add README about below and .env
+
+kubectl create secret generic aztec-secrets --from-env-file=k8s/local/aztec-devnet-node/.env -n chicmoz

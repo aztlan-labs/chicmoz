@@ -28,12 +28,17 @@ spec:
             - --pxe
             - --pxe.network
             - devnet
-            - --pxe.apiKey=xF4vCY9uuwFMEfk8mR3AQ6JJ8JCX26vo
+            - --pxe.apiKey=$(AZTEC_API_KEY)
           env:
+            - name: AZTEC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aztec-secrets
+                  key: AZTEC_API_KEY
             - name: DEBUG
               value: "aztec:*"
             - name: ETHEREUM_HOST
-              value: "https://devnet-mainnet-fork.aztec.network:8545/xF4vCY9uuwFMEfk8mR3AQ6JJ8JCX26vo" # TODO: WARNING! We need to have this as env-var
+              value: "https://devnet-mainnet-fork.aztec.network:8545/$(AZTEC_API_KEY)" # TODO: WARNING! We need to have this as env-var
             - name: L1_CHAIN_ID
               value: "677692"
             - name: ARCHIVER_POLLING_INTERVAL_MS
@@ -53,7 +58,7 @@ spec:
             - name: AZTEC_PORT
               value: "8080"
             - name: FAUCET_ENDPOINT
-              value: "https://api.aztec.network/devnet/aztec-faucet/xF4vCY9uuwFMEfk8mR3AQ6JJ8JCX26vo"
+              value: "https://api.aztec.network/devnet/aztec-faucet/$(AZTEC_API_KEY)"
             - name: PRIVATE_KEY
               value: "5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a"
             - name: ETH_ADDRESS
