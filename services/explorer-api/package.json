@@ -71,7 +71,6 @@
     "generate": "yarn build && drizzle-kit generate",
     "migrate": "yarn node build/scripts/migrate.js",
     "start": "yarn node --unhandled-rejections=strict --enable-source-maps build/src/index.js",
-    "aztec-playground": "yarn node build/scripts/aztec_playground.js",
     "lint": "yarn run lint-base --ext .ts .",
     "lint-base": "yarn run g:lint",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest)"

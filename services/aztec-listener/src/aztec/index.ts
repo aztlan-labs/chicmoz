@@ -1,5 +1,5 @@
 import { IBackOffOptions, backOff } from "exponential-backoff";
-import { NodeInfoAlias } from "@chicmoz-pkg/types";
+import { NodeInfo } from "@chicmoz-pkg/types";
 import { logger } from "../logger.js";
 import {
   getLatestHeight,
@@ -24,7 +24,7 @@ const backOffOptions: Partial<IBackOffOptions> = {
   },
 };
 
-let nodeInfo: NodeInfoAlias;
+let nodeInfo: NodeInfo;
 
 export const init = async () => {
   if (DISABLE_AZTEC) {

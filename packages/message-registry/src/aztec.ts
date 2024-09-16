@@ -1,7 +1,7 @@
-import { NodeInfoAlias } from '@chicmoz-pkg/types';
+import { NodeInfo } from '@chicmoz-pkg/types';
 
 export type NewBlockEvent = {
-  nodeInfo: NodeInfoAlias;
+  nodeInfo: NodeInfo;
   block?: string;
 };
 
