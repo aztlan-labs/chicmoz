@@ -1,48 +1,8 @@
 import { z } from "zod";
 import { deepPartial } from "../utils.js";
+import { bufferSchema, frSchema } from "./utils.js";
 
 // TODO: separate type for transaction?
-
-type AztecFr = {
-  toString(): string;
-};
-
-type StringifiedAztecFr = {
-  type: "Fr";
-  value: string;
-};
-
-const frSchema = z.preprocess(
-  (val) => {
-    if ((val as StringifiedAztecFr).value)
-      return (val as StringifiedAztecFr).value;
-    else if ((val as AztecFr).toString) return (val as AztecFr).toString();
-    else return val;
-  },
-  z
-    .string()
-    .length(66)
-    .regex(/^0x[0-9a-fA-F]+$/)
-);
-
-type StringifiedBuffer = {
-  type: "Buffer";
-  data: number[];
-};
-
-const bufferSchema = z.preprocess(
-  (val) => {
-    if ((val as StringifiedBuffer).data)
-      return Buffer.from((val as StringifiedBuffer).data);
-    return val;
-  },
-  z.custom<Buffer>(
-    (value) => {
-      return value instanceof Buffer;
-    },
-    { message: "Expected a Buffer" }
-  )
-);
 
 export const noteEncryptedLogEntrySchema = z.object({
   data: z.string(),

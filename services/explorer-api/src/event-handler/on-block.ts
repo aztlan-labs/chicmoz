@@ -5,10 +5,16 @@ import {
 } from "@aztec/circuits.js";
 import { ClassRegistererAddress } from "@aztec/protocol-contracts/class-registerer";
 import { NewBlockEvent } from "@chicmoz-pkg/message-registry";
-import { chicmozL2BlockSchema, type ChicmozL2Block } from "@chicmoz-pkg/types";
+import {
+  chicmozL2BlockSchema,
+  chicmozL2ContractClassRegisteredEventSchema,
+  chicmozL2ContractInstanceDeployedEventSchema,
+  type ChicmozL2Block,
+  type ChicmozL2ContractClassRegisteredEvent,
+  type ChicmozL2ContractInstanceDeployedEvent,
+} from "@chicmoz-pkg/types";
 import { controllers } from "../database/index.js";
 import { logger } from "../logger.js";
-
 
 export const onBlock = async ({ block }: NewBlockEvent) => {
   // TODO: start storing NODE_INFO connected to the block
@@ -78,5 +84,64 @@ const storeContracts = async (b: L2Block) => {
     blockLogs,
     ClassRegistererAddress
   );
-  logger.info(`block ${b.number} contractInstances ${JSON.stringify(contractInstances)} contractClasses ${JSON.stringify(contractClasses)}`);
+  logger.info(
+    `block ${b.number} contractInstances ${JSON.stringify(
+      contractInstances
+    )} contractClasses ${JSON.stringify(contractClasses)}`
+  );
+
+  const parsedContractInstances: ChicmozL2ContractInstanceDeployedEvent[] = [];
+  const parsedContractClasses: ChicmozL2ContractClassRegisteredEvent[] = [];
+  for (const contractInstance of contractInstances) {
+    try {
+      const parsed: ChicmozL2ContractInstanceDeployedEvent =
+        chicmozL2ContractInstanceDeployedEventSchema.parse(
+          JSON.parse(JSON.stringify(contractInstance))
+        );
+      parsedContractInstances.push(parsed);
+    } catch (e) {
+      logger.error(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        `Failed to parse contractInstance ${contractInstance.address}: ${e}`
+      );
+    }
+  }
+  for (const contractClass of contractClasses) {
+    try {
+      const parsed = chicmozL2ContractClassRegisteredEventSchema.parse(
+        JSON.parse(JSON.stringify(contractClass))
+      );
+      parsedContractClasses.push(parsed);
+    } catch (e) {
+      logger.error(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        `Failed to parse contractClass ${contractClass.contractClassId}: ${e}`
+      );
+    }
+  }
+
+  try {
+    logger.info(
+      `Storing contractInstances ${JSON.stringify(parsedContractInstances)}`
+    );
+    //await controllers.l2ContractInstance.store(parsedContractInstances);
+  } catch (e) {
+    logger.error(
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      `Failed to store contractInstances: ${(e as Error)?.stack ?? e}`
+    );
+  }
+
+  try {
+    logger.info(
+      `Storing contractClasses ${JSON.stringify(parsedContractClasses)}`
+    );
+    //await controllers.l2ContractClass.store(parsedContractClasses);
+  } catch (e) {
+    logger.error(
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      `Failed to store contractClasses: ${(e as Error)?.stack ?? e}`
+    );
+  }
+
 };
