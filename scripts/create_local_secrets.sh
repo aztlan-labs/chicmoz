@@ -1,7 +1,7 @@
 #!/bin/bash
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-ENV_FILE="$PROJECT_ROOT/.local.env"
+ENV_FILE="$PROJECT_ROOT/.chicmoz-local.env"
 
 # Check if .local.env exists
 if [ ! -f "$ENV_FILE" ]; then

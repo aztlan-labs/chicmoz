@@ -14,6 +14,7 @@ terminal 2:
 ```
 
 terminal 3:
+_Make sure you have .chicmoz-local.env file in the root_
 
 ```sh
 cd services/explorer-ui && yarn dev
