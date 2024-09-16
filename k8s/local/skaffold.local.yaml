@@ -61,12 +61,16 @@ manifests:
     - k8s/local/dummy-node/deployment.yaml
     - k8s/local/dummy-node/service.yaml
     - k8s/local/aztec-listener/deployment.yaml
+    # DEVNET START
     #- k8s/local/aztec-devnet-node/deployment.yaml
     #- k8s/local/aztec-devnet-node/service.yaml
+    # DEVNET END
+    # LOCAL SANDBOX START
     - k8s/local/aztec-sandbox-node/deployment.yaml
     - k8s/local/aztec-sandbox-node/service.yaml
     - k8s/local/anvil-ethereum-node/deployment.yaml
     - k8s/local/anvil-ethereum-node/service.yaml
+    # LOCAL SANDBOX END
     - k8s/local/kafka-ui/configmap.yaml
     - k8s/local/kafka-ui/configmap-env.yaml
     - k8s/local/kafka-ui/ingress.yaml
