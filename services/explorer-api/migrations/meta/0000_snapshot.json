@@ -1,5 +1,5 @@
 {
-  "id": "27bcf267-5474-4400-9b07-8597e50bffe2",
+  "id": "67d1e04e-0624-4b34-9729-d0541ad0bada",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -41,6 +41,12 @@
           "name": "hash",
           "type": "varchar",
           "primaryKey": true,
+          "notNull": true
+        },
+        "height": {
+          "name": "height",
+          "type": "bigint",
+          "primaryKey": false,
           "notNull": true
         },
         "archive_id": {

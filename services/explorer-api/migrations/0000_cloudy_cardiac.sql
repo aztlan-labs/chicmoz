@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS "archive" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l2Block" (
 	"hash" varchar PRIMARY KEY NOT NULL,
+	"height" bigint NOT NULL,
 	"archive_id" uuid NOT NULL,
 	"header_id" uuid NOT NULL,
 	"body_id" uuid NOT NULL

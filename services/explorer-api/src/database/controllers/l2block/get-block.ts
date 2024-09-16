@@ -32,8 +32,10 @@ import {
   txEffectToPublicDataWrite,
 } from "../../../database/schema/l2block/index.js";
 
-export const getBlock = async (blockNumber: number): Promise<ChicmozL2Block | null> => {
-  const res = await db()
+export const getBlock = async (
+  heightOrHash: number | string
+): Promise<ChicmozL2Block | null> => {
+  const joinQuery = db()
     .select({
       // TODO: can this be simplified using getTableColumns?
       hash: l2Block.hash,
@@ -93,10 +95,18 @@ export const getBlock = async (blockNumber: number): Promise<ChicmozL2Block | nu
       eq(header.globalVariablesId, globalVariables.id)
     )
     .innerJoin(gasFees, eq(globalVariables.gasFeesId, gasFees.id))
-    .innerJoin(body, eq(l2Block.bodyId, body.id))
-    .where(eq(l2Block.height, blockNumber))
-    .limit(1)
-    .execute();
+    .innerJoin(body, eq(l2Block.bodyId, body.id));
+
+  const res =
+    typeof heightOrHash === "number" || !isNaN(Number(heightOrHash))
+      ? await joinQuery
+          .where(eq(l2Block.height, Number(heightOrHash)))
+          .limit(1)
+          .execute()
+      : await joinQuery
+          .where(eq(l2Block.hash, heightOrHash))
+          .limit(1)
+          .execute();
 
   if (res.length === 0) return null;
 
@@ -210,6 +220,7 @@ export const getBlock = async (blockNumber: number): Promise<ChicmozL2Block | nu
 
   const blockData = {
     hash: dbRes.hash,
+    height: dbRes.height,
     archive: {
       root: dbRes.archiveRoot,
       nextAvailableLeafIndex: dbRes.archiveNextAvailableLeafIndex,

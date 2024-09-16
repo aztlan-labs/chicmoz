@@ -1,9 +1,9 @@
 // TODO: update url values
 export const aztecExplorer = {
-  getLatestHeight: "",
-  getLatestBlock: "latest/block",
-  getBlockByHash: "",
-  getBlockByHeight: "",
+  getLatestHeight: "latest-height",
+  getLatestBlock: "blocks/latest",
+  getBlockByHash: "blocks/",
+  getBlockByHeight: "blocks/",
   getBlocksByHeightRange: "",
   getTransactionById: "",
   getTransactionsByHeight: "",
