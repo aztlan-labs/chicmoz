@@ -72,6 +72,7 @@ spec:
             - name: DISABLE_AZTEC
               value: "false"
             - name: AZTEC_RPC
-              value: "http://aztec-devnet-node:8080" # DEVNET
+              value: "https://api.aztec.network/devnet/aztec-node-1/xF4vCY9uuwFMEfk8mR3AQ6JJ8JCX26vo" # DEVNET-RPC
+              #value: "http://aztec-devnet-node:8080" # DEVNET
               #value: "http://aztec-sandbox-node:8081" # SANDBOX
 status: {}
