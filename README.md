@@ -9,19 +9,14 @@ minikube start --kubernetes-version=v1.25.3 --cpus max --memory max && skaffold 
 terminal 2:
 
 ```sh
-minikube tunnel --bind-address 127.0.0.1
+# It will end with keeping the terminal open for the tunnel. (Also it will ask for your password)
+./scripts/miscallaneous.sh
 ```
 
 terminal 3:
 
 ```sh
 cd services/explorer-ui && yarn dev
-```
-
-terminal 4 (you need to have [aztec-cli](https://docs.aztec.network/guides/developer_guides/getting_started/quickstart) installed):
-
-```sh
-aztec start --sandbox
 ```
 
 UI: http://localhost:5173

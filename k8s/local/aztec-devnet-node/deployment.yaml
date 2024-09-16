@@ -33,12 +33,12 @@ spec:
             - name: AZTEC_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: aztec-secrets
-                  key: AZTEC_API_KEY
+                  name: global
+                  key: CHICMOZ_AZTEC_API_KEY
             - name: DEBUG
               value: "aztec:*"
             - name: ETHEREUM_HOST
-              value: "https://devnet-mainnet-fork.aztec.network:8545/$(AZTEC_API_KEY)" # TODO: WARNING! We need to have this as env-var
+              value: "https://devnet-mainnet-fork.aztec.network:8545/$(CHICMOZ_AZTEC_API_KEY)" # TODO: WARNING! We need to have this as env-var
             - name: L1_CHAIN_ID
               value: "677692"
             - name: ARCHIVER_POLLING_INTERVAL_MS
@@ -58,15 +58,30 @@ spec:
             - name: AZTEC_PORT
               value: "8080"
             - name: FAUCET_ENDPOINT
-              value: "https://api.aztec.network/devnet/aztec-faucet/$(AZTEC_API_KEY)"
+              value: "https://api.aztec.network/devnet/aztec-faucet/$(CHICMOZ_AZTEC_API_KEY)"
             - name: PRIVATE_KEY
-              value: "5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a"
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: CHICMOZ_AZTEC_PRIVATE_KEY
             - name: ETH_ADDRESS
-              value: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: CHICMOZ_AZTEC_ETH_ADDRESS
             - name: L1_DEV_COIN
-              value: "0x917b94eda07c1e159b88ca23ddbc73f337f7600b"
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: CHICMOZ_AZTEC_L1_DEV_COIN
             - name: DEV_COIN_PORTAL
-              value: "0x3a2a4bca32841dddcf5ba4a2988efae0b23a835a"
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: CHICMOZ_AZTEC_DEV_COIN_PORTAL
             - name: L1_FEE_JUICE
-              value: "0x611ffae40ce7251094244e58073d4e88c14da7e6"
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: CHICMOZ_AZTEC_L1_FEE_JUICE
 status: {}
