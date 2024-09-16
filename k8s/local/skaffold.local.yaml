@@ -61,13 +61,13 @@ manifests:
     - k8s/local/dummy-node/deployment.yaml
     - k8s/local/dummy-node/service.yaml
     - k8s/local/aztec-listener/deployment.yaml
-    #- k8s/local/aztec-devnet-node/deployment.yaml # DEVNET
-    #- k8s/local/aztec-devnet-node/service.yaml # DEVNET
+    - k8s/local/aztec-devnet-node/deployment.yaml # DEVNET
+    - k8s/local/aztec-devnet-node/service.yaml # DEVNET
     # ⚠️ Do not forget to also change AZTEC_RPC_URL in the aztec-listener deployment!
-    - k8s/local/aztec-sandbox-node/deployment.yaml # SANDBOX
-    - k8s/local/aztec-sandbox-node/service.yaml # SANDBOX
-    - k8s/local/anvil-ethereum-node/deployment.yaml # SANDBOX
-    - k8s/local/anvil-ethereum-node/service.yaml # SANDBOX
+    #- k8s/local/aztec-sandbox-node/deployment.yaml # SANDBOX
+    #- k8s/local/aztec-sandbox-node/service.yaml # SANDBOX
+    #- k8s/local/anvil-ethereum-node/deployment.yaml # SANDBOX
+    #- k8s/local/anvil-ethereum-node/service.yaml # SANDBOX
     - k8s/local/kafka-ui/configmap.yaml
     - k8s/local/kafka-ui/configmap-env.yaml
     - k8s/local/kafka-ui/ingress.yaml
