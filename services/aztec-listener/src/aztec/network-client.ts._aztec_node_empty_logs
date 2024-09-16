@@ -5,15 +5,18 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import {
-  PXE,
-  createPXEClient,
+  //type Fr,
+  //type ContractArtifact,
+  createAztecNodeClient,
+  AztecNode,
+  NodeInfo,
   type UnencryptedL2Log,
 } from "@aztec/aztec.js";
 import { ContractInstanceDeployedEvent } from "@aztec/circuits.js";
 import { AZTEC_RPC } from "../constants.js";
 import { logger } from "../logger.js";
 
-let aztecNode: PXE;
+let aztecNode: AztecNode;
 
 const node = () => {
   if (!aztecNode) throw new Error("Node not initialized");
@@ -21,45 +24,45 @@ const node = () => {
 };
 
 export const init = async () => {
-  aztecNode = createPXEClient(AZTEC_RPC);
+  aztecNode = createAztecNodeClient(AZTEC_RPC);
   logger.info("UUUUUUUGGGGLLLLY!!!!");
-  const ninf = await aztecNode.getNodeInfo();
+  const ninf = await getNodeInfo();
   logger.info(JSON.stringify(ninf));
   //await uglyFilipHack();
   await uglyFilipHack2();
   logger.info("UUUUUUUGGGGLLLLY!!!! END");
-  return aztecNode.getNodeInfo();
+  return getNodeInfo();
 };
 
-//export const getNodeInfo = async () => {
-//  const n = node();
-//  const [
-//    nodeVersion,
-//    protocolVersion,
-//    chainId,
-//    enr,
-//    contractAddresses,
-//    protocolContractAddresses,
-//  ] = await Promise.all([
-//    n.getNodeVersion(),
-//    n.getVersion(),
-//    n.getChainId(),
-//    n.getEncodedEnr(),
-//    n.getL1ContractAddresses(),
-//    n.getProtocolContractAddresses(),
-//  ]);
-//
-//  const nodeInfo: NodeInfo = {
-//    nodeVersion,
-//    l1ChainId: chainId,
-//    protocolVersion,
-//    enr,
-//    l1ContractAddresses: contractAddresses,
-//    protocolContractAddresses: protocolContractAddresses,
-//  };
-//
-//  return nodeInfo;
-//};
+export const getNodeInfo = async () => {
+  const n = node();
+  const [
+    nodeVersion,
+    protocolVersion,
+    chainId,
+    enr,
+    contractAddresses,
+    protocolContractAddresses,
+  ] = await Promise.all([
+    n.getNodeVersion(),
+    n.getVersion(),
+    n.getChainId(),
+    n.getEncodedEnr(),
+    n.getL1ContractAddresses(),
+    n.getProtocolContractAddresses(),
+  ]);
+
+  const nodeInfo: NodeInfo = {
+    nodeVersion,
+    l1ChainId: chainId,
+    protocolVersion,
+    enr,
+    l1ContractAddresses: contractAddresses,
+    protocolContractAddresses: protocolContractAddresses,
+  };
+
+  return nodeInfo;
+};
 
 export const getBlock = async (height: number) => node().getBlock(height);
 
@@ -78,16 +81,23 @@ const uglyFilipHack2 = async () => {
   const height = await getLatestHeight();
   let b = await getBlock(height);
   for (let h = 0; h < height; h++) {
-    if (h % 100 === 0) logger.info(`Processing block ${h}`);
     await new Promise((resolve) => setTimeout(resolve, 100));
+    logger.info(
+      JSON.stringify(
+        (
+          b?.body.unencryptedLogs.txLogs as unknown as UnencryptedL2Log[]
+        )
+      )
+    );
     if (!b) return undefined;
     const deployedEvent = ContractInstanceDeployedEvent.fromLogs(
-      b?.body.unencryptedLogs.txLogs as unknown as UnencryptedL2Log[]
+      (b?.body.unencryptedLogs.txLogs as unknown as UnencryptedL2Log[]).filter(
+        (l) => !!l.data
+      )
     );
-    logger.info(deployedEvent);
-    if (deployedEvent.length > 0) 
+    if (deployedEvent.length > 0) {
       deployedEvent.forEach((c) => logger.info(c.address.toString()));
-    
+    }
     b = await getBlock(h);
   }
   return b;

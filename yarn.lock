@@ -3003,6 +3003,7 @@ __metadata:
   resolution: "@chicmoz/aztec-listener@workspace:services/aztec-listener"
   dependencies:
     "@aztec/aztec.js": "npm:0.53.0"
+    "@aztec/circuits.js": "npm:0.53.0"
     "@chicmoz-pkg/logger-server": "workspace:^"
     "@chicmoz-pkg/message-bus": "workspace:^"
     "@chicmoz-pkg/message-registry": "workspace:^"
