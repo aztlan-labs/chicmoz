@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aztec-devnet-node
+  namespace: chicmoz
+spec:
+  selector:
+    app: aztec-devnet-node
+  ports:
+    - name: pxe-port
+      protocol: TCP
+      port: 8080
+      targetPort: 8080

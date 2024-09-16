@@ -3,10 +3,8 @@ build*
 node_modules*
 .DS_Store
 
-# file used to set env vars to local cluster
-set_local_env.sh
-
-decodeKeys.js
+*.env
+!chicmoz-example.env
 
 ignore/
 

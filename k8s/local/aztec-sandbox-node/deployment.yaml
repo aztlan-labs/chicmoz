@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: aztec-sanbox-node
+  name: aztec-sanbox-node
+  namespace: chicmoz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aztec-sanbox-node
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: aztec-sanbox-node
+    spec:
+      containers:
+        - image: aztecprotocol/aztec
+          name: aztec-sanbox-node
+          resources:
+            limits:
+              memory: 4096Mi
+              cpu: 250m
+          args:
+            - start
+            - --sandbox
+          env:
+            - name: DEBUG
+              value: "aztec:*"
+            - name: ETHEREUM_HOST
+              value: "http://anvil-ethereum-node:8545"
+            - name: L1_CHAIN_ID
+              value: "31337"
+            - name: ARCHIVER_POLLING_INTERVAL_MS
+              value: "50"
+            - name: P2P_BLOCK_CHECK_INTERVAL_MS
+              value: "50"
+            - name: SEQ_TX_POLLING_INTERVAL_MS
+              value: "50"
+            - name: WS_BLOCK_CHECK_INTERVAL_MS
+              value: "50"
+            - name: PXE_BLOCK_POLLING_INTERVAL_MS
+              value: "50"
+            - name: ARCHIVER_VIEM_POLLING_INTERVAL_MS
+              value: "500"
+            - name: PXE_PORT
+              value: "8081"
+            - name: AZTEC_PORT
+              value: "8081"
+status: {}

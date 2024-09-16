@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: explorer-api
+  name: explorer-api
+  namespace: chicmoz-prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: explorer-api
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: explorer-api
+    spec:
+      imagePullSecrets:
+        - name: do-registry
+      containers:
+        - image: registry.digitalocean.com/aztlan-containers/explorer-api:latest
+          resources:
+            limits:
+              memory: 4096Mi
+              cpu: 350m
+          ports:
+            - name: http-app
+              containerPort: 80
+              protocol: TCP
+          name: explorer-api
+          env:
+            - name: NODE_ENV
+              value: "development"
+            - name: PORT
+              value: "80"
+            - name: NETWORK_NAME
+              value: "SANDBOX"
+            - name: POSTGRES_IP
+              value: "postgresql"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DB_NAME
+              value: "auth"
+            - name: POSTGRES_ADMIN
+              value: "admin"
+            - name: POSTGRES_PASSWORD
+              value: "secret-local-password" # TODO: change to env-var
+            - name: BLOCK_INTERVAL_MS
+              value: "2000"
+            - name: BLOCK_DB_VALIDATION_ENABLED
+              value: "false"
+            - name: BLOCK_DB_VALIDATION_INTERVAL
+              value: "50"
+            - name: BLOCK_BD_VALIDATION_OFFSET
+              value: "50"
+            - name: CACHE_EXPIRATION_MS
+              value: "5000"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 10
+status: {}
