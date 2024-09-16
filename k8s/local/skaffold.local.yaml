@@ -65,6 +65,7 @@ manifests:
     #- k8s/local/aztec-devnet-node/deployment.yaml
     #- k8s/local/aztec-devnet-node/service.yaml
     # DEVNET END
+    # ⚠️ Do not forget to also change AZTEC_RPC_URL in the aztec-listener deployment!
     # LOCAL SANDBOX START
     - k8s/local/aztec-sandbox-node/deployment.yaml
     - k8s/local/aztec-sandbox-node/service.yaml
