@@ -49,14 +49,10 @@ spec:
               value: "50"
             - name: CHAIN_NAME
               value: "AZTEC"
-            - name: DISABLE_AZTEC
-              value: "true"
             - name: NETWORK_NAME
               value: "SANDBOX"
             - name: MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS
               value: "50"
-            - name: DISABLE_AZTEC
-              value: "false"
             - name: LISTEN_FOR_BLOCKS
               value: "true"
             - name: CATCHUP_ENABLED
@@ -73,4 +69,9 @@ spec:
               value: "secret-local-password"
             - name: IGNORE_PROCESSED_HEIGHT
               value: "false"
+            - name: DISABLE_AZTEC
+              value: "false"
+            - name: AZTEC_RPC
+              #  value: "http://aztec-devnet-node:8080" # DEVNET
+              value: "http://aztec-sandbox-node:8081" # SANDBOX
 status: {}
