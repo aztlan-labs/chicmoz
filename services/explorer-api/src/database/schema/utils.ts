@@ -26,5 +26,3 @@ export const bufferType = customType<{
     return 'bytea'
   },
 });
-
-export type HexString = `${"0x"}${string}`;

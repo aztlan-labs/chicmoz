@@ -18,6 +18,7 @@ export type ChicmozL2ContractInstanceDeployedEvent = z.infer<
 >;
 
 export const chicmozL2ContractClassRegisteredEventSchema = z.object({
+  blockHash: chicmozL2BlockSchema.shape.hash,
   contractClassId: frSchema,
   version: z.number(),
   artifactHash: frSchema,

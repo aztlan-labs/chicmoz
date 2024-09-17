@@ -1,4 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
+import {
+  HexString,
+  type ChicmozL2Block,
+  type EncryptedLogEntry,
+  type NoteEncryptedLogEntry,
+  type UnencryptedLogEntry,
+} from "@chicmoz-pkg/types";
 import { v4 as uuidv4 } from "uuid";
 import { getDb as db } from "../../../database/index.js";
 import {
@@ -6,31 +13,24 @@ import {
   body,
   bodyToTxEffects,
   contentCommitment,
+  functionLogs,
+  gasFees,
   globalVariables,
   header,
-  l2Block,
-  state,
-  txEffect,
-  lastArchive,
   l1ToL2MessageTree,
-  partial,
+  l2Block,
+  lastArchive,
+  logs,
   noteHashTree,
   nullifierTree,
+  partial,
   publicDataTree,
-  gasFees,
   publicDataWrite,
-  logs,
-  functionLogs,
+  state,
+  txEffect,
   txEffectToLogs,
   txEffectToPublicDataWrite,
 } from "../../../database/schema/l2block/index.js";
-import {
-  type ChicmozL2Block,
-  type EncryptedLogEntry,
-  type NoteEncryptedLogEntry,
-  type UnencryptedLogEntry,
-} from "@chicmoz-pkg/types";
-import { HexString } from "../../schema/utils.js";
 
 export const store = async (block: ChicmozL2Block): Promise<void> => {
   return await db().transaction(async (tx) => {
@@ -246,9 +246,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
         encrypted: txEff.encryptedLogs.functionLogs,
         unencrypted: txEff.unencryptedLogs.functionLogs,
       })) {
-        for (const [functionLogIndex, functionLog] of Object.entries(
-          fLogs
-        )) {
+        for (const [functionLogIndex, functionLog] of Object.entries(fLogs)) {
           // Insert logs
           const functionLogId = uuidv4();
           await tx

@@ -19,6 +19,7 @@ import {
 export const l2ContractInstanceDeployed = pgTable(
   "l2_contract_instance_deployed",
   {
+    // TODO: perhaps a different name for this column?
     id: uuid("id").primaryKey().defaultRandom(),
     blockHash: varchar("block_hash")
       .notNull()

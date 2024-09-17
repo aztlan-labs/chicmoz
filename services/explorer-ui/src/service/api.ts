@@ -7,7 +7,7 @@ const defaultHeaders = {
 };
 
 export const getLatestHeight = async () => {
-  const url = `${API_URL}/${aztecExplorer.getLatestHeight}`;
+  const url = `${API_URL}/${aztecExplorer.getL2LatestHeight}`;
   const response = await fetch(url, {
     method: "GET",
     headers: defaultHeaders,
@@ -21,7 +21,7 @@ export const getLatestHeight = async () => {
 };
 
 export const getLatestBlock = async (): Promise<ChicmozL2Block> => {
-  const url = `${API_URL}/${aztecExplorer.getLatestBlock}`;
+  const url = `${API_URL}/${aztecExplorer.getL2LatestBlock}`;
   const response = await fetch(url, {
     method: "GET",
     headers: defaultHeaders,
@@ -36,7 +36,7 @@ export const getLatestBlock = async (): Promise<ChicmozL2Block> => {
 };
 
 export const getBlockByHeight = async (height: number): Promise<ChicmozL2Block> => {
-  const url = `${API_URL}/${aztecExplorer.getBlockByHeight}${height}`;
+  const url = `${API_URL}/${aztecExplorer.getL2BlockByHeight}${height}`;
   const response = await fetch(url, {
     method: "GET",
     headers: defaultHeaders,
@@ -50,7 +50,7 @@ export const getBlockByHeight = async (height: number): Promise<ChicmozL2Block> 
 };
 
 export const getBlocksByHeightRange = async (start: number, end: number) => {
-  const url = `${API_URL}/${aztecExplorer.getBlocksByHeightRange}`;
+  const url = `${API_URL}/${aztecExplorer.getL2BlocksByHeightRange}`;
   const response = await fetch(url, {
     method: "GET",
     headers: defaultHeaders,
@@ -65,7 +65,7 @@ export const getBlocksByHeightRange = async (start: number, end: number) => {
 };
 
 export const getBlocksByHash = async (hash: string): Promise<ChicmozL2Block> => {
-  const url = `${API_URL}/${aztecExplorer.getBlockByHash}${hash}`;
+  const url = `${API_URL}/${aztecExplorer.getL2BlockByHash}${hash}`;
   const response = await fetch(url, {
     method: "GET",
     headers: defaultHeaders,
@@ -79,7 +79,7 @@ export const getBlocksByHash = async (hash: string): Promise<ChicmozL2Block> => 
 };
 
 export const getTransactionById = async (id: string) => {
-  const url = `${API_URL}/${aztecExplorer.getTransactionById}`;
+  const url = `${API_URL}/${aztecExplorer.getL2TransactionById}`;
   const response = await fetch(url, {
     method: "GET",
     headers: defaultHeaders,
@@ -94,7 +94,7 @@ export const getTransactionById = async (id: string) => {
 };
 
 export const getTransactionsByHeight = async (height: number) => {
-  const url = `${API_URL}/${aztecExplorer.getTransactionsByHeight}`;
+  const url = `${API_URL}/${aztecExplorer.getL2TransactionsByHeight}`;
   const response = await fetch(url, {
     method: "GET",
     headers: defaultHeaders,
@@ -109,7 +109,7 @@ export const getTransactionsByHeight = async (height: number) => {
 };
 
 export const getTransactionsByHeightRange = async (start: number, end: number) => {
-  const url = `${API_URL}/${aztecExplorer.getTransactionsByHeightRange}`;
+  const url = `${API_URL}/${aztecExplorer.getL2TransactionsByHeightRange}`;
   const response = await fetch(url, {
     method: "GET",
     headers: defaultHeaders,
@@ -122,3 +122,17 @@ export const getTransactionsByHeightRange = async (start: number, end: number) =
 
   return result;
 };
+
+export const getL2ContractInstance = async (address: string) => {
+  const url = `${API_URL}/${aztecExplorer.getL2ContractInstance}${address}`;
+  const response = await fetch(url, {
+    method: "GET",
+    headers: defaultHeaders,
+  });
+  const result = await response.json();
+
+  console.info(`GET ${url}: `, response.status);
+  if (response.status !== 200) throw new Error(`An error occurred while fetching contract instance: ${result}`);
+
+  return result;
+}
