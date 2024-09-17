@@ -45,9 +45,9 @@ const setLatestProcessedHeight = async (height: number) => {
 
 const fetchAndPublishLatestBlockReoccurring = async () => {
   const networkLatestHeight = await getLatestHeight();
-  const alreadyProcessed = networkLatestHeight <= latestProcessedHeight;
-  const missedBlocks = networkLatestHeight - latestProcessedHeight > 1;
+  if (networkLatestHeight === 0) throw new Error("FATAL: network returned height 0");
 
+  const alreadyProcessed = networkLatestHeight <= latestProcessedHeight;
   if (alreadyProcessed && !IGNORE_PROCESSED_HEIGHT) {
     logger.info(
       `🐻 block ${networkLatestHeight} has already been processed, skipping...`
@@ -55,19 +55,18 @@ const fetchAndPublishLatestBlockReoccurring = async () => {
     return;
   }
 
+  const missedBlocks = networkLatestHeight - latestProcessedHeight > 1;
+  if (missedBlocks)
+    await catchUpOnMissedBlocks(latestProcessedHeight + 1, networkLatestHeight);
+
   const blockRes = await backOff(async () => {
     return await getBlock(networkLatestHeight);
   }, backOffOptions);
-
   if (!blockRes) {
     throw new Error(
       "FATAL: Poller received no block, eventhough receiveing height from network."
     );
   }
-
-  if (missedBlocks)
-    await catchUpOnMissedBlocks(latestProcessedHeight + 1, networkLatestHeight);
-
   await onBlock(blockRes);
 
   await setLatestProcessedHeight(
