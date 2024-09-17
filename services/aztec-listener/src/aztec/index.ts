@@ -17,7 +17,12 @@ const backOffOptions: Partial<IBackOffOptions> = {
   numOfAttempts: 10,
   maxDelay: 10000,
   retry: (e, attemptNumber: number) => {
-    logger.warn(e);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (e.cause)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      logger.warn(e.cause);
+    else logger.warn(e);
+
     logger.info(AZTEC_RPC);
     logger.info(
       `🤡 We'll allow some errors during start-up, retrying attempt ${attemptNumber}...`
@@ -57,4 +62,5 @@ export const init = async () => {
   };
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 export const getNodeInfo = () => nodeInfo;
