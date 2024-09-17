@@ -23,16 +23,17 @@ export const onBlock = async ({ block }: NewBlockEvent) => {
     return;
   }
   const b = L2Block.fromString(block);
-  await storeBlock(b);
-  await storeContracts(b);
+  const hash = b.hash().toString();
+  await storeBlock(b, hash);
+  await storeContracts(b, hash);
 };
 
-const storeBlock = async (b: L2Block) => {
+const storeBlock = async (b: L2Block, hash: string) => {
   let parsedBlock: ChicmozL2Block;
   try {
     logger.info(`👓 Parsing block ${b.number}`);
     parsedBlock = chicmozL2BlockSchema.parse({
-      hash: b.hash().toString(),
+      hash,
       ...JSON.parse(JSON.stringify(b)),
     });
   } catch (e) {
@@ -54,27 +55,7 @@ const storeBlock = async (b: L2Block) => {
   }
 };
 
-//    block 214 contractInstances [
-//      ContractInstanceDeployedEvent {
-//        address: AztecAddress<0x1e03a77b21dddbe1f3f4d96a43ef03de51b9ee797eea1fc8c5a82abb10a396ad>,
-//        version: 1,
-//        salt: Fr<0x2190706dc5976f5697ab65f125aee63ef6393e8a45a1e6f93bc775870bc1402a>,
-//        contractClassId: Fr<0x103bfee81ad018bc58f15008d9cc7f1fb552099e5a1c7ae9fbcde0a56c0def1d>,
-//        initializationHash: Fr<0x140b491a94ac6c8ea07d11e5850e6850f965f612d2b9e665f323128acc7d531a>,
-//        publicKeysHash: Fr<0x0000000000000000000000000000000000000000000000000000000000000000>,
-//        deployer: AztecAddress<0x1ec689d351ad07597014ed33ce941cf752c78c7270cab23bcd050a8b06c060ba>
-//      }
-//    ] contractClasses [
-//      ContractClassRegisteredEvent {
-//        contractClassId: Fr<0x103bfee81ad018bc58f15008d9cc7f1fb552099e5a1c7ae9fbcde0a56c0def1d>,
-//        version: 1,
-//        artifactHash: Fr<0x1517f66a10bbef5b7c17852b3accd1272b844e97ff7fcfed3e226e1f46c925ad>,
-//        privateFunctionsRoot: Fr<0x221318c79f077bb86be40a80d20cc24b011dd8565edd54225c860dbc68a9a0c5>,
-//        packedPublicBytecode: <Buffer 00 00 00 03 1f 69 33 c3 00 00 01 c0 1f 8b 08 00 00 00 00 00 02 ff 65 52 c1 6e 14 31 0c 7d 89 33 8e e3 99 e1 5c 69 11 37 84 b4 d0 ee 65 46 20 38 d2 22 ... 6005 more bytes>
-//      }
-//    ]
-
-const storeContracts = async (b: L2Block) => {
+const storeContracts = async (b: L2Block, blockHash: string) => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
   const blockLogs = b.body.txEffects
     .flatMap((txEffect) => (txEffect ? [txEffect.unencryptedLogs] : []))
@@ -124,7 +105,12 @@ const storeContracts = async (b: L2Block) => {
     logger.info(
       `Storing contractInstances ${JSON.stringify(parsedContractInstances)}`
     );
-    //await controllers.l2ContractInstance.store(parsedContractInstances);
+    for (const contractInstance of parsedContractInstances) {
+      await controllers.l2Contract.storeContractInstance(
+        contractInstance,
+        blockHash
+      );
+    }
   } catch (e) {
     logger.error(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -136,7 +122,12 @@ const storeContracts = async (b: L2Block) => {
     logger.info(
       `Storing contractClasses ${JSON.stringify(parsedContractClasses)}`
     );
-    //await controllers.l2ContractClass.store(parsedContractClasses);
+    for (const contractClass of parsedContractClasses) {
+      await controllers.l2Contract.storeContractClass(
+        contractClass,
+        blockHash
+      );
+    }
   } catch (e) {
     logger.error(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions

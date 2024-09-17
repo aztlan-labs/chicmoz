@@ -9,6 +9,9 @@ import {
 export const generateFrColumn = (name: string) =>
   varchar(name, { length: 66 });
 
+export const generateAztecAddressColumn = (name: string) =>
+  varchar(name, { length: 66 });
+
 export const generateTreeTable = (name: string) => pgTable(name, {
   id: uuid("id").primaryKey().defaultRandom(),
   root: generateFrColumn("root"),

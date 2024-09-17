@@ -28,7 +28,7 @@ let pollInterval: NodeJS.Timeout;
 let latestProcessedHeight = -1;
 
 export const startPolling = async ({ fromHeight }: { fromHeight: number }) => {
-  await setLatestProcessedHeight(fromHeight - 1);
+  await setLatestProcessedHeight(fromHeight - 5);
   pollInterval = setInterval(() => {
     void fetchAndPublishLatestBlockReoccurring();
   }, BLOCK_INTERVAL_MS);
