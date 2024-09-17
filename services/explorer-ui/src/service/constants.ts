@@ -9,6 +9,7 @@ export const aztecExplorer = {
   getL2TransactionsByHeight: "",
   getL2TransactionsByHeightRange: "",
   getL2ContractInstance: "l2/contract-instance/",
+  getL2ContractInstancesByBlockHash: (hash: string) => `l2/blocks/${hash}/contract-instances`,
 };
 
 export const API_URL = import.meta.env.VITE_API_URL;

@@ -6,3 +6,9 @@ export const getContractInstanceSchema = z.object({
     address: hexStringSchema,
   }),
 });
+
+export const getContractInstancesByBlockHashSchema = z.object({
+  params: z.object({
+    blockHash: hexStringSchema,
+  }),
+});

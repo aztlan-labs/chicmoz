@@ -1,5 +1,6 @@
-import { type ChicmozL2Block, chicmozL2BlockSchema } from "@chicmoz-pkg/types";
+import { type ChicmozL2Block, chicmozL2BlockSchema, chicmozL2ContractInstanceDeluxeSchema, type ChicmozL2ContractInstanceDeluxe } from "@chicmoz-pkg/types";
 import { API_URL, aztecExplorer } from "./constants";
+import {z} from "zod";
 
 const defaultHeaders = {
   "Content-Type": "application/json",
@@ -28,9 +29,10 @@ export const getLatestBlock = async (): Promise<ChicmozL2Block> => {
   });
   const result = await response.json();
 
+  if (response.status !== 200) throw new Error(`An error occurred while fetching latest height: ${result}`);
+
   const res = chicmozL2BlockSchema.parse(result);
 
-  if (response.status !== 200) throw new Error(`An error occurred while fetching latest height: ${result}`);
 
   return res;
 };
@@ -123,7 +125,7 @@ export const getTransactionsByHeightRange = async (start: number, end: number) =
   return result;
 };
 
-export const getL2ContractInstance = async (address: string) => {
+export const getL2ContractInstance = async (address: string): Promise<ChicmozL2ContractInstanceDeluxe> => {
   const url = `${API_URL}/${aztecExplorer.getL2ContractInstance}${address}`;
   const response = await fetch(url, {
     method: "GET",
@@ -134,5 +136,23 @@ export const getL2ContractInstance = async (address: string) => {
   console.info(`GET ${url}: `, response.status);
   if (response.status !== 200) throw new Error(`An error occurred while fetching contract instance: ${result}`);
 
-  return result;
+  const res = chicmozL2ContractInstanceDeluxeSchema.parse(result);
+
+  return res;
+}
+
+export const getL2ContractInstancesByBlockHash = async (hash: string): Promise<ChicmozL2ContractInstanceDeluxe[]> => {
+  const url = `${API_URL}/${aztecExplorer.getL2ContractInstancesByBlockHash(hash)}`;
+  const response = await fetch(url, {
+    method: "GET",
+    headers: defaultHeaders,
+  });
+  const result = await response.json();
+
+  console.info(`GET ${url}: `, response.status);
+  if (response.status !== 200) throw new Error(`An error occurred while fetching contract instances by block hash: ${result}`);
+
+  const res = z.array(chicmozL2ContractInstanceDeluxeSchema).parse(result);
+
+  return res;
 }

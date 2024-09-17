@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { IBackOffOptions, backOff } from "exponential-backoff";
 import {
   BLOCK_INTERVAL_MS,
@@ -28,7 +24,7 @@ let pollInterval: NodeJS.Timeout;
 let latestProcessedHeight = -1;
 
 export const startPolling = async ({ fromHeight }: { fromHeight: number }) => {
-  await setLatestProcessedHeight(fromHeight - 5);
+  await setLatestProcessedHeight(fromHeight - 100);
   pollInterval = setInterval(() => {
     void fetchAndPublishLatestBlockReoccurring();
   }, BLOCK_INTERVAL_MS);
@@ -68,10 +64,11 @@ const fetchAndPublishLatestBlockReoccurring = async () => {
       "FATAL: Poller received no block, eventhough receiveing height from network."
     );
   }
-  await onBlock(blockRes);
 
   if (missedBlocks)
     await catchUpOnMissedBlocks(latestProcessedHeight + 1, networkLatestHeight);
+
+  await onBlock(blockRes);
 
   await setLatestProcessedHeight(
     Number(blockRes.header.globalVariables.blockNumber)
@@ -97,5 +94,6 @@ const catchUpOnMissedBlocks = async (start: number, end: number) => {
 
     const durationMs = new Date().getTime() - startTimeMs;
     logger.info(`🐯 missed blocks ${start}-${end} published (${durationMs}ms)`);
+    await new Promise((resolve) => setTimeout(resolve, 500));
   }
 };

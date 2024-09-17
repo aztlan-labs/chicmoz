@@ -1,20 +1,17 @@
 import {
-  ChicmozL2ContractInstanceDeluxe,
-  HexString,
+  ChicmozL2ContractInstanceDeluxe
 } from "@chicmoz-pkg/types";
 import { and, desc, eq } from "drizzle-orm";
 import { getDb as db } from "../../../database/index.js";
-import { logger } from "../../../logger.js";
 import {
   l2ContractClassRegistered,
   l2ContractInstanceDeployed,
 } from "../../schema/l2contract/index.js";
 
-export const getL2DeployedContractInstanceByAddress = async (
-  address: HexString
+export const getL2DeployedContractInstancesByBlockHash = async (
+  blockHash: string
 ): Promise<
-  | ChicmozL2ContractInstanceDeluxe
-  | null
+  ChicmozL2ContractInstanceDeluxe[]
 > => {
   const result = await db()
     .select({
@@ -44,19 +41,8 @@ export const getL2DeployedContractInstanceByAddress = async (
         )
       )
     )
-    .where(eq(l2ContractInstanceDeployed.address, address))
-    .orderBy(desc(l2ContractInstanceDeployed.version))
-    .limit(1);
+    .where(eq(l2ContractInstanceDeployed.blockHash, blockHash))
+    .orderBy(desc(l2ContractInstanceDeployed.version));
 
-  if (result.length === 0) {
-    logger.info(`No contract instance found for address: ${address}`);
-    return null;
-  }
-
-  const contractInstance = result[0];
-
-  return {
-    ...contractInstance,
-    packedPublicBytecode: Buffer.from(contractInstance.packedPublicBytecode),
-  };
+  return result;
 };
