@@ -1,8 +1,10 @@
 import { z } from "zod";
 import { aztecAddressSchema, frSchema } from "./utils.js";
+import { chicmozL2BlockSchema } from "./l2Block.js";
 
 export const chicmozL2ContractInstanceDeployedEventSchema = z.object({
   address: aztecAddressSchema,
+  blockHash: chicmozL2BlockSchema.shape.hash,
   version: z.number(),
   salt: frSchema,
   contractClassId: frSchema,

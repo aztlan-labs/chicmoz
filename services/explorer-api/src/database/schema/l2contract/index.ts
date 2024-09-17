@@ -20,7 +20,7 @@ export const l2ContractInstanceDeployed = pgTable(
   "l2_contract_instance_deployed",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    block_hash: varchar("block_hash")
+    blockHash: varchar("block_hash")
       .notNull()
       .references(() => l2Block.hash),
     address: generateAztecAddressColumn("address").notNull(),
@@ -44,7 +44,7 @@ export const l2ContractInstanceDeployed = pgTable(
 export const l2ContractClassRegistered = pgTable(
   "l2_contract_class_registered",
   {
-    block_hash: varchar("block_hash")
+    blockHash: varchar("block_hash")
       .notNull()
       .references(() => l2Block.hash),
     contractClassId: generateFrColumn("contract_class_id").notNull(),

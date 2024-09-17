@@ -12,26 +12,22 @@ import {
 
 export const storeContractInstance = async (
   instance: ChicmozL2ContractInstanceDeployedEvent,
-  block_hash: string
 ): Promise<void> => {
 
   await db()
     .insert(l2ContractInstanceDeployed)
     .values({
-      block_hash,
       ...instance,
     })
     .onConflictDoNothing();
 };
 export const storeContractClass = async (
   contractClass: ChicmozL2ContractClassRegisteredEvent,
-  block_hash: string
 ): Promise<void> => {
 
   await db()
     .insert(l2ContractClassRegistered)
     .values({
-      block_hash,
       ...contractClass,
     })
     .onConflictDoNothing();

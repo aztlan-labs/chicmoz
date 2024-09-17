@@ -78,7 +78,12 @@ const storeContracts = async (b: L2Block, blockHash: string) => {
     try {
       const parsed: ChicmozL2ContractInstanceDeployedEvent =
         chicmozL2ContractInstanceDeployedEventSchema.parse(
-          JSON.parse(JSON.stringify(contractInstance))
+          JSON.parse(
+            JSON.stringify({
+              blockHash,
+              ...contractInstance,
+            })
+          )
         );
       parsedContractInstances.push(parsed);
     } catch (e) {
@@ -91,7 +96,12 @@ const storeContracts = async (b: L2Block, blockHash: string) => {
   for (const contractClass of contractClasses) {
     try {
       const parsed = chicmozL2ContractClassRegisteredEventSchema.parse(
-        JSON.parse(JSON.stringify(contractClass))
+        JSON.parse(
+          JSON.stringify({
+            blockHash,
+            ...contractClass,
+          })
+        )
       );
       parsedContractClasses.push(parsed);
     } catch (e) {
@@ -106,12 +116,8 @@ const storeContracts = async (b: L2Block, blockHash: string) => {
     logger.info(
       `Storing contractInstances ${JSON.stringify(parsedContractInstances)}`
     );
-    for (const contractInstance of parsedContractInstances) {
-      await controllers.l2Contract.storeContractInstance(
-        contractInstance,
-        blockHash
-      );
-    }
+    for (const contractInstance of parsedContractInstances)
+      await controllers.l2Contract.storeContractInstance(contractInstance);
   } catch (e) {
     logger.error(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -123,17 +129,12 @@ const storeContracts = async (b: L2Block, blockHash: string) => {
     logger.info(
       `Storing contractClasses ${JSON.stringify(parsedContractClasses)}`
     );
-    for (const contractClass of parsedContractClasses) {
-      await controllers.l2Contract.storeContractClass(
-        contractClass,
-        blockHash
-      );
-    }
+    for (const contractClass of parsedContractClasses)
+      await controllers.l2Contract.storeContractClass(contractClass);
   } catch (e) {
     logger.error(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       `Failed to store contractClasses: ${(e as Error)?.stack ?? e}`
     );
   }
-
 };
