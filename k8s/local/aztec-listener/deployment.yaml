@@ -73,5 +73,5 @@ spec:
               value: "false"
             - name: AZTEC_RPC
               # value: "http://aztec-devnet-node:8080" # DEVNET
-              value: "http://aztec-sandbox-node:8081" # SANDBOX
+              value: "http://aztec-sandbox-node:8080" # SANDBOX
 status: {}

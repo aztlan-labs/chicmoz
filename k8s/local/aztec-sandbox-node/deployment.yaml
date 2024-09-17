@@ -26,6 +26,10 @@ spec:
           args:
             - start
             - --sandbox
+          ports:
+            - name: pxe-port
+              containerPort: 8080
+              protocol: TCP
           env:
             - name: DEBUG
               value: "aztec:*"
@@ -46,7 +50,7 @@ spec:
             - name: ARCHIVER_VIEM_POLLING_INTERVAL_MS
               value: "500"
             - name: PXE_PORT
-              value: "8081"
+              value: "8080"
             - name: AZTEC_PORT
-              value: "8081"
+              value: "8080"
 status: {}

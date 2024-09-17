@@ -9,6 +9,7 @@ import {
   CATCHUP_ENABLED,
   LISTEN_FOR_BLOCKS,
   DISABLE_AZTEC,
+  AZTEC_RPC,
 } from "../constants.js";
 import { startPolling, stopPolling } from "./poller.js";
 
@@ -17,6 +18,7 @@ const backOffOptions: Partial<IBackOffOptions> = {
   maxDelay: 10000,
   retry: (e, attemptNumber: number) => {
     logger.warn(e);
+    logger.info(AZTEC_RPC);
     logger.info(
       `🤡 We'll allow some errors during start-up, retrying attempt ${attemptNumber}...`
     );
