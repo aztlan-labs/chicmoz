@@ -24,6 +24,7 @@ export type UnencryptedLogEntry = z.infer<typeof unencryptedLogEntrySchema>;
 
 export const chicmozL2BlockSchema = z.object({
   hash: z.string(),
+  height: z.number(),
   archive: z.object({
     root: frSchema,
     nextAvailableLeafIndex: z.number(),

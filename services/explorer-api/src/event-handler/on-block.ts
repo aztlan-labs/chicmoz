@@ -34,6 +34,7 @@ const storeBlock = async (b: L2Block, hash: string) => {
     logger.info(`👓 Parsing block ${b.number}`);
     parsedBlock = chicmozL2BlockSchema.parse({
       hash,
+      height: b.number,
       ...JSON.parse(JSON.stringify(b)),
     });
   } catch (e) {

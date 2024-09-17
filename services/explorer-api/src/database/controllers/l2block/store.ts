@@ -297,6 +297,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
       .insert(l2Block)
       .values({
         hash: block.hash,
+        height: parseInt(block.header.globalVariables.blockNumber, 16),
         archiveId,
         headerId,
         bodyId,
