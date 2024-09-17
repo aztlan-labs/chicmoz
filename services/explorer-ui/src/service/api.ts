@@ -37,17 +37,16 @@ export const getLatestBlock = async (): Promise<ChicmozL2Block> => {
   return res;
 };
 
-export const getBlockByHeight = async (height: number) => {
-  const url = `${API_URL}/${aztecExplorer.getBlockByHeight}`;
+export const getBlockByHeight = async (height: number): Promise<ChicmozL2Block> => {
+  const url = `${API_URL}/${aztecExplorer.getBlockByHeight}${height}`;
   const response = await fetch(url, {
     method: "GET",
     headers: defaultHeaders,
-    body: JSON.stringify({ height }),
   });
   const result = await response.json();
 
   console.info(`GET ${url}: `, response.status);
-  if (response.status !== 200) throw new Error(`An error occurred while fetching blocks by height range: ${result}`);
+  if (response.status !== 200) throw new Error(`An error occurred while fetching blocks by height: ${result}`);
 
   return result;
 };
@@ -67,12 +66,11 @@ export const getBlocksByHeightRange = async (start: number, end: number) => {
   return result;
 };
 
-export const getBlocksByHash = async (hash: string) => {
-  const url = `${API_URL}/${aztecExplorer.getBlockByHash}`;
+export const getBlocksByHash = async (hash: string): Promise<ChicmozL2Block> => {
+  const url = `${API_URL}/${aztecExplorer.getBlockByHash}${hash}`;
   const response = await fetch(url, {
     method: "GET",
     headers: defaultHeaders,
-    body: JSON.stringify({ hash }),
   });
   const result = await response.json();
 

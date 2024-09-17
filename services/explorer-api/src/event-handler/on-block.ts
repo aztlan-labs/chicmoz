@@ -16,6 +16,7 @@ export const onBlock = async ({ block }: NewBlockEvent) => {
     logger.info(`👓 Parsing block ${b.number}`);
     parsedBlock = chicmozL2BlockSchema.parse({
       hash: b.hash().toString(),
+      height: b.number,
       ...JSON.parse(JSON.stringify(b)),
     });
   } catch (e) {
