@@ -143,14 +143,13 @@ CREATE TABLE IF NOT EXISTS "state" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l2_contract_class_registered" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"block_hash" varchar NOT NULL,
 	"contract_class_id" varchar(66) NOT NULL,
 	"version" bigint NOT NULL,
 	"artifact_hash" varchar(66) NOT NULL,
 	"private_functions_root" varchar(66) NOT NULL,
 	"packed_public_bytecode" "bytea" NOT NULL,
-	CONSTRAINT "l2_contract_class_registered_contract_class_id_version_unique" UNIQUE("contract_class_id","version")
+	CONSTRAINT "contract_class_id_version" PRIMARY KEY("contract_class_id","version")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l2_contract_instance_deployed" (
@@ -299,7 +298,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "l2_contract_instance_deployed" ADD CONSTRAINT "l2_contract_instance_deployed_contract_class_id_l2_contract_class_registered_contract_class_id_fk" FOREIGN KEY ("contract_class_id") REFERENCES "public"."l2_contract_class_registered"("contract_class_id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "l2_contract_instance_deployed" ADD CONSTRAINT "contract_class" FOREIGN KEY ("contract_class_id","version") REFERENCES "public"."l2_contract_class_registered"("contract_class_id","version") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

@@ -1,5 +1,5 @@
 {
-  "id": "59757c46-fd50-4d0c-b111-4e8486c0e7fc",
+  "id": "89e25426-abb5-4378-a476-64785d173f4e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -909,13 +909,6 @@
       "name": "l2_contract_class_registered",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
         "block_hash": {
           "name": "block_hash",
           "type": "varchar",
@@ -965,14 +958,13 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "l2_contract_class_registered_contract_class_id_version_unique": {
-          "name": "l2_contract_class_registered_contract_class_id_version_unique",
-          "nullsNotDistinct": false,
+      "compositePrimaryKeys": {
+        "contract_class_id_version": {
+          "name": "contract_class_id_version",
           "columns": ["contract_class_id", "version"]
         }
-      }
+      },
+      "uniqueConstraints": {}
     },
     "public.l2_contract_instance_deployed": {
       "name": "l2_contract_instance_deployed",
@@ -1045,12 +1037,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "l2_contract_instance_deployed_contract_class_id_l2_contract_class_registered_contract_class_id_fk": {
-          "name": "l2_contract_instance_deployed_contract_class_id_l2_contract_class_registered_contract_class_id_fk",
+        "contract_class": {
+          "name": "contract_class",
           "tableFrom": "l2_contract_instance_deployed",
           "tableTo": "l2_contract_class_registered",
-          "columnsFrom": ["contract_class_id"],
-          "columnsTo": ["contract_class_id"],
+          "columnsFrom": ["contract_class_id", "version"],
+          "columnsTo": ["contract_class_id", "version"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

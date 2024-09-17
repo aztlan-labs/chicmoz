@@ -1,8 +1,10 @@
 import { relations } from "drizzle-orm";
 import {
   bigint,
+  foreignKey,
   integer,
   pgTable,
+  primaryKey,
   unique,
   uuid,
   varchar,
@@ -24,22 +26,24 @@ export const l2ContractInstanceDeployed = pgTable(
     address: generateAztecAddressColumn("address").notNull(),
     version: integer("version").notNull(),
     salt: generateFrColumn("salt").notNull(),
-    contractClassId: generateFrColumn("contract_class_id")
-      .notNull()
-      .references(() => l2ContractClassRegistered.contractClassId),
+    contractClassId: generateFrColumn("contract_class_id").notNull(),
     initializationHash: generateFrColumn("initialization_hash").notNull(),
     publicKeysHash: generateFrColumn("public_keys_hash").notNull(),
     deployer: generateAztecAddressColumn("deployer").notNull(),
   },
   (t) => ({
     unq: unique().on(t.contractClassId, t.address, t.version),
+    contractClass: foreignKey({
+      name: "contract_class",
+      columns: [t.contractClassId, t.version],
+      foreignColumns: [l2ContractClassRegistered.contractClassId, l2ContractClassRegistered.version],
+    }),
   })
 );
 
 export const l2ContractClassRegistered = pgTable(
   "l2_contract_class_registered",
   {
-    id: uuid("id").primaryKey().defaultRandom(),
     block_hash: varchar("block_hash")
       .notNull()
       .references(() => l2Block.hash),
@@ -50,7 +54,10 @@ export const l2ContractClassRegistered = pgTable(
     packedPublicBytecode: bufferType("packed_public_bytecode").notNull(),
   },
   (t) => ({
-    unq: unique().on(t.contractClassId, t.version),
+    primaryKey: primaryKey({
+      name: "contract_class_id_version",
+      columns: [t.contractClassId, t.version],
+    }),
   })
 );
 
