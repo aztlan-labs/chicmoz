@@ -2,23 +2,23 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: aztec-sanbox-node
-  name: aztec-sanbox-node
+    app: aztec-sandbox-node
+  name: aztec-sandbox-node
   namespace: chicmoz
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: aztec-sanbox-node
+      app: aztec-sandbox-node
   strategy: {}
   template:
     metadata:
       labels:
-        app: aztec-sanbox-node
+        app: aztec-sandbox-node
     spec:
       containers:
-        - image: aztecprotocol/aztec
-          name: aztec-sanbox-node
+        - image: aztecprotocol/aztec:0.53.0
+          name: aztec-sandbox-node
           resources:
             limits:
               memory: 4096Mi
@@ -26,6 +26,10 @@ spec:
           args:
             - start
             - --sandbox
+          ports:
+            - name: pxe-port
+              containerPort: 8081
+              protocol: TCP
           env:
             - name: DEBUG
               value: "aztec:*"

@@ -24,5 +24,9 @@ spec:
               memory: 4096Mi
               cpu: 250m
           args:
-            - "anvil -p 8545 --host 0.0.0.0 --chain-id 31337 --silent"
+            - "anvil -p 8545 --host 0.0.0.0 --chain-id 31337"
+          ports:
+            - name: anvil-port
+              containerPort: 8545
+              protocol: TCP
 status: {}
