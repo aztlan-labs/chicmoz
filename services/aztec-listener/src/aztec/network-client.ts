@@ -1,5 +1,3 @@
-// TODO: why unsafe?
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   createAztecNodeClient,
   AztecNode,
