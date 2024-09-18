@@ -9,11 +9,11 @@ metadata:
     nginx.ingress.kubernetes.io/auth-url: http://auth.chicmoz.svc.cluster.local
     nginx.ingress.kubernetes.io/auth-response-headers: x-api-key
     kubernetes.io/ingress.class: "nginx"
-    cert-manager.io/cluster-issuer: "obscura-issuer-production-platform"
+    cert-manager.io/cluster-issuer: "chicmoz-issuer-production"
 spec:
   ingressClassName: nginx
   tls:
-    - secretName: obscura-issuer-platform
+    - secretName: chicmoz-issuer-platform
       hosts:
         - api.chicmoz.info
   rules:
