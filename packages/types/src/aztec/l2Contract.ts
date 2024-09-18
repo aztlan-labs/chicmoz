@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { aztecAddressSchema, frSchema } from "./utils.js";
+import { aztecAddressSchema, bufferSchema, frSchema } from "./utils.js";
 import { chicmozL2BlockSchema } from "./l2Block.js";
 
 export const chicmozL2ContractInstanceDeployedEventSchema = z.object({
@@ -23,7 +23,7 @@ export const chicmozL2ContractClassRegisteredEventSchema = z.object({
   version: z.number(),
   artifactHash: frSchema,
   privateFunctionsRoot: frSchema,
-  packedPublicBytecode: z.instanceof(Buffer),
+  packedPublicBytecode: bufferSchema,
 });
 
 export type ChicmozL2ContractClassRegisteredEvent = z.infer<

@@ -8,6 +8,7 @@ import { logger } from "../logger.js";
 import { storeHeight } from "../database/latestProcessedHeight.controller.js";
 import { getBlock, getBlocks, getLatestHeight } from "./network-client.js";
 import { onBlock } from "../event-handler/index.js";
+import {L2Block} from "@aztec/aztec.js";
 
 const backOffOptions: Partial<IBackOffOptions> = {
   numOfAttempts: 3,
@@ -23,8 +24,8 @@ const backOffOptions: Partial<IBackOffOptions> = {
 let pollInterval: NodeJS.Timeout;
 let latestProcessedHeight = -1;
 
-export const startPolling = async ({ fromHeight }: { fromHeight: number }) => {
-  await setLatestProcessedHeight(fromHeight - 100);
+export const startPolling = ({ fromHeight }: { fromHeight: number }) => {
+  latestProcessedHeight = fromHeight - 100;
   pollInterval = setInterval(() => {
     void fetchAndPublishLatestBlockReoccurring();
   }, BLOCK_INTERVAL_MS);
@@ -34,13 +35,25 @@ export const stopPolling = () => {
   if (pollInterval) clearInterval(pollInterval);
 };
 
-const setLatestProcessedHeight = async (height: number) => {
+const storeLatestProcessedHeight = async (height: number) => {
   const isLater = height > latestProcessedHeight;
   if (isLater) {
     latestProcessedHeight = height;
     await storeHeight(height);
   }
   return isLater;
+};
+
+const internalOnBlock = async (blockRes: L2Block | undefined) => {
+  if (!blockRes) {
+    throw new Error(
+      "FATAL: Poller received no block."
+    );
+  }
+  await onBlock(blockRes);
+  await storeLatestProcessedHeight(
+    Number(blockRes.header.globalVariables.blockNumber)
+  );
 };
 
 const fetchAndPublishLatestBlockReoccurring = async () => {
@@ -62,16 +75,7 @@ const fetchAndPublishLatestBlockReoccurring = async () => {
   const blockRes = await backOff(async () => {
     return await getBlock(networkLatestHeight);
   }, backOffOptions);
-  if (!blockRes) {
-    throw new Error(
-      "FATAL: Poller received no block, eventhough receiveing height from network."
-    );
-  }
-  await onBlock(blockRes);
-
-  await setLatestProcessedHeight(
-    Number(blockRes.header.globalVariables.blockNumber)
-  );
+  await internalOnBlock(blockRes);
 };
 
 const catchUpOnMissedBlocks = async (start: number, end: number) => {
@@ -87,7 +91,7 @@ const catchUpOnMissedBlocks = async (start: number, end: number) => {
     const missedBlocks = await getBlocks(start, end);
 
     const processBlocks = missedBlocks.map((block) => {
-      if (block) return onBlock(block);
+      if (block) return internalOnBlock(block);
     });
     await Promise.allSettled(processBlocks);
 

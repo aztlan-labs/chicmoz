@@ -1,8 +1,6 @@
 import { type ChicmozL2Block } from "@chicmoz-pkg/types";
 import { useCallback, useEffect, useState } from "react";
 import {
-  getL2ContractInstance,
-  getL2ContractInstancesByBlockHash,
   getLatestBlock,
 } from "~/service/api";
 
@@ -50,34 +48,6 @@ const formatTimeSince = (seconds: number) => {
 // };
 //
 
-const testContractDataRoutes = async (blockHash: string) => {
-  const contractInstances = await getL2ContractInstancesByBlockHash(blockHash);
-  if (!contractInstances || contractInstances.length === 0) return;
-
-  const instancesWithoutPackedBytes = contractInstances.map((instance) => {
-    return {
-      ...instance,
-      packedPublicBytecode: undefined,
-    };
-  });
-  console.log(
-    "contractInstances",
-    JSON.stringify(instancesWithoutPackedBytes, null, 2)
-  );
-  const oneInstance = await getL2ContractInstance(contractInstances[0].address);
-  console.log(
-    "oneInstance",
-    JSON.stringify(
-      {
-        ...oneInstance,
-        packedPublicBytecode: undefined,
-      },
-      null,
-      2
-    )
-  );
-};
-
 export const useLatestBlock = () => {
   const [latestBlockData, setLatestBlockData] = useState<ChicmozL2Block | null>(
     null
@@ -97,7 +67,6 @@ export const useLatestBlock = () => {
         return;
 
       console.log(block);
-      await testContractDataRoutes(block.hash);
       //logPublicWrites(block.body.txEffects);
       setLatestBlockData(block);
       setError(null);

@@ -3,6 +3,8 @@ kind: Ingress
 metadata:
   name: ingress-aztec-sandbox-node
   namespace: chicmoz
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
 spec:
   ingressClassName: nginx
   rules:

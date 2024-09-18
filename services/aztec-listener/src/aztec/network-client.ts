@@ -4,6 +4,7 @@ import {
   NodeInfo,
 } from "@aztec/aztec.js";
 import { AZTEC_RPC } from "../constants.js";
+import {logger} from "../logger.js";
 
 let aztecNode: AztecNode;
 
@@ -12,9 +13,14 @@ const node = () => {
   return aztecNode;
 };
 
+export const logFetchFailedCause = (e: Error) => {
+  if (e.cause) logger.warn(`Aztec failed to fetch: ${JSON.stringify(e.cause)}`);
+  throw e;
+}
+
 export const init = async () => {
   aztecNode = createAztecNodeClient(AZTEC_RPC);
-  return getNodeInfo();
+  return getNodeInfo().catch(logFetchFailedCause);
 };
 
 export const getNodeInfo = async (): Promise<NodeInfo> => {
@@ -27,12 +33,12 @@ export const getNodeInfo = async (): Promise<NodeInfo> => {
     contractAddresses,
     protocolContractAddresses,
   ] = await Promise.all([
-    n.getNodeVersion(),
-    n.getVersion(),
-    n.getChainId(),
-    n.getEncodedEnr(),
-    n.getL1ContractAddresses(),
-    n.getProtocolContractAddresses(),
+    n.getNodeVersion().catch(logFetchFailedCause),
+    n.getVersion().catch(logFetchFailedCause),
+    n.getChainId().catch(logFetchFailedCause),
+    n.getEncodedEnr().catch(logFetchFailedCause),
+    n.getL1ContractAddresses().catch(logFetchFailedCause),
+    n.getProtocolContractAddresses().catch(logFetchFailedCause),
   ]);
 
   const nodeInfo: NodeInfo = {
@@ -49,15 +55,15 @@ export const getNodeInfo = async (): Promise<NodeInfo> => {
   return nodeInfo;
 };
 
-export const getBlock = async (height: number) => node().getBlock(height);
+export const getBlock = async (height: number) => node().getBlock(height).catch(logFetchFailedCause);
 
 export const getBlocks = async (fromHeight: number, toHeight: number) => {
   const blocks = [];
   for (let i = fromHeight; i < toHeight; i++) {
-    const block = await node().getBlock(i);
+    const block = await node().getBlock(i).catch(logFetchFailedCause);
     blocks.push(block);
   }
   return blocks;
 };
 
-export const getLatestHeight = () => node().getBlockNumber();
+export const getLatestHeight = () => node().getBlockNumber().catch(logFetchFailedCause);

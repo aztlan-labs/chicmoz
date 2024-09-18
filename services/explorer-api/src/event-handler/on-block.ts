@@ -61,19 +61,32 @@ const storeContracts = async (b: L2Block, blockHash: string) => {
   const blockLogs = b.body.txEffects
     .flatMap((txEffect) => (txEffect ? [txEffect.unencryptedLogs] : []))
     .flatMap((txLog) => txLog.unrollLogs());
-  const contractInstances = ContractInstanceDeployedEvent.fromLogs(blockLogs);
   const contractClasses = ContractClassRegisteredEvent.fromLogs(
     blockLogs,
     ClassRegistererAddress
   );
-  logger.info(
-    `block ${b.number} contractInstances ${JSON.stringify(
-      contractInstances
-    )} contractClasses ${JSON.stringify(contractClasses)}`
-  );
+  const contractInstances = ContractInstanceDeployedEvent.fromLogs(blockLogs);
 
-  const parsedContractInstances: ChicmozL2ContractInstanceDeployedEvent[] = [];
   const parsedContractClasses: ChicmozL2ContractClassRegisteredEvent[] = [];
+  const parsedContractInstances: ChicmozL2ContractInstanceDeployedEvent[] = [];
+  for (const contractClass of contractClasses) {
+    try {
+      const parsed = chicmozL2ContractClassRegisteredEventSchema.parse(
+        JSON.parse(
+          JSON.stringify({
+            blockHash,
+            ...contractClass,
+          })
+        )
+      );
+      parsedContractClasses.push(parsed);
+    } catch (e) {
+      logger.error(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        `Failed to parse contractClass ${contractClass.contractClassId}: ${e}`
+      );
+    }
+  }
   for (const contractInstance of contractInstances) {
     try {
       const parsed: ChicmozL2ContractInstanceDeployedEvent =
@@ -93,48 +106,29 @@ const storeContracts = async (b: L2Block, blockHash: string) => {
       );
     }
   }
-  for (const contractClass of contractClasses) {
+
+  for (const contractClass of parsedContractClasses) {
     try {
-      const parsed = chicmozL2ContractClassRegisteredEventSchema.parse(
-        JSON.parse(
-          JSON.stringify({
-            blockHash,
-            ...contractClass,
-          })
-        )
-      );
-      parsedContractClasses.push(parsed);
+      await controllers.l2Contract.storeContractClass(contractClass);
     } catch (e) {
       logger.error(
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        `Failed to parse contractClass ${contractClass.contractClassId}: ${e}`
+        `Failed to store contractClass (${
+          contractClass.contractClassId
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        }) in block ${blockHash}): ${(e as Error)?.stack ?? e}`
       );
     }
   }
-
-  try {
-    logger.info(
-      `Storing contractInstances ${JSON.stringify(parsedContractInstances)}`
-    );
-    for (const contractInstance of parsedContractInstances)
+  for (const contractInstance of parsedContractInstances) {
+    try {
       await controllers.l2Contract.storeContractInstance(contractInstance);
-  } catch (e) {
-    logger.error(
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      `Failed to store contractInstances: ${(e as Error)?.stack ?? e}`
-    );
-  }
-
-  try {
-    logger.info(
-      `Storing contractClasses ${JSON.stringify(parsedContractClasses)}`
-    );
-    for (const contractClass of parsedContractClasses)
-      await controllers.l2Contract.storeContractClass(contractClass);
-  } catch (e) {
-    logger.error(
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      `Failed to store contractClasses: ${(e as Error)?.stack ?? e}`
-    );
+    } catch (e) {
+      logger.error(
+        `Failed to store contractInstance (${
+          contractInstance.address
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        }) in block ${blockHash}): ${(e as Error)?.stack ?? e}`
+      );
+    }
   }
 };
