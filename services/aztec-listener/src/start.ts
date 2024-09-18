@@ -7,8 +7,10 @@ import { AZTEC_DISABLED } from "./constants.js";
 
 export const start = async () => {
   const { shutdownDb } = await initDb();
+  logger.info("✅ DB");
   registerShutdownCallback(shutdownDb);
   const { shutdownMb } = await initMb();
+  logger.info("✅ MB");
   registerShutdownCallback(shutdownMb);
   if (AZTEC_DISABLED) {
     logger.info(
@@ -16,6 +18,7 @@ export const start = async () => {
     );
   } else {
     const { shutdownAztec } = await initAztec();
+    logger.info("✅ AZTEC");
     registerShutdownCallback(shutdownAztec);
   }
 };

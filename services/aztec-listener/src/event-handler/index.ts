@@ -13,9 +13,7 @@ export const onBlock = async (block: L2Block) => {
   });
 };
 
-export const onBlockCatchup = async (block: L2Block) => {
-  const height = Number(block.header.globalVariables.blockNumber);
-  logger.info(`🐨 publishing block ${height}...`);
+export const onCatchupBlock = async (block: L2Block) => {
   const blockStr = block.toString();
   await publishMessage("CATCHUP_BLOCK_EVENT", {
     block: blockStr,
