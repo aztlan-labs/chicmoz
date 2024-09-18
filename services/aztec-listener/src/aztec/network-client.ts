@@ -3,7 +3,7 @@ import {
   AztecNode,
   NodeInfo,
 } from "@aztec/aztec.js";
-import { AZTEC_RPC } from "../constants.js";
+import { AZTEC_RPC_URL } from "../constants.js";
 import {logger} from "../logger.js";
 
 let aztecNode: AztecNode;
@@ -19,7 +19,7 @@ export const logFetchFailedCause = (e: Error) => {
 }
 
 export const init = async () => {
-  aztecNode = createAztecNodeClient(AZTEC_RPC);
+  aztecNode = createAztecNodeClient(AZTEC_RPC_URL);
   return getNodeInfo().catch(logFetchFailedCause);
 };
 

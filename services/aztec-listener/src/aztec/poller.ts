@@ -1,6 +1,7 @@
+import { L2Block } from "@aztec/aztec.js";
 import { IBackOffOptions, backOff } from "exponential-backoff";
 import {
-  BLOCK_INTERVAL_MS,
+  BLOCK_POLL_INTERVAL_MS,
   IGNORE_PROCESSED_HEIGHT,
   MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS,
 } from "../constants.js";
@@ -8,7 +9,6 @@ import { logger } from "../logger.js";
 import { storeHeight } from "../database/latestProcessedHeight.controller.js";
 import { getBlock, getBlocks, getLatestHeight } from "./network-client.js";
 import { onBlock } from "../event-handler/index.js";
-import {L2Block} from "@aztec/aztec.js";
 
 const backOffOptions: Partial<IBackOffOptions> = {
   numOfAttempts: 3,
@@ -28,7 +28,7 @@ export const startPolling = ({ fromHeight }: { fromHeight: number }) => {
   latestProcessedHeight = fromHeight - 1;
   pollInterval = setInterval(() => {
     void fetchAndPublishLatestBlockReoccurring();
-  }, BLOCK_INTERVAL_MS);
+  }, BLOCK_POLL_INTERVAL_MS);
 };
 
 export const stopPolling = () => {
@@ -45,11 +45,9 @@ const storeLatestProcessedHeight = async (height: number) => {
 };
 
 const internalOnBlock = async (blockRes: L2Block | undefined) => {
-  if (!blockRes) {
-    throw new Error(
-      "FATAL: Poller received no block."
-    );
-  }
+  if (!blockRes) 
+    throw new Error("FATAL: Poller received no block.");
+  
   await onBlock(blockRes);
   await storeLatestProcessedHeight(
     Number(blockRes.header.globalVariables.blockNumber)
@@ -58,7 +56,8 @@ const internalOnBlock = async (blockRes: L2Block | undefined) => {
 
 const fetchAndPublishLatestBlockReoccurring = async () => {
   const networkLatestHeight = await getLatestHeight();
-  if (networkLatestHeight === 0) throw new Error("FATAL: network returned height 0");
+  if (networkLatestHeight === 0)
+    throw new Error("FATAL: network returned height 0");
 
   const alreadyProcessed = networkLatestHeight <= latestProcessedHeight;
   if (alreadyProcessed && !IGNORE_PROCESSED_HEIGHT) {
