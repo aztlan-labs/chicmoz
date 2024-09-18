@@ -143,6 +143,29 @@ CREATE TABLE IF NOT EXISTS "state" (
 	"partial_id" uuid NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "l2_contract_class_registered" (
+	"block_hash" varchar NOT NULL,
+	"contract_class_id" varchar(66) NOT NULL,
+	"version" bigint NOT NULL,
+	"artifact_hash" varchar(66) NOT NULL,
+	"private_functions_root" varchar(66) NOT NULL,
+	"packed_public_bytecode" "bytea" NOT NULL,
+	CONSTRAINT "contract_class_id_version" PRIMARY KEY("contract_class_id","version")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "l2_contract_instance_deployed" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"block_hash" varchar NOT NULL,
+	"address" varchar(66) NOT NULL,
+	"version" integer NOT NULL,
+	"salt" varchar(66) NOT NULL,
+	"contract_class_id" varchar(66) NOT NULL,
+	"initialization_hash" varchar(66) NOT NULL,
+	"public_keys_hash" varchar(66) NOT NULL,
+	"deployer" varchar(66) NOT NULL,
+	CONSTRAINT "l2_contract_instance_deployed_contract_class_id_address_version_unique" UNIQUE("contract_class_id","address","version")
+);
+--> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "l2Block" ADD CONSTRAINT "l2Block_archive_id_archive_id_fk" FOREIGN KEY ("archive_id") REFERENCES "public"."archive"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
@@ -259,6 +282,24 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "state" ADD CONSTRAINT "state_partial_id_partial_id_fk" FOREIGN KEY ("partial_id") REFERENCES "public"."partial"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "l2_contract_class_registered" ADD CONSTRAINT "l2_contract_class_registered_block_hash_l2Block_hash_fk" FOREIGN KEY ("block_hash") REFERENCES "public"."l2Block"("hash") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "l2_contract_instance_deployed" ADD CONSTRAINT "l2_contract_instance_deployed_block_hash_l2Block_hash_fk" FOREIGN KEY ("block_hash") REFERENCES "public"."l2Block"("hash") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "l2_contract_instance_deployed" ADD CONSTRAINT "contract_class" FOREIGN KEY ("contract_class_id","version") REFERENCES "public"."l2_contract_class_registered"("contract_class_id","version") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

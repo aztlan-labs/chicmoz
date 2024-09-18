@@ -1,5 +1,5 @@
 import { IBackOffOptions, backOff } from "exponential-backoff";
-import { NodeInfoAlias } from "@chicmoz-pkg/types";
+import { NodeInfo } from "@chicmoz-pkg/types";
 import { logger } from "../logger.js";
 import {
   getLatestHeight,
@@ -16,11 +16,7 @@ const backOffOptions: Partial<IBackOffOptions> = {
   numOfAttempts: 10,
   maxDelay: 10000,
   retry: (e, attemptNumber: number) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (e.cause)
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      logger.warn(e.cause);
-    else logger.warn(e);
+    logger.warn(e);
 
     logger.info(
       `🤡 We'll allow some errors during start-up, retrying attempt ${attemptNumber}...`
@@ -29,7 +25,7 @@ const backOffOptions: Partial<IBackOffOptions> = {
   },
 };
 
-let nodeInfo: NodeInfoAlias;
+let nodeInfo: NodeInfo;
 
 export const init = async () => {
   if (DISABLE_AZTEC) {
@@ -51,7 +47,7 @@ export const init = async () => {
   // startCatchup({ untilHeight: currentHeight });
   // Should it be blocking?
 
-  if (LISTEN_FOR_BLOCKS) await startPolling({ fromHeight: currentHeight });
+  if (LISTEN_FOR_BLOCKS) startPolling({ fromHeight: currentHeight });
 
   return {
     shutdownAztec: () => {

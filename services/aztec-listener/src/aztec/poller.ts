@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { IBackOffOptions, backOff } from "exponential-backoff";
 import {
   BLOCK_INTERVAL_MS,
@@ -12,6 +8,7 @@ import { logger } from "../logger.js";
 import { storeHeight } from "../database/latestProcessedHeight.controller.js";
 import { getBlock, getBlocks, getLatestHeight } from "./network-client.js";
 import { onBlock } from "../event-handler/index.js";
+import {L2Block} from "@aztec/aztec.js";
 
 const backOffOptions: Partial<IBackOffOptions> = {
   numOfAttempts: 3,
@@ -27,8 +24,8 @@ const backOffOptions: Partial<IBackOffOptions> = {
 let pollInterval: NodeJS.Timeout;
 let latestProcessedHeight = -1;
 
-export const startPolling = async ({ fromHeight }: { fromHeight: number }) => {
-  await setLatestProcessedHeight(fromHeight - 1);
+export const startPolling = ({ fromHeight }: { fromHeight: number }) => {
+  latestProcessedHeight = fromHeight - 100;
   pollInterval = setInterval(() => {
     void fetchAndPublishLatestBlockReoccurring();
   }, BLOCK_INTERVAL_MS);
@@ -38,7 +35,7 @@ export const stopPolling = () => {
   if (pollInterval) clearInterval(pollInterval);
 };
 
-const setLatestProcessedHeight = async (height: number) => {
+const storeLatestProcessedHeight = async (height: number) => {
   const isLater = height > latestProcessedHeight;
   if (isLater) {
     latestProcessedHeight = height;
@@ -47,11 +44,23 @@ const setLatestProcessedHeight = async (height: number) => {
   return isLater;
 };
 
+const internalOnBlock = async (blockRes: L2Block | undefined) => {
+  if (!blockRes) {
+    throw new Error(
+      "FATAL: Poller received no block."
+    );
+  }
+  await onBlock(blockRes);
+  await storeLatestProcessedHeight(
+    Number(blockRes.header.globalVariables.blockNumber)
+  );
+};
+
 const fetchAndPublishLatestBlockReoccurring = async () => {
   const networkLatestHeight = await getLatestHeight();
-  const alreadyProcessed = networkLatestHeight <= latestProcessedHeight;
-  const missedBlocks = networkLatestHeight - latestProcessedHeight > 1;
+  if (networkLatestHeight === 0) throw new Error("FATAL: network returned height 0");
 
+  const alreadyProcessed = networkLatestHeight <= latestProcessedHeight;
   if (alreadyProcessed && !IGNORE_PROCESSED_HEIGHT) {
     logger.info(
       `🐻 block ${networkLatestHeight} has already been processed, skipping...`
@@ -59,23 +68,14 @@ const fetchAndPublishLatestBlockReoccurring = async () => {
     return;
   }
 
-  const blockRes = await backOff(async () => {
-    return await getBlock(networkLatestHeight);
-  }, backOffOptions);
-
-  if (!blockRes) {
-    throw new Error(
-      "FATAL: Poller received no block, eventhough receiveing height from network."
-    );
-  }
-  await onBlock(blockRes);
-
+  const missedBlocks = networkLatestHeight - latestProcessedHeight > 1;
   if (missedBlocks)
     await catchUpOnMissedBlocks(latestProcessedHeight + 1, networkLatestHeight);
 
-  await setLatestProcessedHeight(
-    Number(blockRes.header.globalVariables.blockNumber)
-  );
+  const blockRes = await backOff(async () => {
+    return await getBlock(networkLatestHeight);
+  }, backOffOptions);
+  await internalOnBlock(blockRes);
 };
 
 const catchUpOnMissedBlocks = async (start: number, end: number) => {
@@ -91,11 +91,12 @@ const catchUpOnMissedBlocks = async (start: number, end: number) => {
     const missedBlocks = await getBlocks(start, end);
 
     const processBlocks = missedBlocks.map((block) => {
-      if (block) return onBlock(block);
+      if (block) return internalOnBlock(block);
     });
     await Promise.allSettled(processBlocks);
 
     const durationMs = new Date().getTime() - startTimeMs;
     logger.info(`🐯 missed blocks ${start}-${end} published (${durationMs}ms)`);
+    await new Promise((resolve) => setTimeout(resolve, 500));
   }
 };

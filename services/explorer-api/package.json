@@ -8,6 +8,7 @@
     "@aws-sdk/credential-providers": "3.525.0",
     "@aztec/aztec.js": "0.53.0",
     "@aztec/circuits.js": "0.53.0",
+    "@aztec/protocol-contracts": "0.53.0",
     "@chicmoz-pkg/error-middleware": "workspace:^",
     "@chicmoz-pkg/logger-server": "workspace:^",
     "@chicmoz-pkg/message-bus": "workspace:^",
@@ -70,7 +71,6 @@
     "generate": "yarn build && drizzle-kit generate",
     "migrate": "yarn node build/scripts/migrate.js",
     "start": "yarn node --unhandled-rejections=strict --enable-source-maps build/src/index.js",
-    "aztec-playground": "yarn node build/scripts/aztec_playground.js",
     "lint": "yarn run lint-base --ext .ts .",
     "lint-base": "yarn run g:lint",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest)"

@@ -5,6 +5,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@aztec/aztec.js": "0.53.0",
+    "@aztec/circuits.js": "0.53.0",
     "@chicmoz-pkg/logger-server": "workspace:^",
     "@chicmoz-pkg/message-bus": "workspace:^",
     "@chicmoz-pkg/message-registry": "workspace:^",

@@ -1,7 +1,14 @@
+import { hexStringSchema } from "@chicmoz-pkg/types";
 import { z } from "zod";
 
-export const getBlockSchema = z.object({
+export const getContractInstanceSchema = z.object({
   params: z.object({
-    heightOrHash: z.string(),
-  })
+    address: hexStringSchema,
+  }),
+});
+
+export const getContractInstancesByBlockHashSchema = z.object({
+  params: z.object({
+    blockHash: hexStringSchema,
+  }),
 });
