@@ -1,8 +1,6 @@
 import { type ChicmozL2Block } from "@chicmoz-pkg/types";
 import { useCallback, useEffect, useState } from "react";
-import {
-  getLatestBlock,
-} from "~/service/api";
+import { getLatestBlock } from "~/service/api";
 
 const formatTimeSince = (seconds: number) => {
   const intervals = [
@@ -50,7 +48,7 @@ const formatTimeSince = (seconds: number) => {
 
 export const useLatestBlock = () => {
   const [latestBlockData, setLatestBlockData] = useState<ChicmozL2Block | null>(
-    null
+    null,
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -80,7 +78,7 @@ export const useLatestBlock = () => {
   }, [latestBlockData?.header?.globalVariables?.blockNumber]);
 
   useEffect(() => {
-    fetchLatestBlock(); // Fetch immediately on mount
+    void fetchLatestBlock(); // Fetch immediately on mount
     const intervalId = setInterval(fetchLatestBlock, 3000); // Poll every 3 seconds
     return () => clearInterval(intervalId); // Clean up on unmount
   }, [fetchLatestBlock]);
@@ -89,7 +87,7 @@ export const useLatestBlock = () => {
   if (latestBlockData) {
     const now = new Date().getTime();
     const blockTime = new Date(
-      parseInt(latestBlockData.header.globalVariables.timestamp, 16) * 1000
+      parseInt(latestBlockData.header.globalVariables.timestamp, 16) * 1000,
     ).getTime();
     timeSince = formatTimeSince(Math.round((now - blockTime) / 1000));
   }
