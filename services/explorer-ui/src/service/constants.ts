@@ -1,13 +1,15 @@
 // TODO: update url values
 export const aztecExplorer = {
-  getLatestHeight: "latest-height",
-  getLatestBlock: "blocks/latest",
-  getBlockByHash: "blocks/",
-  getBlockByHeight: "blocks/",
-  getBlocksByHeightRange: "",
-  getTransactionById: "",
-  getTransactionsByHeight: "",
-  getTransactionsByHeightRange: "",
+  getL2LatestHeight: "l2/latest-height",
+  getL2LatestBlock: "l2/blocks/latest",
+  getL2BlockByHash: "l2/blocks/",
+  getL2BlockByHeight: "l2/blocks/",
+  getL2BlocksByHeightRange: "",
+  getL2TransactionById: "",
+  getL2TransactionsByHeight: "",
+  getL2TransactionsByHeightRange: "",
+  getL2ContractInstance: "l2/contract-instance/",
+  getL2ContractInstancesByBlockHash: (hash: string) => `l2/blocks/${hash}/contract-instances`,
 };
 
 export const API_URL = import.meta.env.VITE_API_URL;

@@ -2,7 +2,7 @@ import { bigint, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 
 import { body } from "./body.js";
 import { header } from "./header.js";
-import {generateTreeTable} from "../utils.js";
+import { generateTreeTable } from "../utils.js";
 
   export const l2Block = pgTable("l2Block", {
     hash: varchar("hash").primaryKey().notNull(),

@@ -7,7 +7,6 @@ export const Route = createLazyFileRoute("/blocks/$blockNumber")({
 function Block() {
   const { latestBlockData, loading, error, timeSince } = useLatestBlock();
   const { blockNumber } = Route.useParams();
-  console.log("blockNumber", blockNumber);
 
   // TODO: these messages should perhaps be diplayed?
   // console.log("Extracted messages:");

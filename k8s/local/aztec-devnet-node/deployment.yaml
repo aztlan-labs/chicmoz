@@ -38,7 +38,10 @@ spec:
             - name: DEBUG
               value: "aztec:*"
             - name: ETHEREUM_HOST
-              value: "https://devnet-mainnet-fork.aztec.network:8545/$(CHICMOZ_AZTEC_API_KEY)" # TODO: WARNING! We need to have this as env-var
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: CHICMOZ_AZTEC_ETHEREUM_HOST
             - name: L1_CHAIN_ID
               value: "677692"
             - name: ARCHIVER_POLLING_INTERVAL_MS
@@ -58,7 +61,10 @@ spec:
             - name: AZTEC_PORT
               value: "8080"
             - name: FAUCET_ENDPOINT
-              value: "https://api.aztec.network/devnet/aztec-faucet/$(CHICMOZ_AZTEC_API_KEY)"
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: CHICMOZ_AZTEC_FAUCET_ENDPOINT
             - name: PRIVATE_KEY
               valueFrom:
                 secretKeyRef:

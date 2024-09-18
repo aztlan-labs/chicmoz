@@ -1,5 +1,5 @@
 {
-  "id": "67d1e04e-0624-4b34-9729-d0541ad0bada",
+  "id": "a851266f-c47d-4039-b868-b4da25991a3a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -910,6 +910,157 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
+    },
+    "public.l2_contract_class_registered": {
+      "name": "l2_contract_class_registered",
+      "schema": "",
+      "columns": {
+        "block_hash": {
+          "name": "block_hash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contract_class_id": {
+          "name": "contract_class_id",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "version": {
+          "name": "version",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "artifact_hash": {
+          "name": "artifact_hash",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "private_functions_root": {
+          "name": "private_functions_root",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "packed_public_bytecode": {
+          "name": "packed_public_bytecode",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "l2_contract_class_registered_block_hash_l2Block_hash_fk": {
+          "name": "l2_contract_class_registered_block_hash_l2Block_hash_fk",
+          "tableFrom": "l2_contract_class_registered",
+          "tableTo": "l2Block",
+          "columnsFrom": ["block_hash"],
+          "columnsTo": ["hash"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "contract_class_id_version": {
+          "name": "contract_class_id_version",
+          "columns": ["contract_class_id", "version"]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.l2_contract_instance_deployed": {
+      "name": "l2_contract_instance_deployed",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "block_hash": {
+          "name": "block_hash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "address": {
+          "name": "address",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "salt": {
+          "name": "salt",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contract_class_id": {
+          "name": "contract_class_id",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "initialization_hash": {
+          "name": "initialization_hash",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_hash": {
+          "name": "public_keys_hash",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "deployer": {
+          "name": "deployer",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "l2_contract_instance_deployed_block_hash_l2Block_hash_fk": {
+          "name": "l2_contract_instance_deployed_block_hash_l2Block_hash_fk",
+          "tableFrom": "l2_contract_instance_deployed",
+          "tableTo": "l2Block",
+          "columnsFrom": ["block_hash"],
+          "columnsTo": ["hash"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "contract_class": {
+          "name": "contract_class",
+          "tableFrom": "l2_contract_instance_deployed",
+          "tableTo": "l2_contract_class_registered",
+          "columnsFrom": ["contract_class_id", "version"],
+          "columnsTo": ["contract_class_id", "version"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "l2_contract_instance_deployed_contract_class_id_address_version_unique": {
+          "name": "l2_contract_instance_deployed_contract_class_id_address_version_unique",
+          "nullsNotDistinct": false,
+          "columns": ["contract_class_id", "address", "version"]
+        }
+      }
     }
   },
   "enums": {},

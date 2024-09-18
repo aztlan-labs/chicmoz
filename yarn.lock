@@ -3003,6 +3003,7 @@ __metadata:
   resolution: "@chicmoz/aztec-listener@workspace:services/aztec-listener"
   dependencies:
     "@aztec/aztec.js": "npm:0.53.0"
+    "@aztec/circuits.js": "npm:0.53.0"
     "@chicmoz-pkg/logger-server": "workspace:^"
     "@chicmoz-pkg/message-bus": "workspace:^"
     "@chicmoz-pkg/message-registry": "workspace:^"
@@ -3056,6 +3057,7 @@ __metadata:
     "@aws-sdk/credential-providers": "npm:3.525.0"
     "@aztec/aztec.js": "npm:0.53.0"
     "@aztec/circuits.js": "npm:0.53.0"
+    "@aztec/protocol-contracts": "npm:0.53.0"
     "@chicmoz-pkg/error-middleware": "workspace:^"
     "@chicmoz-pkg/logger-server": "workspace:^"
     "@chicmoz-pkg/message-bus": "workspace:^"
