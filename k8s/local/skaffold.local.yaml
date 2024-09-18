@@ -61,18 +61,37 @@ manifests:
     # - k8s/local/dummy-node/deployment.yaml
     # - k8s/local/dummy-node/service.yaml
     - k8s/local/aztec-listener/deployment.yaml
-    #- k8s/local/aztec-devnet-node/deployment.yaml   # LOCAL DEVNET
-    #- k8s/local/aztec-devnet-node/service.yaml      # LOCAL DEVNET
-    # ⚠️ Also change AZTEC_RPC_URL in the aztec-listener deployment!
-    - k8s/local/aztec-sandbox-node/ingress.yaml # SANDBOX - 👀 NOTE: You also need to add `127.0.0.1	aztec-sandbox-node.localhost` to your /etc/hosts file to reach it from outside the cluster
-    - k8s/local/aztec-sandbox-node/deployment.yaml # SANDBOX
-    - k8s/local/aztec-sandbox-node/service.yaml # SANDBOX
-    - k8s/local/anvil-ethereum-node/ingress.yaml # SANDBOX
-    - k8s/local/anvil-ethereum-node/deployment.yaml # SANDBOX
-    - k8s/local/anvil-ethereum-node/service.yaml # SANDBOX
     # - k8s/local/kafka-ui/configmap.yaml
     # - k8s/local/kafka-ui/configmap-env.yaml
     # - k8s/local/kafka-ui/ingress.yaml
+    #
+    #  -----  Aztec networks -----
+    #   There are 3 different ways to run Chicmoz with Aztec locally.
+    #   ⚠️  whichever you choose you need to update the AZTEC_RPC_URL in k8s/local/aztec-listener/deployment.yaml
+    #
+    #
+    #   # REMOTE DEVNET
+    #   1. You use Aztec-provided RPC endpoint then you don't need any additional containers.
+    #
+    #
+    #   # LOCAL DEVNET
+    #   2. You run a local Aztec devnet node, then you also have a PXE which you can interact with and submit transactions to.
+    #   👀 NOTE: You also need to add `127.0.0.1	aztec-sandbox-node.localhost` to your /etc/hosts file to reach it from outside the cluster
+    #
+    #- k8s/local/aztec-devnet-node/deployment.yaml
+    #- k8s/local/aztec-devnet-node/service.yaml
+    #
+    #
+    #   # SANDBOX
+    #   3. You run a local Aztec sandbox node, then you also have a PXE which you can interact with and submit transactions to. But they are only on your local cluster.
+    #   👀 NOTE: You also need to add `127.0.0.1	aztec-sandbox-node.localhost` to your /etc/hosts file to reach it from outside the cluster
+    #
+    - k8s/local/aztec-sandbox-node/ingress.yaml
+    - k8s/local/aztec-sandbox-node/deployment.yaml
+    - k8s/local/aztec-sandbox-node/service.yaml
+    - k8s/local/anvil-ethereum-node/ingress.yaml
+    - k8s/local/anvil-ethereum-node/deployment.yaml
+    - k8s/local/anvil-ethereum-node/service.yaml
   helm:
     releases:
       - name: ingress-nginx
