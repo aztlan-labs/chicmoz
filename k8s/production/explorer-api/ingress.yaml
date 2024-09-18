@@ -8,10 +8,16 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/auth-url: http://auth.chicmoz.svc.cluster.local
     nginx.ingress.kubernetes.io/auth-response-headers: x-api-key
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "obscura-issuer-production-platform"
 spec:
   ingressClassName: nginx
+  tls:
+    - secretName: obscura-issuer-platform
+      hosts:
+        - api.chicmoz.info
   rules:
-    - host: api.sugarpeanut.com # TODO: change to env-var "DOMAIN"
+    - host: api.chicmoz.info # TODO: change to env-var "DOMAIN"
       http:
         paths:
           - path: /v1/([^/]+)/(.*)

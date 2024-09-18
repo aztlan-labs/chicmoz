@@ -3,10 +3,17 @@ kind: Ingress
 metadata:
   name: ingress-explorer-ui
   namespace: chicmoz-prod
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "obscura-issuer-production-platform"
 spec:
   ingressClassName: nginx
+  tls:
+    - secretName: obscura-issuer-platform
+      hosts:
+        - chicmoz.info
   rules:
-    - host: sugarpeanut.com # TODO: change to env-var "DOMAIN"
+    - host: chicmoz.info # TODO: change to env-var "DOMAIN"
       http:
         paths:
           - backend:
