@@ -1,26 +1,15 @@
 import { L2Block } from "@aztec/aztec.js";
-import { IBackOffOptions, backOff } from "exponential-backoff";
 import {
   BLOCK_POLL_INTERVAL_MS,
   IGNORE_PROCESSED_HEIGHT,
   MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS,
 } from "../constants.js";
 import { logger } from "../logger.js";
+// TODO: remove database
 import { storeHeight } from "../database/latestProcessedHeight.controller.js";
 import { getBlock, getBlocks, getLatestHeight } from "./network-client.js";
 import { onBlock } from "../event-handler/index.js";
 
-const backOffOptions: Partial<IBackOffOptions> = {
-  numOfAttempts: 3,
-  maxDelay: 5000,
-  retry: (e, attemptNumber: number) => {
-    logger.warn(e);
-    logger.info(
-      `We'll allow some API-errors, retrying attempt ${attemptNumber}...`
-    );
-    return true;
-  },
-};
 let pollInterval: NodeJS.Timeout;
 let latestProcessedHeight = -1;
 
@@ -71,9 +60,7 @@ const fetchAndPublishLatestBlockReoccurring = async () => {
   if (missedBlocks)
     await catchUpOnMissedBlocks(latestProcessedHeight + 1, networkLatestHeight);
 
-  const blockRes = await backOff(async () => {
-    return await getBlock(networkLatestHeight);
-  }, backOffOptions);
+  const blockRes = await getBlock(networkLatestHeight);
   await internalOnBlock(blockRes);
 };
 

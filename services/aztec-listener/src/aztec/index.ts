@@ -7,16 +7,16 @@ import {
 } from "./network-client.js";
 import {
   AZTEC_GENESIS_CATCHUP,
-  AZTEC_LISTEN_FOR_BLOCKS
+  AZTEC_LISTEN_FOR_BLOCKS,
 } from "../constants.js";
 import { startPolling, stopPolling } from "./poller.js";
+import { startCatchup } from "./catchup.js";
 
 const backOffOptions: Partial<IBackOffOptions> = {
   numOfAttempts: 10,
   maxDelay: 10000,
   retry: (e, attemptNumber: number) => {
     logger.warn(e);
-
     logger.info(
       `🤡 We'll allow some errors during start-up, retrying attempt ${attemptNumber}...`
     );
@@ -34,10 +34,9 @@ export const init = async () => {
     return await initNetworkClient();
   }, backOffOptions);
   logger.info(`AZTEC: initialized: ${JSON.stringify(nodeInfo)}`);
-  const currentHeight = await getLatestHeight();
-  if (AZTEC_GENESIS_CATCHUP) logger.info("TODO: need to fix catchup-logic");
-  // startCatchup({ untilHeight: currentHeight });
 
+  const currentHeight = await getLatestHeight();
+  if (AZTEC_GENESIS_CATCHUP) await startCatchup({ from: 0, to: currentHeight });
   if (AZTEC_LISTEN_FOR_BLOCKS) startPolling({ fromHeight: currentHeight });
 
   return {
