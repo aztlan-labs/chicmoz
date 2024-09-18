@@ -16,10 +16,6 @@ export const NETWORK_NAME = process.env.NETWORK_NAME ?? "";
 export const KAFKA_CONNECTION = process.env.KAFKA_CONNECTION ?? "kafka:9092";
 export const KAFKA_SASL_USERNAME = process.env.KAFKA_SASL_USERNAME ?? "controller_user";
 export const KAFKA_SASL_PASSWORD = process.env.KAFKA_SASL_PASSWORD ?? "test";
-export const KAFKA_MSK_ACCESS_KEY = process.env.KAFKA_MSK_ACCESS_KEY ?? "accessKey";
-export const KAFKA_MSK_SECRET_KEY = process.env.KAFKA_MSK_SECRET_KEY ?? "secretKey";
-export const KAFKA_MSK_USER_ID = process.env.KAFKA_MSK_USER_ID ?? "userId";
-export const KAFKA_MSK_REGION = process.env.KAFKA_MSK_REGION ?? "local";
 
 export const POSTGRES_IP = process.env.POSTGRES_IP ?? "localhost";
 export const POSTGRES_PORT = Number(process.env.POSTGRES_PORT) || 5432;

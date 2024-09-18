@@ -72,8 +72,8 @@ spec:
             - name: DISABLE_AZTEC
               value: "false"
             - name: AZTEC_RPC
-              #value: "http://aztec-devnet-node:8080" # LOCAL DEVNET
-              #value: "http://aztec-sandbox-node:8081" # SANDBOX
+              #value: "http://aztec-devnet-node:8080"   # LOCAL DEVNET
+              #value: "http://aztec-sandbox-node:8081"  # SANDBOX
               valueFrom: # REMOTE DEVNET
                 secretKeyRef: # REMOTE DEVNET
                   name: global # REMOTE DEVNET
