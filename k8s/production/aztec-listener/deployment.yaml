@@ -28,8 +28,6 @@ spec:
           env:
             - name: NODE_ENV
               value: "development"
-            - name: BATCH_SIZE
-              value: "50"
             - name: CHAIN_NAME
               value: "AZTEC"
             - name: NETWORK_NAME
