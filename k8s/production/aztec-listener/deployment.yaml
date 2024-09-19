@@ -45,7 +45,10 @@ spec:
             - name: POSTGRES_PASSWORD
               value: "secret-local-password"
             - name: AZTEC_RPC_URL
-              value: "http://host.minikube.internal:8080"
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: CHICMOZ_AZTEC_RPC
             - name: AZTEC_GENESIS_CATCHUP
               value: "true"
             - name: IGNORE_PROCESSED_HEIGHT
