@@ -1,5 +1,8 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { KeyValueDisplay } from "~/components/info-display/key-value-display";
+import {
+  DisplayData,
+  KeyValueDisplay,
+} from "~/components/info-display/key-value-display";
 import { TransactionsTable } from "~/components/transactions/transactions-table";
 import { Button } from "~/components/ui";
 import { useLatestBlock } from "~/hooks/useLatestBlock";
@@ -8,27 +11,8 @@ export const Route = createLazyFileRoute("/blocks/$blockNumber")({
   component: Block,
 });
 
-const blockData = [
-  { key: "BLOCK NUMBER", value: "348540" },
-  {
-    key: "BLOCK HASH",
-    value:
-      "0x995542b01a706c56d3a962ba819e765ree057egtr4311562cdf6286147fbf9cf51",
-  },
-  { key: "STATUS", value: "FINALISED" },
-  { key: "TIMESTAMP", value: "1 min ago (Jun-07-2024 08:47:23 AM UTC)" },
-  { key: "TRANSACTIONS", value: "155 transactions" },
-  { key: "TOTAL FEES", value: "0.000122453 ETH ($0.05)" },
-  { key: "SIZE", value: "46,377 bytes" },
-  { key: "LOGS", value: "323 logs" },
-  {
-    key: "PARENT HASH",
-    value: "0xebe7fuy7655b6506fe587hj7c2ad1237b242b9adc60ci8u7y972728ce63b526b",
-  },
-];
-
 function Block() {
-  const { mockedChicmozL2Block, loading, error, timeSince } = useLatestBlock();
+  const { latestBlockData, loading, error, timeSince } = useLatestBlock();
   const { blockNumber } = Route.useParams();
 
   // TODO: these messages should perhaps be diplayed?
@@ -58,6 +42,35 @@ function Block() {
   let bn;
   if (blockNumber === "latest") bn = "latest";
   else if (parseInt(blockNumber)) bn = parseInt(blockNumber);
+
+  let keyValues: DisplayData = [];
+  if (latestBlockData) {
+    keyValues = [
+      { key: "Block Number", value: "" + latestBlockData.height },
+      { key: "Block Hash", value: latestBlockData.hash },
+      {
+        key: "Timestamp",
+        value: new Date(
+          parseInt(latestBlockData.header.globalVariables.timestamp, 16) * 1000
+        ).toLocaleString() + ` (${timeSince} ago)`,
+      },
+      {
+        // TODO: this should be a link to txs list
+        key: "Num Txs",
+        value:
+          "" + parseInt(latestBlockData.header.contentCommitment.numTxs, 16),
+      },
+      // TODO: what is good block header data to display?
+      { key: "slotNumber", value: '' + parseInt(latestBlockData.header.globalVariables.slotNumber, 16) },
+      { key: "coinbase", value: '' + parseInt(latestBlockData.header.globalVariables.coinbase, 16) },
+      // TODO: stats on logs
+      // TODO: better display of gas
+      { key: "feeRecipient", value: '' + parseInt(latestBlockData.header.globalVariables.feeRecipient, 16) },
+      { key: "totalFees", value: '' + parseInt(latestBlockData.header.totalFees, 16) },
+      { key: "gasUsed", value: '' + parseInt(latestBlockData.header.globalVariables.gasFees.feePerDaGas, 16) },
+      { key: "gasLimit", value: '' + parseInt(latestBlockData.header.globalVariables.gasFees.feePerL2Gas, 16) },
+    ];
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const renderList = (items: any[], maxItems = 10) => {
@@ -93,7 +106,7 @@ function Block() {
           </div>
           <div className="flex flex-col gap-4 mt-8">
             <div className="">
-              <KeyValueDisplay data={blockData} />
+              <KeyValueDisplay data={keyValues} />
             </div>
             <div className="flex flex-row gap-4 w-10 mb-4">
               <Button variant={"primary"}>

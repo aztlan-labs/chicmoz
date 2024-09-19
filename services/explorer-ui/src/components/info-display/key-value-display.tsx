@@ -1,11 +1,13 @@
 import { FC } from "react";
 import { KeyValueRow } from "./key-value-row";
 
+export type DisplayData = {
+  key: string;
+  value: string;
+}[];
+
 interface KeyValueDisplayProps {
-  data: {
-    key: string;
-    value: string;
-  }[];
+  data: DisplayData;
 }
 
 export const KeyValueDisplay: FC<KeyValueDisplayProps> = ({ data }) => (
