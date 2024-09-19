@@ -1,7 +1,7 @@
 import { Outlet, createLazyFileRoute, useParams } from "@tanstack/react-router";
 import { BlocksTable } from "~/components/blocks/blocks-table.tsx";
 
-export const Route = createLazyFileRoute("/blocks")({
+export const Route = createLazyFileRoute("/blocks/")({
   component: Blocks,
 });
 

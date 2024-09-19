@@ -1,7 +1,5 @@
 import { MBOptions, MessageBus } from "@chicmoz-pkg/message-bus";
-import {
-  generateAztecTopicName,
-} from "@chicmoz-pkg/message-registry";
+import { generateAztecTopicName } from "@chicmoz-pkg/message-registry";
 import { backOff } from "exponential-backoff";
 import { SERVICE_NAME } from "../constants.js";
 import {
@@ -42,11 +40,7 @@ export const init = async () => {
 };
 
 const tryStartSubscribe = async (
-  {
-    consumerGroup,
-    cb,
-    topicBase,
-  }: EventHandler,
+  { consumerGroup, cb, topicBase }: EventHandler,
   crashCallback: () => void
 ) => {
   const topic = generateAztecTopicName(NETWORK_ID, topicBase);
@@ -58,10 +52,14 @@ const tryStartSubscribe = async (
   logger.info(`Started consuming from topic ${topic}`);
 };
 
-export const startSubscribe = async (eventHandler: EventHandler, crashCallback: () => void) => {
+export const startSubscribe = async (
+  eventHandler: EventHandler,
+  crashCallback: () => void
+) => {
   if (!mb) throw new Error("Message bus not initialized");
 
-  const tryIt = async () => await tryStartSubscribe(eventHandler, crashCallback);
+  const tryIt = async () =>
+    await tryStartSubscribe(eventHandler, crashCallback);
 
   await backOff(tryIt, {
     maxDelay: 10000,
