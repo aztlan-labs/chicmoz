@@ -31,24 +31,25 @@ export interface BadgeProps
 
 function Badge({ className, variant, ...props }: BadgeProps) {
   return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props}>
-      {variant === "success" && (
-        <svg
-          class="h-3 w-3 text-white"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke="currentColor"
-          fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path stroke="none" d="M0 0h24v24H0z" /> <path d="M5 12l5 5l10 -10" />
-        </svg>
-      )}{" "}
-      {props.children}
-    </div>
+    <div></div>
+   // <div className={cn(badgeVariants({ variant }), className)} {...props}>
+   //   {variant === "success" && (
+   //     <svg
+   //       className="h-3 w-3 text-white"
+   //       width="24"
+   //       height="24"
+   //       viewBox="0 0 24 24"
+   //       stroke-width="2"
+   //       stroke="currentColor"
+   //       fill="none"
+   //       stroke-linecap="round"
+   //       stroke-linejoin="round"
+   //     >
+   //       <path stroke="none" d="M0 0h24v24H0z" /> <path d="M5 12l5 5l10 -10" />
+   //     </svg>
+   //   )}{" "}
+   //   {props.children}
+   // </div>
   );
 }
 

@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import {
-  DisplayData,
+  DetailItem,
   KeyValueDisplay,
 } from "~/components/info-display/key-value-display";
 import { TransactionsTable } from "~/components/transactions/transactions-table";
@@ -43,32 +43,32 @@ function Block() {
   if (blockNumber === "latest") bn = "latest";
   else if (parseInt(blockNumber)) bn = parseInt(blockNumber);
 
-  let keyValues: DisplayData = [];
+  let keyValues: DetailItem[] = [];
   if (latestBlockData) {
     keyValues = [
-      { key: "Block Number", value: "" + latestBlockData.height },
-      { key: "Block Hash", value: latestBlockData.hash },
+      { label: "Block Number", value: "" + latestBlockData.height },
+      { label: "Block Hash", value: latestBlockData.hash },
       {
-        key: "Timestamp",
+        label: "Timestamp",
         value: new Date(
           parseInt(latestBlockData.header.globalVariables.timestamp, 16) * 1000
         ).toLocaleString() + ` (${timeSince} ago)`,
       },
       {
         // TODO: this should be a link to txs list
-        key: "Num Txs",
+        label: "Num Txs",
         value:
           "" + parseInt(latestBlockData.header.contentCommitment.numTxs, 16),
       },
       // TODO: what is good block header data to display?
-      { key: "slotNumber", value: '' + parseInt(latestBlockData.header.globalVariables.slotNumber, 16) },
-      { key: "coinbase", value: '' + parseInt(latestBlockData.header.globalVariables.coinbase, 16) },
+      { label: "slotNumber", value: '' + parseInt(latestBlockData.header.globalVariables.slotNumber, 16) },
+      { label: "coinbase", value: '' + parseInt(latestBlockData.header.globalVariables.coinbase, 16) },
       // TODO: stats on logs
       // TODO: better display of gas
-      { key: "feeRecipient", value: '' + parseInt(latestBlockData.header.globalVariables.feeRecipient, 16) },
-      { key: "totalFees", value: '' + parseInt(latestBlockData.header.totalFees, 16) },
-      { key: "gasUsed", value: '' + parseInt(latestBlockData.header.globalVariables.gasFees.feePerDaGas, 16) },
-      { key: "gasLimit", value: '' + parseInt(latestBlockData.header.globalVariables.gasFees.feePerL2Gas, 16) },
+      { label: "feeRecipient", value: '' + parseInt(latestBlockData.header.globalVariables.feeRecipient, 16) },
+      { label: "totalFees", value: '' + parseInt(latestBlockData.header.totalFees, 16) },
+      { label: "gasUsed", value: '' + parseInt(latestBlockData.header.globalVariables.gasFees.feePerDaGas, 16) },
+      { label: "gasLimit", value: '' + parseInt(latestBlockData.header.globalVariables.gasFees.feePerL2Gas, 16) },
     ];
   }
 
@@ -105,7 +105,7 @@ function Block() {
             <p>{bn}</p>
           </div>
           <div className="flex flex-col gap-4 mt-8">
-            <div className="">
+            <div className="bg-white rounded-lg shadow-md p-4">
               <KeyValueDisplay data={keyValues} />
             </div>
             <div className="flex flex-row gap-4 w-10 mb-4">

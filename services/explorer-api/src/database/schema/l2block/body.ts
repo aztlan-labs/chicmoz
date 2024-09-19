@@ -45,6 +45,7 @@ export const txEffectToPublicDataWrite = pgTable(
     txEffectId: uuid("tx_effect_id")
       .notNull()
       .references(() => txEffect.id),
+    index: integer("index").notNull(),
     publicDataWriteId: uuid("public_data_write_id")
       .notNull()
       .references(() => publicDataWrite.id),

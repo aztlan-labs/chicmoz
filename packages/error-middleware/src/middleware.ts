@@ -10,8 +10,11 @@ import { CHICMOZ_ERRORS } from "./errors.js";
 
 export const createErrorMiddleware = (logger: Logger): ErrorRequestHandler => {
   return (err, _req, res, _next) => {
-    if ((err as Error).stack) logger.error((err as Error).stack);
-    else logger.error(err);
+    if (err instanceof Error) {
+      logger.error(`Error-handler: name: ${err.name}, message: ${err.message}`);
+      if (err.stack) logger.error(`Error-handler: stack: ${err.stack}`);
+      else logger.error(err);
+    }
 
     if (
       err instanceof UnauthorizedError ||
@@ -22,6 +25,7 @@ export const createErrorMiddleware = (logger: Logger): ErrorRequestHandler => {
     }
 
     if (err instanceof ZodError) {
+      logger.info(JSON.stringify(err.issues));
       res
         .status(400)
         .send({ message: "Schema validation error", errors: err.issues });
