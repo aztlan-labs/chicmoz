@@ -1,13 +1,4 @@
-import {
-  ChicmozL2Block,
-  EncryptedLogEntry,
-  NoteEncryptedLogEntry,
-  UnencryptedLogEntry,
-  chicmozL2BlockSchema,
-  encryptedLogEntrySchema,
-  noteEncryptedLogEntrySchema,
-  unencryptedLogEntrySchema,
-} from "@chicmoz-pkg/types";
+import { ChicmozL2Block, chicmozL2BlockSchema } from "@chicmoz-pkg/types";
 import { asc, eq, getTableColumns } from "drizzle-orm";
 import { getDb as db } from "../../../database/index.js";
 import {
@@ -15,24 +6,20 @@ import {
   body,
   bodyToTxEffects,
   contentCommitment,
-  functionLogs,
   gasFees,
   globalVariables,
   header,
   l1ToL2MessageTree,
   l2Block,
   lastArchive,
-  logs,
   noteHashTree,
   nullifierTree,
   partial,
   publicDataTree,
-  publicDataWrite,
   state,
   txEffect,
-  txEffectToLogs,
-  txEffectToPublicDataWrite,
 } from "../../../database/schema/l2block/index.js";
+import { getTransactionNestedById } from "../l2transaction/get-transaction.js";
 import { dbParseErrorCallback } from "../utils.js";
 
 export const getBlock = async (
@@ -128,107 +115,10 @@ export const getBlock = async (
   // TODO: might be better to do this async
   const txEffects = await Promise.all(
     txEffectsData.map(async (data) => {
-      const publicDataWrites = await db()
-        .select({
-          publicDataWrite: getTableColumns(publicDataWrite),
-        })
-        .from(txEffectToPublicDataWrite)
-        .innerJoin(
-          publicDataWrite,
-          eq(txEffectToPublicDataWrite.publicDataWriteId, publicDataWrite.id)
-        )
-        .where(eq(txEffectToPublicDataWrite.txEffectId, data.txEffect.id))
-        .orderBy(asc(txEffectToPublicDataWrite.index))
-        .execute();
-
-      const mixedLogs = await db()
-        .select({
-          functionLogIndex: functionLogs.index,
-          ...getTableColumns(logs),
-        })
-        .from(txEffectToLogs)
-        .innerJoin(logs, eq(txEffectToLogs.logId, logs.id))
-        .innerJoin(
-          functionLogs,
-          eq(txEffectToLogs.functionLogId, functionLogs.id)
-        )
-        .where(eq(txEffectToLogs.txEffectId, data.txEffect.id))
-        .orderBy(asc(functionLogs.index), asc(logs.index))
-        .execute();
-
-      const {
-        heigestIndexNoteEncryptedLogs,
-        heigestIndexEncryptedLogs,
-        heigestIndexUnencryptedLogs,
-      } = mixedLogs.reduce(
-        (acc, { functionLogIndex }) => {
-          if (functionLogIndex > acc.heigestIndexNoteEncryptedLogs)
-            acc.heigestIndexNoteEncryptedLogs = functionLogIndex;
-          if (functionLogIndex > acc.heigestIndexEncryptedLogs)
-            acc.heigestIndexEncryptedLogs = functionLogIndex;
-          if (functionLogIndex > acc.heigestIndexUnencryptedLogs)
-            acc.heigestIndexUnencryptedLogs = functionLogIndex;
-
-          return acc;
-        },
-        {
-          heigestIndexNoteEncryptedLogs: -1,
-          heigestIndexEncryptedLogs: -1,
-          heigestIndexUnencryptedLogs: -1,
-        }
-      );
-      const initialLogs = {
-        noteEncryptedLogs: {
-          functionLogs: new Array<{ logs: NoteEncryptedLogEntry[] }>(
-            heigestIndexNoteEncryptedLogs + 1
-          ).fill({ logs: [] }),
-        },
-        encryptedLogs: {
-          functionLogs: new Array<{ logs: EncryptedLogEntry[] }>(
-            heigestIndexEncryptedLogs + 1
-          ).fill({ logs: [] }),
-        },
-        unencryptedLogs: {
-          functionLogs: new Array<{ logs: UnencryptedLogEntry[] }>(
-            heigestIndexUnencryptedLogs + 1
-          ).fill({ logs: [] }),
-        },
-      } as {
-        noteEncryptedLogs: ChicmozL2Block["body"]["txEffects"][0]["noteEncryptedLogs"];
-        encryptedLogs: ChicmozL2Block["body"]["txEffects"][0]["encryptedLogs"];
-        unencryptedLogs: ChicmozL2Block["body"]["txEffects"][0]["unencryptedLogs"];
-      };
-      for (const log of mixedLogs) {
-        if (log.type === "noteEncrypted") {
-          const l = await noteEncryptedLogEntrySchema
-            .parseAsync(log)
-            .catch(dbParseErrorCallback);
-          initialLogs.noteEncryptedLogs.functionLogs[
-            log.functionLogIndex
-          ].logs.push(l);
-        } else if (log.type === "encrypted") {
-          const l = await encryptedLogEntrySchema
-            .parseAsync(log)
-            .catch(dbParseErrorCallback);
-          initialLogs.encryptedLogs.functionLogs[
-            log.functionLogIndex
-          ].logs.push(l);
-        } else if (log.type === "unencrypted") {
-          const l = await unencryptedLogEntrySchema
-            .parseAsync(log)
-            .catch(dbParseErrorCallback);
-          initialLogs.unencryptedLogs.functionLogs[
-            log.functionLogIndex
-          ].logs.push(l);
-        }
-      }
-
+      const nestedData = await getTransactionNestedById(data.txEffect.id);
       return {
         ...data.txEffect,
-        publicDataWrites: publicDataWrites.map((pdw) => pdw.publicDataWrite),
-        noteEncryptedLogs: initialLogs.noteEncryptedLogs,
-        encryptedLogs: initialLogs.encryptedLogs,
-        unencryptedLogs: initialLogs.unencryptedLogs,
+        ...nestedData,
       };
     })
   );

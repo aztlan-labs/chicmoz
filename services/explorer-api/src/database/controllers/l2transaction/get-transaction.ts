@@ -8,42 +8,32 @@ import {
   noteEncryptedLogEntrySchema,
   unencryptedLogEntrySchema,
 } from "@chicmoz-pkg/types";
-import { asc, eq, and, getTableColumns } from "drizzle-orm";
+import { and, asc, eq, getTableColumns } from "drizzle-orm";
 import { getDb as db } from "../../../database/index.js";
 import {
-  l2Block,
   body,
   bodyToTxEffects,
-  txEffect,
-  txEffectToPublicDataWrite,
-  publicDataWrite,
-  txEffectToLogs,
-  logs,
   functionLogs,
+  l2Block,
+  logs,
+  publicDataWrite,
+  txEffect,
+  txEffectToLogs,
+  txEffectToPublicDataWrite,
 } from "../../../database/schema/l2block/index.js";
 import { dbParseErrorCallback } from "../utils.js";
 
-export const getTransaction = async (
-  blockHeight: number,
-  transactionIndex: number
-): Promise<ChicmozL2Transaction | null> => {
-  const txEffectData = await db()
-    .select({
-      txEffect: getTableColumns(txEffect),
-    })
-    .from(l2Block)
-    .innerJoin(body, eq(l2Block.bodyId, body.id))
-    .innerJoin(bodyToTxEffects, eq(body.id, bodyToTxEffects.bodyId))
-    .innerJoin(txEffect, eq(bodyToTxEffects.txEffectId, txEffect.id))
-    .where(
-      and(eq(l2Block.height, blockHeight), eq(txEffect.index, transactionIndex))
-    )
-    .execute();
-
-  if (txEffectData.length === 0) return null;
-
-  const txEffectResult = txEffectData[0];
-
+export const getTransactionNestedById = async (
+  txId: string
+): Promise<
+  Pick<
+    ChicmozL2Transaction,
+    | "publicDataWrites"
+    | "noteEncryptedLogs"
+    | "encryptedLogs"
+    | "unencryptedLogs"
+  >
+> => {
   const publicDataWrites = await db()
     .select({
       publicDataWrite: getTableColumns(publicDataWrite),
@@ -53,7 +43,7 @@ export const getTransaction = async (
       publicDataWrite,
       eq(txEffectToPublicDataWrite.publicDataWriteId, publicDataWrite.id)
     )
-    .where(eq(txEffectToPublicDataWrite.txEffectId, txEffectResult.txEffect.id))
+    .where(eq(txEffectToPublicDataWrite.txEffectId, txId))
     .orderBy(asc(txEffectToPublicDataWrite.index))
     .execute();
 
@@ -65,7 +55,7 @@ export const getTransaction = async (
     .from(txEffectToLogs)
     .innerJoin(logs, eq(txEffectToLogs.logId, logs.id))
     .innerJoin(functionLogs, eq(txEffectToLogs.functionLogId, functionLogs.id))
-    .where(eq(txEffectToLogs.txEffectId, txEffectResult.txEffect.id))
+    .where(eq(txEffectToLogs.txEffectId, txId))
     .orderBy(asc(functionLogs.index), asc(logs.index))
     .execute();
 
@@ -136,15 +126,42 @@ export const getTransaction = async (
     }
   }
 
+  return {
+    publicDataWrites: publicDataWrites.map((pdw) => pdw.publicDataWrite),
+    ...initialLogs,
+  };
+};
+
+export const getTransactionByBlockHeightAndIndex = async (
+  blockHeight: number,
+  transactionIndex: number
+): Promise<ChicmozL2Transaction | null> => {
+  const txEffectData = await db()
+    .select({
+      txEffect: getTableColumns(txEffect),
+    })
+    .from(l2Block)
+    .innerJoin(body, eq(l2Block.bodyId, body.id))
+    .innerJoin(bodyToTxEffects, eq(body.id, bodyToTxEffects.bodyId))
+    .innerJoin(txEffect, eq(bodyToTxEffects.txEffectId, txEffect.id))
+    .where(
+      and(eq(l2Block.height, blockHeight), eq(txEffect.index, transactionIndex))
+    )
+    .execute();
+
+  if (txEffectData.length === 0) return null;
+  const txEffectResult = txEffectData[0];
+
+  const nestedData = await getTransactionNestedById(txEffectResult.txEffect.id);
+
   const transactionData = {
     ...txEffectResult.txEffect,
-    publicDataWrites: publicDataWrites.map((pdw) => pdw.publicDataWrite),
-    noteEncryptedLogs: initialLogs.noteEncryptedLogs,
-    encryptedLogs: initialLogs.encryptedLogs,
-    unencryptedLogs: initialLogs.unencryptedLogs,
+    ...nestedData,
   };
 
-  const transaction = await chicmozL2TransactionSchema.parseAsync(transactionData).catch(dbParseErrorCallback);
+  const transaction = await chicmozL2TransactionSchema
+    .parseAsync(transactionData)
+    .catch(dbParseErrorCallback);
 
   return transaction;
 };

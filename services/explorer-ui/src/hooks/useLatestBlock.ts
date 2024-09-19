@@ -1,6 +1,6 @@
 import { type ChicmozL2Block } from "@chicmoz-pkg/types";
 import { useCallback, useEffect, useState } from "react";
-import { getLatestBlock } from "~/service/api";
+import { getLatestBlock, getTransactionByHeightAndIndex } from "~/service/api";
 
 const formatTimeSince = (seconds: number) => {
   const intervals = [
@@ -181,6 +181,11 @@ export const useLatestBlock = () => {
 
       console.log(block);
       //logPublicWrites(block.body.txEffects);
+      if (block.body.txEffects.length > 0) {
+        const tx = getTransactionByHeightAndIndex(block.height, 0);
+        console.log(JSON.stringify(tx));
+      }
+
       setLatestBlockData(block);
       setError(null);
     } catch (err) {

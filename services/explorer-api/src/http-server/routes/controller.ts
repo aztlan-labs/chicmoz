@@ -36,7 +36,7 @@ export const GET_L2_TRANSACTION_BY_BLOCK_HEIGHT_AND_INDEX = asyncHandler(
   async (req, res) => {
     const { blockHeight, txIndex } =
       getTransactionByBlockHeightAndIndexSchema.parse(req).params;
-    const transaction = await db.l2Transaction.getTransaction(
+    const transaction = await db.l2Transaction.getTransactionByBlockHeightAndIndex(
       blockHeight,
       txIndex
     );
