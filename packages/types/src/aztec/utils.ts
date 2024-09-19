@@ -20,7 +20,8 @@ export type StringifiedAztecAddress = {
 
 export const frSchema = z.preprocess(
   (val) => {
-    if ((val as StringifiedAztecFr).value)
+    if (!val) return val;
+    else if ((val as StringifiedAztecFr).value)
       return (val as StringifiedAztecFr).value;
     else if ((val as AztecFr).toString) return (val as AztecFr).toString();
     else return val;
