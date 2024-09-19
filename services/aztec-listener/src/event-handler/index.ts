@@ -13,5 +13,11 @@ export const onBlock = async (block: L2Block) => {
   });
 };
 
-// TODO: onCatchupAztecBlocks
+export const onCatchupBlock = async (block: L2Block) => {
+  const blockStr = block.toString();
+  await publishMessage("CATCHUP_BLOCK_EVENT", {
+    block: blockStr,
+    nodeInfo: getNodeInfo(),
+  });
+}
 // TODO: onCatchupRequestFromExplorerApi

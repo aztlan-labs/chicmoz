@@ -1,4 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
+import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { TransactionsTable } from "~/components/transactions/transactions-table";
 import { Button } from "~/components/ui";
 import { useLatestBlock } from "~/hooks/useLatestBlock";
@@ -7,11 +8,29 @@ export const Route = createLazyFileRoute("/blocks/$blockNumber")({
   component: Block,
 });
 
+const blockData = [
+  { key: "BLOCK NUMBER", value: "348540" },
+  {
+    key: "BLOCK HASH",
+    value:
+      "0x995542b01a706c56d3a962ba819e765ree057egtr4311562cdf6286147fbf9cf51",
+  },
+  { key: "STATUS", value: "FINALISED" },
+  { key: "TIMESTAMP", value: "1 min ago (Jun-07-2024 08:47:23 AM UTC)" },
+  { key: "TRANSACTIONS", value: "155 transactions" },
+  { key: "TOTAL FEES", value: "0.000122453 ETH ($0.05)" },
+  { key: "SIZE", value: "46,377 bytes" },
+  { key: "LOGS", value: "323 logs" },
+  {
+    key: "PARENT HASH",
+    value: "0xebe7fuy7655b6506fe587hj7c2ad1237b242b9adc60ci8u7y972728ce63b526b",
+  },
+];
+
 function Block() {
   const { mockedChicmozL2Block, loading, error, timeSince } = useLatestBlock();
   const { blockNumber } = Route.useParams();
 
-  const latestBlockData = mockedChicmozL2Block;
   // TODO: these messages should perhaps be diplayed?
   // console.log("Extracted messages:");
   // const txEffects = latestBlockData?.body.txEffects;
@@ -67,33 +86,23 @@ function Block() {
   return (
     <div className="mx-auto px-[70px] max-w-[1440px]">
       {bn ? (
-        <div className="">
-          <div className="bg-white p-6 rounded-lg shadow-md mt-8 mb-8">
-            <h2 className="text-2xl font-bold mb-4">Block Data</h2>
-            {loading && <p>Loading...</p>}
-            {error && <p className="text-red-500">{error}</p>}
-            {latestBlockData && (
-              <>
-                <div>
-                  <p>
-                    <strong>Block Number:</strong>{" "}
-                    {parseInt(
-                      latestBlockData.header.globalVariables.blockNumber,
-                      16,
-                    )}
-                  </p>
-                  <p>
-                    <strong>Time since:</strong> {timeSince}
-                  </p>
-                </div>
-              </>
-            )}
+        <div>
+          <div>
+            <h2>Block Details</h2>
+            <p>{bn}</p>
           </div>
-          <div className="flex flex-row gap-4 w-10 mb-4">
-            <Button variant={"primary"}>View Transactions</Button>
-            <Button variant={"primary"}>View Transactions</Button>
+          <div className="flex flex-col gap-4 mt-8">
+            <div className="">
+              <KeyValueDisplay data={blockData} />
+            </div>
+            <div className="flex flex-row gap-4 w-10 mb-4">
+              <Button variant={"primary"}>
+                <p>View Transactions</p>
+              </Button>
+              <Button variant={"primary"}>View Transactions</Button>
+            </div>
+            <TransactionsTable />
           </div>
-          <TransactionsTable />
         </div>
       ) : (
         <div>

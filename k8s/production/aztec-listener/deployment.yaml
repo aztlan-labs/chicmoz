@@ -28,20 +28,12 @@ spec:
           env:
             - name: NODE_ENV
               value: "development"
-            - name: BLOCK_INTERVAL_MS
-              value: "2000"
-            - name: BATCH_SIZE
-              value: "50"
             - name: CHAIN_NAME
               value: "AZTEC"
             - name: NETWORK_NAME
               value: "SANDBOX"
             - name: MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS
               value: "50"
-            - name: LISTEN_FOR_BLOCKS
-              value: "true"
-            - name: CATCHUP_ENABLED
-              value: "false"
             - name: POSTGRES_IP
               value: "postgresql"
             - name: POSTGRES_PORT
@@ -52,8 +44,15 @@ spec:
               value: "admin"
             - name: POSTGRES_PASSWORD
               value: "secret-local-password"
-            - name: AZTEC_RPC
-              value: "http://host.minikube.internal:8080"
+            - name: AZTEC_RPC_URL
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: CHICMOZ_AZTEC_RPC
+            - name: AZTEC_GENESIS_CATCHUP
+              value: "true"
             - name: IGNORE_PROCESSED_HEIGHT
+              value: "true"
+            - name: AZTEC_LISTEN_FOR_BLOCKS
               value: "true"
 status: {}
