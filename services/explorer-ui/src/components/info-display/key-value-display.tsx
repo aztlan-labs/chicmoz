@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { KeyValueRow } from "./key-value-row";
 
-interface DetailItem {
+export interface DetailItem {
   label: string;
   value: string;
   isClickable?: boolean;
