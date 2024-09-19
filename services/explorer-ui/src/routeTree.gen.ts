@@ -16,18 +16,16 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
-const TransactionsLazyImport = createFileRoute('/transactions')()
 const ContractsLazyImport = createFileRoute('/contracts')()
 const IndexLazyImport = createFileRoute('/')()
+const TransactionsIndexLazyImport = createFileRoute('/transactions/')()
 const BlocksIndexLazyImport = createFileRoute('/blocks/')()
+const TransactionsTransactionIdLazyImport = createFileRoute(
+  '/transactions/$transactionId',
+)()
 const BlocksBlockNumberLazyImport = createFileRoute('/blocks/$blockNumber')()
 
 // Create/Update Routes
-
-const TransactionsLazyRoute = TransactionsLazyImport.update({
-  path: '/transactions',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/transactions.lazy').then((d) => d.Route))
 
 const ContractsLazyRoute = ContractsLazyImport.update({
   path: '/contracts',
@@ -39,10 +37,25 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
+const TransactionsIndexLazyRoute = TransactionsIndexLazyImport.update({
+  path: '/transactions/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/transactions/index.lazy').then((d) => d.Route),
+)
+
 const BlocksIndexLazyRoute = BlocksIndexLazyImport.update({
   path: '/blocks/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/blocks/index.lazy').then((d) => d.Route))
+
+const TransactionsTransactionIdLazyRoute =
+  TransactionsTransactionIdLazyImport.update({
+    path: '/transactions/$transactionId',
+    getParentRoute: () => rootRoute,
+  } as any).lazy(() =>
+    import('./routes/transactions/$transactionId.lazy').then((d) => d.Route),
+  )
 
 const BlocksBlockNumberLazyRoute = BlocksBlockNumberLazyImport.update({
   path: '/blocks/$blockNumber',
@@ -69,13 +82,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContractsLazyImport
       parentRoute: typeof rootRoute
     }
-    '/transactions': {
-      id: '/transactions'
-      path: '/transactions'
-      fullPath: '/transactions'
-      preLoaderRoute: typeof TransactionsLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/blocks/$blockNumber': {
       id: '/blocks/$blockNumber'
       path: '/blocks/$blockNumber'
@@ -83,11 +89,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlocksBlockNumberLazyImport
       parentRoute: typeof rootRoute
     }
+    '/transactions/$transactionId': {
+      id: '/transactions/$transactionId'
+      path: '/transactions/$transactionId'
+      fullPath: '/transactions/$transactionId'
+      preLoaderRoute: typeof TransactionsTransactionIdLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/blocks/': {
       id: '/blocks/'
       path: '/blocks'
       fullPath: '/blocks'
       preLoaderRoute: typeof BlocksIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/transactions/': {
+      id: '/transactions/'
+      path: '/transactions'
+      fullPath: '/transactions'
+      preLoaderRoute: typeof TransactionsIndexLazyImport
       parentRoute: typeof rootRoute
     }
   }
@@ -98,9 +118,10 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
   ContractsLazyRoute,
-  TransactionsLazyRoute,
   BlocksBlockNumberLazyRoute,
+  TransactionsTransactionIdLazyRoute,
   BlocksIndexLazyRoute,
+  TransactionsIndexLazyRoute,
 })
 
 /* prettier-ignore-end */
@@ -113,9 +134,10 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/",
         "/contracts",
-        "/transactions",
         "/blocks/$blockNumber",
-        "/blocks/"
+        "/transactions/$transactionId",
+        "/blocks/",
+        "/transactions/"
       ]
     },
     "/": {
@@ -124,14 +146,17 @@ export const routeTree = rootRoute.addChildren({
     "/contracts": {
       "filePath": "contracts.lazy.tsx"
     },
-    "/transactions": {
-      "filePath": "transactions.lazy.tsx"
-    },
     "/blocks/$blockNumber": {
       "filePath": "blocks/$blockNumber.lazy.tsx"
     },
+    "/transactions/$transactionId": {
+      "filePath": "transactions/$transactionId.lazy.tsx"
+    },
     "/blocks/": {
       "filePath": "blocks/index.lazy.tsx"
+    },
+    "/transactions/": {
+      "filePath": "transactions/index.lazy.tsx"
     }
   }
 }
