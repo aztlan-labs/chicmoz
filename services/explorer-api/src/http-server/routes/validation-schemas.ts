@@ -1,10 +1,16 @@
 import { hexStringSchema } from "@chicmoz-pkg/types";
 import { z } from "zod";
 
+export const getTransactionsByBlockHeightSchema = z.object({
+  params: z.object({
+    blockHeight: z.coerce.number(),
+  }),
+});
+
 export const getTransactionByBlockHeightAndIndexSchema = z.object({
   params: z.object({
-blockHeight: z.coerce.number(),
-txIndex: z.coerce.number(),
+    blockHeight: z.coerce.number(),
+    txIndex: z.coerce.number(),
   }),
 });
 

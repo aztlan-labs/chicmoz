@@ -25,7 +25,7 @@ export const createErrorMiddleware = (logger: Logger): ErrorRequestHandler => {
     }
 
     if (err instanceof ZodError) {
-      logger.info(err.issues);
+      logger.info(JSON.stringify(err.issues));
       res
         .status(400)
         .send({ message: "Schema validation error", errors: err.issues });

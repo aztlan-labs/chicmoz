@@ -96,11 +96,10 @@ export const getTransactionById = async (id: string) => {
 };
 
 export const getTransactionsByHeight = async (height: number) => {
-  const url = `${API_URL}/${aztecExplorer.getL2TransactionsByHeight}`;
+  const url = `${API_URL}/${aztecExplorer.getL2TransactionsByHeight(height)}`;
   const response = await fetch(url, {
     method: "GET",
     headers: defaultHeaders,
-    body: JSON.stringify({ height }),
   });
   const result = await response.json();
 

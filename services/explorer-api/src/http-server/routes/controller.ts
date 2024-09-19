@@ -4,6 +4,7 @@ import {
   getContractInstanceSchema,
   getContractInstancesByBlockHashSchema,
   getTransactionByBlockHeightAndIndexSchema,
+  getTransactionsByBlockHeightSchema,
 } from "./validation-schemas.js";
 
 export const GET_LATEST_HEIGHT = asyncHandler(async (_req, res) => {
@@ -32,14 +33,26 @@ export const GET_HEALTH = asyncHandler((_req, res) => {
   res.sendStatus(200);
 });
 
+export const GET_L2_TRANSACTIONS_BY_BLOCK_HEIGHT = asyncHandler(
+  async (req, res) => {
+    const { blockHeight } =
+      getTransactionsByBlockHeightSchema.parse(req).params;
+    const transactions =
+      await db.l2Transaction.getTransactionsByBlockHeight(blockHeight);
+    if (!transactions) throw new Error("Transactions not found");
+    res.status(200).send(JSON.stringify(transactions));
+  }
+);
+
 export const GET_L2_TRANSACTION_BY_BLOCK_HEIGHT_AND_INDEX = asyncHandler(
   async (req, res) => {
     const { blockHeight, txIndex } =
       getTransactionByBlockHeightAndIndexSchema.parse(req).params;
-    const transaction = await db.l2Transaction.getTransactionByBlockHeightAndIndex(
-      blockHeight,
-      txIndex
-    );
+    const transaction =
+      await db.l2Transaction.getTransactionByBlockHeightAndIndex(
+        blockHeight,
+        txIndex
+      );
     if (!transaction) throw new Error("Transaction not found");
     res.status(200).send(JSON.stringify(transaction));
   }

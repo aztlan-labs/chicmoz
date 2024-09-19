@@ -165,3 +165,29 @@ export const getTransactionByBlockHeightAndIndex = async (
 
   return transaction;
 };
+
+export const getTransactionsByBlockHeight = async (height: number) => {
+  const txEffectData = await db()
+    .select({
+      txEffect: getTableColumns(txEffect),
+    })
+    .from(l2Block)
+    .innerJoin(body, eq(l2Block.bodyId, body.id))
+    .innerJoin(bodyToTxEffects, eq(body.id, bodyToTxEffects.bodyId))
+    .innerJoin(txEffect, eq(bodyToTxEffects.txEffectId, txEffect.id))
+    .where(eq(l2Block.height, height))
+    .orderBy(asc(txEffect.index))
+    .execute();
+
+  const transactions = await Promise.all(
+    txEffectData.map(async (txEffect) => {
+      const nestedData = await getTransactionNestedById(txEffect.txEffect.id);
+      return {
+        ...txEffect.txEffect,
+        ...nestedData,
+      };
+    })
+  );
+
+  return transactions;
+};

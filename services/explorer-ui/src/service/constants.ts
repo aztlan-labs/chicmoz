@@ -6,7 +6,7 @@ export const aztecExplorer = {
   getL2BlockByHeight: "l2/blocks/",
   getL2BlocksByHeightRange: "",
   getL2TransactionById: "",
-  getL2TransactionsByHeight: "",
+  getL2TransactionsByHeight: (height: number) => `l2/blocks/${height}/transactions`,
   getL2TransactionByHeightAndIndex: (height: number, index: number) => `l2/blocks/${height}/transactions/${index}`,
   getL2TransactionsByHeightRange: "",
   getL2ContractInstance: "l2/contract-instance/",
