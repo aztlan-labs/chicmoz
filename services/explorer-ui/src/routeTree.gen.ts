@@ -18,8 +18,8 @@ import { Route as rootRoute } from './routes/__root'
 
 const TransactionsLazyImport = createFileRoute('/transactions')()
 const ContractsLazyImport = createFileRoute('/contracts')()
-const BlocksLazyImport = createFileRoute('/blocks')()
 const IndexLazyImport = createFileRoute('/')()
+const BlocksIndexLazyImport = createFileRoute('/blocks/')()
 const BlocksBlockNumberLazyImport = createFileRoute('/blocks/$blockNumber')()
 
 // Create/Update Routes
@@ -34,21 +34,21 @@ const ContractsLazyRoute = ContractsLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/contracts.lazy').then((d) => d.Route))
 
-const BlocksLazyRoute = BlocksLazyImport.update({
-  path: '/blocks',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/blocks.lazy').then((d) => d.Route))
-
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
+const BlocksIndexLazyRoute = BlocksIndexLazyImport.update({
+  path: '/blocks/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/blocks/index.lazy').then((d) => d.Route))
+
 const BlocksBlockNumberLazyRoute = BlocksBlockNumberLazyImport.update({
-  path: '/$blockNumber',
-  getParentRoute: () => BlocksLazyRoute,
+  path: '/blocks/$blockNumber',
+  getParentRoute: () => rootRoute,
 } as any).lazy(() =>
-  import('./routes/blocks.$blockNumber.lazy').then((d) => d.Route),
+  import('./routes/blocks/$blockNumber.lazy').then((d) => d.Route),
 )
 
 // Populate the FileRoutesByPath interface
@@ -60,13 +60,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/blocks': {
-      id: '/blocks'
-      path: '/blocks'
-      fullPath: '/blocks'
-      preLoaderRoute: typeof BlocksLazyImport
       parentRoute: typeof rootRoute
     }
     '/contracts': {
@@ -85,10 +78,17 @@ declare module '@tanstack/react-router' {
     }
     '/blocks/$blockNumber': {
       id: '/blocks/$blockNumber'
-      path: '/$blockNumber'
+      path: '/blocks/$blockNumber'
       fullPath: '/blocks/$blockNumber'
       preLoaderRoute: typeof BlocksBlockNumberLazyImport
-      parentRoute: typeof BlocksLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/blocks/': {
+      id: '/blocks/'
+      path: '/blocks'
+      fullPath: '/blocks'
+      preLoaderRoute: typeof BlocksIndexLazyImport
+      parentRoute: typeof rootRoute
     }
   }
 }
@@ -97,9 +97,10 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
-  BlocksLazyRoute: BlocksLazyRoute.addChildren({ BlocksBlockNumberLazyRoute }),
   ContractsLazyRoute,
   TransactionsLazyRoute,
+  BlocksBlockNumberLazyRoute,
+  BlocksIndexLazyRoute,
 })
 
 /* prettier-ignore-end */
@@ -111,19 +112,14 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/blocks",
         "/contracts",
-        "/transactions"
+        "/transactions",
+        "/blocks/$blockNumber",
+        "/blocks/"
       ]
     },
     "/": {
       "filePath": "index.lazy.tsx"
-    },
-    "/blocks": {
-      "filePath": "blocks.lazy.tsx",
-      "children": [
-        "/blocks/$blockNumber"
-      ]
     },
     "/contracts": {
       "filePath": "contracts.lazy.tsx"
@@ -132,8 +128,10 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "transactions.lazy.tsx"
     },
     "/blocks/$blockNumber": {
-      "filePath": "blocks.$blockNumber.lazy.tsx",
-      "parent": "/blocks"
+      "filePath": "blocks/$blockNumber.lazy.tsx"
+    },
+    "/blocks/": {
+      "filePath": "blocks/index.lazy.tsx"
     }
   }
 }

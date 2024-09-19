@@ -61,15 +61,15 @@ manifests:
     # - k8s/local/dummy-node/deployment.yaml
     # - k8s/local/dummy-node/service.yaml
     - k8s/local/aztec-listener/deployment.yaml
-    #- k8s/local/aztec-devnet-node/deployment.yaml # DEVNET
-    #- k8s/local/aztec-devnet-node/service.yaml # DEVNET
+    # - k8s/local/aztec-devnet-node/deployment.yaml # DEVNET
+    # - k8s/local/aztec-devnet-node/service.yaml # DEVNET
     # ⚠️ Also change AZTEC_RPC in the aztec-listener deployment!
-    #- k8s/local/aztec-sandbox-node/ingress.yaml # SANDBOX - 👀 NOTE: You also need to add `127.0.0.1	aztec-sandbox-node.localhost` to your /etc/hosts file to reach it from outside the cluster
-    #- k8s/local/aztec-sandbox-node/deployment.yaml # SANDBOX
-    #- k8s/local/aztec-sandbox-node/service.yaml # SANDBOX
-    #- k8s/local/anvil-ethereum-node/ingress.yaml # SANDBOX
-    #- k8s/local/anvil-ethereum-node/deployment.yaml # SANDBOX
-    #- k8s/local/anvil-ethereum-node/service.yaml # SANDBOX
+    # - k8s/local/aztec-sandbox-node/ingress.yaml # SANDBOX - 👀 NOTE: You also need to add `127.0.0.1	aztec-sandbox-node.localhost` to your /etc/hosts file to reach it from outside the cluster
+    # - k8s/local/aztec-sandbox-node/deployment.yaml # SANDBOX
+    # - k8s/local/aztec-sandbox-node/service.yaml # SANDBOX
+    # - k8s/local/anvil-ethereum-node/ingress.yaml # SANDBOX
+    # - k8s/local/anvil-ethereum-node/deployment.yaml # SANDBOX
+    # - k8s/local/anvil-ethereum-node/service.yaml # SANDBOX
     # - k8s/local/kafka-ui/configmap.yaml
     # - k8s/local/kafka-ui/configmap-env.yaml
     # - k8s/local/kafka-ui/ingress.yaml
