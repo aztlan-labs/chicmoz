@@ -46,6 +46,8 @@ spec:
               value: "secret-local-password"
             - name: AZTEC_RPC_URL
               value: "http://host.minikube.internal:8080"
+            - name: AZTEC_GENESIS_CATCHUP
+              value: "true"
             - name: IGNORE_PROCESSED_HEIGHT
               value: "true"
             - name: AZTEC_LISTEN_FOR_BLOCKS
