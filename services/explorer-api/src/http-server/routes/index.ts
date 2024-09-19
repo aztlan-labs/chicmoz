@@ -13,6 +13,9 @@ export const init = ({
   router.get(`/l2/blocks/:heightOrHash`, controller.GET_BLOCK);
   // router.get(`/blocks`, controller.GET_BLOCKS);
 
+  // router.get(`/l2/blocks/:height/transactions`, controller.GET_L2_TRANSACTIONS_BY_BLOCK_HEIGHT);
+  router.get(`/l2/blocks/:blockHeight/transactions/:txIndex`, controller.GET_L2_TRANSACTION_BY_BLOCK_HEIGHT_AND_INDEX);
+
   router.get(`/l2/contract-instance/:address`, controller.GET_L2_CONTRACT_INSTANCE);
   router.get(`/l2/blocks/:blockHash/contract-instances`, controller.GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH);
   return router;

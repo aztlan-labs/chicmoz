@@ -16,7 +16,7 @@ export const getLatestHeight = async () => {
   const result = await response.json();
 
   console.info(`GET ${url}: `, response.status);
-  if (response.status !== 200) throw new Error(`An error occurred while fetching latest height: ${result}`);
+  if (response.status !== 200) throw new Error(`An error occurred while fetching latest height: ${JSON.stringify(result)}`);
 
   return result;
 };
@@ -29,7 +29,7 @@ export const getLatestBlock = async (): Promise<ChicmozL2Block> => {
   });
   const result = await response.json();
 
-  if (response.status !== 200) throw new Error(`An error occurred while fetching latest height: ${result}`);
+  if (response.status !== 200) throw new Error(`An error occurred while fetching latest height: ${JSON.stringify(result)}`);
 
   const res = chicmozL2BlockSchema.parse(result);
 
@@ -46,7 +46,7 @@ export const getBlockByHeight = async (height: number): Promise<ChicmozL2Block> 
   const result = await response.json();
 
   console.info(`GET ${url}: `, response.status);
-  if (response.status !== 200) throw new Error(`An error occurred while fetching blocks by height: ${result}`);
+  if (response.status !== 200) throw new Error(`An error occurred while fetching blocks by height: ${JSON.stringify(result)}`);
 
   return result;
 };
@@ -61,7 +61,7 @@ export const getBlocksByHeightRange = async (start: number, end: number) => {
   const result = await response.json();
 
   console.info(`GET ${url}: `, response.status);
-  if (response.status !== 200) throw new Error(`An error occurred while fetching blocks by height range: ${result}`);
+  if (response.status !== 200) throw new Error(`An error occurred while fetching blocks by height range: ${JSON.stringify(result)}`);
 
   return result;
 };
@@ -75,7 +75,7 @@ export const getBlocksByHash = async (hash: string): Promise<ChicmozL2Block> => 
   const result = await response.json();
 
   console.info(`GET ${url}: `, response.status);
-  if (response.status !== 200) throw new Error(`An error occurred while fetching block by hash: ${result}`);
+  if (response.status !== 200) throw new Error(`An error occurred while fetching block by hash: ${JSON.stringify(result)}`);
 
   return result;
 };
@@ -90,7 +90,7 @@ export const getTransactionById = async (id: string) => {
   const result = await response.json();
 
   console.info(`GET ${url}: `, response.status);
-  if (response.status !== 200) throw new Error(`An error occurred while fetching transaction by id: ${result}`);
+  if (response.status !== 200) throw new Error(`An error occurred while fetching transaction by id: ${JSON.stringify(result)}`);
 
   return result;
 };
@@ -105,10 +105,24 @@ export const getTransactionsByHeight = async (height: number) => {
   const result = await response.json();
 
   console.info(`GET ${url}: `, response.status);
-  if (response.status !== 200) throw new Error(`An error occurred while fetching transactions by height: ${result}`);
+  if (response.status !== 200) throw new Error(`An error occurred while fetching transactions by height: ${JSON.stringify(result)}`);
 
   return result;
 };
+
+export const getTransactionByHeightAndIndex = async (height: number, index: number) => {
+  const url = `${API_URL}/${aztecExplorer.getL2TransactionByHeightAndIndex(height, index)}`;
+  const response = await fetch(url, {
+    method: "GET",
+    headers: defaultHeaders,
+  });
+  const result = await response.json();
+
+  console.info(`GET ${url}: `, response.status);
+  if (response.status !== 200) throw new Error(`An error occurred while fetching transaction by height and index: ${JSON.stringify(result)}`);
+
+  return result;
+}
 
 export const getTransactionsByHeightRange = async (start: number, end: number) => {
   const url = `${API_URL}/${aztecExplorer.getL2TransactionsByHeightRange}`;
@@ -120,7 +134,7 @@ export const getTransactionsByHeightRange = async (start: number, end: number) =
   const result = await response.json();
 
   console.info(`GET ${url}: `, response.status);
-  if (response.status !== 200) throw new Error(`An error occurred while fetching transactions by height range: ${result}`);
+  if (response.status !== 200) throw new Error(`An error occurred while fetching transactions by height range: ${JSON.stringify(result)}`);
 
   return result;
 };
@@ -134,7 +148,7 @@ export const getL2ContractInstance = async (address: string): Promise<ChicmozL2C
   const result = await response.json();
 
   console.info(`GET ${url}: `, response.status);
-  if (response.status !== 200) throw new Error(`An error occurred while fetching contract instance: ${result}`);
+  if (response.status !== 200) throw new Error(`An error occurred while fetching contract instance: ${JSON.stringify(result)}`);
 
   const res = chicmozL2ContractInstanceDeluxeSchema.parse(result);
 
@@ -150,7 +164,7 @@ export const getL2ContractInstancesByBlockHash = async (hash: string): Promise<C
   const result = await response.json();
 
   console.info(`GET ${url}: `, response.status);
-  if (response.status !== 200) throw new Error(`An error occurred while fetching contract instances by block hash: ${result}`);
+  if (response.status !== 200) throw new Error(`An error occurred while fetching contract instances by block hash: ${JSON.stringify(result)}`);
 
   const res = z.array(chicmozL2ContractInstanceDeluxeSchema).parse(result);
 

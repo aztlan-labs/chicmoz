@@ -1,6 +1,10 @@
 import asyncHandler from "express-async-handler";
 import { controllers as db } from "../../database/index.js";
-import {getContractInstanceSchema, getContractInstancesByBlockHashSchema} from "./validation-schemas.js";
+import {
+  getContractInstanceSchema,
+  getContractInstancesByBlockHashSchema,
+  getTransactionByBlockHeightAndIndexSchema,
+} from "./validation-schemas.js";
 
 export const GET_LATEST_HEIGHT = asyncHandler(async (_req, res) => {
   const latestBlock = await db.l2Block.getLatestBlock();
@@ -28,16 +32,34 @@ export const GET_HEALTH = asyncHandler((_req, res) => {
   res.sendStatus(200);
 });
 
+export const GET_L2_TRANSACTION_BY_BLOCK_HEIGHT_AND_INDEX = asyncHandler(
+  async (req, res) => {
+    const { blockHeight, txIndex } =
+      getTransactionByBlockHeightAndIndexSchema.parse(req).params;
+    const transaction = await db.l2Transaction.getTransaction(
+      blockHeight,
+      txIndex
+    );
+    if (!transaction) throw new Error("Transaction not found");
+    res.status(200).send(JSON.stringify(transaction));
+  }
+);
+
 export const GET_L2_CONTRACT_INSTANCE = asyncHandler(async (req, res) => {
   const { address } = getContractInstanceSchema.parse(req).params;
-  const instance = await db.l2Contract.getL2DeployedContractInstanceByAddress(address);
+  const instance =
+    await db.l2Contract.getL2DeployedContractInstanceByAddress(address);
   if (!instance) throw new Error("Contract instance not found");
   res.status(200).send(JSON.stringify(instance));
 });
 
-export const GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH = asyncHandler(async (req, res) => {
-  const { blockHash } = getContractInstancesByBlockHashSchema.parse(req).params;
-  const instances = await db.l2Contract.getL2DeployedContractInstancesByBlockHash(blockHash);
-  if (!instances) throw new Error("Contract instances not found");
-  res.status(200).send(JSON.stringify(instances));
-});
+export const GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH = asyncHandler(
+  async (req, res) => {
+    const { blockHash } =
+      getContractInstancesByBlockHashSchema.parse(req).params;
+    const instances =
+      await db.l2Contract.getL2DeployedContractInstancesByBlockHash(blockHash);
+    if (!instances) throw new Error("Contract instances not found");
+    res.status(200).send(JSON.stringify(instances));
+  }
+);

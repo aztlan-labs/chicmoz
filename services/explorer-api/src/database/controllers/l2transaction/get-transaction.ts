@@ -138,7 +138,7 @@ export const getTransaction = async (
 
   const transactionData = {
     ...txEffectResult.txEffect,
-    publicDataWrites,
+    publicDataWrites: publicDataWrites.map((pdw) => pdw.publicDataWrite),
     noteEncryptedLogs: initialLogs.noteEncryptedLogs,
     encryptedLogs: initialLogs.encryptedLogs,
     unencryptedLogs: initialLogs.unencryptedLogs,
