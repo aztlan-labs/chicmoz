@@ -1,5 +1,5 @@
 {
-  "id": "a851266f-c47d-4039-b868-b4da25991a3a",
+  "id": "47fe0b8e-e7ee-4794-b885-fea1f8fed7bc",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -392,6 +392,12 @@
         "tx_effect_id": {
           "name": "tx_effect_id",
           "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "index": {
+          "name": "index",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },

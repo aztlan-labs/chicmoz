@@ -220,7 +220,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
         .onConflictDoNothing();
 
       // Insert public data writes
-      for (const pdw of txEff.publicDataWrites) {
+      for (const [pdwIndex, pdw] of Object.entries(txEff.publicDataWrites)) {
         const publicDataWriteId = uuidv4();
         await tx
           .insert(publicDataWrite)
@@ -236,6 +236,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
           .insert(txEffectToPublicDataWrite)
           .values({
             txEffectId: txEffectId,
+            index: Number(pdwIndex),
             publicDataWriteId: publicDataWriteId,
           })
           .onConflictDoNothing();

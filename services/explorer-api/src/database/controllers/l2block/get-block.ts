@@ -4,7 +4,9 @@ import {
   NoteEncryptedLogEntry,
   UnencryptedLogEntry,
   chicmozL2BlockSchema,
+  encryptedLogEntrySchema,
   noteEncryptedLogEntrySchema,
+  unencryptedLogEntrySchema,
 } from "@chicmoz-pkg/types";
 import { asc, eq, getTableColumns } from "drizzle-orm";
 import { getDb as db } from "../../../database/index.js";
@@ -31,6 +33,7 @@ import {
   txEffectToLogs,
   txEffectToPublicDataWrite,
 } from "../../../database/schema/l2block/index.js";
+import { dbParseErrorCallback } from "../utils.js";
 
 export const getBlock = async (
   heightOrHash: number | string
@@ -115,18 +118,9 @@ export const getBlock = async (
   const txEffectsData = await db()
     .select({
       txEffect: getTableColumns(txEffect),
-      publicDataWrites: getTableColumns(publicDataWrite),
     })
     .from(bodyToTxEffects)
     .innerJoin(txEffect, eq(bodyToTxEffects.txEffectId, txEffect.id))
-    .leftJoin(
-      txEffectToPublicDataWrite,
-      eq(txEffect.id, txEffectToPublicDataWrite.txEffectId)
-    )
-    .leftJoin(
-      publicDataWrite,
-      eq(txEffectToPublicDataWrite.publicDataWriteId, publicDataWrite.id)
-    )
     .where(eq(bodyToTxEffects.bodyId, dbRes.bodyId))
     .orderBy(asc(txEffect.index))
     .execute();
@@ -134,6 +128,19 @@ export const getBlock = async (
   // TODO: might be better to do this async
   const txEffects = await Promise.all(
     txEffectsData.map(async (data) => {
+      const publicDataWrites = await db()
+        .select({
+          publicDataWrite: getTableColumns(publicDataWrite),
+        })
+        .from(txEffectToPublicDataWrite)
+        .innerJoin(
+          publicDataWrite,
+          eq(txEffectToPublicDataWrite.publicDataWriteId, publicDataWrite.id)
+        )
+        .where(eq(txEffectToPublicDataWrite.txEffectId, data.txEffect.id))
+        .orderBy(asc(txEffectToPublicDataWrite.index))
+        .execute();
+
       const mixedLogs = await db()
         .select({
           functionLogIndex: functionLogs.index,
@@ -191,29 +198,37 @@ export const getBlock = async (
         encryptedLogs: ChicmozL2Block["body"]["txEffects"][0]["encryptedLogs"];
         unencryptedLogs: ChicmozL2Block["body"]["txEffects"][0]["unencryptedLogs"];
       };
-      const { noteEncryptedLogs, encryptedLogs, unencryptedLogs } =
-        mixedLogs.reduce((acc, log) => {
-          if (log.type === "noteEncrypted") {
-            acc.noteEncryptedLogs.functionLogs[log.functionLogIndex].logs.push(
-              noteEncryptedLogEntrySchema.parse(log)
-            );
-          } else if (log.type === "encrypted") {
-            acc.encryptedLogs.functionLogs[log.functionLogIndex].logs.push(
-              log as EncryptedLogEntry
-            );
-          } else if (log.type === "unencrypted") {
-            acc.unencryptedLogs.functionLogs[log.functionLogIndex].logs.push(
-              log as UnencryptedLogEntry
-            );
-          }
-          return acc;
-        }, initialLogs);
+      for (const log of mixedLogs) {
+        if (log.type === "noteEncrypted") {
+          const l = await noteEncryptedLogEntrySchema
+            .parseAsync(log)
+            .catch(dbParseErrorCallback);
+          initialLogs.noteEncryptedLogs.functionLogs[
+            log.functionLogIndex
+          ].logs.push(l);
+        } else if (log.type === "encrypted") {
+          const l = await encryptedLogEntrySchema
+            .parseAsync(log)
+            .catch(dbParseErrorCallback);
+          initialLogs.encryptedLogs.functionLogs[
+            log.functionLogIndex
+          ].logs.push(l);
+        } else if (log.type === "unencrypted") {
+          const l = await unencryptedLogEntrySchema
+            .parseAsync(log)
+            .catch(dbParseErrorCallback);
+          initialLogs.unencryptedLogs.functionLogs[
+            log.functionLogIndex
+          ].logs.push(l);
+        }
+      }
+
       return {
         ...data.txEffect,
-        publicDataWrites: data.publicDataWrites ? [data.publicDataWrites] : [],
-        noteEncryptedLogs,
-        encryptedLogs,
-        unencryptedLogs,
+        publicDataWrites: publicDataWrites.map((pdw) => pdw.publicDataWrite),
+        noteEncryptedLogs: initialLogs.noteEncryptedLogs,
+        encryptedLogs: initialLogs.encryptedLogs,
+        unencryptedLogs: initialLogs.unencryptedLogs,
       };
     })
   );
@@ -280,7 +295,9 @@ export const getBlock = async (
     },
   };
 
-  const block = chicmozL2BlockSchema.parse(blockData);
+  const block = await chicmozL2BlockSchema
+    .parseAsync(blockData)
+    .catch(dbParseErrorCallback);
 
   return block;
 };

@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS "tx_effect_to_logs" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tx_effect_to_public_data_write" (
 	"tx_effect_id" uuid NOT NULL,
+	"index" integer NOT NULL,
 	"public_data_write_id" uuid NOT NULL
 );
 --> statement-breakpoint
