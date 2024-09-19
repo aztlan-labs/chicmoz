@@ -1,10 +1,6 @@
-import {
-  createAztecNodeClient,
-  AztecNode,
-  NodeInfo,
-} from "@aztec/aztec.js";
-import { AZTEC_RPC } from "../constants.js";
-import {logger} from "../logger.js";
+import { createAztecNodeClient, AztecNode, NodeInfo } from "@aztec/aztec.js";
+import { AZTEC_RPC_URL, NODE_ENV } from "../constants.js";
+import { logger } from "../logger.js";
 
 let aztecNode: AztecNode;
 
@@ -16,10 +12,10 @@ const node = () => {
 export const logFetchFailedCause = (e: Error) => {
   if (e.cause) logger.warn(`Aztec failed to fetch: ${JSON.stringify(e.cause)}`);
   throw e;
-}
+};
 
 export const init = async () => {
-  aztecNode = createAztecNodeClient(AZTEC_RPC);
+  aztecNode = createAztecNodeClient(AZTEC_RPC_URL);
   return getNodeInfo().catch(logFetchFailedCause);
 };
 
@@ -55,15 +51,19 @@ export const getNodeInfo = async (): Promise<NodeInfo> => {
   return nodeInfo;
 };
 
-export const getBlock = async (height: number) => node().getBlock(height).catch(logFetchFailedCause);
+export const getBlock = async (height: number) =>
+  node().getBlock(height).catch(logFetchFailedCause);
 
 export const getBlocks = async (fromHeight: number, toHeight: number) => {
   const blocks = [];
   for (let i = fromHeight; i < toHeight; i++) {
+    if (NODE_ENV === "development")
+      await new Promise((r) => setTimeout(r, 500));
     const block = await node().getBlock(i).catch(logFetchFailedCause);
     blocks.push(block);
   }
   return blocks;
 };
 
-export const getLatestHeight = () => node().getBlockNumber().catch(logFetchFailedCause);
+export const getLatestHeight = () =>
+  node().getBlockNumber().catch(logFetchFailedCause);

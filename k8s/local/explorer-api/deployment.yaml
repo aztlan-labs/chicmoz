@@ -61,14 +61,6 @@ spec:
               value: "admin"
             - name: POSTGRES_PASSWORD
               value: "secret-local-password"
-            - name: BLOCK_DB_VALIDATION_ENABLED
-              value: "false"
-            - name: BLOCK_DB_VALIDATION_INTERVAL
-              value: "50"
-            - name: BLOCK_BD_VALIDATION_OFFSET
-              value: "50"
-            - name: CACHE_EXPIRATION_MS
-              value: "5000"
           readinessProbe:
             httpGet:
               path: /health
