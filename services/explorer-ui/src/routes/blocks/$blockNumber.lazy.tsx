@@ -9,20 +9,20 @@ export const Route = createLazyFileRoute("/blocks/$blockNumber")({
 });
 
 const blockData = [
-  { key: "BLOCK NUMBER", value: "348540" },
+  { label: "BLOCK NUMBER", value: "348540" },
   {
-    key: "BLOCK HASH",
+    label: "BLOCK HASH",
     value:
       "0x995542b01a706c56d3a962ba819e765ree057egtr4311562cdf6286147fbf9cf51",
   },
-  { key: "STATUS", value: "FINALISED" },
-  { key: "TIMESTAMP", value: "1 min ago (Jun-07-2024 08:47:23 AM UTC)" },
-  { key: "TRANSACTIONS", value: "155 transactions" },
-  { key: "TOTAL FEES", value: "0.000122453 ETH ($0.05)" },
-  { key: "SIZE", value: "46,377 bytes" },
-  { key: "LOGS", value: "323 logs" },
+  { label: "STATUS", value: "FINALISED" },
+  { label: "TIMESTAMP", value: "1 min ago (Jun-07-2024 08:47:23 AM UTC)" },
+  { label: "TRANSACTIONS", value: "155 transactions" },
+  { label: "TOTAL FEES", value: "0.000122453 ETH ($0.05)" },
+  { label: "SIZE", value: "46,377 bytes" },
+  { label: "LOGS", value: "323 logs" },
   {
-    key: "PARENT HASH",
+    label: "PARENT HASH",
     value: "0xebe7fuy7655b6506fe587hj7c2ad1237b242b9adc60ci8u7y972728ce63b526b",
   },
 ];
@@ -92,7 +92,7 @@ function Block() {
             <p>{bn}</p>
           </div>
           <div className="flex flex-col gap-4 mt-8">
-            <div className="">
+            <div className="bg-white rounded-lg shadow-md p-4">
               <KeyValueDisplay data={blockData} />
             </div>
             <div className="flex flex-row gap-4 w-10 mb-4">

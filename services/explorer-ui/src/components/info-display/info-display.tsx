@@ -3,12 +3,13 @@ import { KeyValueDisplay } from "./key-value-display";
 
 interface InfoDisplayProps {
   blockData: {
-    key: string;
+    label: string;
     value: string;
+    isClickable?: boolean;
   }[];
 }
 
-const InfoDisplay: FC<InfoDisplayProps> = ({ blockData }) => {
+export const InfoDisplay: FC<InfoDisplayProps> = ({ blockData }) => {
   return (
     <div className="p-4">
       <KeyValueDisplay data={blockData} />
