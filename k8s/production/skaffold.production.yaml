@@ -143,7 +143,3 @@ manifests:
         skipBuildDependencies: false
         useHelmSecrets: false
         wait: false
-deploy:
-  kubectl:
-    manifests:
-      - k8s/production/cert-manager/cert-production.yaml
