@@ -67,7 +67,7 @@ manifests:
         skipBuildDependencies: false
         useHelmSecrets: false
         wait: false
-        values:
+        setValues:
           installCRDs: true
       - name: ingress-nginx
         remoteChart: ingress-nginx
