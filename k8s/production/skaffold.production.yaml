@@ -52,9 +52,19 @@ manifests:
     - k8s/production/auth/service.yaml
     - k8s/production/aztec-listener/deployment.yaml
     - k8s/production/aztec-listener/service.yaml
-    - k8s/production/cert-manager/cert-production.yaml
   helm:
     releases:
+      - name: cert-manager
+        remoteChart: jetstack/cert-manager
+        version: 1.13.3
+        namespace: chicmoz-prod
+        createNamespace: false
+        recreatePods: false
+        skipBuildDependencies: false
+        useHelmSecrets: false
+        wait: false
+        valuesFiles:
+          - k8s/production/cert-manager/cert-production.yaml
       - name: ingress-nginx
         remoteChart: ingress-nginx
         repo: https://kubernetes.github.io/ingress-nginx
