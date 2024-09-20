@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { FC, useState } from "react";
+import { useState } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { Button } from "~/components/ui";
 
@@ -103,4 +103,3 @@ function TransactionDetails() {
     </div>
   );
 }
-

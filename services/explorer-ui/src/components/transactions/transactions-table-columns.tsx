@@ -1,5 +1,5 @@
 import { type ColumnDef } from "@tanstack/react-table";
-import type { TransactionTableSchema } from "~/components/transactions";
+import type { TransactionTableSchema } from "~/components/transactions/transactions-schema";
 import { DataTableColumnHeader } from "~/components/data-table";
 import { Badge } from "../ui";
 
