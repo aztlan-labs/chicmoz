@@ -14,7 +14,7 @@ build:
         dockerfile: Dockerfile
         buildArgs:
           NODE_ENV: "production"
-          VITE_API_URL: "http://api.sugarpeanut.com:80/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4" # TODO: change the api key
+          VITE_API_URL: "https://api.chicmoz.info:80/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4" # TODO: change the api key
       requires:
         - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
           alias: BASE
@@ -57,6 +57,16 @@ manifests:
     - k8s/production/postgres/persistant-volume-claim.yaml
   helm:
     releases:
+      - name: cert-manager
+        remoteChart: cert-manager
+        repo: https://charts.bitnami.com/bitnami
+        version: 1.3.18
+        namespace: chicmoz-prod
+        createNamespace: false
+        recreatePods: false
+        skipBuildDependencies: false
+        useHelmSecrets: false
+        wait: false
       - name: ingress-nginx
         remoteChart: ingress-nginx
         repo: https://kubernetes.github.io/ingress-nginx
