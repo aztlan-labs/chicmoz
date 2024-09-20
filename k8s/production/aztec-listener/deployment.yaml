@@ -18,6 +18,23 @@ spec:
     spec:
       imagePullSecrets:
         - name: do-registry
+      initContainers:
+        - name: run-migrations
+          image: aztec-listener:latest
+          command: ["yarn", run, "migrate"]
+          env:
+            - name: NODE_ENV
+              value: "development"
+            - name: POSTGRES_IP
+              value: "postgresql"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DB_NAME
+              value: "aztec_listener"
+            - name: POSTGRES_ADMIN
+              value: "admin"
+            - name: POSTGRES_PASSWORD
+              value: "secret-local-password"
       containers:
         - image: registry.digitalocean.com/aztlan-containers/aztec-listener:latest
           resources:
