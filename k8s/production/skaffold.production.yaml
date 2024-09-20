@@ -52,6 +52,7 @@ manifests:
     - k8s/production/auth/service.yaml
     - k8s/production/aztec-listener/deployment.yaml
     - k8s/production/aztec-listener/service.yaml
+    - k8s/production/cert-manager/cert-production.yaml
   helm:
     releases:
       - name: cert-manager
