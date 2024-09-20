@@ -1,48 +1,6 @@
 import { z } from "zod";
 import { deepPartial } from "../utils.js";
-
-// TODO: separate type for transaction?
-
-type AztecFr = {
-  toString(): string;
-};
-
-type StringifiedAztecFr = {
-  type: "Fr";
-  value: string;
-};
-
-const frSchema = z.preprocess(
-  (val) => {
-    if ((val as StringifiedAztecFr).value)
-      return (val as StringifiedAztecFr).value;
-    else if ((val as AztecFr).toString) return (val as AztecFr).toString();
-    else return val;
-  },
-  z
-    .string()
-    .length(66)
-    .regex(/^0x[0-9a-fA-F]+$/)
-);
-
-type StringifiedBuffer = {
-  type: "Buffer";
-  data: number[];
-};
-
-const bufferSchema = z.preprocess(
-  (val) => {
-    if ((val as StringifiedBuffer).data)
-      return Buffer.from((val as StringifiedBuffer).data);
-    return val;
-  },
-  z.custom<Buffer>(
-    (value) => {
-      return value instanceof Buffer;
-    },
-    { message: "Expected a Buffer" }
-  )
-);
+import { bufferSchema, frSchema } from "./utils.js";
 
 export const noteEncryptedLogEntrySchema = z.object({
   data: z.string(),
@@ -58,12 +16,50 @@ export const unencryptedLogEntrySchema = z.object({
   contractAddress: z.string(),
 });
 
-export type NoteEncryptedLogEntry = z.infer<typeof noteEncryptedLogEntrySchema>;
-export type EncryptedLogEntry = z.infer<typeof encryptedLogEntrySchema>;
-export type UnencryptedLogEntry = z.infer<typeof unencryptedLogEntrySchema>;
+export const chicmozL2TransactionSchema = z.object({
+  revertCode: z.preprocess(
+    (val) => {
+      if (typeof val === "number") return { code: val };
+      return val;
+    },
+    z.object({ code: z.number() })
+  ),
+  transactionFee: frSchema,
+  noteHashes: z.array(frSchema),
+  nullifiers: z.array(frSchema),
+  l2ToL1Msgs: z.array(frSchema),
+  publicDataWrites: z.array(
+    z.object({ leafIndex: frSchema, newValue: frSchema })
+  ),
+  noteEncryptedLogsLength: frSchema,
+  encryptedLogsLength: frSchema,
+  unencryptedLogsLength: frSchema,
+  noteEncryptedLogs: z.object({
+    functionLogs: z.array(
+      z.object({
+        logs: z.array(noteEncryptedLogEntrySchema),
+      })
+    ),
+  }),
+  encryptedLogs: z.object({
+    functionLogs: z.array(
+      z.object({
+        logs: z.array(encryptedLogEntrySchema),
+      })
+    ),
+  }),
+  unencryptedLogs: z.object({
+    functionLogs: z.array(
+      z.object({
+        logs: z.array(unencryptedLogEntrySchema),
+      })
+    ),
+  }),
+});
 
 export const chicmozL2BlockSchema = z.object({
   hash: z.string(),
+  height: z.number(),
   archive: z.object({
     root: frSchema,
     nextAvailableLeafIndex: z.number(),
@@ -115,50 +111,15 @@ export const chicmozL2BlockSchema = z.object({
     totalFees: frSchema,
   }),
   body: z.object({
-    txEffects: z.array(
-      z.object({
-        revertCode: z.preprocess(
-          (val) => {
-            if (typeof val === "number") return { code: val };
-            return val;
-          },
-          z.object({ code: z.number() })
-        ),
-        transactionFee: frSchema,
-        noteHashes: z.array(frSchema),
-        nullifiers: z.array(frSchema),
-        l2ToL1Msgs: z.array(frSchema),
-        publicDataWrites: z.array(
-          z.object({ leafIndex: frSchema, newValue: frSchema })
-        ),
-        noteEncryptedLogsLength: frSchema,
-        encryptedLogsLength: frSchema,
-        unencryptedLogsLength: frSchema,
-        noteEncryptedLogs: z.object({
-          functionLogs: z.array(
-            z.object({
-              logs: z.array(noteEncryptedLogEntrySchema),
-            })
-          ),
-        }),
-        encryptedLogs: z.object({
-          functionLogs: z.array(
-            z.object({
-              logs: z.array(encryptedLogEntrySchema),
-            })
-          ),
-        }),
-        unencryptedLogs: z.object({
-          functionLogs: z.array(
-            z.object({
-              logs: z.array(unencryptedLogEntrySchema),
-            })
-          ),
-        }),
-      })
-    ),
+    txEffects: z.array(chicmozL2TransactionSchema),
   }),
 });
+
+export type NoteEncryptedLogEntry = z.infer<typeof noteEncryptedLogEntrySchema>;
+export type EncryptedLogEntry = z.infer<typeof encryptedLogEntrySchema>;
+export type UnencryptedLogEntry = z.infer<typeof unencryptedLogEntrySchema>;
+
+export type ChicmozL2Transaction = z.infer<typeof chicmozL2TransactionSchema>;
 
 export type ChicmozL2Block = z.infer<typeof chicmozL2BlockSchema>;
 

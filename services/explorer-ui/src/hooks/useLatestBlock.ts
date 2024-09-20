@@ -20,9 +20,35 @@ const formatTimeSince = (seconds: number) => {
   return "just now";
 };
 
+// const logLogs = (txEffects: ChicmozL2Block["body"]["txEffects"]) => {
+//   for (const [txI, tx] of Object.entries(txEffects)) {
+//     for (const [fLogI, fLog] of Object.entries(
+//       tx.unencryptedLogs.functionLogs
+//     )) {
+//       for (const [logI, log] of Object.entries(fLog.logs)) {
+//         console.log(`tx ${txI} fLog ${fLogI} log ${logI}: `, log);
+//       }
+//     }
+//   }
+// };
+//
+// const logPublicWrites = (txEffects: ChicmozL2Block["body"]["txEffects"]) => {
+//   for (const [txI, tx] of Object.entries(txEffects)) {
+//     for (const [pubWriteI, pubWrite] of Object.entries(tx.publicDataWrites)) {
+//       console.log(`tx ${txI} pubWrite ${pubWriteI}: `, pubWrite);
+//       for (const [logI, log] of Object.entries(
+//         tx.unencryptedLogs.functionLogs[Number(pubWriteI)].logs
+//       )) {
+//         console.log(`\tlog ${logI}: `, log);
+//       }
+//     }
+//   }
+// };
+//
+
 export const useLatestBlock = () => {
   const [latestBlockData, setLatestBlockData] = useState<ChicmozL2Block | null>(
-    null
+    null,
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +56,7 @@ export const useLatestBlock = () => {
   const fetchLatestBlock = useCallback(async () => {
     try {
       const block = await getLatestBlock();
-      console.log("block", block);
+      //console.log("block", block);
       if (
         !block ||
         latestBlockData?.header?.globalVariables?.blockNumber ===
@@ -38,6 +64,8 @@ export const useLatestBlock = () => {
       )
         return;
 
+      console.log(block);
+      //logPublicWrites(block.body.txEffects);
       setLatestBlockData(block);
       setError(null);
     } catch (err) {
@@ -50,7 +78,7 @@ export const useLatestBlock = () => {
   }, [latestBlockData?.header?.globalVariables?.blockNumber]);
 
   useEffect(() => {
-    fetchLatestBlock(); // Fetch immediately on mount
+    void fetchLatestBlock(); // Fetch immediately on mount
     const intervalId = setInterval(fetchLatestBlock, 3000); // Poll every 3 seconds
     return () => clearInterval(intervalId); // Clean up on unmount
   }, [fetchLatestBlock]);
@@ -59,7 +87,7 @@ export const useLatestBlock = () => {
   if (latestBlockData) {
     const now = new Date().getTime();
     const blockTime = new Date(
-      parseInt(latestBlockData.header.globalVariables.timestamp, 16) * 1000
+      parseInt(latestBlockData.header.globalVariables.timestamp, 16) * 1000,
     ).getTime();
     timeSince = formatTimeSince(Math.round((now - blockTime) / 1000));
   }
@@ -70,4 +98,4 @@ export const useLatestBlock = () => {
     error,
     timeSince,
   };
-}
+};

@@ -1,31 +1,69 @@
-import { PXE, createPXEClient } from "@aztec/aztec.js";
-import { AZTEC_RPC } from "../constants.js";
+import { createAztecNodeClient, AztecNode, NodeInfo } from "@aztec/aztec.js";
+import { AZTEC_RPC_URL, NODE_ENV } from "../constants.js";
+import { logger } from "../logger.js";
 
-let pxe: PXE;
+let aztecNode: AztecNode;
 
-export const init = () => {
-  pxe = createPXEClient(AZTEC_RPC);
-  return pxe.getNodeInfo();
+const node = () => {
+  if (!aztecNode) throw new Error("Node not initialized");
+  return aztecNode;
 };
 
-export const getBlock = (height: number) => {
-  if (!pxe) throw new Error("PXE client not initialized");
-
-  return pxe.getBlock(height);
+export const logFetchFailedCause = (e: Error) => {
+  if (e.cause) logger.warn(`Aztec failed to fetch: ${JSON.stringify(e.cause)}`);
+  throw e;
 };
+
+export const init = async () => {
+  aztecNode = createAztecNodeClient(AZTEC_RPC_URL);
+  return getNodeInfo().catch(logFetchFailedCause);
+};
+
+export const getNodeInfo = async (): Promise<NodeInfo> => {
+  const n = node();
+  const [
+    nodeVersion,
+    protocolVersion,
+    chainId,
+    enr,
+    contractAddresses,
+    protocolContractAddresses,
+  ] = await Promise.all([
+    n.getNodeVersion().catch(logFetchFailedCause),
+    n.getVersion().catch(logFetchFailedCause),
+    n.getChainId().catch(logFetchFailedCause),
+    n.getEncodedEnr().catch(logFetchFailedCause),
+    n.getL1ContractAddresses().catch(logFetchFailedCause),
+    n.getProtocolContractAddresses().catch(logFetchFailedCause),
+  ]);
+
+  const nodeInfo: NodeInfo = {
+    nodeVersion,
+    l1ChainId: chainId,
+    protocolVersion,
+    enr,
+    l1ContractAddresses: contractAddresses,
+    protocolContractAddresses: protocolContractAddresses,
+  };
+
+  // TODO: why unsafe?
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return nodeInfo;
+};
+
+export const getBlock = async (height: number) =>
+  node().getBlock(height).catch(logFetchFailedCause);
 
 export const getBlocks = async (fromHeight: number, toHeight: number) => {
-  if (!pxe) throw new Error("PXE client not initialized");
   const blocks = [];
   for (let i = fromHeight; i < toHeight; i++) {
-    const block = await pxe.getBlock(i);
+    if (NODE_ENV === "development")
+      await new Promise((r) => setTimeout(r, 500));
+    const block = await node().getBlock(i).catch(logFetchFailedCause);
     blocks.push(block);
   }
   return blocks;
-}
-
-export const getLatestHeight = () => {
-  if (!pxe) throw new Error("PXE client not initialized");
-
-  return pxe.getBlockNumber();
 };
+
+export const getLatestHeight = () =>
+  node().getBlockNumber().catch(logFetchFailedCause);

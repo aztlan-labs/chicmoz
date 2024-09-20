@@ -1,5 +1,5 @@
 import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
-import { bufferType, generateFrColumn, generateTreeTable } from "../utils.js";
+import { bufferType, generateAztecAddressColumn, generateFrColumn, generateTreeTable } from "../utils.js";
 
 export const header = pgTable("header", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -68,8 +68,7 @@ export const globalVariables = pgTable("global_variables", {
   slotNumber: generateFrColumn("slot_number"),
   timestamp: generateFrColumn("timestamp"),
   coinbase: varchar("coinbase", { length: 42 }).notNull(),
-  // NOTE: feeRecipient is referred to as "AztecAddress" and not Fr (although it is(?) a Fr)
-  feeRecipient: varchar("fee_recipient", { length: 66 }).notNull(),
+  feeRecipient: generateAztecAddressColumn("fee_recipient").notNull(),
   gasFeesId: uuid("gas_fees_id")
     .notNull()
     .references(() => gasFees.id),

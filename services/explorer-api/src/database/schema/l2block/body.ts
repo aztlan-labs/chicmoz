@@ -1,3 +1,4 @@
+import { HexString } from "@chicmoz-pkg/types";
 import {
   integer,
   jsonb,
@@ -6,7 +7,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
-import { HexString, generateFrColumn } from "../utils.js";
+import { generateFrColumn } from "../utils.js";
 
 export const body = pgTable("body", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -31,7 +32,9 @@ export const txEffect = pgTable("tx_effect", {
   noteHashes: jsonb("note_hashes").notNull(),
   nullifiers: jsonb("nullifiers").notNull(),
   l2ToL1Msgs: jsonb("l2_to_l1_msgs").notNull().$type<HexString[]>(),
-  noteEncryptedLogsLength: generateFrColumn("note_encrypted_logs_length").notNull(),
+  noteEncryptedLogsLength: generateFrColumn(
+    "note_encrypted_logs_length"
+  ).notNull(),
   encryptedLogsLength: generateFrColumn("encrypted_logs_length").notNull(),
   unencryptedLogsLength: generateFrColumn("unencrypted_logs_length").notNull(),
 });
@@ -42,6 +45,7 @@ export const txEffectToPublicDataWrite = pgTable(
     txEffectId: uuid("tx_effect_id")
       .notNull()
       .references(() => txEffect.id),
+    index: integer("index").notNull(),
     publicDataWriteId: uuid("public_data_write_id")
       .notNull()
       .references(() => publicDataWrite.id),

@@ -20,6 +20,11 @@ const config = {
     "plugin:react-hooks/recommended",
     "prettier",
   ],
+  settings: {
+    "import/resolver": {
+      typescript: {}, // this loads <rootdir>/tsconfig.json to eslint
+    },
+  },
   ignorePatterns: ["dist", ".eslintrc.cjs"],
   plugins: ["@typescript-eslint", "react-refresh", "tailwindcss"],
   rules: {

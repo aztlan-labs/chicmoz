@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: aztec-devnet-node
+  name: aztec-devnet-node
+  namespace: chicmoz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aztec-devnet-node
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: aztec-devnet-node
+    spec:
+      containers:
+        - image: aztecprotocol/aztec:devnet
+          name: aztec-devnet-node
+          resources:
+            limits:
+              memory: 4096Mi
+              cpu: 250m
+          args:
+            - start
+            - --pxe
+            - --pxe.network
+            - devnet
+            - --pxe.apiKey=$(AZTEC_API_KEY)
+          env:
+            - name: AZTEC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: CHICMOZ_AZTEC_API_KEY
+            - name: DEBUG
+              value: "aztec:*"
+            - name: ETHEREUM_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: CHICMOZ_AZTEC_ETHEREUM_HOST
+            - name: L1_CHAIN_ID
+              value: "677692"
+            - name: ARCHIVER_POLLING_INTERVAL_MS
+              value: "50"
+            - name: P2P_BLOCK_CHECK_INTERVAL_MS
+              value: "50"
+            - name: SEQ_TX_POLLING_INTERVAL_MS
+              value: "50"
+            - name: WS_BLOCK_CHECK_INTERVAL_MS
+              value: "50"
+            - name: PXE_BLOCK_POLLING_INTERVAL_MS
+              value: "50"
+            - name: ARCHIVER_VIEM_POLLING_INTERVAL_MS
+              value: "500"
+            - name: PXE_PORT
+              value: "8080"
+            - name: AZTEC_PORT
+              value: "8080"
+            - name: FAUCET_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: CHICMOZ_AZTEC_FAUCET_ENDPOINT
+            - name: PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: CHICMOZ_AZTEC_PRIVATE_KEY
+            - name: ETH_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: CHICMOZ_AZTEC_ETH_ADDRESS
+            - name: L1_DEV_COIN
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: CHICMOZ_AZTEC_L1_DEV_COIN
+            - name: DEV_COIN_PORTAL
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: CHICMOZ_AZTEC_DEV_COIN_PORTAL
+            - name: L1_FEE_JUICE
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: CHICMOZ_AZTEC_L1_FEE_JUICE
+status: {}

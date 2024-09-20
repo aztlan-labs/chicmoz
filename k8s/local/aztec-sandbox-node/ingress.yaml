@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-aztec-sandbox-node
+  namespace: chicmoz
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: aztec-sandbox-node.localhost
+      http:
+        paths:
+          - backend:
+              service:
+                name: aztec-sandbox-node
+                port:
+                  name: pxe-port
+            path: /
+            pathType: Prefix
+status:
+  loadBalancer: {}

@@ -70,6 +70,7 @@ export class GatewayTimeoutError extends Error {
   readonly code = 504;
 }
 
+// TODO: these should have a more generic name and we should use CHICMOZ_ERRORS for more specific errors
 export const CHICMOZ_ERRORS = [
   BadRequestError,
   UnauthorizedError,

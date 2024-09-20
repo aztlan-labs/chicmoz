@@ -11,12 +11,9 @@ export const POSTGRES_ADMIN = process.env.POSTGRES_ADMIN ?? "admin";
 export const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD ?? "test";
 
 export const KAFKA_CONNECTION = process.env.KAFKA_CONNECTION ?? "kafka:9092";
-export const KAFKA_SASL_USERNAME = process.env.KAFKA_SASL_USERNAME ?? "controller_user";
+export const KAFKA_SASL_USERNAME =
+  process.env.KAFKA_SASL_USERNAME ?? "controller_user";
 export const KAFKA_SASL_PASSWORD = process.env.KAFKA_SASL_PASSWORD ?? "test";
-export const KAFKA_MSK_ACCESS_KEY = process.env.KAFKA_MSK_ACCESS_KEY ?? "accessKey";
-export const KAFKA_MSK_SECRET_KEY = process.env.KAFKA_MSK_SECRET_KEY ?? "secretKey";
-export const KAFKA_MSK_USER_ID = process.env.KAFKA_MSK_USER_ID ?? "secretKey";
-export const KAFKA_MSK_REGION = process.env.KAFKA_MSK_REGION ?? "local";
 
 export const SERVICE_NAME = process.env.SERVICE_NAME ?? "auth";
 

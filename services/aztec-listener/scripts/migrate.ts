@@ -29,14 +29,17 @@ async function runMigrations() {
         console.log(`Retrying attempt ${attemptNumber} of ${retries}...`);
         return true;
       }
-      console.error(e.stack);
+      console.error(e);
       return false;
     },
   });
 
-  console.log("🤩 Migrations complete!");
-
   await pool.end();
+  console.log("🤩 Migrations complete!");
 }
 
-runMigrations().catch(console.error);
+runMigrations().catch(async (e) => {
+  console.error(e);
+  await pool.end();
+  process.exit(1);
+});

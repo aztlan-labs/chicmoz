@@ -1,9 +1,11 @@
-import { NodeInfoAlias } from '@chicmoz-pkg/types';
+import { NodeInfo } from '@chicmoz-pkg/types';
 
 export type NewBlockEvent = {
-  nodeInfo: NodeInfoAlias;
+  nodeInfo: NodeInfo;
   block?: string;
 };
+
+export type CatchupBlockEvent = NewBlockEvent;
 
 export function generateAztecTopicName(networkId: string, topic: keyof AZTEC_MESSAGES): string {
   return `${networkId}_${topic}`;
@@ -11,4 +13,5 @@ export function generateAztecTopicName(networkId: string, topic: keyof AZTEC_MES
 
 export type AZTEC_MESSAGES = {
   NEW_BLOCK_EVENT: NewBlockEvent
+  CATCHUP_BLOCK_EVENT: CatchupBlockEvent
 };

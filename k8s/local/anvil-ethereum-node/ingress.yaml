@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-anvil-ethereum-node
+  namespace: chicmoz
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: anvil-ethereum-node.localhost
+      http:
+        paths:
+          - backend:
+              service:
+                name: anvil-ethereum-node
+                port:
+                  name: anvil-port
+            path: /
+            pathType: Prefix
+status:
+  loadBalancer: {}
