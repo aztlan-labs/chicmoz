@@ -53,11 +53,10 @@ function Block() {
         value:
           new Date(
             parseInt(latestBlockData.header.globalVariables.timestamp, 16) *
-              1000,
+              1000
           ).toLocaleString() + ` (${timeSince} ago)`,
       },
       {
-        // TODO: this should be a link to txs list
         label: "Num Txs",
         value:
           "" + parseInt(latestBlockData.header.contentCommitment.numTxs, 16),
@@ -86,21 +85,21 @@ function Block() {
         value: "" + parseInt(latestBlockData.header.totalFees, 16),
       },
       {
-        label: "gasUsed",
+        label: "feePerDaGas",
         value:
           "" +
           parseInt(
             latestBlockData.header.globalVariables.gasFees.feePerDaGas,
-            16,
+            16
           ),
       },
       {
-        label: "gasLimit",
+        label: "feePerL2Gas",
         value:
           "" +
           parseInt(
             latestBlockData.header.globalVariables.gasFees.feePerL2Gas,
-            16,
+            16
           ),
       },
     ];
