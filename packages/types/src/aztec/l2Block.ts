@@ -24,6 +24,7 @@ export const chicmozL2TransactionSchema = z.object({
     },
     z.object({ code: z.number() })
   ),
+  txHash: z.string(),
   transactionFee: frSchema,
   noteHashes: z.array(frSchema),
   nullifiers: z.array(frSchema),

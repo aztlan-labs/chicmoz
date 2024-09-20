@@ -15,6 +15,7 @@ import {
 } from "@chicmoz-pkg/types";
 import { controllers } from "../database/index.js";
 import { logger } from "../logger.js";
+import {play1} from "./playground.js";
 
 export const onBlock = async ({ block }: NewBlockEvent) => {
   // TODO: start storing NODE_INFO connected to the block
@@ -28,14 +29,30 @@ export const onBlock = async ({ block }: NewBlockEvent) => {
   await storeContracts(b, hash);
 };
 
+const getTxEffectWithHashes = (txEffects: L2Block["body"]["txEffects"]) => {
+  return txEffects.map((txEffect) => {
+    return ({
+    ...txEffect,
+    txHash: txEffect.hash().toString('hex'),
+  })});
+}
+
 const storeBlock = async (b: L2Block, hash: string) => {
   let parsedBlock: ChicmozL2Block;
+  await play1(b);
+  const blockWithTxEffectsHashesAdded = {
+    ...b,
+    body: {
+      ...b.body,
+      txEffects: getTxEffectWithHashes(b.body.txEffects),
+    },
+  };
   try {
     logger.info(`👓 Parsing block ${b.number}`);
     parsedBlock = chicmozL2BlockSchema.parse({
       hash,
       height: b.number,
-      ...JSON.parse(JSON.stringify(b)),
+      ...JSON.parse(JSON.stringify(blockWithTxEffectsHashesAdded)),
     });
   } catch (e) {
     logger.error(
