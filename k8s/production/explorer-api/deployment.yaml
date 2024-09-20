@@ -19,8 +19,8 @@ spec:
       imagePullSecrets:
         - name: do-registry
       initContainers:
-        - name: run-migrations
-          image: explorer-api:latest
+        - image: registry.digitalocean.com/aztlan-containers/explorer-api:latest
+          name: run-migrations
           command: ["yarn", run, "migrate"]
           env:
             - name: NODE_ENV
@@ -37,6 +37,7 @@ spec:
               value: "secret-local-password"
       containers:
         - image: registry.digitalocean.com/aztlan-containers/explorer-api:latest
+          name: explorer-api
           resources:
             limits:
               memory: 4096Mi
@@ -45,7 +46,6 @@ spec:
             - name: http-app
               containerPort: 80
               protocol: TCP
-          name: explorer-api
           env:
             - name: NODE_ENV
               value: "development"

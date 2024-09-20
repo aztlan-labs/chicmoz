@@ -19,8 +19,8 @@ spec:
       imagePullSecrets:
         - name: do-registry
       initContainers:
-        - name: run-migrations
-          image: aztec-listener:latest
+        - image: registry.digitalocean.com/aztlan-containers/aztec-listener:latest
+          name: run-migrations
           command: ["yarn", run, "migrate"]
           env:
             - name: NODE_ENV
@@ -37,11 +37,11 @@ spec:
               value: "secret-local-password"
       containers:
         - image: registry.digitalocean.com/aztlan-containers/aztec-listener:latest
+          name: aztec-listener
           resources:
             limits:
               memory: 750Mi
               cpu: 250m
-          name: aztec-listener
           env:
             - name: NODE_ENV
               value: "development"
