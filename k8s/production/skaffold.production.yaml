@@ -54,6 +54,7 @@ manifests:
     - k8s/production/aztec-listener/service.yaml
     - k8s/production/postgres/persistant-volume.yaml
     - k8s/production/postgres/persistant-volume-claim.yaml
+    - k8s/production/cert-manager/cert-production.yaml
   helm:
     releases:
       - name: cert-manager
@@ -98,8 +99,8 @@ manifests:
           global.postgresql.auth.username: "admin"
           global.postgresql.auth.password: "secret-local-password" # TODO: change to env-var
           image.debug: true
-          primary.persistance.enabled: true
-          primary.persistance.storageClass: "postgres-pvc"
+          primary.persistence.enabled: true
+          primary.persistence.existingClaim: "postgres-pvc"
           volumePermissions.enabled: true
         namespace: chicmoz-prod
         createNamespace: false
