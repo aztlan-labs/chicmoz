@@ -17,7 +17,7 @@ spec:
         app: explorer-api
     spec:
       imagePullSecrets:
-        - name: do-registry
+        - name: registry-aztlan-containers
       initContainers:
         - image: registry.digitalocean.com/aztlan-containers/explorer-api:latest
           name: run-migrations

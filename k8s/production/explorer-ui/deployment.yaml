@@ -17,7 +17,7 @@ spec:
         app: explorer-ui
     spec:
       imagePullSecrets:
-        - name: do-registry
+        - name: registry-aztlan-containers
       containers:
         - image: registry.digitalocean.com/aztlan-containers/explorer-ui:latest
           resources:

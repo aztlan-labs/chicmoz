@@ -17,7 +17,7 @@ spec:
         app: aztec-listener
     spec:
       imagePullSecrets:
-        - name: do-registry
+        - name: registry-aztlan-containers
       initContainers:
         - image: registry.digitalocean.com/aztlan-containers/aztec-listener:latest
           name: run-migrations
