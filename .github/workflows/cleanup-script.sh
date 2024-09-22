@@ -27,6 +27,37 @@ delete_old_tags() {
     done <<< "$SHA_TAGS"
 }
 
+# Function to start garbage collection
+start_garbage_collection() {
+    echo "Starting garbage collection..."
+    doctl registry garbage-collection start --include-untagged-manifests --force
+}
+
+# Function to check garbage collection status
+check_garbage_collection_status() {
+    local status
+    status=$(doctl registry garbage-collection get-active --format Status --no-header)
+    echo "$status"
+}
+
+# Function to wait for garbage collection to complete
+wait_for_garbage_collection() {
+    echo "Waiting for garbage collection to complete..."
+    while true; do
+        local status
+        status=$(check_garbage_collection_status)
+        if [ "$status" = "succeeded" ]; then
+            echo "Garbage collection completed successfully."
+            break
+        elif [ "$status" = "failed" ]; then
+            echo "Garbage collection failed."
+            exit 1
+        fi
+        echo "Garbage collection is still in progress. Waiting..."
+        sleep 60  # Wait for 60 seconds before checking again
+    done
+}
+
 # List all repositories in the registry
 echo "Listing repositories..."
 REPOS=$(doctl registry repository list --format Name --no-header) || { echo "Failed to list repositories"; exit 1; }
@@ -41,4 +72,10 @@ while IFS= read -r repo; do
     delete_old_tags "$repo"
 done <<< "$REPOS"
 
-echo "Cleanup completed."
+# Start garbage collection
+start_garbage_collection
+
+# Wait for garbage collection to complete
+wait_for_garbage_collection
+
+echo "Cleanup and garbage collection completed."
