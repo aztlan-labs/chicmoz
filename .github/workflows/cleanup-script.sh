@@ -30,31 +30,57 @@ delete_old_tags() {
 # Function to start garbage collection
 start_garbage_collection() {
     echo "Starting garbage collection..."
-    doctl registry garbage-collection start --include-untagged-manifests --force
+    if doctl registry garbage-collection start --include-untagged-manifests --force; then
+        echo "Garbage collection started successfully."
+        return 0
+    else
+        echo "Failed to start garbage collection."
+        return 1
+    fi
 }
 
 # Function to check garbage collection status
 check_garbage_collection_status() {
     local status
-    status=$(doctl registry garbage-collection get-active --format Status --no-header)
-    echo "$status"
+    status=$(doctl registry garbage-collection get-active --format Status --no-header 2>/dev/null) || true
+    if [ -z "$status" ]; then
+        echo "no_active_gc"
+    else
+        echo "$status"
+    fi
 }
 
 # Function to wait for garbage collection to complete
 wait_for_garbage_collection() {
-    echo "Waiting for garbage collection to complete..."
-    while true; do
+    echo "Checking garbage collection status..."
+    local max_attempts=30
+    local attempt=1
+    while [ $attempt -le $max_attempts ]; do
         local status
         status=$(check_garbage_collection_status)
-        if [ "$status" = "succeeded" ]; then
-            echo "Garbage collection completed successfully."
-            break
-        elif [ "$status" = "failed" ]; then
-            echo "Garbage collection failed."
-            exit 1
-        fi
-        echo "Garbage collection is still in progress. Waiting..."
-        sleep 60  # Wait for 60 seconds before checking again
+        case "$status" in
+            "succeeded")
+                echo "Garbage collection completed successfully."
+                return 0
+                ;;
+            "failed")
+                echo "Garbage collection failed."
+                return 1
+                ;;
+            "no_active_gc")
+                echo "No active garbage collection found. It may have completed quickly."
+                return 0
+                ;;
+            *)
+                if [ $attempt -eq $max_attempts ]; then
+                    echo "Garbage collection is still in progress after maximum attempts. Please check manually."
+                    return 1
+                fi
+                echo "Garbage collection is still in progress. Waiting... (Attempt $attempt/$max_attempts)"
+                sleep 30  # Wait for 30 seconds before checking again
+                ;;
+        esac
+        attempt=$((attempt + 1))
     done
 }
 
@@ -73,9 +99,11 @@ while IFS= read -r repo; do
 done <<< "$REPOS"
 
 # Start garbage collection
-start_garbage_collection
+if start_garbage_collection; then
+    # Wait for garbage collection to complete
+    wait_for_garbage_collection
+else
+    echo "Skipping garbage collection wait due to start failure."
+fi
 
-# Wait for garbage collection to complete
-wait_for_garbage_collection
-
-echo "Cleanup and garbage collection completed."
+echo "Cleanup process completed."
