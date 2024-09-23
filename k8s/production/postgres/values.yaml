@@ -4,6 +4,8 @@ primary:
       init.sql: |
         SELECT 'CREATE DATABASE aztec_listener'
         WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'aztec_listener')\gexec
+        SELECT 'CREATE DATABASE explorer_api'
+        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'explorer_api')\gexec
         SELECT 'CREATE DATABASE auth'
         WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'auth')\gexec
         \c auth
@@ -67,8 +69,3 @@ primary:
 
         SELECT 'CREATE DATABASE metrics'
         WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'metrics')\gexec
-
-        SELECT 'CREATE DATABASE azteclistener'
-        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'azteclistener')\gexec
-        SELECT 'CREATE DATABASE explorer-api'
-        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'explorer-api')\gexec
