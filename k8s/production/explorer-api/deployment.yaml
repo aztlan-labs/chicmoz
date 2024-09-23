@@ -58,7 +58,7 @@ spec:
             - name: POSTGRES_PORT
               value: "5432"
             - name: POSTGRES_DB_NAME
-              value: "auth"
+              value: "explorer_api"
             - name: POSTGRES_ADMIN
               value: "admin"
             - name: POSTGRES_PASSWORD
