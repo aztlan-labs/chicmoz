@@ -66,9 +66,9 @@ export const GET_L2_TX_EFFECT_BY_BLOCK_HEIGHT_AND_INDEX = asyncHandler(
   }
 );
 
-export const GET_L2_TX_EFFECTS_BY_TX_HASH = asyncHandler(async (req, res) => {
+export const GET_L2_TX_EFFECT_BY_TX_HASH = asyncHandler(async (req, res) => {
   const { txHash } = getTxEffectsByTxHashSchema.parse(req).params;
-  const txEffects = await db.l2TxEffect.getTxeffectsByTxHash(txHash);
+  const txEffects = await db.l2TxEffect.getTxeffectByTxHash(txHash);
   if (!txEffects) throw new Error("TxEffects not found");
   res.status(200).send(JSON.stringify(txEffects));
 });

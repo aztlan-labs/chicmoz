@@ -220,7 +220,7 @@ const _getTxEffects = async (
     .catch(dbParseErrorCallback);
 };
 
-export const getTxeffectsByTxHash = async (
+export const getTxeffectByTxHash = async (
   txHash: string
 ): Promise<ChicmozL2TxEffect | null> => {
   const dbRes = await db()
