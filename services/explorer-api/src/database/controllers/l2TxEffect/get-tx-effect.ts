@@ -9,6 +9,7 @@ import {
   unencryptedLogEntrySchema,
 } from "@chicmoz-pkg/types";
 import { and, asc, eq, getTableColumns } from "drizzle-orm";
+import { z } from "zod";
 import { getDb as db } from "../../../database/index.js";
 import {
   body,
@@ -22,6 +23,33 @@ import {
   txEffectToPublicDataWrite,
 } from "../../../database/schema/l2block/index.js";
 import { dbParseErrorCallback } from "../utils.js";
+
+enum GetTypes {
+  BlockHeight,
+  BlockHeightAndIndex,
+  TxHash,
+}
+
+type GetTxEffectByBlockHeightAndIndex = {
+  blockHeight: number;
+  txEffectIndex: number;
+  getType: GetTypes.BlockHeightAndIndex;
+};
+
+type GetTxEffectsByBlockHeight = {
+  blockHeight: number;
+  getType: GetTypes.BlockHeight;
+};
+
+type GetTxEffectsByTxHash = {
+  txHash: string;
+  getType: GetTypes.TxHash;
+};
+
+type GetTxEffectsArgs =
+  | GetTxEffectsByBlockHeight
+  | GetTxEffectByBlockHeightAndIndex
+  | GetTxEffectsByTxHash;
 
 export const getTxEffectNestedById = async (
   txId: string
@@ -136,51 +164,73 @@ export const getTxEffectByBlockHeightAndIndex = async (
   blockHeight: number,
   txEffectIndex: number
 ): Promise<ChicmozL2TxEffect | null> => {
-  const txEffectDbRes = await db()
-    .select({
-      txEffect: getTableColumns(txEffect),
-    })
-    .from(l2Block)
-    .innerJoin(body, eq(l2Block.bodyId, body.id))
-    .innerJoin(bodyToTxEffects, eq(body.id, bodyToTxEffects.bodyId))
-    .innerJoin(txEffect, eq(bodyToTxEffects.txEffectId, txEffect.id))
-    .where(
-      and(eq(l2Block.height, blockHeight), eq(txEffect.index, txEffectIndex))
-    )
-    .execute();
+  const res = await _getTxEffects({
+    blockHeight,
+    txEffectIndex,
+    getType: GetTypes.BlockHeightAndIndex,
+  });
 
-  if (txEffectDbRes.length === 0) return null;
-  const txEffectResult = txEffectDbRes[0];
+  if (res.length === 0) return null;
 
-  const nestedData = await getTxEffectNestedById(txEffectResult.txEffect.id);
-
-  const txEffectData = {
-    ...txEffectResult.txEffect,
-    ...nestedData,
-  };
-
-  const txEffectObj = await chicmozL2TxEffectSchema
-    .parseAsync(txEffectData)
-    .catch(dbParseErrorCallback);
-
-  return txEffectObj;
+  return res[0];
 };
 
-export const getTxEffectsByBlockHeight = async (height: number) => {
-  const txEffectData = await db()
+export const getTxEffectsByBlockHeight = async (
+  height: number
+): Promise<ChicmozL2TxEffect[]> => {
+  return _getTxEffects({ blockHeight: height, getType: GetTypes.BlockHeight });
+};
+
+export const getTxeffectsByTxHash = async (
+  txHash: string
+): Promise<ChicmozL2TxEffect | null> => {
+  const res = await _getTxEffects({
+    txHash,
+    getType: GetTypes.TxHash,
+  });
+
+  if (res.length === 0) return null;
+
+  return res[0];
+};
+
+const _getTxEffects = async (args: GetTxEffectsArgs) => {
+  const joinQuery = db()
     .select({
       txEffect: getTableColumns(txEffect),
     })
     .from(l2Block)
     .innerJoin(body, eq(l2Block.bodyId, body.id))
     .innerJoin(bodyToTxEffects, eq(body.id, bodyToTxEffects.bodyId))
-    .innerJoin(txEffect, eq(bodyToTxEffects.txEffectId, txEffect.id))
-    .where(eq(l2Block.height, height))
-    .orderBy(asc(txEffect.index))
-    .execute();
+    .innerJoin(txEffect, eq(bodyToTxEffects.txEffectId, txEffect.id));
+
+  let whereQuery;
+
+  switch (args.getType) {
+    case GetTypes.BlockHeight:
+      whereQuery = joinQuery
+        .where(eq(l2Block.height, args.blockHeight))
+        .orderBy(asc(txEffect.index));
+      break;
+    case GetTypes.BlockHeightAndIndex:
+      whereQuery = joinQuery
+        .where(
+          and(
+            eq(l2Block.height, args.blockHeight),
+            eq(txEffect.index, args.txEffectIndex)
+          )
+        )
+        .limit(1);
+      break;
+    case GetTypes.TxHash:
+      whereQuery = joinQuery.where(eq(l2Block.hash, args.txHash)).limit(1);
+      break;
+  }
+
+  const dbRes = await whereQuery.execute();
 
   const txEffects = await Promise.all(
-    txEffectData.map(async (txEffect) => {
+    dbRes.map(async (txEffect) => {
       const nestedData = await getTxEffectNestedById(txEffect.txEffect.id);
       return {
         ...txEffect.txEffect,
@@ -189,5 +239,5 @@ export const getTxEffectsByBlockHeight = async (height: number) => {
     })
   );
 
-  return txEffects;
+  return z.array(chicmozL2TxEffectSchema).parse(txEffects);
 };

@@ -7,6 +7,7 @@ import {
   getContractInstancesByBlockHashSchema,
   getTxEffectByBlockHeightAndIndexSchema,
   getTxEffectsByBlockHeightSchema,
+  getTxEffectsByTxHashSchema,
 } from "./validation-schemas.js";
 
 export const GET_LATEST_HEIGHT = asyncHandler(async (_req, res) => {
@@ -64,6 +65,13 @@ export const GET_L2_TX_EFFECT_BY_BLOCK_HEIGHT_AND_INDEX = asyncHandler(
     res.status(200).send(JSON.stringify(txEffect));
   }
 );
+
+export const GET_L2_TX_EFFECTS_BY_TX_HASH = asyncHandler(async (req, res) => {
+  const { txHash } = getTxEffectsByTxHashSchema.parse(req).params;
+  const txEffects = await db.l2TxEffect.getTxeffectsByTxHash(txHash);
+  if (!txEffects) throw new Error("TxEffects not found");
+  res.status(200).send(JSON.stringify(txEffects));
+});
 
 export const GET_L2_CONTRACT_INSTANCE = asyncHandler(async (req, res) => {
   const { address } = getContractInstanceSchema.parse(req).params;

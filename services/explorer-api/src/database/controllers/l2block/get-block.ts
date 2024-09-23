@@ -23,6 +23,28 @@ import {
 import { dbParseErrorCallback } from "../utils.js";
 import { getTxEffectNestedById } from "../l2TxEffect/get-tx-effect.js";
 
+enum GetTypes {
+  BlockHeight,
+  BlockHash,
+  Range,
+}
+
+type GetBlocksByHeight = {
+  height: number;
+  getType: GetTypes.BlockHeight;
+};
+
+type GetBlocksByHash = {
+  hash: string;
+  getType: GetTypes.BlockHash;
+};
+
+type GetBlocksByRange = {
+  from: number;
+  to: number | undefined;
+  getType: GetTypes.Range;
+};
+
 export const getBlocks = async ({
   from,
   to,
@@ -30,7 +52,7 @@ export const getBlocks = async ({
   from: number;
   to: number | undefined;
 }): Promise<ChicmozL2Block[]> => {
-  return _getBlocks({ from, to });
+  return _getBlocks({ from, to, getType: GetTypes.Range });
 };
 
 export const getBlock = async (
@@ -38,31 +60,18 @@ export const getBlock = async (
 ): Promise<ChicmozL2Block | null> => {
   const res = await _getBlocks(
     typeof heightOrHash === "number"
-      ? { height: heightOrHash }
-      : { hash: heightOrHash }
+      ? { height: heightOrHash, getType: GetTypes.BlockHeight }
+      : { hash: heightOrHash, getType: GetTypes.BlockHash }
   );
   if (res.length === 0) return null;
   return res[0];
 };
 
-type GetBlocksHeight = {
-  height: number;
-};
-
-type GetBlocksHash = {
-  hash: string;
-};
-
-type GetBlocksFromTo = {
-  from: number;
-  to: number | undefined;
-};
-
-type GetBlocksArgs = GetBlocksHeight | GetBlocksHash | GetBlocksFromTo;
+type GetBlocksArgs = GetBlocksByHeight | GetBlocksByHash | GetBlocksByRange;
 
 const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2Block[]> => {
-  if (typeof (args as GetBlocksHeight).height === "number") {
-    const { from, to } = args as GetBlocksFromTo;
+  if (args.getType === GetTypes.Range) {
+    const { from, to } = args;
     if (to) {
       if (from > to) throw new Error("Invalid range: from is greater than to");
       if (to - from > DB_MAX_BLOCKS)
@@ -70,8 +79,8 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2Block[]> => {
     }
   }
 
-  if (typeof (args as GetBlocksHeight).height === "number")
-    if ((args as GetBlocksHeight).height < 0) throw new Error("Invalid height");
+  if (args.getType === GetTypes.BlockHeight)
+    if (args.height < 0) throw new Error("Invalid height");
 
   const joinQuery = db()
     .select({
@@ -136,29 +145,29 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2Block[]> => {
     .innerJoin(body, eq(l2Block.bodyId, body.id));
 
   let whereQuery;
-  if (typeof (args as GetBlocksHeight).height === "number") {
-    whereQuery = joinQuery
-      .where(eq(l2Block.height, (args as GetBlocksHeight).height))
-      .limit(1);
-  }
-  if (typeof (args as GetBlocksHash).hash === "string") {
-    whereQuery = joinQuery
-      .where(eq(l2Block.hash, (args as GetBlocksHash).hash))
-      .limit(1);
-  }
-  if (typeof (args as GetBlocksFromTo).from === "number") {
-    const { from, to } = args as GetBlocksFromTo;
-    whereQuery = joinQuery
-      .where(
-        and(
-          gte(l2Block.height, from),
-          lt(l2Block.height, to ?? from + DB_MAX_BLOCKS)
-        )
-      )
-      .orderBy(asc(l2Block.height));
-  }
 
-  if (!whereQuery) throw new Error("FATAL: get blocks received invalid args");
+  switch (args.getType) {
+    case GetTypes.BlockHeight:
+      whereQuery = joinQuery
+        .where(eq(l2Block.height, args.height))
+        .limit(1);
+      break;
+    case GetTypes.BlockHash:
+      whereQuery = joinQuery
+        .where(eq(l2Block.hash, args.hash))
+        .limit(1);
+      break;
+    case GetTypes.Range:
+      whereQuery = joinQuery
+        .where(
+          and(
+            gte(l2Block.height, args.from),
+            lt(l2Block.height, args.to ?? args.from + DB_MAX_BLOCKS)
+          )
+        )
+        .orderBy(asc(l2Block.height));
+      break;
+  }
 
   const results = await whereQuery.execute();
 
