@@ -11,7 +11,7 @@ export const init = ({
   router.get(`/l2/latest-height`, controller.GET_LATEST_HEIGHT);
   router.get(`/l2/blocks/latest`, controller.GET_LATEST_BLOCK);
   router.get(`/l2/blocks/:heightOrHash`, controller.GET_BLOCK);
-  // router.get(`/blocks`, controller.GET_BLOCKS);
+  router.get(`/l2/blocks`, controller.GET_BLOCKS);
 
   router.get(`/l2/blocks/:blockHeight/txEffects`, controller.GET_L2_TX_EFFECTS_BY_BLOCK_HEIGHT);
   router.get(`/l2/blocks/:blockHeight/txEffects/:txEffectIndex`, controller.GET_L2_TX_EFFECT_BY_BLOCK_HEIGHT_AND_INDEX);
