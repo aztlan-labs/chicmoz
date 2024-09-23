@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { deepPartial } from "../utils.js";
+import { chicmozL2TxEffectSchema } from "./l2TxEffect.js";
 import { bufferSchema, frSchema } from "./utils.js";
-import {chicmozL2TxEffectSchema} from "./l2TxEffect.js";
 
 export const chicmozL2BlockSchema = z.object({
   hash: z.string(),
