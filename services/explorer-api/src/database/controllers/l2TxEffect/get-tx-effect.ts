@@ -1,9 +1,9 @@
 import {
-  ChicmozL2Transaction,
+  ChicmozL2TxEffect,
   EncryptedLogEntry,
   NoteEncryptedLogEntry,
   UnencryptedLogEntry,
-  chicmozL2TransactionSchema,
+  chicmozL2TxEffectSchema,
   encryptedLogEntrySchema,
   noteEncryptedLogEntrySchema,
   unencryptedLogEntrySchema,
@@ -23,11 +23,11 @@ import {
 } from "../../../database/schema/l2block/index.js";
 import { dbParseErrorCallback } from "../utils.js";
 
-export const getTransactionNestedById = async (
+export const getTxEffectNestedById = async (
   txId: string
 ): Promise<
   Pick<
-    ChicmozL2Transaction,
+    ChicmozL2TxEffect,
     | "publicDataWrites"
     | "noteEncryptedLogs"
     | "encryptedLogs"
@@ -132,11 +132,11 @@ export const getTransactionNestedById = async (
   };
 };
 
-export const getTransactionByBlockHeightAndIndex = async (
+export const getTxEffectByBlockHeightAndIndex = async (
   blockHeight: number,
-  transactionIndex: number
-): Promise<ChicmozL2Transaction | null> => {
-  const txEffectData = await db()
+  txEffectIndex: number
+): Promise<ChicmozL2TxEffect | null> => {
+  const txEffectDbRes = await db()
     .select({
       txEffect: getTableColumns(txEffect),
     })
@@ -145,28 +145,28 @@ export const getTransactionByBlockHeightAndIndex = async (
     .innerJoin(bodyToTxEffects, eq(body.id, bodyToTxEffects.bodyId))
     .innerJoin(txEffect, eq(bodyToTxEffects.txEffectId, txEffect.id))
     .where(
-      and(eq(l2Block.height, blockHeight), eq(txEffect.index, transactionIndex))
+      and(eq(l2Block.height, blockHeight), eq(txEffect.index, txEffectIndex))
     )
     .execute();
 
-  if (txEffectData.length === 0) return null;
-  const txEffectResult = txEffectData[0];
+  if (txEffectDbRes.length === 0) return null;
+  const txEffectResult = txEffectDbRes[0];
 
-  const nestedData = await getTransactionNestedById(txEffectResult.txEffect.id);
+  const nestedData = await getTxEffectNestedById(txEffectResult.txEffect.id);
 
-  const transactionData = {
+  const txEffectData = {
     ...txEffectResult.txEffect,
     ...nestedData,
   };
 
-  const transaction = await chicmozL2TransactionSchema
-    .parseAsync(transactionData)
+  const txEffectObj = await chicmozL2TxEffectSchema
+    .parseAsync(txEffectData)
     .catch(dbParseErrorCallback);
 
-  return transaction;
+  return txEffectObj;
 };
 
-export const getTransactionsByBlockHeight = async (height: number) => {
+export const getTxEffectsByBlockHeight = async (height: number) => {
   const txEffectData = await db()
     .select({
       txEffect: getTableColumns(txEffect),
@@ -179,9 +179,9 @@ export const getTransactionsByBlockHeight = async (height: number) => {
     .orderBy(asc(txEffect.index))
     .execute();
 
-  const transactions = await Promise.all(
+  const txEffects = await Promise.all(
     txEffectData.map(async (txEffect) => {
-      const nestedData = await getTransactionNestedById(txEffect.txEffect.id);
+      const nestedData = await getTxEffectNestedById(txEffect.txEffect.id);
       return {
         ...txEffect.txEffect,
         ...nestedData,
@@ -189,5 +189,5 @@ export const getTransactionsByBlockHeight = async (height: number) => {
     })
   );
 
-  return transactions;
+  return txEffects;
 };

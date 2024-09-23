@@ -19,8 +19,8 @@ import {
   state,
   txEffect,
 } from "../../../database/schema/l2block/index.js";
-import { getTransactionNestedById } from "../l2transaction/get-transaction.js";
 import { dbParseErrorCallback } from "../utils.js";
+import {getTxEffectNestedById} from "../l2TxEffect/get-tx-effect.js";
 
 export const getBlock = async (
   heightOrHash: number | string
@@ -115,7 +115,7 @@ export const getBlock = async (
   // TODO: might be better to do this async
   const txEffects = await Promise.all(
     txEffectsData.map(async (data) => {
-      const nestedData = await getTransactionNestedById(data.txEffect.id);
+      const nestedData = await getTxEffectNestedById(data.txEffect.id);
       return {
         ...data.txEffect,
         ...nestedData,

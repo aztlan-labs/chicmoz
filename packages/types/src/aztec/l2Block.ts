@@ -16,7 +16,7 @@ export const unencryptedLogEntrySchema = z.object({
   contractAddress: z.string(),
 });
 
-export const chicmozL2TransactionSchema = z.object({
+export const chicmozL2TxEffectSchema = z.object({
   revertCode: z.preprocess(
     (val) => {
       if (typeof val === "number") return { code: val };
@@ -112,7 +112,7 @@ export const chicmozL2BlockSchema = z.object({
     totalFees: frSchema,
   }),
   body: z.object({
-    txEffects: z.array(chicmozL2TransactionSchema),
+    txEffects: z.array(chicmozL2TxEffectSchema),
   }),
 });
 
@@ -120,7 +120,7 @@ export type NoteEncryptedLogEntry = z.infer<typeof noteEncryptedLogEntrySchema>;
 export type EncryptedLogEntry = z.infer<typeof encryptedLogEntrySchema>;
 export type UnencryptedLogEntry = z.infer<typeof unencryptedLogEntrySchema>;
 
-export type ChicmozL2Transaction = z.infer<typeof chicmozL2TransactionSchema>;
+export type ChicmozL2TxEffect = z.infer<typeof chicmozL2TxEffectSchema>;
 
 export type ChicmozL2Block = z.infer<typeof chicmozL2BlockSchema>;
 
