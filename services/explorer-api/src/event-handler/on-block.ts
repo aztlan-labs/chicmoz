@@ -15,7 +15,6 @@ import {
 } from "@chicmoz-pkg/types";
 import { controllers } from "../database/index.js";
 import { logger } from "../logger.js";
-import { play1 } from "./playground.js";
 
 export const onBlock = async ({ block }: NewBlockEvent) => {
   // TODO: start storing NODE_INFO connected to the block
@@ -40,7 +39,6 @@ const getTxEffectWithHashes = (txEffects: L2Block["body"]["txEffects"]) => {
 
 const storeBlock = async (b: L2Block, hash: string) => {
   let parsedBlock: ChicmozL2Block;
-  await play1(b);
   const blockWithTxEffectsHashesAdded = {
     ...b,
     body: {
