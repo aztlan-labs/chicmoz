@@ -29,7 +29,7 @@ export const getTxEffectByBlockHeightAndIndexSchema = z.object({
 
 export const getTxEffectsByTxHashSchema = z.object({
   params: z.object({
-    txHash: hexStringSchema,
+    txHash: z.string(),
   }),
 });
 

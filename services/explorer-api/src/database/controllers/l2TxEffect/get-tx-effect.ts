@@ -27,7 +27,6 @@ import { dbParseErrorCallback } from "../utils.js";
 enum GetTypes {
   BlockHeight,
   BlockHeightAndIndex,
-  TxHash,
 }
 
 type GetTxEffectByBlockHeightAndIndex = {
@@ -40,16 +39,6 @@ type GetTxEffectsByBlockHeight = {
   blockHeight: number;
   getType: GetTypes.BlockHeight;
 };
-
-type GetTxEffectsByTxHash = {
-  txHash: string;
-  getType: GetTypes.TxHash;
-};
-
-type GetTxEffectsArgs =
-  | GetTxEffectsByBlockHeight
-  | GetTxEffectByBlockHeightAndIndex
-  | GetTxEffectsByTxHash;
 
 export const getTxEffectNestedById = async (
   txId: string
@@ -181,20 +170,9 @@ export const getTxEffectsByBlockHeight = async (
   return _getTxEffects({ blockHeight: height, getType: GetTypes.BlockHeight });
 };
 
-export const getTxeffectsByTxHash = async (
-  txHash: string
-): Promise<ChicmozL2TxEffect | null> => {
-  const res = await _getTxEffects({
-    txHash,
-    getType: GetTypes.TxHash,
-  });
-
-  if (res.length === 0) return null;
-
-  return res[0];
-};
-
-const _getTxEffects = async (args: GetTxEffectsArgs) => {
+const _getTxEffects = async (
+  args: GetTxEffectByBlockHeightAndIndex | GetTxEffectsByBlockHeight
+) => {
   const joinQuery = db()
     .select({
       txEffect: getTableColumns(txEffect),
@@ -222,9 +200,6 @@ const _getTxEffects = async (args: GetTxEffectsArgs) => {
         )
         .limit(1);
       break;
-    case GetTypes.TxHash:
-      whereQuery = joinQuery.where(eq(l2Block.hash, args.txHash)).limit(1);
-      break;
   }
 
   const dbRes = await whereQuery.execute();
@@ -239,5 +214,32 @@ const _getTxEffects = async (args: GetTxEffectsArgs) => {
     })
   );
 
-  return z.array(chicmozL2TxEffectSchema).parse(txEffects);
+  return z
+    .array(chicmozL2TxEffectSchema)
+    .parseAsync(txEffects)
+    .catch(dbParseErrorCallback);
+};
+
+export const getTxeffectsByTxHash = async (
+  txHash: string
+): Promise<ChicmozL2TxEffect | null> => {
+  const dbRes = await db()
+    .select({
+      ...getTableColumns(txEffect),
+    })
+    .from(txEffect)
+    .where(eq(txEffect.txHash, txHash))
+    .limit(1)
+    .execute();
+
+  if (dbRes.length === 0) return null;
+
+  const nestedData = await getTxEffectNestedById(dbRes[0].id);
+
+  return chicmozL2TxEffectSchema
+    .parseAsync({
+      ...dbRes[0],
+      ...nestedData,
+    })
+    .catch(dbParseErrorCallback);
 };

@@ -17,7 +17,7 @@ export const init = ({
   router.get(`/l2/blocks/:blockHeight/txEffects/:txEffectIndex`, controller.GET_L2_TX_EFFECT_BY_BLOCK_HEIGHT_AND_INDEX);
   router.get(`/l2/txEffects/:txHash`, controller.GET_L2_TX_EFFECTS_BY_TX_HASH);
 
-  router.get(`/l2/contract-instance/:address`, controller.GET_L2_CONTRACT_INSTANCE);
+  router.get(`/l2/contract-instances/:address`, controller.GET_L2_CONTRACT_INSTANCE);
   router.get(`/l2/blocks/:blockHash/contract-instances`, controller.GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH);
   return router;
 };
