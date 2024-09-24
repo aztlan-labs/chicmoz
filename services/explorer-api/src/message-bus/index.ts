@@ -44,10 +44,11 @@ export const init = async () => {
   };
 };
 
-const tryStartSubscribe = async (
-  { consumerGroup, cb, topicBase }: EventHandler,
-  crashCallback: () => void
-) => {
+const tryStartSubscribe = async ({
+  consumerGroup,
+  cb,
+  topicBase,
+}: EventHandler) => {
   if (!isInitialized) throw new Error("MessageBus is not initialized");
   if (isShutdown) throw new Error("MessageBus is already shutdown");
 
@@ -56,19 +57,15 @@ const tryStartSubscribe = async (
   logger.info(`Subscribing to topic ${topic}...`);
   await mb.subscribe(groupId, topic, cb);
   logger.info(`Started consuming from topic ${topic}`);
-  await mb.runConsumer(groupId, crashCallback);
+  await mb.runConsumer(groupId);
   logger.info(`Started consuming from topic ${topic}`);
 };
 
-export const startSubscribe = async (
-  eventHandler: EventHandler,
-  crashCallback: () => void
-) => {
+export const startSubscribe = async (eventHandler: EventHandler) => {
   if (!isInitialized) throw new Error("MessageBus is not initialized");
   if (isShutdown) throw new Error("MessageBus is already shutdown");
 
-  const tryIt = async () =>
-    await tryStartSubscribe(eventHandler, crashCallback);
+  const tryIt = async () => await tryStartSubscribe(eventHandler);
 
   await backOff(tryIt, {
     maxDelay: 10000,
