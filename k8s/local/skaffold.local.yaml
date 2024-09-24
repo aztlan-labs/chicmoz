@@ -57,8 +57,6 @@ manifests:
     - k8s/local/explorer-api/service.yaml
     - k8s/local/auth/deployment.yaml
     - k8s/local/auth/service.yaml
-    - k8s/local/postgres/persistant-volume.yaml
-    - k8s/local/postgres/persistant-volume-claim.yaml
     # - k8s/local/dummy-node/ingress.yaml
     # - k8s/local/dummy-node/deployment.yaml
     # - k8s/local/dummy-node/service.yaml
@@ -116,9 +114,6 @@ manifests:
           global.postgresql.auth.username: "admin"
           global.postgresql.auth.password: "secret-local-password"
           image.debug: true
-          primary.persistance.enabled: true
-          primary.persistance.storageClass: "postgres-pvc"
-          volumePermissions.enabled: true
         namespace: chicmoz
         createNamespace: false
         recreatePods: false

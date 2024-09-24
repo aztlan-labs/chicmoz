@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: nginx
   tls:
-    - secretName: chicmoz-issuer-platform
+    - secretName: chicmoz-issuer-production
       hosts:
         - chicmoz.info
   rules:
