@@ -48,6 +48,7 @@ export const init = async () => {
   await initPromise;
 
   return {
-    shutdownHttpServer: gracefulShutdown,
+    id: "SERVER",
+    shutdownCb: gracefulShutdown,
   };
 };
