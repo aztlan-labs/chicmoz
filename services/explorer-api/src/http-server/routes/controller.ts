@@ -8,7 +8,14 @@ import {
   getTxEffectByBlockHeightAndIndexSchema,
   getTxEffectsByBlockHeightSchema,
   getTxEffectsByTxHashSchema,
-} from "./validation-schemas.js";
+} from "./routes_and_validation.js";
+
+export const GET_ROUTES = asyncHandler(async (_req) => {
+  // 1. get domain from req
+  // 2. do a basic DB-query to fill in the routes
+  // 3. replace the routes with the actual routes
+  // 4. return as html
+});
 
 export const GET_LATEST_HEIGHT = asyncHandler(async (_req, res) => {
   const latestBlock = await db.l2Block.getLatestBlock();
