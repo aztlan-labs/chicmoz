@@ -2,6 +2,12 @@
 
 ## running locally
 
+Requirements:
+
+- [minikube](https://minikube.sigs.k8s.io/docs/start/)
+- [skaffold](https://skaffold.dev/docs/install/)
+- [yarn](https://yarnpkg.com/getting-started/install)
+
 terminal 1:
 
 ```sh
