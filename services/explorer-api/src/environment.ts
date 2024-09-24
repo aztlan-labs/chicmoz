@@ -5,6 +5,8 @@ export const BODY_LIMIT = process.env.BODY_LIMIT ?? "64kb";
 export const PARAMETER_LIMIT = Number(process.env.PARAMETER_LIMIT) || 100;
 export const NODE_ENV = process.env.NODE_ENV ?? "development";
 
+export const DB_MAX_BLOCKS = 20;
+
 export const NETWORK_NAME = process.env.NETWORK_NAME ?? "SANDBOX";
 
 export const KAFKA_CONNECTION_URL =
