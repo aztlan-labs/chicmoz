@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { hexStringSchema } from "../general.js";
 import { frSchema } from "./utils.js";
 
 export const noteEncryptedLogEntrySchema = z.object({
@@ -23,7 +24,7 @@ export const chicmozL2TxEffectSchema = z.object({
     },
     z.object({ code: z.number() })
   ),
-  txHash: z.string(),
+  txHash: hexStringSchema,
   transactionFee: frSchema,
   noteHashes: z.array(frSchema),
   nullifiers: z.array(frSchema),

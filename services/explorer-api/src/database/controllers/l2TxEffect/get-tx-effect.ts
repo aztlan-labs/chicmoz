@@ -1,6 +1,7 @@
 import {
   ChicmozL2TxEffect,
   EncryptedLogEntry,
+  HexString,
   NoteEncryptedLogEntry,
   UnencryptedLogEntry,
   chicmozL2TxEffectSchema,
@@ -221,7 +222,7 @@ const _getTxEffects = async (
 };
 
 export const getTxeffectByTxHash = async (
-  txHash: string
+  txHash: HexString,
 ): Promise<ChicmozL2TxEffect | null> => {
   const dbRes = await db()
     .select({

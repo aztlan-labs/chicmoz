@@ -1,10 +1,11 @@
 import { z } from "zod";
+import { hexStringSchema } from "../general.js";
 import { deepPartial } from "../utils.js";
 import { chicmozL2TxEffectSchema } from "./l2TxEffect.js";
 import { bufferSchema, frSchema } from "./utils.js";
 
 export const chicmozL2BlockSchema = z.object({
-  hash: z.string(),
+  hash: hexStringSchema,
   height: z.number(),
   archive: z.object({
     root: frSchema,
