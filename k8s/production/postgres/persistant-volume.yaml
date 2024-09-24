@@ -4,7 +4,7 @@ metadata:
   name: postgres-pv
   namespace: chicmoz-prod
 spec:
-  storageClassName: standard
+  storageClassName: do-block-storage
   capacity:
     storage: 50Gi
   accessModes:

@@ -17,7 +17,7 @@ spec:
         app: auth
     spec:
       imagePullSecrets:
-        - name: do-registry
+        - name: registry-aztlan-containers
       containers:
         - image: registry.digitalocean.com/aztlan-containers/auth:latest
           resources:

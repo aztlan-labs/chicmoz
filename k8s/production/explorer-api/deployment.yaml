@@ -17,9 +17,27 @@ spec:
         app: explorer-api
     spec:
       imagePullSecrets:
-        - name: do-registry
+        - name: registry-aztlan-containers
+      initContainers:
+        - image: registry.digitalocean.com/aztlan-containers/explorer-api:latest
+          name: run-migrations
+          command: ["yarn", run, "migrate"]
+          env:
+            - name: NODE_ENV
+              value: "development"
+            - name: POSTGRES_IP
+              value: "postgresql"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DB_NAME
+              value: "explorer_api"
+            - name: POSTGRES_ADMIN
+              value: "admin"
+            - name: POSTGRES_PASSWORD
+              value: "secret-local-password"
       containers:
         - image: registry.digitalocean.com/aztlan-containers/explorer-api:latest
+          name: explorer-api
           resources:
             limits:
               memory: 4096Mi
@@ -28,7 +46,6 @@ spec:
             - name: http-app
               containerPort: 80
               protocol: TCP
-          name: explorer-api
           env:
             - name: NODE_ENV
               value: "development"
@@ -41,7 +58,7 @@ spec:
             - name: POSTGRES_PORT
               value: "5432"
             - name: POSTGRES_DB_NAME
-              value: "auth"
+              value: "explorer_api"
             - name: POSTGRES_ADMIN
               value: "admin"
             - name: POSTGRES_PASSWORD
