@@ -198,6 +198,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
         .insert(txEffect)
         .values({
           id: txEffectId,
+          txHash: txEff.txHash,
           index: Number(i),
           revertCode: txEff.revertCode.code,
           transactionFee: txEff.transactionFee,

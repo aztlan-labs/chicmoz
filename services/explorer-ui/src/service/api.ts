@@ -80,8 +80,8 @@ export const getBlocksByHash = async (hash: string): Promise<ChicmozL2Block> => 
   return result;
 };
 
-export const getTransactionById = async (id: string) => {
-  const url = `${API_URL}/${aztecExplorer.getL2TransactionById}`;
+export const getTxEffectById = async (id: string) => {
+  const url = `${API_URL}/${aztecExplorer.getL2TxEffectById}`;
   const response = await fetch(url, {
     method: "GET",
     headers: defaultHeaders,
@@ -90,13 +90,13 @@ export const getTransactionById = async (id: string) => {
   const result = await response.json();
 
   console.info(`GET ${url}: `, response.status);
-  if (response.status !== 200) throw new Error(`An error occurred while fetching transaction by id: ${JSON.stringify(result)}`);
+  if (response.status !== 200) throw new Error(`An error occurred while fetching txEffect by id: ${JSON.stringify(result)}`);
 
   return result;
 };
 
-export const getTransactionsByHeight = async (height: number) => {
-  const url = `${API_URL}/${aztecExplorer.getL2TransactionsByHeight(height)}`;
+export const getTxEffectsByHeight = async (height: number) => {
+  const url = `${API_URL}/${aztecExplorer.getL2TxEffectsByHeight(height)}`;
   const response = await fetch(url, {
     method: "GET",
     headers: defaultHeaders,
@@ -104,13 +104,13 @@ export const getTransactionsByHeight = async (height: number) => {
   const result = await response.json();
 
   console.info(`GET ${url}: `, response.status);
-  if (response.status !== 200) throw new Error(`An error occurred while fetching transactions by height: ${JSON.stringify(result)}`);
+  if (response.status !== 200) throw new Error(`An error occurred while fetching txEffects by height: ${JSON.stringify(result)}`);
 
   return result;
 };
 
-export const getTransactionByHeightAndIndex = async (height: number, index: number) => {
-  const url = `${API_URL}/${aztecExplorer.getL2TransactionByHeightAndIndex(height, index)}`;
+export const getTxEffectByHeightAndIndex = async (height: number, index: number) => {
+  const url = `${API_URL}/${aztecExplorer.getL2TxEffectByHeightAndIndex(height, index)}`;
   const response = await fetch(url, {
     method: "GET",
     headers: defaultHeaders,
@@ -118,13 +118,13 @@ export const getTransactionByHeightAndIndex = async (height: number, index: numb
   const result = await response.json();
 
   console.info(`GET ${url}: `, response.status);
-  if (response.status !== 200) throw new Error(`An error occurred while fetching transaction by height and index: ${JSON.stringify(result)}`);
+  if (response.status !== 200) throw new Error(`An error occurred while fetching txEffect by height and index: ${JSON.stringify(result)}`);
 
   return result;
 }
 
-export const getTransactionsByHeightRange = async (start: number, end: number) => {
-  const url = `${API_URL}/${aztecExplorer.getL2TransactionsByHeightRange}`;
+export const getTxEffectsByHeightRange = async (start: number, end: number) => {
+  const url = `${API_URL}/${aztecExplorer.getL2TxEffectsByHeightRange}`;
   const response = await fetch(url, {
     method: "GET",
     headers: defaultHeaders,
@@ -133,7 +133,7 @@ export const getTransactionsByHeightRange = async (start: number, end: number) =
   const result = await response.json();
 
   console.info(`GET ${url}: `, response.status);
-  if (response.status !== 200) throw new Error(`An error occurred while fetching transactions by height range: ${JSON.stringify(result)}`);
+  if (response.status !== 200) throw new Error(`An error occurred while fetching txEffects by height range: ${JSON.stringify(result)}`);
 
   return result;
 };

@@ -18,7 +18,7 @@ export const startCatchup = async ({
     await onCatchupBlock(blockRes);
     if (NODE_ENV === "development") {
       // NOTE: we are restarting our local cluster quiet often, so we shouldn't spam them unnecessarily
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     }
   }
 };
