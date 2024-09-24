@@ -1,6 +1,4 @@
-import {
-  ChicmozL2ContractInstanceDeluxe
-} from "@chicmoz-pkg/types";
+import { ChicmozL2ContractInstanceDeluxe, HexString } from "@chicmoz-pkg/types";
 import { and, desc, eq } from "drizzle-orm";
 import { getDb as db } from "../../../database/index.js";
 import {
@@ -9,10 +7,8 @@ import {
 } from "../../schema/l2contract/index.js";
 
 export const getL2DeployedContractInstancesByBlockHash = async (
-  blockHash: string
-): Promise<
-  ChicmozL2ContractInstanceDeluxe[]
-> => {
+  blockHash: HexString
+): Promise<ChicmozL2ContractInstanceDeluxe[]> => {
   const result = await db()
     .select({
       address: l2ContractInstanceDeployed.address,

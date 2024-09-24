@@ -1,3 +1,4 @@
+import { HexString } from "@chicmoz-pkg/types";
 import { relations } from "drizzle-orm";
 import {
   bigint,
@@ -22,6 +23,7 @@ export const l2ContractInstanceDeployed = pgTable(
     // TODO: perhaps a different name for this column?
     id: uuid("id").primaryKey().defaultRandom(),
     blockHash: varchar("block_hash")
+      .$type<HexString>()
       .notNull()
       .references(() => l2Block.hash),
     address: generateAztecAddressColumn("address").notNull(),
@@ -37,7 +39,10 @@ export const l2ContractInstanceDeployed = pgTable(
     contractClass: foreignKey({
       name: "contract_class",
       columns: [t.contractClassId, t.version],
-      foreignColumns: [l2ContractClassRegistered.contractClassId, l2ContractClassRegistered.version],
+      foreignColumns: [
+        l2ContractClassRegistered.contractClassId,
+        l2ContractClassRegistered.version,
+      ],
     }),
   })
 );

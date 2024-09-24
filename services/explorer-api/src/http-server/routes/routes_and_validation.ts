@@ -25,7 +25,7 @@ export const routes = {
 
 export const getBlockByHeightOrHashSchema = z.object({
   params: z.object({
-    [heightOrHash]: z.string(),
+    [heightOrHash]: hexStringSchema.or(z.coerce.number()),
   }),
 });
 

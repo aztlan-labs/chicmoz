@@ -1,6 +1,9 @@
 import asyncHandler from "express-async-handler";
 import { controllers as db } from "../../database/index.js";
 import {
+  address,
+  blockHash,
+  blockHeight,
   getBlockByHeightOrHashSchema,
   getBlocksSchema,
   getContractInstanceSchema,
@@ -8,13 +11,87 @@ import {
   getTxEffectByBlockHeightAndIndexSchema,
   getTxEffectsByBlockHeightSchema,
   getTxEffectsByTxHashSchema,
+  heightOrHash,
+  routes,
+  txEffectIndex,
+  txHash,
 } from "./routes_and_validation.js";
 
-export const GET_ROUTES = asyncHandler(async (_req) => {
-  // 1. get domain from req
-  // 2. do a basic DB-query to fill in the routes
-  // 3. replace the routes with the actual routes
-  // 4. return as html
+const SUB_PATH = "/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4";
+
+export const GET_ROUTES = asyncHandler(async (_req, res) => {
+  const block = await db.signOfLife.getABlock();
+  const blockAndTxEffect = await db.signOfLife.getABlockWithTxEffects();
+  const blockAndAContractInstance =
+    await db.signOfLife.getABlockWithContractInstances();
+  const r = [routes.latestHeight, routes.latestBlock, `${routes.blocks}?from=0`];
+
+  if (block) {
+    r.push(routes.block.replace(`:${heightOrHash}`, block.height.toString()));
+    r.push(routes.block.replace(`:${heightOrHash}`, block.hash));
+  } else {
+    r.push(routes.block + "NOT FOUND");
+  }
+
+  if (blockAndTxEffect) {
+    r.push(
+      routes.txEffectsByBlockHeight.replace(
+        `:${blockHeight}`,
+        blockAndTxEffect.block.height.toString()
+      )
+    );
+    r.push(
+      routes.txEffectByBlockHeightAndIndex
+        .replace(`:${blockHeight}`, blockAndTxEffect.block.height.toString())
+        .replace(
+          `:${txEffectIndex}`,
+          blockAndTxEffect.txEffect.index.toString()
+        )
+    );
+    r.push(
+      routes.txEffectsByTxHash.replace(
+        `:${txHash}`,
+        blockAndTxEffect.txEffect.txHash
+      )
+    );
+  } else {
+    r.push(routes.txEffectsByBlockHeight + "NOT FOUND");
+    r.push(routes.txEffectByBlockHeightAndIndex + "NOT FOUND");
+    r.push(routes.txEffectsByTxHash + "NOT FOUND");
+  }
+
+  if (blockAndAContractInstance) {
+    r.push(
+      routes.contractInstancesByBlockHash.replace(
+        `:${blockHash}`,
+        blockAndAContractInstance.block.hash
+      )
+    );
+    r.push(
+      routes.contractInstance.replace(
+        `:${address}`,
+        blockAndAContractInstance.contractInstance.address
+      )
+    );
+  } else {
+    r.push(routes.contractInstancesByBlockHash + "NOT FOUND");
+    r.push(routes.contractInstance + "NOT FOUND");
+  }
+
+  const html = `
+  <html>
+    <head>
+      <title>CHICMOZ API ROUTES</title>
+    </head>
+    <body>
+      <ul>
+        ${r.map((route) => `<li><a href=${SUB_PATH + route}>${route}</a></li>`).join("")}
+      </ul>
+    </body>
+  </html>
+  `;
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  res.send(html);
 });
 
 export const GET_LATEST_HEIGHT = asyncHandler(async (_req, res) => {

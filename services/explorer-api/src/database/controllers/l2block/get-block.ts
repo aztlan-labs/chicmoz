@@ -1,6 +1,9 @@
-import { ChicmozL2Block, chicmozL2BlockSchema } from "@chicmoz-pkg/types";
+import {
+  ChicmozL2Block,
+  HexString,
+  chicmozL2BlockSchema,
+} from "@chicmoz-pkg/types";
 import { and, asc, eq, getTableColumns, gte, lt } from "drizzle-orm";
-import { DB_MAX_BLOCKS } from "../../../environment.js";
 import { getDb as db } from "../../../database/index.js";
 import {
   archive,
@@ -20,8 +23,9 @@ import {
   state,
   txEffect,
 } from "../../../database/schema/l2block/index.js";
-import { dbParseErrorCallback } from "../utils.js";
+import { DB_MAX_BLOCKS } from "../../../environment.js";
 import { getTxEffectNestedById } from "../l2TxEffect/get-tx-effect.js";
+import { dbParseErrorCallback } from "../utils.js";
 
 enum GetTypes {
   BlockHeight,
@@ -35,7 +39,7 @@ type GetBlocksByHeight = {
 };
 
 type GetBlocksByHash = {
-  hash: string;
+  hash: HexString;
   getType: GetTypes.BlockHash;
 };
 
@@ -56,7 +60,7 @@ export const getBlocks = async ({
 };
 
 export const getBlock = async (
-  heightOrHash: number | string
+  heightOrHash: number | HexString
 ): Promise<ChicmozL2Block | null> => {
   const res = await _getBlocks(
     typeof heightOrHash === "number"
@@ -148,14 +152,10 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2Block[]> => {
 
   switch (args.getType) {
     case GetTypes.BlockHeight:
-      whereQuery = joinQuery
-        .where(eq(l2Block.height, args.height))
-        .limit(1);
+      whereQuery = joinQuery.where(eq(l2Block.height, args.height)).limit(1);
       break;
     case GetTypes.BlockHash:
-      whereQuery = joinQuery
-        .where(eq(l2Block.hash, args.hash))
-        .limit(1);
+      whereQuery = joinQuery.where(eq(l2Block.hash, args.hash)).limit(1);
       break;
     case GetTypes.Range:
       whereQuery = joinQuery
