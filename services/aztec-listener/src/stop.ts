@@ -1,17 +1,21 @@
 import { SERVICE_NAME } from "./constants.js";
 import { logger } from "./logger.js";
 
+const registeredShutdownCallbacks: ({
+  id: string;
+  shutdownCb: () => Promise<void>;
+})[] = [];
 
-type ShutdownCallback = () => (Promise<void> | void);
-const registeredShutdownCallbacks: ShutdownCallback[] = [];
-
-export const registerShutdownCallback = (callback: ShutdownCallback) => {
-  registeredShutdownCallbacks.push(callback);
+export const registerShutdownCallback = ({id, shutdownCb}: {id: string, shutdownCb: () => Promise<void>}) => {
+  registeredShutdownCallbacks.push({ id, shutdownCb });
 };
 
 const _gracefulShutdown = async () => {
   try {
-    for (const callback of registeredShutdownCallbacks) await callback();
+    for (const shutdown of registeredShutdownCallbacks) {
+      logger.info(`💥 Shutting down ${shutdown.id}...`);
+      await shutdown.shutdownCb();
+    }
   } catch (e) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     logger.error(`during shutdown of ${SERVICE_NAME}: ${e}`);

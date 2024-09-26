@@ -13,6 +13,8 @@ import {
 import { logger } from "../logger.js";
 
 let mb: MessageBus;
+let isInitialized = false;
+let isShutdown = false;
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export const init = async () => {
@@ -31,13 +33,16 @@ export const init = async () => {
 
   const gracefulShutdown = async () => {
     logger.info(`Shutting down Kafka client...`);
+    isShutdown = true;
     await mb.disconnect();
   };
 
   mb = new MessageBus(mbConfig);
+  isInitialized = true;
 
   return {
-    shutdownMb: gracefulShutdown,
+    id: "MB",
+    shutdownCb: gracefulShutdown,
   };
 };
 
@@ -45,7 +50,9 @@ export const publishMessage = async <T>(
   eventType: keyof AZTEC_MESSAGES,
   message: T
 ) => {
+  if (!isInitialized) throw new Error("MessageBus is not initialized");
+  if (isShutdown) throw new Error("MessageBus is already shutdown");
+
   const topic = generateAztecTopicName(NETWORK_ID, eventType);
-  if (!mb) throw new Error("MessageBus is not initialized");
   await mb.publish<T>(topic, message);
 };

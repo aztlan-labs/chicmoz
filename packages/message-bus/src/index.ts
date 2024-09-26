@@ -55,7 +55,7 @@ export class MessageBus {
     autoBind(this);
   }
 
-  private shouldRestart(error: Error): boolean {
+  private shouldCrash(error: Error): boolean {
     const isNonRetriableError =
       error instanceof kafkaJS.KafkaJSNonRetriableError;
     const isNumberOfRetriesExceeded =
@@ -99,10 +99,10 @@ export class MessageBus {
     topic: string,
     cb: ((event: T) => Promise<void>) | ((event: T) => void)
   ) {
-    this.logger.info(`Kafka: connecting to consumer group ${groupId}`);
+    this.logger.info(`Kafka (sub): connecting to consumer group ${groupId}`);
     if (!this.#consumers[groupId]) await this.connectConsumer(groupId);
 
-    this.logger.info(`Kafka: subscribing to topic ${topic}`);
+    this.logger.info(`Kafka (sub): subscribing to topic ${topic}`);
     await this.#consumers[groupId]!.consumer.subscribe({
       topic,
       fromBeginning: true,
@@ -113,15 +113,14 @@ export class MessageBus {
     };
   }
 
-  private nonRetriableWrapper(groupId: string, crashCallback?: () => void) {
+  private nonRetriableWrapper(groupId: string) {
     // TODO: we should do this without promise
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.#consumers[groupId]!.consumer.on("consumer.crash", async (payload) => {
-      if (!this.shouldRestart(payload.payload.error)) {
+      if (this.shouldCrash(payload.payload.error)) {
         this.logger.error(`FATAL: not recoverable error: ${JSON.stringify(payload.payload.error)}`);
-        // NOTE: this is potentially solving `https://github.com/aztlan-labs/chicmoz/issues/6`
-        if (crashCallback) crashCallback();
-        // TODO: this could potentially just be a `process.kill(process.pid, "SIGTERM")`
+        process.kill(process.pid, "SIGTERM");
+        return;
       }
 
       const currentTopics = this.#consumers[groupId]!.topicCallbacks;
@@ -147,11 +146,11 @@ export class MessageBus {
     });
   }
 
-  async runConsumer(groupId: string, crashCallback?: () => void) {
+  async runConsumer(groupId: string) {
     if (!this.#consumers[groupId])
       throw new Error(`No consumer exists with groupId: ${groupId}`);
 
-    this.nonRetriableWrapper(groupId, crashCallback);
+    this.nonRetriableWrapper(groupId);
 
     await this.#consumers[groupId]!.consumer.run({
       eachMessage: async ({ topic, message }) => {

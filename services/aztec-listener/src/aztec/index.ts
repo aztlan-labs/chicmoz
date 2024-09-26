@@ -43,7 +43,9 @@ export const init = async () => {
     startPolling({ fromHeight: pollFromHeight });
 
   return {
-    shutdownAztec: () => {
+    id: "AZTEC",
+    // eslint-disable-next-line @typescript-eslint/require-await
+    shutdownCb: async () => {
       stopPolling();
     },
   };
