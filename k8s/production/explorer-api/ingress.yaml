@@ -6,16 +6,16 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /$2
-    nginx.ingress.kubernetes.io/auth-url: http://auth.chicmoz.svc.cluster.local
+    nginx.ingress.kubernetes.io/auth-url: http://auth.chicmoz-prod.svc.cluster.local
     nginx.ingress.kubernetes.io/auth-response-headers: x-api-key
     kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "chicmoz-issuer-production"
 spec:
   ingressClassName: nginx
   tls:
-    - secretName: chicmoz-issuer-production
-      hosts:
+    - hosts:
         - api.chicmoz.info
+      secretName: chicmoz-api-tls
   rules:
     - host: api.chicmoz.info # TODO: change to env-var "DOMAIN"
       http:

@@ -11,3 +11,10 @@ metadata:
   name: ingress-nginx
   labels:
     name: ingress-nginx
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cert-manager
+  labels:
+    name: cert-manager
