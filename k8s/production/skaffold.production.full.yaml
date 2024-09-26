@@ -54,6 +54,19 @@ manifests:
     - k8s/production/aztec-listener/service.yaml
   helm:
     releases:
+      - name: cert-manager
+        remoteChart: cert-manager
+        repo: https://charts.bitnami.com/bitnami
+        version: 1.3.18
+        namespace: cert-manager
+        createNamespace: false
+        recreatePods: false
+        skipBuildDependencies: false
+        useHelmSecrets: false
+        wait: true
+        setValues:
+          installCRDs: true
+          clusterResourceNamespace: chicmoz-prod
       - name: ingress-nginx
         remoteChart: ingress-nginx
         repo: https://kubernetes.github.io/ingress-nginx
@@ -73,3 +86,56 @@ manifests:
           controller.config.set-real-ip-from: "0.0.0.0/0"
           controller.service.annotations.service\.beta\.kubernetes\.io/do-loadbalancer-protocol: "tcp"
           controller.service.annotations.service\.beta\.kubernetes\.io/do-loadbalancer-enable-proxy-protocol: "true"
+      - name: postgresql
+        version: 12.10.0
+        remoteChart: postgresql
+        repo: https://charts.bitnami.com/bitnami
+        valuesFiles:
+          - k8s/production/postgres/values.yaml
+        setValues:
+          global.postgresql.auth.postgresPassword: "secret-local-password" # TODO: change to env-var
+          global.postgresql.auth.username: "admin"
+          global.postgresql.auth.password: "secret-local-password" # TODO: change to env-var
+          image.debug: true
+        namespace: chicmoz-prod
+        createNamespace: false
+        recreatePods: false
+        skipBuildDependencies: false
+        useHelmSecrets: false
+        wait: false
+      - name: redis
+        version: 18.17.1
+        remoteChart: redis
+        repo: https://charts.bitnami.com/bitnami
+        namespace: chicmoz-prod
+        createNamespace: false
+        recreatePods: false
+        skipBuildDependencies: false
+        useHelmSecrets: false
+        wait: false
+        setValues:
+          auth.enabled: false
+      - name: kafka
+        version: 26.4.2
+        remoteChart: kafka
+        repo: https://charts.bitnami.com/bitnami
+        namespace: chicmoz-prod
+        setValues:
+          sasl.enabledMechanisms: plain
+          sasl.controllerMechanism: plain
+          sasl.interBrokerMechanism: plain
+          sasl.controller.user: controller_user
+          sasl.controller.password: test
+          sasl.interbroker.user: inter_broker_user
+          sasl.interbroker.password: test
+          sasl.client.users:
+            - controller_user
+          sasl.client.passwords:
+            - test
+          extraConfig: |
+            message.max.bytes=10000000
+        createNamespace: false
+        recreatePods: true
+        skipBuildDependencies: false
+        useHelmSecrets: false
+        wait: false
