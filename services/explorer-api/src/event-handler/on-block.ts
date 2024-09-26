@@ -86,6 +86,7 @@ const storeContracts = async (b: L2Block, blockHash: string) => {
   const parsedContractClasses: ChicmozL2ContractClassRegisteredEvent[] = [];
   const parsedContractInstances: ChicmozL2ContractInstanceDeployedEvent[] = [];
   for (const contractClass of contractClasses) {
+    logger.info("================");
     try {
       const parsed = chicmozL2ContractClassRegisteredEventSchema.parse(
         JSON.parse(
@@ -104,6 +105,7 @@ const storeContracts = async (b: L2Block, blockHash: string) => {
     }
   }
   for (const contractInstance of contractInstances) {
+    logger.info("==============/////////");
     try {
       const parsed: ChicmozL2ContractInstanceDeployedEvent =
         chicmozL2ContractInstanceDeployedEventSchema.parse(

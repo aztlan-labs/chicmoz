@@ -5,9 +5,9 @@
   "main": "index.js",
   "license": "UNLICENSED",
   "dependencies": {
-    "@aztec/aztec.js": "0.53.0",
-    "@aztec/circuits.js": "0.53.0",
-    "@aztec/protocol-contracts": "0.53.0",
+    "@aztec/aztec.js": "0.55.1",
+    "@aztec/circuits.js": "0.55.1",
+    "@aztec/protocol-contracts": "0.55.1",
     "@chicmoz-pkg/error-middleware": "workspace:^",
     "@chicmoz-pkg/logger-server": "workspace:^",
     "@chicmoz-pkg/message-bus": "workspace:^",
