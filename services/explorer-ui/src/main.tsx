@@ -1,23 +1,11 @@
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
-import { createRouter, RouterProvider } from "@tanstack/react-router";
 import "~/styles/global.css";
+import { QueryProvider, TanstackRouterProvider } from "./providers";
+
 // NOTE: these two lines are necessary for proper parsing of ChicmozL2Block
 import { Buffer } from "buffer";
 window.Buffer = window.Buffer || Buffer;
-
-// Import the generated route tree
-import { routeTree } from "./routeTree.gen";
-
-// Create a new router instance
-const router = createRouter({ routeTree });
-
-// Register the router instance for type safety
-declare module "@tanstack/react-router" {
-  interface Register {
-    router: typeof router;
-  }
-}
 
 // Render the app
 const rootElement = document.getElementById("root")!;
@@ -25,7 +13,9 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <RouterProvider router={router} />
+      <QueryProvider>
+        <TanstackRouterProvider />
+      </QueryProvider>
     </StrictMode>,
   );
 }
