@@ -25,7 +25,8 @@ client.interceptors.response.use(
     if (error.response) {
       throw new ApiError(
         error.response.status,
-        error.response.data?.message || "An error occurred",
+        //error.response.data?.message || "An error occurred",
+        "An error occurred",
       );
     } else if (error.request) {
       throw new ApiError(0, "No response received from server");

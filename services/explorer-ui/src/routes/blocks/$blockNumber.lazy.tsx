@@ -5,129 +5,74 @@ import {
 } from "~/components/info-display/key-value-display";
 import { TransactionsTable } from "~/components/transactions/transactions-table";
 import { Button } from "~/components/ui";
-import { useLatestBlock } from "~/hooks/useLatestBlock";
+import { useLatestBlock } from "~/hooks/";
 
 export const Route = createLazyFileRoute("/blocks/$blockNumber")({
   component: Block,
 });
 
 function Block() {
-  const { latestBlockData, timeSince } = useLatestBlock();
   const { blockNumber } = Route.useParams();
-
-  // TODO: these messages should perhaps be diplayed?
-  // console.log("Extracted messages:");
-  // const txEffects = latestBlockData?.body.txEffects;
-  // if (txEffects && txEffects.length > 0) {
-  //   for (let i = 0; i < txEffects.length; i++) {
-  //     const functionLogs = txEffects[i]?.unencryptedLogs.functionLogs;
-  //     if (functionLogs && functionLogs.length > 0) {
-  //       for (let j = 0; j < functionLogs.length; j++) {
-  //         const logs = functionLogs[j]?.logs;
-  //         if (logs && logs.length > 0) {
-  //           for (let k = 0; k < logs.length; k++) {
-  //             const cleanedMessage = Buffer.from(logs[k].data, "hex")
-  //               .toString("utf8")
-  //               .split("")
-  //               .filter((char) => char.charCodeAt(0) > 31)
-  //               .join("");
-  //             console.log(`[${i}][${j}][${k}]: ${cleanedMessage}`);
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
+  const { data: latestBlock, isLoading, error } = useLatestBlock();
 
   let bn;
   if (blockNumber === "latest") bn = "latest";
   else if (parseInt(blockNumber)) bn = parseInt(blockNumber);
 
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p className="text-red-500">{error.message}</p>;
+  if (!latestBlock) return <p>No data</p>;
+
   let keyValues: DetailItem[] = [];
-  if (latestBlockData) {
+  if (latestBlock) {
     keyValues = [
-      { label: "Block Number", value: "" + latestBlockData.height },
-      { label: "Block Hash", value: latestBlockData.hash },
+      { label: "Block Number", value: "" + latestBlock.height },
+      { label: "Block Hash", value: latestBlock.hash },
       {
         label: "Timestamp",
         value:
           new Date(
-            parseInt(latestBlockData.header.globalVariables.timestamp, 16) *
-              1000
-          ).toLocaleString() + ` (${timeSince} ago)`,
+            parseInt(latestBlock.header.globalVariables.timestamp, 16) * 1000,
+          ).toLocaleString() + ` (${4} ago)`,
       },
       {
         label: "Num Txs",
-        value:
-          "" + parseInt(latestBlockData.header.contentCommitment.numTxs, 16),
+        value: "" + parseInt(latestBlock.header.contentCommitment.numTxs, 16),
       },
       // TODO: what is good block header data to display?
       {
         label: "slotNumber",
-        value:
-          "" + parseInt(latestBlockData.header.globalVariables.slotNumber, 16),
+        value: "" + parseInt(latestBlock.header.globalVariables.slotNumber, 16),
       },
       {
         label: "coinbase",
-        value:
-          "" + parseInt(latestBlockData.header.globalVariables.coinbase, 16),
+        value: "" + parseInt(latestBlock.header.globalVariables.coinbase, 16),
       },
       // TODO: stats on logs
       // TODO: better display of gas
       {
         label: "feeRecipient",
         value:
-          "" +
-          parseInt(latestBlockData.header.globalVariables.feeRecipient, 16),
+          "" + parseInt(latestBlock.header.globalVariables.feeRecipient, 16),
       },
       {
         label: "totalFees",
-        value: "" + parseInt(latestBlockData.header.totalFees, 16),
+        value: "" + parseInt(latestBlock.header.totalFees, 16),
       },
       {
         label: "feePerDaGas",
         value:
           "" +
-          parseInt(
-            latestBlockData.header.globalVariables.gasFees.feePerDaGas,
-            16
-          ),
+          parseInt(latestBlock.header.globalVariables.gasFees.feePerDaGas, 16),
       },
       {
         label: "feePerL2Gas",
         value:
           "" +
-          parseInt(
-            latestBlockData.header.globalVariables.gasFees.feePerL2Gas,
-            16
-          ),
+          parseInt(latestBlock.header.globalVariables.gasFees.feePerL2Gas, 16),
       },
     ];
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  // const renderList = (items: any[], maxItems = 10) => {
-  //   const displayItems = items.slice(0, maxItems);
-  //   return (
-  //     <ul className="list-disc list-inside pl-4">
-  //       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-  //       {displayItems.map((item: any, index: number) => (
-  //         <li key={index}>
-  //           {typeof item === "object" ? (
-  //             <pre className="bg-gray-100 p-2 rounded-md overflow-x-auto max-h-40">
-  //               <code>{JSON.stringify(item, null, 2)}</code>
-  //             </pre>
-  //           ) : (
-  //             item
-  //           )}
-  //         </li>
-  //       ))}
-  //       {items.length > maxItems && (
-  //         <li>...and {items.length - maxItems} more</li>
-  //       )}
-  //     </ul>
-  //   );
-  // };
 
   return (
     <div className="mx-auto px-[70px] max-w-[1440px]">
