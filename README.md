@@ -14,6 +14,12 @@ terminal 1:
 minikube start --kubernetes-version=v1.25.3 --cpus max --memory max && skaffold run
 ```
 
+after the first time you have deployed the app you can run the following command to have faster deployments:
+
+```sh
+skaffold run -f k8s/local/skaffold.local.light.yaml
+```
+
 terminal 2:
 
 _Make sure you have .chicmoz-local.env file in the root_
@@ -23,12 +29,11 @@ _Make sure you have .chicmoz-local.env file in the root_
 ./scripts/miscallaneous.sh
 ```
 
-terminal 3:
+## Pro tip
 
-```sh
-cd services/explorer-ui && yarn dev
+when developing locally you can command out the creation of the `explorer-ui` and run it locally
+
 ```
-
-- UI: http://localhost:5173
-- API: https://explorer-api.localhost:443
-- (index of API: https://explorer-api.localhost:443/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4/l2/index)
+cd services/exporer-ui/
+yarn dev
+```
