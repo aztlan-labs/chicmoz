@@ -14,7 +14,7 @@ build:
         dockerfile: Dockerfile
         buildArgs:
           NODE_ENV: "production"
-          VITE_API_URL: "https://api.chicmoz.info:80/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4" # TODO: change the api key
+          VITE_API_URL: "https://api.chicmoz.info/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4" # TODO: change the api key
       requires:
         - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
           alias: BASE
