@@ -1,3 +1,3 @@
 export * from "./contract";
 export * from "./block";
-export * from "./tx-effects";
+export * from "./tx-effect";
