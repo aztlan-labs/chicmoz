@@ -39,4 +39,4 @@ yarn dev
 ```
 
 - API: http://explorer-api.localhost
-  - (index of API: http://explorer-api.localhost/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4/l2/index)
+- (index of API: http://explorer-api.localhost/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4/l2/index)
