@@ -7,7 +7,6 @@ let db: ReturnType<typeof drizzle>;
 let isInitialized = false;
 let isShutDown = false;
 
-
 export const init = async () => {
   const client = new pg.Client(dbCredentials);
 
@@ -15,8 +14,6 @@ export const init = async () => {
 
   await client.connect();
   isInitialized = true;
-
-  initialized = true;
 
   return {
     id: "DB",
