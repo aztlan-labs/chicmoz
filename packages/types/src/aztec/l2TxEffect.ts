@@ -22,7 +22,7 @@ export const chicmozL2TxEffectSchema = z.object({
       if (typeof val === "number") return { code: val };
       return val;
     },
-    z.object({ code: z.number() })
+    z.object({ code: z.number() }),
   ),
   txHash: hexStringSchema,
   transactionFee: frSchema,
@@ -30,7 +30,7 @@ export const chicmozL2TxEffectSchema = z.object({
   nullifiers: z.array(frSchema),
   l2ToL1Msgs: z.array(frSchema),
   publicDataWrites: z.array(
-    z.object({ leafIndex: frSchema, newValue: frSchema })
+    z.object({ leafIndex: frSchema, newValue: frSchema }),
   ),
   noteEncryptedLogsLength: frSchema,
   encryptedLogsLength: frSchema,
@@ -39,21 +39,21 @@ export const chicmozL2TxEffectSchema = z.object({
     functionLogs: z.array(
       z.object({
         logs: z.array(noteEncryptedLogEntrySchema),
-      })
+      }),
     ),
   }),
   encryptedLogs: z.object({
     functionLogs: z.array(
       z.object({
         logs: z.array(encryptedLogEntrySchema),
-      })
+      }),
     ),
   }),
   unencryptedLogs: z.object({
     functionLogs: z.array(
       z.object({
         logs: z.array(unencryptedLogEntrySchema),
-      })
+      }),
     ),
   }),
 });

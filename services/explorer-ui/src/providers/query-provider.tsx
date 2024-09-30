@@ -8,7 +8,9 @@ interface Props {
 const queryClient = new QueryClient();
 
 export const QueryProvider: FC<Props> = ({ children }) => {
-  return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  return(
+  <QueryClientProvider client={queryClient}>
+    {children}
+  </QueryClientProvider>
   );
 };

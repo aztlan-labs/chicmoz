@@ -8,3 +8,12 @@ export const useLatestBlock = (): UseQueryResult<ChicmozL2Block, Error> => {
     queryFn: BlockAPI.getLatestBlock,
   });
 };
+
+export const useGetBlockByHeight = (
+  height: string,
+): UseQueryResult<ChicmozL2Block, Error> => {
+  return useQuery<ChicmozL2Block, Error>({
+    queryKey: ["blockByHeight", height],
+    queryFn: () => BlockAPI.getBlockByHeight(height),
+  });
+};

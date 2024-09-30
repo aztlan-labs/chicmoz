@@ -7,10 +7,12 @@ export const aztecExplorer = {
   getL2BlocksByHeightRange: "",
   getL2TxEffectById: "",
   getL2TxEffectsByHeight: (height: number) => `l2/blocks/${height}/txEffects`,
-  getL2TxEffectByHeightAndIndex: (height: number, index: number) => `l2/blocks/${height}/txEffects/${index}`,
+  getL2TxEffectByHeightAndIndex: (height: number, index: number) =>
+    `l2/blocks/${height}/txEffects/${index}`,
   getL2TxEffectsByHeightRange: "",
   getL2ContractInstance: "l2/contract-instance/",
-  getL2ContractInstancesByBlockHash: (hash: string) => `l2/blocks/${hash}/contract-instances`,
+  getL2ContractInstancesByBlockHash: (hash: string) =>
+    `l2/blocks/${hash}/contract-instances`,
 };
 
 export const API_URL = import.meta.env.VITE_API_URL;
