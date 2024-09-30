@@ -13,7 +13,7 @@ export const BlockAPI = {
     const response = await client.get(aztecExplorer.getL2LatestHeight);
     return validateResponse(z.number(), response.data);
   },
-  getBlockByHeight: async (height: number): Promise<ChicmozL2Block> => {
+  getBlockByHeight: async (height: string): Promise<ChicmozL2Block> => {
     const response = await client.get(
       `${aztecExplorer.getL2BlockByHeight}${height}`,
     );
