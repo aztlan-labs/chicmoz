@@ -1,11 +1,8 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import {
-  DetailItem,
-  KeyValueDisplay,
-} from "~/components/info-display/key-value-display";
-import { TransactionsTable } from "~/components/transactions/transactions-table";
+import { KeyValueDisplay } from "~/components/info-display/key-value-display";
+import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { Button } from "~/components/ui";
-import { useLatestBlock } from "~/hooks/";
+import { useGetBlockByHeight } from "~/hooks";
 
 export const Route = createLazyFileRoute("/blocks/$blockNumber")({
   component: Block,
@@ -13,7 +10,11 @@ export const Route = createLazyFileRoute("/blocks/$blockNumber")({
 
 function Block() {
   const { blockNumber } = Route.useParams();
-  const { data: latestBlock, isLoading, error } = useLatestBlock();
+  const {
+    data: latestBlock,
+    isLoading,
+    error,
+  } = useGetBlockByHeight(blockNumber);
 
   let bn;
   if (blockNumber === "latest") bn = "latest";
@@ -23,9 +24,8 @@ function Block() {
   if (error) return <p className="text-red-500">{error.message}</p>;
   if (!latestBlock) return <p>No data</p>;
 
-  let keyValues: DetailItem[] = [];
-  if (latestBlock) {
-    keyValues = [
+  const getBlockDetails = () => {
+    return [
       { label: "Block Number", value: "" + latestBlock.height },
       { label: "Block Hash", value: latestBlock.hash },
       {
@@ -72,7 +72,21 @@ function Block() {
           parseInt(latestBlock.header.globalVariables.gasFees.feePerL2Gas, 16),
       },
     ];
-  }
+  };
+
+  const getTxEffects = () => {
+    return latestBlock.body.txEffects.map((tx) => {
+      console.log(tx.txHash);
+      return {
+        txHash: tx.txHash,
+        transactionFee: Number(tx.transactionFee),
+        logCount:
+          tx.noteEncryptedLogs.functionLogs.length +
+          tx.encryptedLogs.functionLogs.length +
+          tx.unencryptedLogs.functionLogs.length,
+      };
+    });
+  };
 
   return (
     <div className="mx-auto px-[70px] max-w-[1440px]">
@@ -84,7 +98,7 @@ function Block() {
           </div>
           <div className="flex flex-col gap-4 mt-8">
             <div className="bg-white rounded-lg shadow-md p-4">
-              <KeyValueDisplay data={keyValues} />
+              <KeyValueDisplay data={getBlockDetails()} />
             </div>
             <div className="flex flex-row gap-4 w-10 mb-4">
               <Button variant={"primary"}>
@@ -92,7 +106,7 @@ function Block() {
               </Button>
               <Button variant={"primary"}>View Transactions</Button>
             </div>
-            <TransactionsTable />
+            <TxEffectsTable txEffects={getTxEffects()} />
           </div>
         </div>
       ) : (
