@@ -39,8 +39,13 @@ export const routes = {
     },
   },
   transactions: {
+    // TODO: might not need this
     route: "/transactions",
     title: "Transactions",
+  },
+  txEffect: {
+    route: "/tx-effects/",
+    title: "Tx Effect",
   },
   contracts: {
     route: "/contracts",

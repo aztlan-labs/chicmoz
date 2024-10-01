@@ -1,5 +1,4 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { TransactionsTable } from "~/components/transactions/transactions-table";
 
 export const Route = createLazyFileRoute("/transactions/")({
   component: Transactions,
@@ -23,7 +22,6 @@ function Transactions() {
           <h2 className="text-primary">0.000012245</h2>
         </div>
       </div>
-      <TransactionsTable />
     </div>
   );
 }
