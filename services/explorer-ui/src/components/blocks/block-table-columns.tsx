@@ -1,28 +1,30 @@
 import { type ColumnDef } from "@tanstack/react-table";
-import type { BlockTableSchema } from "~/components/blocks/blocks-schema";
+import type { BlockTableSchema } from "./blocks-schema";
 import { DataTableColumnHeader } from "~/components/data-table";
 
 const text = {
-  blockNumber: "BLOCK NUMBER",
+  height: "BLOCK HEIGHT",
   blockHash: "BLOCK HASH",
   status: "STATUS",
+  numberOfTransactions: "TRANSACTIONS",
+  txEffectsLength: "TX EFFECTS",
+  totalFees: "TOTAL FEES",
   timestamp: "TIMESTAMP",
-  transactions: "TRANSACTIONS",
 };
 
-export const blockTableColumns: ColumnDef<BlockTableSchema>[] = [
+export const BlockTableColumns: ColumnDef<BlockTableSchema>[] = [
   {
-    accessorKey: "id",
-    header: ({ column }) => <DataTableColumnHeader className="text-purple-dark text-sm " column={column} title={text.blockNumber} />,
+    accessorKey: "height",
+    header: ({ column }) => <DataTableColumnHeader className="text-purple-dark text-sm" column={column} title={text.height} />,
     cell: ({ row }) => (
-      <div className="text-purple-light">{row.getValue("id")}</div>
+      <div className="text-purple-light">{row.getValue("height")}</div>
     ),
-    enableSorting: false,
+    enableSorting: true,
     enableHiding: false,
   },
   {
     accessorKey: "blockHash",
-    header: ({ column }) => <DataTableColumnHeader className="text-purple-dark text-sm  text-wrap" column={column} title={text.blockHash} />,
+    header: ({ column }) => <DataTableColumnHeader className="text-purple-dark text-sm text-wrap" column={column} title={text.blockHash} />,
     cell: ({ row }) => (
       <div className="text-purple-light" style={{ lineBreak: "anywhere" }}>
         {row.getValue("blockHash")}
@@ -33,23 +35,36 @@ export const blockTableColumns: ColumnDef<BlockTableSchema>[] = [
   },
   {
     accessorKey: "status",
-    header: ({ column }) => <DataTableColumnHeader className="text-purple-dark text-sm " column={column} title={text.status}  />,
+    header: ({ column }) => <DataTableColumnHeader className="text-purple-dark text-sm" column={column} title={text.status} />,
     cell: ({ row }) => <div className="uppercase">{row.getValue("status")}</div>,
     enableSorting: true,
     enableHiding: false,
   },
   {
-    accessorKey: "timestamp",
-    header: ({ column }) => <DataTableColumnHeader className="text-purple-dark text-sm " column={column} title={text.timestamp} />,
-    cell: ({ row }) => <div className="text-purple-dark">{row.getValue("timestamp")}</div>,
-    filterFn: (row, id, value: string) => {
-      return value.includes(row.getValue(id));
-    },
+    accessorKey: "numberOfTransactions",
+    header: ({ column }) => <DataTableColumnHeader className="text-purple-dark text-sm" column={column} title={text.numberOfTransactions} />,
+    cell: ({ row }) => <div className="text-purple-dark">{row.getValue("numberOfTransactions")}</div>,
+    enableSorting: true,
+    enableHiding: false,
   },
   {
-    accessorKey: "transactions",
-    header: ({ column }) => <DataTableColumnHeader className="text-purple-dark text-sm " column={column} title={text.transactions}  />,
-    cell: ({ row }) => <div className="text-purple-dark">{row.getValue("transactions")}</div>,
+    accessorKey: "txEffectsLength",
+    header: ({ column }) => <DataTableColumnHeader className="text-purple-dark text-sm" column={column} title={text.txEffectsLength} />,
+    cell: ({ row }) => <div className="text-purple-dark">{row.getValue("txEffectsLength")}</div>,
+    enableSorting: true,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "totalFees",
+    header: ({ column }) => <DataTableColumnHeader className="text-purple-dark text-sm" column={column} title={text.totalFees} />,
+    cell: ({ row }) => <div className="text-purple-dark">{row.getValue("totalFees")}</div>,
+    enableSorting: true,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "timestamp",
+    header: ({ column }) => <DataTableColumnHeader className="text-purple-dark text-sm" column={column} title={text.timestamp} />,
+    cell: ({ row }) => <div className="text-purple-dark">{row.getValue("timestamp")}</div>,
     enableSorting: true,
     enableHiding: false,
   },
