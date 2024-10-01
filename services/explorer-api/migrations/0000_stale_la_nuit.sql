@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS "public_data_write" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tx_effect" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"tx_hash" varchar NOT NULL,
 	"index" integer NOT NULL,
 	"revert_code" smallint NOT NULL,
 	"transaction_fee" varchar(66) NOT NULL,
