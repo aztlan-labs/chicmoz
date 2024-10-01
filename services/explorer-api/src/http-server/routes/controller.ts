@@ -24,7 +24,7 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
   const blockAndTxEffect = await db.signOfLife.getABlockWithTxEffects();
   const blockAndAContractInstance =
     await db.signOfLife.getABlockWithContractInstances();
-  const r = [routes.latestHeight, routes.latestBlock, `${routes.blocks}?from=0`];
+  const r = [routes.latestHeight, routes.latestBlock, `${routes.blocks}?from=0`, `${routes.blocks}`];
 
   if (block) {
     r.push(routes.block.replace(`:${heightOrHash}`, block.height.toString()));
