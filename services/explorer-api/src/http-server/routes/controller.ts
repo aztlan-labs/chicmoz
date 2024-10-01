@@ -45,13 +45,13 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
         .replace(`:${blockHeight}`, blockAndTxEffect.block.height.toString())
         .replace(
           `:${txEffectIndex}`,
-          blockAndTxEffect.txEffect.index.toString()
+          blockAndTxEffect.txEffects[0].index.toString()
         )
     );
     r.push(
       routes.txEffectsByTxHash.replace(
         `:${txHash}`,
-        blockAndTxEffect.txEffect.txHash
+        blockAndTxEffect.txEffects[0].txHash
       )
     );
   } else {

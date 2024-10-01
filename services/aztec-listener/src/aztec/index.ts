@@ -38,7 +38,7 @@ export const init = async () => {
     ? latestProcessedHeight + 1
     : await getLatestHeight();
   if (AZTEC_GENESIS_CATCHUP)
-    await startCatchup({ from: 0, to: pollFromHeight });
+    await startCatchup({ from: 0, to: 4 });
   if (AZTEC_LISTEN_FOR_BLOCKS)
     startPolling({ fromHeight: pollFromHeight });
 

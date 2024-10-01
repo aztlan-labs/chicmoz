@@ -62,7 +62,8 @@ const storeBlock = async (b: L2Block, hash: string) => {
   }
   try {
     logger.info(`🧢 Storing block ${b.number} (hash: ${parsedBlock.hash})`);
-    // logger.info(JSON.stringify(parsedBlock));
+    logger.info(JSON.stringify(parsedBlock.header.contentCommitment.numTxs));
+    logger.info(JSON.stringify(parsedBlock.body.txEffects.length));
     await controllers.l2Block.store(parsedBlock);
   } catch (e) {
     logger.error(
@@ -86,7 +87,6 @@ const storeContracts = async (b: L2Block, blockHash: string) => {
   const parsedContractClasses: ChicmozL2ContractClassRegisteredEvent[] = [];
   const parsedContractInstances: ChicmozL2ContractInstanceDeployedEvent[] = [];
   for (const contractClass of contractClasses) {
-    logger.info("================");
     try {
       const parsed = chicmozL2ContractClassRegisteredEventSchema.parse(
         JSON.parse(
@@ -105,7 +105,6 @@ const storeContracts = async (b: L2Block, blockHash: string) => {
     }
   }
   for (const contractInstance of contractInstances) {
-    logger.info("==============/////////");
     try {
       const parsed: ChicmozL2ContractInstanceDeployedEvent =
         chicmozL2ContractInstanceDeployedEventSchema.parse(

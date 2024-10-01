@@ -3,7 +3,7 @@ import { DataTableColumnHeader } from "~/components/data-table";
 import { type TxEffectsTableSchema } from "./tx-effects-schema";
 
 const text = {
-  txHash: "TRANSACTION HASH",
+  txHash: "TX EFFECT HASH",
   transactionFee: "TRANSACTION FEE",
   logCount: "LOGS COUNT",
 };
