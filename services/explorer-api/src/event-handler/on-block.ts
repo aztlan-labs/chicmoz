@@ -62,8 +62,7 @@ const storeBlock = async (b: L2Block, hash: string) => {
   }
   try {
     logger.info(`🧢 Storing block ${b.number} (hash: ${parsedBlock.hash})`);
-    logger.info(JSON.stringify(parsedBlock.header.contentCommitment.numTxs));
-    logger.info(JSON.stringify(parsedBlock.body.txEffects.length));
+    // logger.info(JSON.stringify(parsedBlock));
     await controllers.l2Block.store(parsedBlock);
   } catch (e) {
     logger.error(
