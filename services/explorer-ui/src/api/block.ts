@@ -15,28 +15,28 @@ export const BlockAPI = {
   },
   getBlockByHeight: async (height: string): Promise<ChicmozL2Block> => {
     const response = await client.get(
-      `${aztecExplorer.getL2BlockByHeight}${height}`,
+      `${aztecExplorer.getL2BlockByHeight}${height}`
     );
     return validateResponse(chicmozL2BlockSchema, response.data);
   },
   getBlocksByHeightRange: async (
-    start: number,
-    end: number,
+    start?: number,
+    end?: number,
   ): Promise<ChicmozL2Block[]> => {
+    const params: { start?: number; end?: number } = {};
+    if (start) params.start = start;
+    if (end) params.end = end;
     const response = await client.get(
       `${aztecExplorer.getL2BlocksByHeightRange}`,
       {
-        params: {
-          start,
-          end,
-        },
-      },
+        params,
+      }
     );
     return validateResponse(z.array(chicmozL2BlockSchema), response.data);
   },
   getBlockByHash: async (hash: string): Promise<ChicmozL2Block> => {
     const response = await client.get(
-      `${aztecExplorer.getL2BlockByHash}${hash}`,
+      `${aztecExplorer.getL2BlockByHash}${hash}`
     );
     return validateResponse(chicmozL2BlockSchema, response.data);
   },

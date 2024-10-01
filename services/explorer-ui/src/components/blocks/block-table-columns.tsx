@@ -1,43 +1,46 @@
 import { type ColumnDef } from "@tanstack/react-table";
-import type { BlockTableSchema } from "./blocks-schema";
+import { Link } from "@tanstack/react-router";
+import {routes} from "~/routes/__root";
 import { DataTableColumnHeader } from "~/components/data-table";
+import type { BlockTableSchema } from "./blocks-schema";
+import {formatTimeSince} from "~/lib/utils";
 
 const text = {
   height: "BLOCK HEIGHT",
   blockHash: "BLOCK HASH",
-  status: "STATUS",
   numberOfTransactions: "TRANSACTIONS",
   txEffectsLength: "TX EFFECTS",
   totalFees: "TOTAL FEES",
-  timestamp: "TIMESTAMP",
+  timeSince: "TIME SINCE",
 };
 
 export const BlockTableColumns: ColumnDef<BlockTableSchema>[] = [
   {
     accessorKey: "height",
     header: ({ column }) => <DataTableColumnHeader className="text-purple-dark text-sm" column={column} title={text.height} />,
-    cell: ({ row }) => (
-      <div className="text-purple-light">{row.getValue("height")}</div>
-    ),
+    cell: ({ row }) => {
+      const height = row.getValue("height");
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+      const r = routes.blocks.route + "/" + height;
+      return (<div className="text-purple-light">
+        <Link to={r}>{row.getValue("height")}</Link>
+      </div>);
+    },
     enableSorting: true,
     enableHiding: false,
   },
   {
     accessorKey: "blockHash",
     header: ({ column }) => <DataTableColumnHeader className="text-purple-dark text-sm text-wrap" column={column} title={text.blockHash} />,
-    cell: ({ row }) => (
-      <div className="text-purple-light" style={{ lineBreak: "anywhere" }}>
-        {row.getValue("blockHash")}
-      </div>
-    ),
+    cell: ({ row }) => {
+      const blockHash = row.getValue("blockHash");
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+      const r = routes.blocks.route + "/" + blockHash;
+      return (<div className="text-purple-light">
+        <Link to={r}>{row.getValue("blockHash")}</Link>
+      </div>);
+    },
     enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "status",
-    header: ({ column }) => <DataTableColumnHeader className="text-purple-dark text-sm" column={column} title={text.status} />,
-    cell: ({ row }) => <div className="uppercase">{row.getValue("status")}</div>,
-    enableSorting: true,
     enableHiding: false,
   },
   {
@@ -63,8 +66,12 @@ export const BlockTableColumns: ColumnDef<BlockTableSchema>[] = [
   },
   {
     accessorKey: "timestamp",
-    header: ({ column }) => <DataTableColumnHeader className="text-purple-dark text-sm" column={column} title={text.timestamp} />,
-    cell: ({ row }) => <div className="text-purple-dark">{row.getValue("timestamp")}</div>,
+    header: ({ column }) => <DataTableColumnHeader className="text-purple-dark text-sm" column={column} title={text.timeSince} />,
+    cell: ({ row }) => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      const formattedTime = formatTimeSince(row.getValue("timestamp") as unknown as number * 1000);
+      return (<div className="text-purple-dark">{formattedTime}</div>);
+    },
     enableSorting: true,
     enableHiding: false,
   },
