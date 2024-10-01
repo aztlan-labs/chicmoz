@@ -1,1 +1,0 @@
-ALTER TABLE "tx_effect" ADD COLUMN "tx_hash" varchar NOT NULL;

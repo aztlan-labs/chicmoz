@@ -1,5 +1,5 @@
 {
-  "id": "47fe0b8e-e7ee-4794-b885-fea1f8fed7bc",
+  "id": "e5266a9a-a408-4d41-af8d-121243dede01",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -268,6 +268,12 @@
           "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
+        },
+        "tx_hash": {
+          "name": "tx_hash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
         },
         "index": {
           "name": "index",

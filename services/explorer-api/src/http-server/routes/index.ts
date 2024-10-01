@@ -22,5 +22,11 @@ export const init = ({
   router.get(routes.contractInstancesByBlockHash, controller.GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH);
   router.get(routes.contractInstance, controller.GET_L2_CONTRACT_INSTANCE);
 
+  router.get(routes.statsTotalTxEffects, controller.GET_STATS_TOTAL_TX_EFFECTS);
+  router.get(routes.statsTotalTxEffectsLast24h, controller.GET_STATS_TOTAL_TX_EFFECTS_LAST_24H);
+  router.get(routes.statsTotalContracts, controller.GET_STATS_TOTAL_CONTRACTS);
+  router.get(routes.statsAverageFees, controller.GET_STATS_AVERAGE_FEES);
+  router.get(routes.statsAverageBlockTime, controller.GET_STATS_AVERAGE_BLOCK_TIME);
+
   return router;
 };

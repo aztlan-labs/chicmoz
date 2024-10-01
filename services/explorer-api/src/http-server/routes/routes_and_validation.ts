@@ -21,6 +21,12 @@ export const routes = {
   // contractInstancesByContractClassId: `/l2/contract-classes/:${contractClassId}/contract-instances`,
   contractInstancesByBlockHash: `/l2/blocks/:${blockHash}/contract-instances`,
   contractInstance: `/l2/contract-instances/:${address}`,
+
+  statsTotalTxEffects: '/l2/stats/total-tx-effects',
+  statsTotalTxEffectsLast24h: '/l2/stats/tx-effects-last-24h',
+  statsTotalContracts: '/l2/stats/total-contracts',
+  statsAverageFees: '/l2/stats/average-fees',
+  statsAverageBlockTime: '/l2/stats/average-block-time',
 };
 
 export const getBlockByHeightOrHashSchema = z.object({
