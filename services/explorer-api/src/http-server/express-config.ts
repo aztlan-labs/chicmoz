@@ -4,9 +4,9 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
-import { init as initApiRoutes } from "./routes/index.js";
+import { init as initApiRoutes, openApiPaths } from "./routes/index.js";
 import { createErrorMiddleware } from "@chicmoz-pkg/error-middleware";
-import { openApiSpec } from "./open-api-spec.js";
+import { genereateOpenApiSpec } from "./open-api-spec.js";
 import { logger } from "../logger.js";
 
 type ExpressOptions = {
@@ -47,7 +47,8 @@ export function setup(
 
   const router = express.Router();
   router.get("/health", getHealthHandler);
-  router.get("/openapi-specification", (_req, res) => {
+  const openApiSpec = genereateOpenApiSpec(openApiPaths);
+  router.get("/open-api-specification", (_req, res) => {
     res.json(openApiSpec);
   });
   initApiRoutes({ router });

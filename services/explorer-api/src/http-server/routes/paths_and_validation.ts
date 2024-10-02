@@ -8,7 +8,7 @@ export const txEffectIndex = 'txEffectIndex';
 export const txHash = 'txHash';
 export const address = 'address';
 
-export const routes = {
+export const paths = {
   latestHeight: '/l2/latest-height',
   latestBlock: '/l2/blocks/latest',
   block: `/l2/blocks/:${heightOrHash}`,
