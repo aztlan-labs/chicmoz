@@ -6,26 +6,10 @@ import { Button } from "~/components/ui";
 import { useGetTxEffectById } from "~/hooks/tx-effect";
 import { getTxEffectData } from "./utils";
 import { useParams } from "@tanstack/react-router";
-import { TabId, txEffectTabs } from "./constants";
-
-const feeData = [
-  { label: "TRANSACTION FEE", value: "0.000012453 ETH" },
-  { label: "FPA USED", value: "ETHER" },
-  { label: "GAS PRICE", value: "0.000012453 ETH" },
-  { label: "GAS", value: "0.000012453 ETH" },
-  { label: "FEE USED FOR L2 GAS", value: "0.000012453 ETH" },
-  { label: "L1 GAS", value: "0.000012453 ETH" },
-  { label: "DATA AVAILABILITY FEE", value: "0.000012453 ETH" },
-  { label: "COINBASE", value: "0.000012453 ETH" },
-  {
-    label: "FEE RECIPIENT",
-    value: "0xb950b8ba84a4f35f85d5f62a0e3f8b161d8733479c14d426dc36ae30f7e96246",
-    isClickable: true,
-  },
-];
+import { type TabId, txEffectTabs } from "./constants";
 
 export const TxEffectDetails: FC = () => {
-  const [selectedButton, setSelectedButton] = useState<TabId>("ecryptedLogs");
+  const [selectedTab, setSelectedTab] = useState<TabId>("ecryptedLogs");
   const { transactionId } = useParams({
     from: "/transactions/$transactionId",
   });
@@ -36,7 +20,6 @@ export const TxEffectDetails: FC = () => {
   } = useGetTxEffectById(transactionId);
 
   if (!transactionId) <div> No transaction id</div>;
-
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error</div>;
   if (!txEffects) return <div>No data</div>;
@@ -57,29 +40,32 @@ export const TxEffectDetails: FC = () => {
               <Button
                 key={tab.id}
                 variant={"primary"}
-                onClick={() => setSelectedButton(tab.id)}
+                onClick={() => setSelectedTab(tab.id)}
               >
                 {tab.label}
               </Button>
             ))}
           </div>
-          {selectedButton === "ecryptedLogs" && (
-            <TxEffextDetailsDisplay
-              title="Transaction effects"
-              details={["Encrypted logs", "Unencrypted logs"]}
-            />
+          {selectedTab === "ecryptedLogs" && (
+            <div className="bg-white rounded-lg shadow-md p-4"></div>
           )}
-          {selectedButton === "unencryptedLogs" && (
-            <div className="bg-white rounded-lg shadow-md p-4">
-              <div className="flex flex-col mt-8">
-                <h3>Fee Details</h3>
-                <KeyValueDisplay data={feeData} />
-              </div>
-              <div className="flex flex-col mt-8">
-                <h3>Public fee Details</h3>
-                <KeyValueDisplay data={feeData} />
-              </div>
-            </div>
+          {selectedTab === "unencryptedLogs" && (
+            <div className="bg-white rounded-lg shadow-md p-4"></div>
+          )}
+          {selectedTab === "nullifiers" && (
+            <div className="bg-white rounded-lg shadow-md p-4"></div>
+          )}
+          {selectedTab === "noteEncryption" && (
+            <div className="bg-white rounded-lg shadow-md p-4"></div>
+          )}
+          {selectedTab === "noteHashes" && (
+            <div className="bg-white rounded-lg shadow-md p-4"></div>
+          )}
+          {selectedTab === "l2ToL1Msgs" && (
+            <div className="bg-white rounded-lg shadow-md p-4"></div>
+          )}
+          {selectedTab === "publicDataWrites" && (
+            <div className="bg-white rounded-lg shadow-md p-4"></div>
           )}
         </div>
       </div>
