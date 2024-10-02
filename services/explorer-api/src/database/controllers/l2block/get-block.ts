@@ -3,7 +3,7 @@ import {
   HexString,
   chicmozL2BlockSchema,
 } from "@chicmoz-pkg/types";
-import { and, asc, eq, getTableColumns, gte, lt } from "drizzle-orm";
+import { and, asc, desc, eq, getTableColumns, gte, lt } from "drizzle-orm";
 import { getDb as db } from "../../../database/index.js";
 import {
   archive,
@@ -44,7 +44,7 @@ type GetBlocksByHash = {
 };
 
 type GetBlocksByRange = {
-  from: number;
+  from: number | undefined;
   to: number | undefined;
   getType: GetTypes.Range;
 };
@@ -53,7 +53,7 @@ export const getBlocks = async ({
   from,
   to,
 }: {
-  from: number;
+  from: number | undefined;
   to: number | undefined;
 }): Promise<ChicmozL2Block[]> => {
   return _getBlocks({ from, to, getType: GetTypes.Range });
@@ -74,12 +74,26 @@ export const getBlock = async (
 type GetBlocksArgs = GetBlocksByHeight | GetBlocksByHash | GetBlocksByRange;
 
 const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2Block[]> => {
+  let whereRange;
   if (args.getType === GetTypes.Range) {
-    const { from, to } = args;
-    if (to) {
-      if (from > to) throw new Error("Invalid range: from is greater than to");
-      if (to - from > DB_MAX_BLOCKS)
+    if (args.to && args.from) {
+      if (args.from > args.to)
+        throw new Error("Invalid range: from is greater than to");
+      if (args.to - args.from > DB_MAX_BLOCKS)
         throw new Error("Invalid range: too many blocks requested");
+      whereRange = and(
+        gte(l2Block.height, args.from),
+        lt(l2Block.height, args.to)
+      );
+    } else if (args.from) {
+      whereRange = and(
+        gte(l2Block.height, args.from),
+        lt(l2Block.height, args.from + DB_MAX_BLOCKS)
+      );
+    } else if (args.to) {
+      whereRange = lt(l2Block.height, args.to);
+    } else {
+      whereRange = undefined;
     }
   }
 
@@ -159,13 +173,9 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2Block[]> => {
       break;
     case GetTypes.Range:
       whereQuery = joinQuery
-        .where(
-          and(
-            gte(l2Block.height, args.from),
-            lt(l2Block.height, args.to ?? args.from + DB_MAX_BLOCKS)
-          )
-        )
-        .orderBy(asc(l2Block.height));
+        .where(whereRange)
+        .orderBy(desc(l2Block.height))
+        .limit(DB_MAX_BLOCKS);
       break;
   }
 

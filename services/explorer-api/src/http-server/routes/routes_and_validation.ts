@@ -37,7 +37,7 @@ export const getBlockByHeightOrHashSchema = z.object({
 
 export const getBlocksSchema = z.object({
   query: z.object({
-    from: z.coerce.number(),
+    from: z.coerce.number().optional(),
     to: z.coerce.number().optional(),
   }),
 });
