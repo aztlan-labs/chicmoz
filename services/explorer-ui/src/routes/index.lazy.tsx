@@ -1,5 +1,6 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { Link, createLazyFileRoute } from "@tanstack/react-router";
 import { useLatestBlock } from "~/hooks/";
+import { routes } from "./__root";
 
 const LatestBlockData = () => {
   const { data: latestBlock, isLoading, error } = useLatestBlock();
@@ -11,8 +12,10 @@ const LatestBlockData = () => {
   return (
     <ul className="space-y-2">
       <li>
-        <strong>Block Number:</strong>{" "}
-        {parseInt(latestBlock.header.globalVariables.blockNumber, 16)}
+        <Link to={routes.blocks.route + "/" + parseInt(latestBlock.header.globalVariables.blockNumber, 16)}>
+          <strong>Block Number:</strong>{" "}
+          {parseInt(latestBlock.header.globalVariables.blockNumber, 16)}
+        </Link>
       </li>
       <li>
         <strong>Number of Transactions:</strong>{" "}

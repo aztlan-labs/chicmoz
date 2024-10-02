@@ -1,9 +1,11 @@
 import { type ColumnDef } from "@tanstack/react-table";
+import { Link } from "@tanstack/react-router";
+import { routes } from "~/routes/__root";
 import { DataTableColumnHeader } from "~/components/data-table";
 import { type TxEffectsTableSchema } from "./tx-effects-schema";
 
 const text = {
-  txHash: "TRANSACTION HASH",
+  txHash: "TX EFFECT HASH",
   transactionFee: "TRANSACTION FEE",
   logCount: "LOGS COUNT",
 };
@@ -18,9 +20,16 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectsTableSchema>[] = [
         title={text.txHash}
       />
     ),
-    cell: ({ row }) => (
-      <div className="text-purple-light">{row.getValue("txHash")}</div>
-    ),
+    cell: ({ row }) => {
+      const txHash = row.getValue("txHash");
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+      const r = routes.txEffect.route + txHash;
+      return (
+        <div className="text-purple-light">
+          <Link to={r}>{row.getValue("txHash")}</Link>
+        </div>
+      );
+    },
     enableSorting: false,
     enableHiding: false,
   },
