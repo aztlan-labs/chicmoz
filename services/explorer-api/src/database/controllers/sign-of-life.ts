@@ -1,4 +1,5 @@
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { getDb as db } from "../../database/index.js";
 import {
   bodyToTxEffects,
@@ -25,32 +26,36 @@ export const getABlock = async () => {
 };
 
 export const getABlockWithTxEffects = async () => {
-  const dbRes = await db()
+  const dbInstance = db() as NodePgDatabase;
+  const dbRes = await dbInstance
     .select({
-      txEffect: {
-        txHash: txEffect.txHash,
-        index: txEffect.index,
-      },
       block: {
         height: l2Block.height,
         hash: l2Block.hash,
       },
+      txEffects: sql<string>`COALESCE(json_agg(json_build_object('txHash', ${txEffect.txHash}, 'index', ${txEffect.index})) FILTER (WHERE ${txEffect.id} IS NOT NULL), '[]'::json)`.as('txEffects'),
+      txEffectCount: sql<number>`count(${txEffect.id})`.as('txEffectCount'),
     })
     .from(bodyToTxEffects)
     .innerJoin(txEffect, eq(bodyToTxEffects.txEffectId, txEffect.id))
     .innerJoin(l2Block, eq(bodyToTxEffects.bodyId, l2Block.bodyId))
+    .groupBy(l2Block.height, l2Block.hash)
+    .orderBy(sql`count(${txEffect.id}) DESC, ${l2Block.height} DESC`)
     .limit(1)
     .execute();
+
   if (dbRes.length === 0) return null;
+
+  const result = dbRes[0];
   return {
     block: {
-      height: Number(dbRes[0].block.height),
-      hash: dbRes[0].block.hash,
+      height: Number(result.block.height),
+      hash: result.block.hash,
     },
-    txEffect: {
-      txHash: dbRes[0].txEffect.txHash,
-      index: Number(dbRes[0].txEffect.index),
-    },
+    txEffects: (result.txEffects as unknown as Array<{ txHash: string; index: string }>).map(te => ({
+      txHash: te.txHash,
+      index: Number(te.index),
+    })),
   };
 };
 

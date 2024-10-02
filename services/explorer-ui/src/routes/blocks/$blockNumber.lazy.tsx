@@ -3,6 +3,7 @@ import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { Button } from "~/components/ui";
 import { useGetBlockByHeight } from "~/hooks";
+import { formatTimeSince } from "~/lib/utils";
 
 export const Route = createLazyFileRoute("/blocks/$blockNumber")({
   component: Block,
@@ -24,19 +25,20 @@ function Block() {
   if (error) return <p className="text-red-500">{error.message}</p>;
   if (!latestBlock) return <p>No data</p>;
 
+  const timestamp =
+    parseInt(latestBlock.header.globalVariables.timestamp, 16) * 1000;
+  const timeSince = formatTimeSince(timestamp);
   const getBlockDetails = () => {
     return [
       { label: "Block Number", value: "" + latestBlock.height },
       { label: "Block Hash", value: latestBlock.hash },
       {
         label: "Timestamp",
-        value:
-          new Date(
-            parseInt(latestBlock.header.globalVariables.timestamp, 16) * 1000,
-          ).toLocaleString() + ` (${4} ago)`,
+        value: new Date(timestamp).toLocaleString() + ` (${timeSince})`,
       },
       {
-        label: "Num Txs",
+        // NOTE: this is not the same as txEffects.length!
+        label: "Number of transactions",
         value: "" + parseInt(latestBlock.header.contentCommitment.numTxs, 16),
       },
       // TODO: what is good block header data to display?
@@ -76,14 +78,13 @@ function Block() {
 
   const getTxEffects = () => {
     return latestBlock.body.txEffects.map((tx) => {
-      console.log(tx.txHash);
       return {
         txHash: tx.txHash,
         transactionFee: Number(tx.transactionFee),
         logCount:
-          tx.noteEncryptedLogs.functionLogs.length +
-          tx.encryptedLogs.functionLogs.length +
-          tx.unencryptedLogs.functionLogs.length,
+          parseInt(tx.encryptedLogsLength, 16) +
+          parseInt(tx.unencryptedLogsLength, 16) +
+          parseInt(tx.noteEncryptedLogsLength, 16),
       };
     });
   };

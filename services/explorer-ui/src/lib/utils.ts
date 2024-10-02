@@ -62,3 +62,23 @@ export const hexToHSL = (hex: string): string => {
   return `hsl(${h}, ${s}%, ${l}%)`;
 };
 
+  const intervals = [
+    { label: "day", seconds: 86400 },
+    { label: "hour", seconds: 3600 },
+    { label: "minute", seconds: 60 },
+    { label: "second", seconds: 1 },
+  ];
+
+export const formatTimeSince = (unixTimestamp: number | null) => {
+  if (unixTimestamp === null) return "no timestamp";
+  const now = new Date().getTime();
+  const secondsSince = Math.round((now - unixTimestamp) / 1000);
+  for (let i = 0; i < intervals.length; i++) {
+    const interval = intervals[i];
+    const count = Math.floor(secondsSince / interval.seconds);
+    if (count >= 1) {
+      return `${count} ${interval.label}${count > 1 ? "s" : ""} ago`;
+    }
+  }
+  return "just now";
+};
