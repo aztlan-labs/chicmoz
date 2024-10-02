@@ -2,6 +2,18 @@ import { Router } from "express";
 import * as controller from "./controllers/index.js";
 import { paths } from "./paths_and_validation.js";
 
+export const openApiPaths = {
+  ...controller.openapi_GET_LATEST_HEIGHT,
+  ...controller.openapi_GET_LATEST_BLOCK,
+  ...controller.openapi_GET_BLOCK,
+  ...controller.openapi_GET_BLOCKS,
+  ...controller.openapi_GET_L2_TX_EFFECTS_BY_BLOCK_HEIGHT,
+  ...controller.openapi_GET_L2_TX_EFFECT_BY_BLOCK_HEIGHT_AND_INDEX,
+  ...controller.openapi_GET_L2_TX_EFFECT_BY_TX_HASH,
+  ...controller.openapi_GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH,
+  ...controller.openapi_GET_L2_CONTRACT_INSTANCE,
+};
+
 export const init = ({ router }: { router: Router }) => {
   router.get("/l2/index", controller.GET_ROUTES);
 

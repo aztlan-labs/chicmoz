@@ -5,10 +5,35 @@ import {
   getContractInstancesByBlockHashSchema,
 } from "../paths_and_validation.js";
 
-export * from "./inofficial.js";
-export * from "./blocks.js";
-export * from "./tx-effects.js";
-export * from "./contracts.js";
+export const openapi_GET_L2_CONTRACT_INSTANCE = {
+  "/l2/contracts/{address}": {
+    get: {
+      summary: "Get contract instance by address",
+      parameters: [
+        {
+          name: "address",
+          in: "path",
+          required: true,
+          schema: {
+            type: "string",
+          },
+        },
+      ],
+      responses: {
+        "200": {
+          description: "Successful response",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
 
 export const GET_L2_CONTRACT_INSTANCE = asyncHandler(async (req, res) => {
   const { address } = getContractInstanceSchema.parse(req).params;
@@ -17,6 +42,39 @@ export const GET_L2_CONTRACT_INSTANCE = asyncHandler(async (req, res) => {
   if (!instance) throw new Error("Contract instance not found");
   res.status(200).send(JSON.stringify(instance));
 });
+
+export const openapi_GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH = {
+  "/l2/contracts/block/{blockHash}": {
+    get: {
+      summary: "Get contract instances by block hash",
+      parameters: [
+        {
+          name: "blockHash",
+          in: "path",
+          required: true,
+          schema: {
+            type: "string",
+          },
+        },
+      ],
+      responses: {
+        "200": {
+          description: "Successful response",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: {
+                  type: "object",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
 
 export const GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH = asyncHandler(
   async (req, res) => {
