@@ -14,6 +14,6 @@ const main = async () => {
 };
 
 main().catch((e) => {
-  logger.error(`during startup of ${SERVICE_NAME}: ${(e as Error).stack ?? e}`);
+  logger.error(`during startup of ${SERVICE_NAME}: ${e}`);
   process.exit(1);
 });
