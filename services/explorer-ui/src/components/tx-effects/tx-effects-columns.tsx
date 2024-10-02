@@ -3,8 +3,6 @@ import { Link } from "@tanstack/react-router";
 import { routes } from "~/routes/__root";
 import { DataTableColumnHeader } from "~/components/data-table";
 import { type TxEffectsTableSchema } from "./tx-effects-schema";
-import { Link } from "@tanstack/react-router";
-import { routes } from "~/routes/__root";
 
 const text = {
   txHash: "TX EFFECT HASH",
