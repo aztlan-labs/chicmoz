@@ -131,13 +131,6 @@ export const GET_BLOCKS = asyncHandler(async (req, res) => {
   res.status(200).send(JSON.stringify(blocks));
 });
 
-export const GET_HEALTH = asyncHandler((_req, res) => {
-  // TODO: evaluate actual health checks
-  //   - db
-  //   - message bus
-  res.sendStatus(200);
-});
-
 export const GET_L2_TX_EFFECTS_BY_BLOCK_HEIGHT = asyncHandler(
   async (req, res) => {
     const { blockHeight } = getTxEffectsByBlockHeightSchema.parse(req).params;

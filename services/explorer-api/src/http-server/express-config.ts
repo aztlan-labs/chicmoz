@@ -1,10 +1,12 @@
 import bodyParser from "body-parser";
+import asyncHandler from "express-async-handler";
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
-import { init as initRoutes } from "./routes/index.js";
+import { init as initApiRoutes } from "./routes/index.js";
 import { createErrorMiddleware } from "@chicmoz-pkg/error-middleware";
+import { openApiSpec } from "./open-api-spec.js";
 import { logger } from "../logger.js";
 
 type ExpressOptions = {
@@ -12,6 +14,14 @@ type ExpressOptions = {
   PARAMETER_LIMIT: number;
   NODE_ENV: string;
 };
+
+const getHealthHandler = asyncHandler((_req, res) => {
+  // perhaps should be injected?
+  // TODO: evaluate actual health checks
+  //   - db
+  //   - message bus
+  res.sendStatus(200);
+});
 
 export function setup(
   app: express.Application,
@@ -36,7 +46,11 @@ export function setup(
   app.use(morgan("common"));
 
   const router = express.Router();
-  initRoutes({ router });
+  router.get("/health", getHealthHandler);
+  router.get("/openapi-specification", (_req, res) => {
+    res.json(openApiSpec);
+  });
+  initApiRoutes({ router });
   app.use(router);
 
   const errorMiddleware = createErrorMiddleware(logger);

@@ -2,7 +2,7 @@ import express from "express";
 import http from "http";
 import { BODY_LIMIT, NODE_ENV, PARAMETER_LIMIT, PORT } from "../environment.js";
 import { logger } from "../logger.js";
-import {setup} from "./express-config.js";
+import { setup } from "./express-config.js";
 
 export const init = async () => {
   let resolveInit: () => void;
