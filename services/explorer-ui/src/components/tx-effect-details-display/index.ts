@@ -1,1 +1,1 @@
-export * from "./tx-effext-details-display";
+export * from "./tx-effect-details-display";

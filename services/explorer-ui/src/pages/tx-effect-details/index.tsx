@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { Button } from "~/components/ui";
-import { useGetTxEffectById } from "~/hooks/tx-effect";
+import { useGetTxEffectByHash } from "~/hooks/";
 import { getTxEffectData } from "./utils";
 import { useParams } from "@tanstack/react-router";
 import { type TabId, txEffectTabs } from "./constants";
@@ -15,7 +15,7 @@ export const TxEffectDetails: FC = () => {
     data: txEffects,
     isLoading,
     error,
-  } = useGetTxEffectById(transactionId);
+  } = useGetTxEffectByHash(transactionId);
 
   if (!transactionId) <div> No transaction id</div>;
   if (isLoading) return <div>Loading...</div>;
