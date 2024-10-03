@@ -37,7 +37,6 @@ export const GET_L2_TX_EFFECTS_BY_BLOCK_HEIGHT = asyncHandler(
       ["l2", "blocks", blockHeight, "txEffects"],
       () => db.l2TxEffect.getTxEffectsByBlockHeight(blockHeight)
     );
-    if (!txEffectsData) throw new Error("TxEffects not found");
     res.status(200).send(txEffectsData);
   }
 );
@@ -81,7 +80,6 @@ export const GET_L2_TX_EFFECT_BY_BLOCK_HEIGHT_AND_INDEX = asyncHandler(
           txEffectIndex
         )
     );
-    if (!txEffectsData) throw new Error("TxEffect not found");
     res.status(200).send(txEffectsData);
   }
 );
@@ -111,6 +109,5 @@ export const GET_L2_TX_EFFECT_BY_TX_HASH = asyncHandler(async (req, res) => {
   const txEffectsData = await dbWrapper.get(["l2", "txEffects", txHash], () =>
     db.l2TxEffect.getTxeffectByTxHash(txHash)
   );
-  if (!txEffectsData) throw new Error("TxEffects not found");
   res.status(200).send(txEffectsData);
 });

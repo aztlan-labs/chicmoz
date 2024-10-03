@@ -35,7 +35,6 @@ export const GET_L2_CONTRACT_INSTANCE = asyncHandler(async (req, res) => {
     ["l2", "contracts", address],
     () => db.l2Contract.getL2DeployedContractInstanceByAddress(address)
   );
-  if (!instanceData) throw new Error("Contract instance not found");
   res.status(200).send(instanceData);
 });
 
@@ -67,7 +66,6 @@ export const GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH = asyncHandler(
       () =>
         db.l2Contract.getL2DeployedContractInstancesByBlockHash(blockHash)
     );
-    if (!instances) throw new Error("Contract instances not found");
     res.status(200).send(instances);
   }
 );

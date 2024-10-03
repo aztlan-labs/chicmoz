@@ -28,8 +28,7 @@ export const openapi_GET_LATEST_HEIGHT = {
 
 export const GET_LATEST_HEIGHT = asyncHandler(async (_req, res) => {
   const latestHeight = await dbWrapper.getLatestHeight();
-  if (latestHeight) res.status(200).send(latestHeight);
-  else throw new Error("Latest height not found");
+  res.status(200).send(latestHeight);
 });
 
 export const openapi_GET_LATEST_BLOCK = {
@@ -82,7 +81,6 @@ export const GET_BLOCK = asyncHandler(async (req, res) => {
   const blockData = await dbWrapper.get(["l2", "blocks", heightOrHash], () =>
     db.l2Block.getBlock(heightOrHash)
   );
-  if (!blockData) throw new Error("Block not found");
   res.status(200).send(blockData);
 });
 
@@ -121,6 +119,5 @@ export const GET_BLOCKS = asyncHandler(async (req, res) => {
       : await dbWrapper.get(["l2", "blocks", from, to], () =>
           db.l2Block.getBlocks({ from, to })
         );
-  if (!blocksData) throw new Error("Blocks not found");
   res.status(200).send(blocksData);
 });

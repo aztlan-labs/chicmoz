@@ -18,15 +18,16 @@ export const getLatestHeight = async () => {
       });
     }
   }
+  if (!val) throw new Error(`${LATEST_HEIGHT} not found`);
   return val;
 };
 
 export const getLatest = async <DbReturnType>(
   keys: string[],
   dbFn: () => Promise<DbReturnType>
-): Promise<string | null> => {
+): Promise<string> => {
   const latestHeight = await getLatestHeight();
-  if (!latestHeight) return null;
+  if (!latestHeight) throw new Error("CACHE_ERROR: latest height not found");
   // NOTE: we add one second to the TTL to ensure that stale cache is not stored
   return get([...keys, latestHeight], dbFn, LATEST_TTL_SECONDS + 1);
 };
@@ -35,7 +36,7 @@ export const get = async <DbReturnType>(
   keys: (string | number | undefined)[],
   dbFn: () => Promise<DbReturnType>,
   ttl = CACHE_TTL_SECONDS
-): Promise<string | null> => {
+): Promise<string> => {
   const cacheKey = keys.join("-");
   let val = await c().get(cacheKey);
   if (!val) {
@@ -47,5 +48,6 @@ export const get = async <DbReturnType>(
       });
     }
   }
+  if (!val) throw new Error(`${cacheKey} not found`);
   return val;
 };
