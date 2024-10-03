@@ -1,9 +1,10 @@
+import { Link } from "@tanstack/react-router";
 import { FC } from "react";
 
 interface KeyValueRowProps {
   label: string;
   value: string;
-  isClickable?: boolean;
+  link?: string;
   isLast?: boolean;
 }
 
@@ -11,7 +12,7 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
   label,
   value,
   isLast,
-  isClickable = false,
+  link,
 }) => (
   <div
     className={`flex items-center py-3 ${
@@ -19,13 +20,16 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
     }`}
   >
     <span className="text-gray-600 w-1/5">{label}</span>
-    <span
-      className={`text-sm flex-grow ${
-        isClickable ? "text-blue-600 cursor-pointer" : ""
-      }`}
-    >
-      {value}
-      {isClickable && <span className="ml-1">🔗</span>}
-    </span>
+    {link ? (
+      <Link
+        to={link}
+        className="text-sm flex-grow text-primary-600 text-primary cursor-pointer"
+      >
+        {value}
+        <span className="ml-1">🔗</span>
+      </Link>
+    ) : (
+      <span className={`text-sm flex-grow `}>{value}</span>
+    )}
   </div>
 );

@@ -4,7 +4,7 @@ import { KeyValueRow } from "./key-value-row";
 export interface DetailItem {
   label: string;
   value: string;
-  isClickable?: boolean;
+  link?: boolean;
 }
 
 interface KeyValueDisplayProps {
@@ -19,7 +19,7 @@ export const KeyValueDisplay: FC<KeyValueDisplayProps> = ({ data }) => (
         label={item.label}
         value={item.value}
         isLast={index === data.length - 1}
-        isClickable={item.isClickable}
+        link={item.link}
       />
     ))}
   </>
