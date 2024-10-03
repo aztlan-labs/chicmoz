@@ -1,7 +1,5 @@
-import { ChicmozL2TxEffect } from "@chicmoz-pkg/types";
 import { FC, useState } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
-import { TxEffextDetailsDisplay } from "~/components/tx-effect-details-display";
 import { Button } from "~/components/ui";
 import { useGetTxEffectById } from "~/hooks/tx-effect";
 import { getTxEffectData } from "./utils";
@@ -39,34 +37,124 @@ export const TxEffectDetails: FC = () => {
             {txEffectTabs.map((tab) => (
               <Button
                 key={tab.id}
-                variant={"primary"}
+                variant="primary"
                 onClick={() => setSelectedTab(tab.id)}
               >
                 {tab.label}
               </Button>
             ))}
           </div>
-          {selectedTab === "ecryptedLogs" && (
-            <div className="bg-white rounded-lg shadow-md p-4"></div>
-          )}
-          {selectedTab === "unencryptedLogs" && (
-            <div className="bg-white rounded-lg shadow-md p-4"></div>
-          )}
-          {selectedTab === "nullifiers" && (
-            <div className="bg-white rounded-lg shadow-md p-4"></div>
-          )}
-          {selectedTab === "noteEncryption" && (
-            <div className="bg-white rounded-lg shadow-md p-4"></div>
-          )}
-          {selectedTab === "noteHashes" && (
-            <div className="bg-white rounded-lg shadow-md p-4"></div>
-          )}
-          {selectedTab === "l2ToL1Msgs" && (
-            <div className="bg-white rounded-lg shadow-md p-4"></div>
-          )}
-          {selectedTab === "publicDataWrites" && (
-            <div className="bg-white rounded-lg shadow-md p-4"></div>
-          )}
+          <div className="bg-white rounded-lg shadow-md p-4">
+            {selectedTab === "ecryptedLogs" && (
+              <div className="">
+                {txEffects.encryptedLogs.functionLogs.map(
+                  (encryption, index) => {
+                    const entries = encryption.logs.map((log) => {
+                      return Object.entries(log).map(([key, value]) => ({
+                        label: key,
+                        value: value,
+                        isClickable: false,
+                      }));
+                    });
+                    // Flatten the nested arrays
+                    const flattenedEntries = entries.flat();
+
+                    // Render KeyValueDisplay with the flattened entries
+                    return (
+                      <div key={index}>
+                        <h3>Log {index + 1}</h3>
+                        <KeyValueDisplay key={index} data={flattenedEntries} />
+                      </div>
+                    );
+                  },
+                )}
+              </div>
+            )}
+            {selectedTab === "unencryptedLogs" && (
+              <div className="">
+                {txEffects.nullifiers.map((nullifier) => (
+                  <KeyValueDisplay
+                    data={[{ label: "Nullifier", value: nullifier }]}
+                  />
+                ))}
+              </div>
+            )}
+            {selectedTab === "nullifiers" && (
+              <div className="">
+                {txEffects.nullifiers.map((nullifier) => (
+                  <KeyValueDisplay
+                    data={[{ label: "Nullifier", value: nullifier }]}
+                  />
+                ))}
+              </div>
+            )}
+            {selectedTab === "noteEncryption" && (
+              <div className="flex flex-col gap-4 w-10 mb-4">
+                {txEffects.noteEncryptedLogs.functionLogs.map(
+                  (noteEncryption, index) => {
+                    const entries = noteEncryption.logs.map((log) => {
+                      return Object.entries(log).map(([key, value]) => ({
+                        label: key,
+                        value: value,
+                        isClickable: false,
+                      }));
+                    });
+                    // Flatten the nested arrays
+                    const flattenedEntries = entries.flat();
+
+                    // Render KeyValueDisplay with the flattened entries
+                    return (
+                      <div key={index}>
+                        <h3>Log {index + 1}</h3>
+                        <KeyValueDisplay key={index} data={flattenedEntries} />
+                      </div>
+                    );
+                  },
+                )}
+              </div>
+            )}
+            {selectedTab === "noteHashes" && (
+              <div className="">
+                {txEffects.noteHashes.map((nullifier) => (
+                  <KeyValueDisplay
+                    data={[{ label: "Note Hashes", value: nullifier }]}
+                  />
+                ))}
+              </div>
+            )}
+            {selectedTab === "l2ToL1Msgs" && (
+              <div className="">
+                {txEffects.l2ToL1Msgs.map((nullifier) => (
+                  <KeyValueDisplay
+                    data={[{ label: "L2 to L1 Messages", value: nullifier }]}
+                  />
+                ))}
+              </div>
+            )}
+            {selectedTab === "publicDataWrites" && (
+              <div className="flex flex-col gap-19 w-auto mb-4">
+                {txEffects.publicDataWrites.map((publicDataWrite, index) => (
+                  <div key={index}>
+                    <h4>Log {index + 1}</h4>
+                    <KeyValueDisplay
+                      data={[
+                        {
+                          label: "leafIndex",
+                          value: publicDataWrite.leafIndex,
+                          isClickable: false,
+                        },
+                        {
+                          label: "newValue",
+                          value: publicDataWrite.newValue,
+                          isClickable: false,
+                        },
+                      ]}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
