@@ -9,8 +9,9 @@ import {
   txEffectIndex,
   txHash,
 } from "../paths_and_validation.js";
+import {PUBLIC_API_KEY} from "../../../environment.js";
 
-const SUB_PATH = "/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4";
+const SUB_PATH = `/v1/${PUBLIC_API_KEY}`;
 
 export const GET_ROUTES = asyncHandler(async (_req, res) => {
   const block = await db.signOfLife.getABlock();
