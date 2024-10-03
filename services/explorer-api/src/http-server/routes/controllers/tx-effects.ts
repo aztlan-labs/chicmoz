@@ -5,7 +5,7 @@ import {
   getTxEffectsByBlockHeightSchema,
   getTxEffectsByTxHashSchema,
 } from "../paths_and_validation.js";
-import { txEffectResponse, txEffectResponseArray } from "./utils.js";
+import { txEffectResponse, txEffectResponseArray } from "./utils/index.js";
 
 export const openapi_GET_L2_TX_EFFECTS_BY_BLOCK_HEIGHT = {
   "/l2/blocks/{blockHeight}/txEffects": {

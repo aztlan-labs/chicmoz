@@ -1,3 +1,4 @@
+import { init as initCache } from "./cache/index.js";
 import { init as initDb } from "./database/index.js";
 import { blockHandler, catchupHandler } from "./event-handler/index.js";
 import { init as initHttpServer } from "./http-server/index.js";
@@ -9,6 +10,9 @@ export const start = async () => {
   const shutdownDb = await initDb();
   logger.info("✅ DB");
   registerShutdownCallback(shutdownDb);
+  const shutdownCache = await initCache();
+  logger.info("✅ CACHE");
+  registerShutdownCallback(shutdownCache);
   const shutdownHttpServer = await initHttpServer();
   logger.info("✅ SERVER");
   registerShutdownCallback(shutdownHttpServer);

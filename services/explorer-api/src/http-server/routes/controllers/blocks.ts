@@ -4,7 +4,7 @@ import {
   getBlockByHeightOrHashSchema,
   getBlocksSchema,
 } from "../paths_and_validation.js";
-import {blockResponse, blockResponseArray} from "./utils.js";
+import { blockResponse, blockResponseArray, dbWrapper } from "./utils/index.js";
 
 export const openapi_GET_LATEST_HEIGHT = {
   "/l2/latest-height": {
@@ -16,12 +16,7 @@ export const openapi_GET_LATEST_HEIGHT = {
           content: {
             "application/json": {
               schema: {
-                type: "object",
-                properties: {
-                  height: {
-                    type: "integer",
-                  },
-                },
+                type: "integer",
               },
             },
           },
@@ -32,9 +27,8 @@ export const openapi_GET_LATEST_HEIGHT = {
 };
 
 export const GET_LATEST_HEIGHT = asyncHandler(async (_req, res) => {
-  const latestBlock = await db.l2Block.getLatestBlock();
-  if (latestBlock?.header.globalVariables.blockNumber)
-    res.status(200).send(latestBlock.header.globalVariables.blockNumber);
+  const latestHeight = await dbWrapper.getLatestHeight();
+  if (latestHeight) res.status(200).send(latestHeight);
   else throw new Error("Latest height not found");
 });
 

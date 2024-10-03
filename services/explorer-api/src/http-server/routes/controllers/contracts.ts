@@ -4,7 +4,10 @@ import {
   getContractInstanceSchema,
   getContractInstancesByBlockHashSchema,
 } from "../paths_and_validation.js";
-import {contractInstanceResponse, contractInstanceResponseArray} from "./utils.js";
+import {
+  contractInstanceResponse,
+  contractInstanceResponseArray,
+} from "./utils/index.js";
 
 export const openapi_GET_L2_CONTRACT_INSTANCE = {
   "/l2/contracts/{address}": {

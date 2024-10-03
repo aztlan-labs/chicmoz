@@ -7,6 +7,8 @@ import {
 } from "@chicmoz-pkg/types";
 import { generateSchema } from "@anatine/zod-openapi";
 
+export * from "./db-wrapper.js";
+
 export const blockResponse = {
   "200": {
     description: "Successful response",
