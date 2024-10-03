@@ -141,12 +141,10 @@ export const TxEffectDetails: FC = () => {
                         {
                           label: "leafIndex",
                           value: publicDataWrite.leafIndex,
-                          isClickable: false,
                         },
                         {
                           label: "newValue",
                           value: publicDataWrite.newValue,
-                          isClickable: false,
                         },
                       ]}
                     />

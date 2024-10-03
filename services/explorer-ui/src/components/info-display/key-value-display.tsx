@@ -4,7 +4,7 @@ import { KeyValueRow } from "./key-value-row";
 export interface DetailItem {
   label: string;
   value: string;
-  link?: boolean;
+  link?: string;
 }
 
 interface KeyValueDisplayProps {
