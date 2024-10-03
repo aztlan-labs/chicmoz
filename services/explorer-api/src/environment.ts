@@ -2,7 +2,7 @@ import { CHAIN_NAME } from "./constants.js";
 
 export const PUBLIC_API_KEY = process.env.PUBLIC_API_KEY ?? "d1e2083a-660c-4314-a6f2-1d42f4b944f4";
 
-export const CACHE_TTL = Number(process.env.CACHE_TTL) || undefined;
+export const CACHE_TTL_SECONDS = Number(process.env.CACHE_TTL) || undefined;
 export const REDIS_HOST = process.env.REDIS_HOST ?? "redis-master";
 export const REDIS_PORT = Number(process.env.REDIS_PORT) || 6379;
 

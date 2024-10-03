@@ -42,8 +42,12 @@ export const openapi_GET_LATEST_BLOCK = {
 };
 
 export const GET_LATEST_BLOCK = asyncHandler(async (_req, res) => {
-  const latestBlock = await db.l2Block.getLatestBlock();
-  res.status(200).send(JSON.stringify(latestBlock));
+  const latestBlockData = await dbWrapper.getLatest(
+    ["l2", "blocks"],
+    db.l2Block.getLatestBlock
+  );
+  if (!latestBlockData) throw new Error("Latest block not found");
+  res.status(200).send(latestBlockData);
 });
 
 export const openapi_GET_BLOCK = {
@@ -75,9 +79,11 @@ export const openapi_GET_BLOCK = {
 
 export const GET_BLOCK = asyncHandler(async (req, res) => {
   const { heightOrHash } = getBlockByHeightOrHashSchema.parse(req).params;
-  const block = await db.l2Block.getBlock(heightOrHash);
-  if (!block) throw new Error("Block not found");
-  res.status(200).send(JSON.stringify(block));
+  const blockData = await dbWrapper.get(["l2", "blocks", heightOrHash], () =>
+    db.l2Block.getBlock(heightOrHash)
+  );
+  if (!blockData) throw new Error("Block not found");
+  res.status(200).send(blockData);
 });
 
 export const openapi_GET_BLOCKS = {
@@ -107,7 +113,14 @@ export const openapi_GET_BLOCKS = {
 
 export const GET_BLOCKS = asyncHandler(async (req, res) => {
   const { from, to } = getBlocksSchema.parse(req).query;
-  const blocks = await db.l2Block.getBlocks({ from, to });
-  if (!blocks) throw new Error("Blocks not found");
-  res.status(200).send(JSON.stringify(blocks));
+  const blocksData =
+    !from && !to
+      ? await dbWrapper.getLatest(["l2", "blocks"], () =>
+          db.l2Block.getLatestBlock()
+        )
+      : await dbWrapper.get(["l2", "blocks", from, to], () =>
+          db.l2Block.getBlocks({ from, to })
+        );
+  if (!blocksData) throw new Error("Blocks not found");
+  res.status(200).send(blocksData);
 });

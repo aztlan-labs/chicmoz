@@ -7,6 +7,7 @@ import {
 import {
   contractInstanceResponse,
   contractInstanceResponseArray,
+  dbWrapper,
 } from "./utils/index.js";
 
 export const openapi_GET_L2_CONTRACT_INSTANCE = {
@@ -30,10 +31,12 @@ export const openapi_GET_L2_CONTRACT_INSTANCE = {
 
 export const GET_L2_CONTRACT_INSTANCE = asyncHandler(async (req, res) => {
   const { address } = getContractInstanceSchema.parse(req).params;
-  const instance =
-    await db.l2Contract.getL2DeployedContractInstanceByAddress(address);
-  if (!instance) throw new Error("Contract instance not found");
-  res.status(200).send(JSON.stringify(instance));
+  const instanceData = await dbWrapper.get(
+    ["l2", "contracts", address],
+    () => db.l2Contract.getL2DeployedContractInstanceByAddress(address)
+  );
+  if (!instanceData) throw new Error("Contract instance not found");
+  res.status(200).send(instanceData);
 });
 
 export const openapi_GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH = {
@@ -59,9 +62,12 @@ export const GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH = asyncHandler(
   async (req, res) => {
     const { blockHash } =
       getContractInstancesByBlockHashSchema.parse(req).params;
-    const instances =
-      await db.l2Contract.getL2DeployedContractInstancesByBlockHash(blockHash);
+    const instances = await dbWrapper.get(
+      ["l2", "contracts", "block", blockHash],
+      () =>
+        db.l2Contract.getL2DeployedContractInstancesByBlockHash(blockHash)
+    );
     if (!instances) throw new Error("Contract instances not found");
-    res.status(200).send(JSON.stringify(instances));
+    res.status(200).send(instances);
   }
 );
