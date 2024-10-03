@@ -7,34 +7,32 @@ import { aztecExplorer } from "~/service/constants";
 import client, { validateResponse } from "./client";
 
 export const TxEffectsAPI = {
-  getTxEffectById: async (txId: string): Promise<number> => {
-    const response = await client.get(aztecExplorer.getL2TxEffectById, {
-      params: {
-        id: txId,
-      },
-    });
-    return validateResponse(z.number(), response.data);
+  getTxEffectByHash: async (txHash: string): Promise<ChicmozL2TxEffect> => {
+    const response = await client.get(
+      `${aztecExplorer.getL2TxEffectByHash}/${txHash}`,
+    );
+    return validateResponse(chicmozL2TxEffectSchema, response.data);
   },
   getTxEffectsByHeight: async (
-    height: number
+    height: number,
   ): Promise<ChicmozL2TxEffect[]> => {
     const response = await client.get(
-      aztecExplorer.getL2TxEffectsByHeight(height)
+      aztecExplorer.getL2TxEffectsByHeight(height),
     );
     return validateResponse(z.array(chicmozL2TxEffectSchema), response.data);
   },
   getTxEffectByHeightAndIndex: async (
     height: number,
-    index: number
+    index: number,
   ): Promise<number> => {
     const response = await client.get(
-      aztecExplorer.getL2TxEffectByHeightAndIndex(height, index)
+      aztecExplorer.getL2TxEffectByHeightAndIndex(height, index),
     );
     return validateResponse(z.number(), response.data);
   },
   getTxEffectsByHeightRange: async (
     start: number,
-    end: number
+    end: number,
   ): Promise<number> => {
     const response = await client.get(
       aztecExplorer.getL2TxEffectsByHeightRange,
@@ -43,7 +41,7 @@ export const TxEffectsAPI = {
           start,
           end,
         },
-      }
+      },
     );
     return validateResponse(z.number(), response.data);
   },
