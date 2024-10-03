@@ -1,10 +1,10 @@
 import { getCache as c } from "../../../../cache/index.js";
 import { controllers as db } from "../../../../database/index.js";
 import { dbParseErrorCallback } from "../../../../database/controllers/utils.js";
-import { CACHE_TTL_SECONDS } from "../../../../environment.js";
+import { CACHE_LATEST_TTL_SECONDS, CACHE_TTL_SECONDS } from "../../../../environment.js";
+import {logger} from "../../../../logger.js";
 
 const LATEST_HEIGHT = "latestHeight";
-const LATEST_TTL_SECONDS = 2;
 
 export const getLatestHeight = async () => {
   let val = await c().get(LATEST_HEIGHT);
@@ -14,7 +14,7 @@ export const getLatestHeight = async () => {
     val = block?.header.globalVariables.blockNumber ?? null;
     if (val) {
       await c().set(LATEST_HEIGHT, val, {
-        EX: LATEST_TTL_SECONDS,
+        EX: CACHE_LATEST_TTL_SECONDS,
       });
     }
   }
@@ -29,7 +29,7 @@ export const getLatest = async <DbReturnType>(
   const latestHeight = await getLatestHeight();
   if (!latestHeight) throw new Error("CACHE_ERROR: latest height not found");
   // NOTE: we add one second to the TTL to ensure that stale cache is not stored
-  return get([...keys, latestHeight], dbFn, LATEST_TTL_SECONDS + 1);
+  return get([...keys, latestHeight], dbFn, CACHE_LATEST_TTL_SECONDS + 1);
 };
 
 export const get = async <DbReturnType>(
@@ -47,6 +47,8 @@ export const get = async <DbReturnType>(
         EX: ttl,
       });
     }
+  } else {
+    logger.info(`Cache hit for ${cacheKey}`);
   }
   if (!val) throw new Error(`${cacheKey} not found`);
   return val;
