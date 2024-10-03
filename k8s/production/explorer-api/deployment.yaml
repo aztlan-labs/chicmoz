@@ -63,6 +63,10 @@ spec:
               value: "admin"
             - name: POSTGRES_PASSWORD
               value: "secret-local-password" # TODO: change to env-var
+            - name: REDIS_HOST
+              value: "redis-master"
+            - name: REDIS_PORT
+              value: "6379"
           readinessProbe:
             httpGet:
               path: /health

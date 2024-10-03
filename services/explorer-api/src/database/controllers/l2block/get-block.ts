@@ -25,7 +25,6 @@ import {
 } from "../../../database/schema/l2block/index.js";
 import { DB_MAX_BLOCKS } from "../../../environment.js";
 import { getTxEffectNestedById } from "../l2TxEffect/get-tx-effect.js";
-import { dbParseErrorCallback } from "../utils.js";
 
 enum GetTypes {
   BlockHeight,
@@ -271,7 +270,6 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2Block[]> => {
     blocks.push(
       await chicmozL2BlockSchema
         .parseAsync(blockData)
-        .catch(dbParseErrorCallback)
     );
   }
   return blocks;

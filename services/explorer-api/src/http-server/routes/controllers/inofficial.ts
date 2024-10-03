@@ -9,7 +9,7 @@ import {
   txEffectIndex,
   txHash,
 } from "../paths_and_validation.js";
-import {PUBLIC_API_KEY} from "../../../environment.js";
+import { PUBLIC_API_KEY } from "../../../environment.js";
 
 const SUB_PATH = `/v1/${PUBLIC_API_KEY}`;
 
@@ -87,11 +87,15 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
     </head>
     <body>
       <ul>
-        ${r.map((route) => `<li><a href=${SUB_PATH + route}>${route}</a></li>`).join("")}
+        ${r
+          .map((route) => `<li><a href=${SUB_PATH + route}>${route}</a></li>`)
+          .join("")}
       </ul>
       <br>
       <ul>
-        ${statsRoutes.map((route) => `<li><a href=${SUB_PATH + route}>${route}</a></li>`).join("")}
+        ${statsRoutes
+          .map((route) => `<li><a href=${SUB_PATH + route}>${route}</a></li>`)
+          .join("")}
     </body>
   </html>
   `;
