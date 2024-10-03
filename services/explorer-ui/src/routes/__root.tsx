@@ -5,16 +5,13 @@ import { Header } from "~/components/header";
 import { TailwindIndicator } from "~/components/ui/tailwind-indicator";
 
 const TanStackRouterDevtools =
-  process.env.NODE_ENV === "production"
-    ? () => null // Render nothing in production
-    : lazy(() =>
-        // Lazy load in development
+  process.env.NODE_ENV === "development"
+    ? lazy(() =>
         import("@tanstack/router-devtools").then((res) => ({
           default: res.TanStackRouterDevtools,
-          // For Embedded Mode
-          // default: res.TanStackRouterDevtoolsPanel
         }))
-      );
+      )
+    : () => null;
 
 export const Route = createRootRoute({
   component: () => (
