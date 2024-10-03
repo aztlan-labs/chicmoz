@@ -22,7 +22,6 @@ const BlocksIndexLazyImport = createFileRoute('/blocks/')()
 const TransactionsTransactionIdLazyImport = createFileRoute(
   '/transactions/$transactionId',
 )()
-const ContractsContractsLazyImport = createFileRoute('/contracts/contracts')()
 const ContractsContractAddressLazyImport = createFileRoute(
   '/contracts/$contractAddress',
 )()
@@ -54,13 +53,6 @@ const TransactionsTransactionIdLazyRoute =
   } as any).lazy(() =>
     import('./routes/transactions/$transactionId.lazy').then((d) => d.Route),
   )
-
-const ContractsContractsLazyRoute = ContractsContractsLazyImport.update({
-  path: '/contracts/contracts',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/contracts/contracts.lazy').then((d) => d.Route),
-)
 
 const ContractsContractAddressLazyRoute =
   ContractsContractAddressLazyImport.update({
@@ -102,13 +94,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContractsContractAddressLazyImport
       parentRoute: typeof rootRoute
     }
-    '/contracts/contracts': {
-      id: '/contracts/contracts'
-      path: '/contracts/contracts'
-      fullPath: '/contracts/contracts'
-      preLoaderRoute: typeof ContractsContractsLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/transactions/$transactionId': {
       id: '/transactions/$transactionId'
       path: '/transactions/$transactionId'
@@ -139,7 +124,6 @@ export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
   BlocksBlockNumberLazyRoute,
   ContractsContractAddressLazyRoute,
-  ContractsContractsLazyRoute,
   TransactionsTransactionIdLazyRoute,
   BlocksIndexLazyRoute,
   TransactionsIndexLazyRoute,
@@ -156,7 +140,6 @@ export const routeTree = rootRoute.addChildren({
         "/",
         "/blocks/$blockNumber",
         "/contracts/$contractAddress",
-        "/contracts/contracts",
         "/transactions/$transactionId",
         "/blocks/",
         "/transactions/"
@@ -170,9 +153,6 @@ export const routeTree = rootRoute.addChildren({
     },
     "/contracts/$contractAddress": {
       "filePath": "contracts/$contractAddress.lazy.tsx"
-    },
-    "/contracts/contracts": {
-      "filePath": "contracts/contracts.lazy.tsx"
     },
     "/transactions/$transactionId": {
       "filePath": "transactions/$transactionId.lazy.tsx"
