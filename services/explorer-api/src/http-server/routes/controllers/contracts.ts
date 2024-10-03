@@ -4,6 +4,7 @@ import {
   getContractInstanceSchema,
   getContractInstancesByBlockHashSchema,
 } from "../paths_and_validation.js";
+import {contractInstanceResponse, contractInstanceResponseArray} from "./utils.js";
 
 export const openapi_GET_L2_CONTRACT_INSTANCE = {
   "/l2/contracts/{address}": {
@@ -19,18 +20,7 @@ export const openapi_GET_L2_CONTRACT_INSTANCE = {
           },
         },
       ],
-      responses: {
-        "200": {
-          description: "Successful response",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-              },
-            },
-          },
-        },
-      },
+      responses: contractInstanceResponse,
     },
   },
 };
@@ -57,21 +47,7 @@ export const openapi_GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH = {
           },
         },
       ],
-      responses: {
-        "200": {
-          description: "Successful response",
-          content: {
-            "application/json": {
-              schema: {
-                type: "array",
-                items: {
-                  type: "object",
-                },
-              },
-            },
-          },
-        },
-      },
+      responses: contractInstanceResponseArray,
     },
   },
 };

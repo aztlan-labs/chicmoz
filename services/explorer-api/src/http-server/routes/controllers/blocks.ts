@@ -4,6 +4,7 @@ import {
   getBlockByHeightOrHashSchema,
   getBlocksSchema,
 } from "../paths_and_validation.js";
+import {blockResponse, blockResponseArray} from "./utils.js";
 
 export const openapi_GET_LATEST_HEIGHT = {
   "/l2/latest-height": {
@@ -41,18 +42,7 @@ export const openapi_GET_LATEST_BLOCK = {
   "/l2/blocks/latest": {
     get: {
       summary: "Get the latest block",
-      responses: {
-        "200": {
-          description: "Successful response",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-              },
-            },
-          },
-        },
-      },
+      responses: blockResponse,
     },
   },
 };
@@ -84,18 +74,7 @@ export const openapi_GET_BLOCK = {
           },
         },
       ],
-      responses: {
-        "200": {
-          description: "Successful response",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-              },
-            },
-          },
-        },
-      },
+      responses: blockResponse,
     },
   },
 };
@@ -127,21 +106,7 @@ export const openapi_GET_BLOCKS = {
           },
         },
       ],
-      responses: {
-        "200": {
-          description: "Successful response",
-          content: {
-            "application/json": {
-              schema: {
-                type: "array",
-                items: {
-                  type: "object",
-                },
-              },
-            },
-          },
-        },
-      },
+      responses: blockResponseArray,
     },
   },
 };

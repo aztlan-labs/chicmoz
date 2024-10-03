@@ -1,7 +1,7 @@
 import { openApiPaths } from "./routes/index.js";
 
 export const genereateOpenApiSpec = () => ({
-  "openapi": "3.0.0",
+  "openapi": "3.1.0",
   "info": {
     "title": "Aztec Scan API",
     "version": "0.1.0",

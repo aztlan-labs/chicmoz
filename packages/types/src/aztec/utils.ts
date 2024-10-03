@@ -42,7 +42,7 @@ export type StringifiedBuffer = {
 
 export const bufferSchema = z.preprocess(
   (val) => {
-    if ((val as StringifiedBuffer).data)
+    if (val && (val as StringifiedBuffer).data)
       return Buffer.from((val as StringifiedBuffer).data);
     return val;
   },

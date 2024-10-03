@@ -5,6 +5,7 @@ import {
   getTxEffectsByBlockHeightSchema,
   getTxEffectsByTxHashSchema,
 } from "../paths_and_validation.js";
+import { txEffectResponse, txEffectResponseArray } from "./utils.js";
 
 export const openapi_GET_L2_TX_EFFECTS_BY_BLOCK_HEIGHT = {
   "/l2/blocks/{blockHeight}/txEffects": {
@@ -20,21 +21,7 @@ export const openapi_GET_L2_TX_EFFECTS_BY_BLOCK_HEIGHT = {
           },
         },
       ],
-      responses: {
-        "200": {
-          description: "Successful response",
-          content: {
-            "application/json": {
-              schema: {
-                type: "array",
-                items: {
-                  type: "object",
-                },
-              },
-            },
-          },
-        },
-      },
+      responses: txEffectResponseArray,
     },
   },
 };
@@ -71,18 +58,7 @@ export const openapi_GET_L2_TX_EFFECT_BY_BLOCK_HEIGHT_AND_INDEX = {
           },
         },
       ],
-      responses: {
-        "200": {
-          description: "Successful response",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-              },
-            },
-          },
-        },
-      },
+      responses: txEffectResponse,
     },
   },
 };
@@ -115,21 +91,7 @@ export const openapi_GET_L2_TX_EFFECT_BY_TX_HASH = {
           },
         },
       ],
-      responses: {
-        "200": {
-          description: "Successful response",
-          content: {
-            "application/json": {
-              schema: {
-                type: "array",
-                items: {
-                  type: "object",
-                },
-              },
-            },
-          },
-        },
-      },
+      responses: txEffectResponse,
     },
   },
 };
