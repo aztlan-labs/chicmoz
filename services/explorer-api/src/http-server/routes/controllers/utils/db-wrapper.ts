@@ -1,8 +1,10 @@
 import { getCache as c } from "../../../../cache/index.js";
 import { controllers as db } from "../../../../database/index.js";
 import { dbParseErrorCallback } from "../../../../database/controllers/utils.js";
-import { CACHE_LATEST_TTL_SECONDS, CACHE_TTL_SECONDS } from "../../../../environment.js";
-import {logger} from "../../../../logger.js";
+import {
+  CACHE_LATEST_TTL_SECONDS,
+  CACHE_TTL_SECONDS,
+} from "../../../../environment.js";
 
 const LATEST_HEIGHT = "latestHeight";
 
@@ -47,8 +49,6 @@ export const get = async <DbReturnType>(
         EX: ttl,
       });
     }
-  } else {
-    logger.info(`Cache hit for ${cacheKey}`);
   }
   if (!val) throw new Error(`${cacheKey} not found`);
   return val;
