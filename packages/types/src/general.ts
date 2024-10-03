@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const hexStringSchema = z.custom<`0x${string}`>(
   (value) => {
-    return (value as string).startsWith("0x");
+    return typeof value === "string" && value.startsWith("0x");
   },
   { message: "Expected a hex string" }
 );

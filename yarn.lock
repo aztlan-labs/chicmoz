@@ -29,6 +29,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@anatine/zod-openapi@npm:^2.2.6":
+  version: 2.2.6
+  resolution: "@anatine/zod-openapi@npm:2.2.6"
+  dependencies:
+    ts-deepmerge: "npm:^6.0.3"
+  peerDependencies:
+    openapi3-ts: ^4.1.2
+    zod: ^3.20.0
+  checksum: 06f0dad3d653dfe2dfd5ac04052418014f5d4d13572b90aa023281899e126a07e5a2e2468fd642ab0b18ec214646108125025da95e428c42125424a1717bd1a4
+  languageName: node
+  linkType: hard
+
 "@aztec/aztec.js@npm:0.55.1":
   version: 0.55.1
   resolution: "@aztec/aztec.js@npm:0.55.1"
@@ -898,6 +910,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@chicmoz/explorer-api@workspace:services/explorer-api"
   dependencies:
+    "@anatine/zod-openapi": "npm:^2.2.6"
     "@aztec/aztec.js": "npm:0.55.1"
     "@aztec/circuits.js": "npm:0.55.1"
     "@aztec/protocol-contracts": "npm:0.55.1"
@@ -12525,6 +12538,13 @@ __metadata:
   peerDependencies:
     typescript: ">=4.2.0"
   checksum: f54a0ba9ed56ce66baea90a3fa087a484002e807f28a8ccb2d070c75e76bde64bd0f6dce98b3802834156306050871b67eec325cb4e918015a360a3f0868c77c
+  languageName: node
+  linkType: hard
+
+"ts-deepmerge@npm:^6.0.3":
+  version: 6.2.1
+  resolution: "ts-deepmerge@npm:6.2.1"
+  checksum: b73bc0a0530b26b3969f994483abbb33a8514a9b345e7095cf2add5242cd1fe388c1007c4989e2d8b193fe608f9d7a443025a635fd4331bd0ceb76c73f748adf
   languageName: node
   linkType: hard
 

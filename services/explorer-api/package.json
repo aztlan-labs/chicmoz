@@ -5,6 +5,7 @@
   "main": "index.js",
   "license": "UNLICENSED",
   "dependencies": {
+    "@anatine/zod-openapi": "2.2.6",
     "@aztec/aztec.js": "0.55.1",
     "@aztec/circuits.js": "0.55.1",
     "@aztec/protocol-contracts": "0.55.1",
