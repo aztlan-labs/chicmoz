@@ -1,8 +1,17 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import { lazy } from "react";
 import { Footer } from "~/components/footer";
 import { Header } from "~/components/header";
 import { TailwindIndicator } from "~/components/ui/tailwind-indicator";
+
+const TanStackRouterDevtools =
+  process.env.NODE_ENV === "development"
+    ? lazy(() =>
+        import("@tanstack/router-devtools").then((res) => ({
+          default: res.TanStackRouterDevtools,
+        }))
+      )
+    : () => null;
 
 export const Route = createRootRoute({
   component: () => (
