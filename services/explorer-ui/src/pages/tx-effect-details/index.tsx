@@ -1,26 +1,27 @@
-import { type FC, useState } from "react";
+import { useParams } from "@tanstack/react-router";
+import { useState, type FC } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { Button } from "~/components/ui";
 import { useGetTxEffectByHash } from "~/hooks/";
+import { API_URL, aztecExplorer } from "~/service/constants";
+import { txEffectTabs, type TabId } from "./constants";
 import { getTxEffectData } from "./utils";
-import { useParams } from "@tanstack/react-router";
-import { type TabId, txEffectTabs } from "./constants";
+
+const API_ENDPOINT_URL = `${API_URL}/${aztecExplorer.getL2TxEffectByHash}`;
 
 export const TxEffectDetails: FC = () => {
   const [selectedTab, setSelectedTab] = useState<TabId>("ecryptedLogs");
   const { txHash } = useParams({
     from: "/tx-effects/$txHash",
   });
-  const {
-    data: txEffects,
-    isLoading,
-    error,
-  } = useGetTxEffectByHash(txHash);
+  const { data: txEffects, isLoading, error } = useGetTxEffectByHash(txHash);
 
   if (!txHash) <div> No txEffect hash</div>;
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error</div>;
   if (!txEffects) return <div>No data</div>;
+
+  const apiEndpointUrl = `${API_ENDPOINT_URL}${txHash}`;
 
   return (
     <div className="mx-auto px-[70px] max-w-[1440px]">
@@ -28,6 +29,9 @@ export const TxEffectDetails: FC = () => {
         <div>
           <h2>TxEffect details</h2>
           <p>{txEffects.txHash}</p>
+          <a href={apiEndpointUrl} target="_blank" rel="noreferrer">
+            (API Endpoint)
+          </a>
         </div>
         <div className="flex flex-col gap-4 mt-8">
           <div className="bg-white rounded-lg shadow-md p-4">
@@ -66,31 +70,33 @@ export const TxEffectDetails: FC = () => {
                         <KeyValueDisplay key={index} data={flattenedEntries} />
                       </div>
                     );
-                  },
+                  }
                 )}
               </div>
             )}
             {selectedTab === "unencryptedLogs" && (
               <div className="">
-                {txEffects.unencryptedLogs.functionLogs.map((unencrypted, index) => {
-                  const entries = unencrypted.logs.map((log) => {
-                    return Object.entries(log).map(([key, value]) => ({
-                      label: key,
-                      value: value,
-                      isClickable: false,
-                    }));
-                  });
-                  // Flatten the nested arrays
-                  const flattenedEntries = entries.flat();
+                {txEffects.unencryptedLogs.functionLogs.map(
+                  (unencrypted, index) => {
+                    const entries = unencrypted.logs.map((log) => {
+                      return Object.entries(log).map(([key, value]) => ({
+                        label: key,
+                        value: value,
+                        isClickable: false,
+                      }));
+                    });
+                    // Flatten the nested arrays
+                    const flattenedEntries = entries.flat();
 
-                  // Render KeyValueDisplay with the flattened entries
-                  return (
-                    <div key={index}>
-                      <h3>Log {index + 1}</h3>
-                      <KeyValueDisplay key={index} data={flattenedEntries} />
-                    </div>
-                  );
-                })}
+                    // Render KeyValueDisplay with the flattened entries
+                    return (
+                      <div key={index}>
+                        <h3>Log {index + 1}</h3>
+                        <KeyValueDisplay key={index} data={flattenedEntries} />
+                      </div>
+                    );
+                  }
+                )}
               </div>
             )}
             {selectedTab === "nullifiers" && (
@@ -123,7 +129,7 @@ export const TxEffectDetails: FC = () => {
                         <KeyValueDisplay key={index} data={flattenedEntries} />
                       </div>
                     );
-                  },
+                  }
                 )}
               </div>
             )}

@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios, { type AxiosError } from "axios";
 import { type z } from "zod";
 import { API_URL } from "~/service/constants";
 
