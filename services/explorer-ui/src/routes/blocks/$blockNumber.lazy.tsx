@@ -1,5 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
+import {txEffectSchema} from "~/components/tx-effects/tx-effects-schema";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { Button } from "~/components/ui";
 import { useGetBlockByHeight } from "~/hooks";
@@ -78,14 +79,16 @@ function Block() {
 
   const getTxEffects = () => {
     return latestBlock.body.txEffects.map((tx) => {
-      return {
+      return txEffectSchema.parse({
+        blockNumber: latestBlock.height,
+        timestamp: latestBlock.header.globalVariables.timestamp,
         txHash: tx.txHash,
         transactionFee: Number(tx.transactionFee),
         logCount:
           parseInt(tx.encryptedLogsLength, 16) +
           parseInt(tx.unencryptedLogsLength, 16) +
           parseInt(tx.noteEncryptedLogsLength, 16),
-      };
+      });
     });
   };
 

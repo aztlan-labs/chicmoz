@@ -1,9 +1,11 @@
 import { z } from "zod";
 
-export type TxEffectsTableSchema = z.infer<typeof txEffectsSchema>;
+export type TxEffectTableSchema = z.infer<typeof txEffectSchema>;
 
-const txEffectsSchema = z.object({
+export const txEffectSchema = z.object({
   txHash: z.string(),
   transactionFee: z.number(),
   logCount: z.number(),
+  blockNumber: z.number(),
+  timestamp: z.number(),
 });

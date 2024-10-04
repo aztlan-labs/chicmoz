@@ -1,10 +1,10 @@
-import { FC } from "react";
+import { type FC } from "react";
 import { DataTable } from "~/components/data-table";
 import { TxEffectsTableColumns } from "./tx-effects-columns";
-import { type TxEffectsTableSchema } from "./tx-effects-schema";
+import { type TxEffectTableSchema } from "./tx-effects-schema";
 
 interface Props {
-  txEffects: TxEffectsTableSchema[];
+  txEffects: TxEffectTableSchema[];
 }
 
 export const TxEffectsTable: FC<Props> = ({ txEffects }) => {
