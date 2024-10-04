@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { type FC, useState } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { Button } from "~/components/ui";
 import { useGetTxEffectByHash } from "~/hooks/";
@@ -8,16 +8,16 @@ import { type TabId, txEffectTabs } from "./constants";
 
 export const TxEffectDetails: FC = () => {
   const [selectedTab, setSelectedTab] = useState<TabId>("ecryptedLogs");
-  const { transactionId } = useParams({
-    from: "/transactions/$transactionId",
+  const { txEffectHash } = useParams({
+    from: "/tx-effects/$txEffectHash",
   });
   const {
     data: txEffects,
     isLoading,
     error,
-  } = useGetTxEffectByHash(transactionId);
+  } = useGetTxEffectByHash(txEffectHash);
 
-  if (!transactionId) <div> No transaction id</div>;
+  if (!txEffectHash) <div> No txEffect hash</div>;
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error</div>;
   if (!txEffects) return <div>No data</div>;
@@ -26,7 +26,7 @@ export const TxEffectDetails: FC = () => {
     <div className="mx-auto px-[70px] max-w-[1440px]">
       <div>
         <div>
-          <h2>Transaction details</h2>
+          <h2>TxEffect details</h2>
           <p>{txEffects.txHash}</p>
         </div>
         <div className="flex flex-col gap-4 mt-8">
@@ -72,11 +72,25 @@ export const TxEffectDetails: FC = () => {
             )}
             {selectedTab === "unencryptedLogs" && (
               <div className="">
-                {txEffects.nullifiers.map((nullifier) => (
-                  <KeyValueDisplay
-                    data={[{ label: "Nullifier", value: nullifier }]}
-                  />
-                ))}
+                {txEffects.unencryptedLogs.functionLogs.map((unencrypted, index) => {
+                  const entries = unencrypted.logs.map((log) => {
+                    return Object.entries(log).map(([key, value]) => ({
+                      label: key,
+                      value: value,
+                      isClickable: false,
+                    }));
+                  });
+                  // Flatten the nested arrays
+                  const flattenedEntries = entries.flat();
+
+                  // Render KeyValueDisplay with the flattened entries
+                  return (
+                    <div key={index}>
+                      <h3>Log {index + 1}</h3>
+                      <KeyValueDisplay key={index} data={flattenedEntries} />
+                    </div>
+                  );
+                })}
               </div>
             )}
             {selectedTab === "nullifiers" && (
@@ -88,11 +102,11 @@ export const TxEffectDetails: FC = () => {
                 ))}
               </div>
             )}
-            {selectedTab === "noteEncryption" && (
+            {selectedTab === "noteEncryptedLogs" && (
               <div className="flex flex-col gap-4 w-10 mb-4">
                 {txEffects.noteEncryptedLogs.functionLogs.map(
-                  (noteEncryption, index) => {
-                    const entries = noteEncryption.logs.map((log) => {
+                  (noteEncryptedLogs, index) => {
+                    const entries = noteEncryptedLogs.logs.map((log) => {
                       return Object.entries(log).map(([key, value]) => ({
                         label: key,
                         value: value,
@@ -135,7 +149,7 @@ export const TxEffectDetails: FC = () => {
               <div className="flex flex-col gap-19 w-auto mb-4">
                 {txEffects.publicDataWrites.map((publicDataWrite, index) => (
                   <div key={index}>
-                    <h4>Log {index + 1}</h4>
+                    <h4>Write {index + 1}</h4>
                     <KeyValueDisplay
                       data={[
                         {

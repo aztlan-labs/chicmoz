@@ -18,10 +18,10 @@ export const Header = () => {
             {routes.blocks.title}
           </Link>
           <Link
-            to={routes.transactions.route}
+            to={routes.txEffects.route}
             className="[&.active]:text-white mr-[30px] [&.active]:font-bold text-grey-light hover:text-white"
           >
-            {routes.transactions.title}
+            {routes.txEffects.title}
           </Link>
           <Link
             to={routes.contracts.route}

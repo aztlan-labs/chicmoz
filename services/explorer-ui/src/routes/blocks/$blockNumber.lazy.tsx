@@ -103,9 +103,9 @@ function Block() {
             </div>
             <div className="flex flex-row gap-4 w-10 mb-4">
               <Button variant={"primary"}>
-                <p>View Transactions</p>
+                <p>View TxEffects</p>
               </Button>
-              <Button variant={"primary"}>View Transactions</Button>
+              <Button variant={"primary"}>View TxEffects</Button>
             </div>
             <TxEffectsTable txEffects={getTxEffects()} />
           </div>
