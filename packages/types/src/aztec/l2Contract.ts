@@ -36,7 +36,6 @@ export const chicmozL2ContractInstanceDeluxeSchema = z.object({
   blockHeight: z.number().optional(),
 });
 
-// TODO: come up with a better name for this type
-export type ChicmozL2ContractInstanceDeluxe =
-  ChicmozL2ContractInstanceDeployedEvent &
-    ChicmozL2ContractClassRegisteredEvent;
+export type ChicmozL2ContractInstanceDeluxe = z.infer<
+  typeof chicmozL2ContractInstanceDeluxeSchema
+>;

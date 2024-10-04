@@ -7,7 +7,7 @@ interface Props {
   contracts: ContractTableSchema[];
 }
 
-export const contractsTable: FC<Props> = ({ contracts }) => {
+export const ContractsTable: FC<Props> = ({ contracts }) => {
   return (
     <section className="relative mx-auto w-full transition-all">
       <DataTable data={contracts} columns={contractsTableColumns} />
