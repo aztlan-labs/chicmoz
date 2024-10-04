@@ -55,8 +55,8 @@ export const routes = {
         route: "/",
         title: "All tx effects",
       },
-      txEffectHash: {
-        route: "/$txEffectHash",
+      txHash: {
+        route: "/$txHash",
         title: "Tx Effect Details",
       },
     },

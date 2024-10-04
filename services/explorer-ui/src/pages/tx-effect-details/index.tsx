@@ -8,16 +8,16 @@ import { type TabId, txEffectTabs } from "./constants";
 
 export const TxEffectDetails: FC = () => {
   const [selectedTab, setSelectedTab] = useState<TabId>("ecryptedLogs");
-  const { txEffectHash } = useParams({
-    from: "/tx-effects/$txEffectHash",
+  const { txHash } = useParams({
+    from: "/tx-effects/$txHash",
   });
   const {
     data: txEffects,
     isLoading,
     error,
-  } = useGetTxEffectByHash(txEffectHash);
+  } = useGetTxEffectByHash(txHash);
 
-  if (!txEffectHash) <div> No txEffect hash</div>;
+  if (!txHash) <div> No txEffect hash</div>;
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error</div>;
   if (!txEffects) return <div>No data</div>;
