@@ -27,7 +27,7 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
       // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       const r = routes.txEffects.route + "/" + txHash;
       return (
-        <div className="text-purple-light">
+        <div className="text-purple-light font-mono">
           <Link to={r}>{row.getValue("txHash")}</Link>
         </div>
       );
