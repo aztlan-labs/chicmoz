@@ -3,6 +3,7 @@ import { controllers as db } from "../../../database/index.js";
 import {
   getContractInstanceSchema,
   getContractInstancesByBlockHashSchema,
+  getContractInstancesSchema,
 } from "../paths_and_validation.js";
 import {
   contractInstanceResponse,
@@ -36,6 +37,44 @@ export const GET_L2_CONTRACT_INSTANCE = asyncHandler(async (req, res) => {
     () => db.l2Contract.getL2DeployedContractInstanceByAddress(address)
   );
   res.status(200).send(instanceData);
+});
+
+export const openapi_GET_L2_CONTRACT_INSTANCES = {
+  "/l2/contracts": {
+    get: {
+      summary: "Get contract instances between from and to block heights",
+      parameters: [
+        {
+          name: "fromHeight",
+          in: "query",
+          schema: {
+            type: "integer",
+          },
+        },
+        {
+          name: "toHeight",
+          in: "query",
+          schema: {
+            type: "integer",
+          },
+        },
+      ],
+      responses: contractInstanceResponseArray,
+    },
+  },
+};
+
+export const GET_L2_CONTRACT_INSTANCES = asyncHandler(async (req, res) => {
+  const { fromHeight, toHeight } = getContractInstancesSchema.parse(req).query;
+  const instances = await dbWrapper.get(
+    ["l2", "contracts", fromHeight, toHeight],
+    () =>
+      db.l2Contract.getL2DeployedContractInstances({
+        fromHeight,
+        toHeight
+      })
+  );
+  res.status(200).send(instances);
 });
 
 export const openapi_GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH = {

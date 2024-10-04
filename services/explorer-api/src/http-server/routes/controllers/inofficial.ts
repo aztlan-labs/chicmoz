@@ -73,6 +73,7 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
         blockAndAContractInstance.contractInstance.address
       )
     );
+    r.push(paths.contractInstances);
   } else {
     r.push(paths.contractInstancesByBlockHash + "NOT FOUND");
     r.push(paths.contractInstance + "NOT FOUND");

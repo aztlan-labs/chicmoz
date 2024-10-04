@@ -12,6 +12,7 @@ export const openApiPaths = {
   ...controller.openapi_GET_L2_TX_EFFECT_BY_TX_HASH,
   ...controller.openapi_GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH,
   ...controller.openapi_GET_L2_CONTRACT_INSTANCE,
+  ...controller.openapi_GET_L2_CONTRACT_INSTANCES,
 };
 
 export const init = ({ router }: { router: Router }) => {
@@ -28,6 +29,7 @@ export const init = ({ router }: { router: Router }) => {
 
   router.get(paths.contractInstancesByBlockHash, controller.GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH);
   router.get(paths.contractInstance, controller.GET_L2_CONTRACT_INSTANCE);
+  router.get(paths.contractInstances, controller.GET_L2_CONTRACT_INSTANCES);
 
   router.get(paths.statsTotalTxEffects, controller.GET_STATS_TOTAL_TX_EFFECTS);
   router.get(paths.statsTotalTxEffectsLast24h, controller.GET_STATS_TOTAL_TX_EFFECTS_LAST_24H);

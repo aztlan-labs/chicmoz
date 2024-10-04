@@ -11,6 +11,7 @@ export const aztecExplorer = {
     `l2/blocks/${height}/txEffects/${index}`,
   getL2TxEffectsByHeightRange: "",
   getL2ContractInstance: "l2/contract-instances/",
+  getL2ContractInstances: "l2/contract-instances",
   getL2ContractInstancesByBlockHash: (hash: string) =>
     `l2/blocks/${hash}/contract-instances`,
 };

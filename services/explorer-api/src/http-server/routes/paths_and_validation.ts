@@ -21,6 +21,7 @@ export const paths = {
   // contractInstancesByContractClassId: `/l2/contract-classes/:${contractClassId}/contract-instances`,
   contractInstancesByBlockHash: `/l2/blocks/:${blockHash}/contract-instances`,
   contractInstance: `/l2/contract-instances/:${address}`,
+  contractInstances: '/l2/contract-instances',
 
   statsTotalTxEffects: '/l2/stats/total-tx-effects',
   statsTotalTxEffectsLast24h: '/l2/stats/tx-effects-last-24h',
@@ -64,6 +65,13 @@ export const getTxEffectsByTxHashSchema = z.object({
 export const getContractInstanceSchema = z.object({
   params: z.object({
     [address]: hexStringSchema,
+  }),
+});
+
+export const getContractInstancesSchema = z.object({
+  query: z.object({
+    fromHeight: z.coerce.number().optional(),
+    toHeight: z.coerce.number().optional(),
   }),
 });
 
