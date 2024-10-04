@@ -9,11 +9,17 @@ import {
   txEffectIndex,
   txHash,
 } from "../paths_and_validation.js";
-import { PUBLIC_API_KEY } from "../../../environment.js";
+import { NODE_ENV, PUBLIC_API_KEY } from "../../../environment.js";
+import {getCache} from "../../../cache/index.js";
 
 const SUB_PATH = `/v1/${PUBLIC_API_KEY}`;
 
 export const GET_ROUTES = asyncHandler(async (_req, res) => {
+  const cachedHtml = await getCache().get("GET_ROUTES");
+  if (cachedHtml) {
+    res.send(cachedHtml);
+    return;
+  }
   const block = await db.signOfLife.getABlock();
   const blockAndTxEffect = await db.signOfLife.getABlockWithTxEffects();
   const blockAndAContractInstance =
@@ -99,6 +105,8 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
     </body>
   </html>
   `;
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await getCache().set("GET_ROUTES", html, {
+    EX: NODE_ENV === "production" ? 60 : 2,
+  });
   res.send(html);
 });

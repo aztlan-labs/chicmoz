@@ -7,7 +7,8 @@ export const getTotalTxEffects = async (): Promise<number> => {
   return dbRes[0].count;
 };
 
-export const getTotalTxEffectsLast24h = (): number => {
+// eslint-disable-next-line @typescript-eslint/require-await
+export const getTotalTxEffectsLast24h = async (): Promise<number> => {
   // TODO: we need l2Block.header.globalVariables.timestamp as number to sum this
   return -1;
 }
