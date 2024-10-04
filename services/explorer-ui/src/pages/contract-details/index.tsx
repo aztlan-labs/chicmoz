@@ -14,7 +14,7 @@ export const ContractDetails: FC = () => {
     error,
   } = useContractInstance(contractAddress);
 
-  if (!contractAddress) <div> No transaction id</div>;
+  if (!contractAddress) <div> No contract address</div>;
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error</div>;
   if (!contractDetails) return <div>No data</div>;
