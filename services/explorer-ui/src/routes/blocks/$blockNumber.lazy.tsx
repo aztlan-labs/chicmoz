@@ -81,7 +81,7 @@ function Block() {
     return latestBlock.body.txEffects.map((tx) => {
       return txEffectSchema.parse({
         blockNumber: latestBlock.height,
-        timestamp: latestBlock.header.globalVariables.timestamp,
+        timestamp: parseInt(latestBlock.header.globalVariables.timestamp, 16) * 1000,
         txHash: tx.txHash,
         transactionFee: Number(tx.transactionFee),
         logCount:

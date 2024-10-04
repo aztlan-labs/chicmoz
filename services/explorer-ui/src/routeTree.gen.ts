@@ -18,6 +18,7 @@ import { Route as rootRoute } from './routes/__root'
 
 const IndexLazyImport = createFileRoute('/')()
 const TxEffectsIndexLazyImport = createFileRoute('/tx-effects/')()
+const ContractsIndexLazyImport = createFileRoute('/contracts/')()
 const BlocksIndexLazyImport = createFileRoute('/blocks/')()
 const TxEffectsTxHashLazyImport = createFileRoute('/tx-effects/$txHash')()
 const ContractsContractAddressLazyImport = createFileRoute(
@@ -37,6 +38,13 @@ const TxEffectsIndexLazyRoute = TxEffectsIndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
   import('./routes/tx-effects/index.lazy').then((d) => d.Route),
+)
+
+const ContractsIndexLazyRoute = ContractsIndexLazyImport.update({
+  path: '/contracts/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/contracts/index.lazy').then((d) => d.Route),
 )
 
 const BlocksIndexLazyRoute = BlocksIndexLazyImport.update({
@@ -105,6 +113,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlocksIndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/contracts/': {
+      id: '/contracts/'
+      path: '/contracts'
+      fullPath: '/contracts'
+      preLoaderRoute: typeof ContractsIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/tx-effects/': {
       id: '/tx-effects/'
       path: '/tx-effects'
@@ -123,6 +138,7 @@ export const routeTree = rootRoute.addChildren({
   ContractsContractAddressLazyRoute,
   TxEffectsTxHashLazyRoute,
   BlocksIndexLazyRoute,
+  ContractsIndexLazyRoute,
   TxEffectsIndexLazyRoute,
 })
 
@@ -139,6 +155,7 @@ export const routeTree = rootRoute.addChildren({
         "/contracts/$contractAddress",
         "/tx-effects/$txHash",
         "/blocks/",
+        "/contracts/",
         "/tx-effects/"
       ]
     },
@@ -156,6 +173,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/blocks/": {
       "filePath": "blocks/index.lazy.tsx"
+    },
+    "/contracts/": {
+      "filePath": "contracts/index.lazy.tsx"
     },
     "/tx-effects/": {
       "filePath": "tx-effects/index.lazy.tsx"
