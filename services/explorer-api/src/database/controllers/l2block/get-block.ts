@@ -3,7 +3,7 @@ import {
   HexString,
   chicmozL2BlockSchema,
 } from "@chicmoz-pkg/types";
-import { and, asc, desc, eq, getTableColumns, gte, lt } from "drizzle-orm";
+import { asc, desc, eq, getTableColumns } from "drizzle-orm";
 import { getDb as db } from "../../../database/index.js";
 import {
   archive,
@@ -25,6 +25,7 @@ import {
 } from "../../../database/schema/l2block/index.js";
 import { DB_MAX_BLOCKS } from "../../../environment.js";
 import { getTxEffectNestedById } from "../l2TxEffect/get-tx-effect.js";
+import { getBlocksWhereRange } from "../utils.js";
 
 enum GetTypes {
   BlockHeight,
@@ -73,28 +74,8 @@ export const getBlock = async (
 type GetBlocksArgs = GetBlocksByHeight | GetBlocksByHash | GetBlocksByRange;
 
 const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2Block[]> => {
-  let whereRange;
-  if (args.getType === GetTypes.Range) {
-    if (args.to && args.from) {
-      if (args.from > args.to)
-        throw new Error("Invalid range: from is greater than to");
-      if (args.to - args.from > DB_MAX_BLOCKS)
-        throw new Error("Invalid range: too many blocks requested");
-      whereRange = and(
-        gte(l2Block.height, args.from),
-        lt(l2Block.height, args.to)
-      );
-    } else if (args.from) {
-      whereRange = and(
-        gte(l2Block.height, args.from),
-        lt(l2Block.height, args.from + DB_MAX_BLOCKS)
-      );
-    } else if (args.to) {
-      whereRange = lt(l2Block.height, args.to);
-    } else {
-      whereRange = undefined;
-    }
-  }
+  const whereRange =
+    args.getType === GetTypes.Range ? getBlocksWhereRange(args) : undefined;
 
   if (args.getType === GetTypes.BlockHeight)
     if (args.height < 0) throw new Error("Invalid height");
@@ -267,10 +248,7 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2Block[]> => {
       },
     };
 
-    blocks.push(
-      await chicmozL2BlockSchema
-        .parseAsync(blockData)
-    );
+    blocks.push(await chicmozL2BlockSchema.parseAsync(blockData));
   }
   return blocks;
 };

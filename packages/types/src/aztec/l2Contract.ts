@@ -33,6 +33,7 @@ export type ChicmozL2ContractClassRegisteredEvent = z.infer<
 export const chicmozL2ContractInstanceDeluxeSchema = z.object({
   ...chicmozL2ContractInstanceDeployedEventSchema.shape,
   ...chicmozL2ContractClassRegisteredEventSchema.shape,
+  blockHeight: z.number().optional(),
 });
 
 // TODO: come up with a better name for this type

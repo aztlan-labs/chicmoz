@@ -1,5 +1,8 @@
+import { and, gte, lt } from "drizzle-orm";
 import { ZodError } from "zod";
 import { logger } from "../../logger.js";
+import { DB_MAX_BLOCKS } from "../../environment.js";
+import { l2Block } from "../schema/index.js";
 
 export const dbParseErrorCallback = (e: Error) => {
   if (e instanceof ZodError) {
@@ -13,4 +16,30 @@ export const dbParseErrorCallback = (e: Error) => {
     );
     throw e;
   }
+};
+
+export const getBlocksWhereRange = ({
+  from,
+  to,
+}: {
+  from: number | undefined;
+  to: number | undefined;
+}) => {
+  let whereRange;
+  if (to && from) {
+    if (from > to) throw new Error("Invalid range: from is greater than to");
+    if (to - from > DB_MAX_BLOCKS)
+      throw new Error("Invalid range: too wide of a range requested");
+    whereRange = and(gte(l2Block.height, from), lt(l2Block.height, to));
+  } else if (from) {
+    whereRange = and(
+      gte(l2Block.height, from),
+      lt(l2Block.height, from + DB_MAX_BLOCKS)
+    );
+  } else if (to) {
+    whereRange = lt(l2Block.height, to);
+  } else {
+    whereRange = undefined;
+  }
+  return whereRange;
 };
