@@ -26,11 +26,13 @@ export const contractsTableColumns: ColumnDef<ContractTableSchema>[] = [
     ),
     cell: ({ row }) => {
       const address = row.getValue("address");
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-      const r = routes.contracts.route + "/" + address;
+      if (typeof address !== "string") return null;
+      const r = `${routes.contracts.route}/${address}`;
+      const truncatedAddress = `${address.slice(0, 6)}...${address.slice(-4)}`;
       return (
-        <div className="text-purple-light">
-          <Link to={r}>{row.getValue("address")}</Link>
+        // TODO: make text chars equally wide (and not truncate)
+        <div className="text-purple-light font-mono font-bold">
+          <Link to={r}>{truncatedAddress}</Link>
         </div>
       );
     },
@@ -38,25 +40,18 @@ export const contractsTableColumns: ColumnDef<ContractTableSchema>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "blockHash",
+    accessorKey: "version",
     header: ({ column }) => (
       <DataTableColumnHeader
         className="text-purple-dark text-sm "
         column={column}
-        title={text.blockHash}
+        title={text.version}
       />
     ),
-    cell: ({ row }) => {
-      const blockHash = row.getValue("blockHash");
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-      const r = routes.blocks.route + "/" + blockHash;
-      return (
-        <div className="text-purple-light">
-          <Link to={r}>{row.getValue("blockHash")}</Link>
-        </div>
-      );
-    },
-    enableSorting: false,
+    cell: ({ row }) => (
+      <div className="text-purple-dark">{row.getValue("version")}</div>
+    ),
+    enableSorting: true,
     enableHiding: false,
   },
   {
@@ -82,21 +77,6 @@ export const contractsTableColumns: ColumnDef<ContractTableSchema>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "version",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        className="text-purple-dark text-sm "
-        column={column}
-        title={text.version}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="text-purple-dark">{row.getValue("version")}</div>
-    ),
-    enableSorting: true,
-    enableHiding: false,
-  },
-  {
     accessorKey: "contractClassId",
     header: ({ column }) => (
       <DataTableColumnHeader
@@ -106,7 +86,7 @@ export const contractsTableColumns: ColumnDef<ContractTableSchema>[] = [
       />
     ),
     cell: ({ row }) => (
-      <div className="text-purple-dark">{row.getValue("contractClassId")}</div>
+      <div className="text-purple-dark font-mono">{row.getValue("contractClassId")}</div>
     ),
     enableSorting: true,
     enableHiding: false,
@@ -121,7 +101,7 @@ export const contractsTableColumns: ColumnDef<ContractTableSchema>[] = [
       />
     ),
     cell: ({ row }) => (
-      <div className="text-purple-dark">{row.getValue("publicKeysHash")}</div>
+      <div className="text-purple-dark font-mono">{row.getValue("publicKeysHash")}</div>
     ),
     enableSorting: false,
     enableHiding: false,
@@ -136,8 +116,31 @@ export const contractsTableColumns: ColumnDef<ContractTableSchema>[] = [
       />
     ),
     cell: ({ row }) => (
-      <div className="text-purple-dark">{row.getValue("deployer")}</div>
+      <div className="text-purple-dark font-mono">{row.getValue("deployer")}</div>
     ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "blockHash",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className="text-purple-dark text-sm "
+        column={column}
+        title={text.blockHash}
+      />
+    ),
+    cell: ({ row }) => {
+      const blockHash = row.getValue("blockHash");
+      if (typeof blockHash !== "string") return null;
+      const r = `${routes.blocks.route}/${blockHash}`;
+      const truncatedBlockHash = `${blockHash.slice(0, 6)}...${blockHash.slice(-4)}`;
+      return (
+        <div className="text-purple-light font-mono font-bold">
+          <Link to={r}>{truncatedBlockHash}</Link>
+        </div>
+      );
+    },
     enableSorting: false,
     enableHiding: false,
   },
