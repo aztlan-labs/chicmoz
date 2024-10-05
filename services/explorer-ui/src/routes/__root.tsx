@@ -47,14 +47,19 @@ export const routes = {
       },
     },
   },
-  transactions: {
-    // TODO: might not need this
-    route: "/transactions",
-    title: "Transactions",
-  },
-  txEffect: {
-    route: "/tx-effects/",
-    title: "Tx Effect",
+  txEffects: {
+    route: "/tx-effects",
+    title: "Tx Effects",
+    children: {
+      index: {
+        route: "/",
+        title: "All tx effects",
+      },
+      txHash: {
+        route: "/$txHash",
+        title: "Tx Effect Details",
+      },
+    },
   },
   contracts: {
     route: "/contracts",

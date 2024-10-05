@@ -36,7 +36,7 @@ export const BlockTableColumns: ColumnDef<BlockTableSchema>[] = [
       const blockHash = row.getValue("blockHash");
       // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       const r = routes.blocks.route + "/" + blockHash;
-      return (<div className="text-purple-light">
+      return (<div className="text-purple-light font-mono">
         <Link to={r}>{row.getValue("blockHash")}</Link>
       </div>);
     },

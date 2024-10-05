@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { TxEffectDetails } from "~/pages/tx-effect-details";
 
-export const Route = createLazyFileRoute("/transactions/$transactionId")({
+export const Route = createLazyFileRoute("/tx-effects/$txHash")({
   component: TxEffectDetails,
 });

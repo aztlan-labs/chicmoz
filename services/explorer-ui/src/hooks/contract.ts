@@ -6,7 +6,14 @@ export const useContractInstance = (
   address: string,
 ): UseQueryResult<ChicmozL2ContractInstanceDeluxe, Error> => {
   return useQuery<ChicmozL2ContractInstanceDeluxe, Error>({
-    queryKey: ["latestBlock"],
+    queryKey: ["contractInstance", address],
     queryFn: () => ContractL2API.getContracInstance(address),
   });
 };
+
+export const useLatestContractInstances = (): UseQueryResult<ChicmozL2ContractInstanceDeluxe[], Error> => {
+  return useQuery<ChicmozL2ContractInstanceDeluxe[], Error>({
+    queryKey: ["latestContractInstances"],
+    queryFn: () => ContractL2API.getContractInstances(),
+  });
+}

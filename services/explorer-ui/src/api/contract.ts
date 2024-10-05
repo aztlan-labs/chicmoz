@@ -17,6 +17,13 @@ export const ContractL2API = {
       response.data,
     );
   },
+  getContractInstances: async (): Promise<ChicmozL2ContractInstanceDeluxe[]> => {
+    const response = await client.get(aztecExplorer.getL2ContractInstances);
+    return validateResponse(
+      chicmozL2ContractInstanceDeluxeSchema.array(),
+      response.data,
+    );
+  },
   getContracInstanceByBlockHash: async (
     blockHash: string,
   ): Promise<ChicmozL2ContractInstanceDeluxe> => {
