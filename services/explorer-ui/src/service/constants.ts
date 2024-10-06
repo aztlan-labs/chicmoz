@@ -14,6 +14,12 @@ export const aztecExplorer = {
   getL2ContractInstances: "l2/contract-instances",
   getL2ContractInstancesByBlockHash: (hash: string) =>
     `l2/blocks/${hash}/contract-instances`,
+
+  getL2TotalTxEffects: "l2/stats/total-tx-effects",
+  getL2TotalTxEffectsLast24h: "/l2/stats/tx-effects-last-24h",
+  getL2TotalContracts: "/l2/stats/total-contracts",
+  getL2AverageFees: "/l2/stats/average-fees",
+  getL2AverageBlockTime: "/l2/stats/average-block-time",
 };
 
 export const API_URL = import.meta.env.VITE_API_URL;
