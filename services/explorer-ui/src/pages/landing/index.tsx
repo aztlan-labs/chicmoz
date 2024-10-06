@@ -1,7 +1,5 @@
 import { FC } from "react";
-import { blockSchema } from "~/components/blocks/blocks-schema";
 import { BlocksTable } from "~/components/blocks/blocks-table";
-import { txEffectSchema } from "~/components/tx-effects/tx-effects-schema";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { useLatestBlocks } from "~/hooks";
 import {
