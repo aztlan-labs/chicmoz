@@ -20,7 +20,7 @@ const IndexLazyImport = createFileRoute('/')()
 const TxEffectsIndexLazyImport = createFileRoute('/tx-effects/')()
 const ContractsIndexLazyImport = createFileRoute('/contracts/')()
 const BlocksIndexLazyImport = createFileRoute('/blocks/')()
-const TxEffectsTxHashLazyImport = createFileRoute('/tx-effects/$txHash')()
+const TxEffectsHashLazyImport = createFileRoute('/tx-effects/$hash')()
 const ContractsContractAddressLazyImport = createFileRoute(
   '/contracts/$contractAddress',
 )()
@@ -52,11 +52,11 @@ const BlocksIndexLazyRoute = BlocksIndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/blocks/index.lazy').then((d) => d.Route))
 
-const TxEffectsTxHashLazyRoute = TxEffectsTxHashLazyImport.update({
-  path: '/tx-effects/$txHash',
+const TxEffectsHashLazyRoute = TxEffectsHashLazyImport.update({
+  path: '/tx-effects/$hash',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
-  import('./routes/tx-effects/$txHash.lazy').then((d) => d.Route),
+  import('./routes/tx-effects/$hash.lazy').then((d) => d.Route),
 )
 
 const ContractsContractAddressLazyRoute =
@@ -99,11 +99,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContractsContractAddressLazyImport
       parentRoute: typeof rootRoute
     }
-    '/tx-effects/$txHash': {
-      id: '/tx-effects/$txHash'
-      path: '/tx-effects/$txHash'
-      fullPath: '/tx-effects/$txHash'
-      preLoaderRoute: typeof TxEffectsTxHashLazyImport
+    '/tx-effects/$hash': {
+      id: '/tx-effects/$hash'
+      path: '/tx-effects/$hash'
+      fullPath: '/tx-effects/$hash'
+      preLoaderRoute: typeof TxEffectsHashLazyImport
       parentRoute: typeof rootRoute
     }
     '/blocks/': {
@@ -136,7 +136,7 @@ export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
   BlocksBlockNumberLazyRoute,
   ContractsContractAddressLazyRoute,
-  TxEffectsTxHashLazyRoute,
+  TxEffectsHashLazyRoute,
   BlocksIndexLazyRoute,
   ContractsIndexLazyRoute,
   TxEffectsIndexLazyRoute,
@@ -153,7 +153,7 @@ export const routeTree = rootRoute.addChildren({
         "/",
         "/blocks/$blockNumber",
         "/contracts/$contractAddress",
-        "/tx-effects/$txHash",
+        "/tx-effects/$hash",
         "/blocks/",
         "/contracts/",
         "/tx-effects/"
@@ -168,8 +168,8 @@ export const routeTree = rootRoute.addChildren({
     "/contracts/$contractAddress": {
       "filePath": "contracts/$contractAddress.lazy.tsx"
     },
-    "/tx-effects/$txHash": {
-      "filePath": "tx-effects/$txHash.lazy.tsx"
+    "/tx-effects/$hash": {
+      "filePath": "tx-effects/$hash.lazy.tsx"
     },
     "/blocks/": {
       "filePath": "blocks/index.lazy.tsx"

@@ -6,7 +6,7 @@ import { type TxEffectTableSchema } from "./tx-effects-schema";
 import { formatTimeSince } from "~/lib/utils";
 
 const text = {
-  txHash: "TX EFFECT HASH",
+  hash: "TX EFFECT HASH",
   transactionFee: "TRANSACTION FEE",
   logCount: "LOGS COUNT",
   blockHeight: "BLOCK HEIGHT",
@@ -15,19 +15,19 @@ const text = {
 
 export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
   {
-    accessorKey: "txHash",
+    accessorKey: "hash",
     header: ({ column }) => (
       <DataTableColumnHeader
         className="text-purple-dark text-sm "
         column={column}
-        title={text.txHash}
+        title={text.hash}
       />
     ),
     cell: ({ row }) => {
-      const txHash = row.getValue("txHash");
-      if (typeof txHash !== "string") return null;
-      const r = `${routes.txEffects.route}/${txHash}`;
-      const truncatedTxHash = `${txHash.slice(0, 6)}...${txHash.slice(-4)}`;
+      const hash = row.getValue("hash");
+      if (typeof hash !== "string") return null;
+      const r = `${routes.txEffects.route}/${hash}`;
+      const truncatedTxHash = `${hash.slice(0, 6)}...${hash.slice(-4)}`;
       return (
         <div className="text-purple-light font-mono font-bold">
           <Link to={r}>{truncatedTxHash}</Link>

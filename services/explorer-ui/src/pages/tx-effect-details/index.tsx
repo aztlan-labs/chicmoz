@@ -11,24 +11,24 @@ const API_ENDPOINT_URL = `${API_URL}/${aztecExplorer.getL2TxEffectByHash}`;
 
 export const TxEffectDetails: FC = () => {
   const [selectedTab, setSelectedTab] = useState<TabId>("ecryptedLogs");
-  const { txHash } = useParams({
-    from: "/tx-effects/$txHash",
+  const { hash } = useParams({
+    from: "/tx-effects/$hash",
   });
-  const { data: txEffects, isLoading, error } = useGetTxEffectByHash(txHash);
+  const { data: txEffects, isLoading, error } = useGetTxEffectByHash(hash);
 
-  if (!txHash) <div> No txEffect hash</div>;
+  if (!hash) <div> No txEffect hash</div>;
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error</div>;
   if (!txEffects) return <div>No data</div>;
 
-  const apiEndpointUrl = `${API_ENDPOINT_URL}${txHash}`;
+  const apiEndpointUrl = `${API_ENDPOINT_URL}${hash}`;
 
   return (
     <div className="mx-auto px-[70px] max-w-[1440px]">
       <div>
         <div>
           <h2>TxEffect details</h2>
-          <p>{txEffects.txHash}</p>
+          <p>{txEffects.hash}</p>
           <a href={apiEndpointUrl} target="_blank" rel="noreferrer">
             (API Endpoint)
           </a>

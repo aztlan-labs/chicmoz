@@ -23,9 +23,9 @@ export const bodyToTxEffects = pgTable("body_to_tx_effects", {
 });
 
 export const txEffect = pgTable("tx_effect", {
-  // TODO: replace id with txHash as PK - maybe?
+  // TODO: replace id with hash as PK - maybe?
   id: uuid("id").primaryKey().defaultRandom(),
-  txHash: varchar("tx_hash").notNull().$type<HexString>(),
+  hash: varchar("hash").notNull().$type<HexString>(),
   // TODO: move index to junction table
   index: integer("index").notNull(),
   revertCode: smallint("revert_code").notNull(),

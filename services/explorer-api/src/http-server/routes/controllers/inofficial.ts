@@ -7,7 +7,7 @@ import {
   heightOrHash,
   paths,
   txEffectIndex,
-  txHash,
+  txEffectHash,
 } from "../paths_and_validation.js";
 import { NODE_ENV, PUBLIC_API_KEY } from "../../../environment.js";
 import {getCache} from "../../../cache/index.js";
@@ -50,8 +50,8 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
     );
     r.push(
       paths.txEffectsByTxHash.replace(
-        `:${txHash}`,
-        blockAndTxEffect.txEffects[0].txHash
+        `:${txEffectHash}`,
+        blockAndTxEffect.txEffects[0].hash
       )
     );
   } else {

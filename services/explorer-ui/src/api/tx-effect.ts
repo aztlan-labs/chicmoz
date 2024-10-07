@@ -7,9 +7,9 @@ import { aztecExplorer } from "~/service/constants";
 import client, { validateResponse } from "./client";
 
 export const TxEffectsAPI = {
-  getTxEffectByHash: async (txHash: string): Promise<ChicmozL2TxEffect> => {
+  getTxEffectByHash: async (hash: string): Promise<ChicmozL2TxEffect> => {
     const response = await client.get(
-      `${aztecExplorer.getL2TxEffectByHash}/${txHash}`,
+      `${aztecExplorer.getL2TxEffectByHash}/${hash}`,
     );
     return validateResponse(chicmozL2TxEffectSchema, response.data);
   },

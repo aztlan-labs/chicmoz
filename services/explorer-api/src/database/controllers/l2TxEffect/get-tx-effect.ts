@@ -221,15 +221,15 @@ const _getTxEffects = async (
     .catch(dbParseErrorCallback);
 };
 
-export const getTxeffectByTxHash = async (
-  txHash: HexString,
+export const getTxeffectByHash = async (
+  hash: HexString,
 ): Promise<ChicmozL2TxEffect | null> => {
   const dbRes = await db()
     .select({
       ...getTableColumns(txEffect),
     })
     .from(txEffect)
-    .where(eq(txEffect.txHash, txHash))
+    .where(eq(txEffect.hash, hash))
     .limit(1)
     .execute();
 

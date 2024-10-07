@@ -33,7 +33,7 @@ export const getABlockWithTxEffects = async () => {
         height: l2Block.height,
         hash: l2Block.hash,
       },
-      txEffects: sql<string>`COALESCE(json_agg(json_build_object('txHash', ${txEffect.txHash}, 'index', ${txEffect.index})) FILTER (WHERE ${txEffect.id} IS NOT NULL), '[]'::json)`.as('txEffects'),
+      txEffects: sql<string>`COALESCE(json_agg(json_build_object('hash', ${txEffect.hash}, 'index', ${txEffect.index})) FILTER (WHERE ${txEffect.id} IS NOT NULL), '[]'::json)`.as('txEffects'),
       txEffectCount: sql<number>`count(${txEffect.id})`.as('txEffectCount'),
     })
     .from(bodyToTxEffects)
@@ -52,8 +52,8 @@ export const getABlockWithTxEffects = async () => {
       height: Number(result.block.height),
       hash: result.block.hash,
     },
-    txEffects: (result.txEffects as unknown as Array<{ txHash: string; index: string }>).map(te => ({
-      txHash: te.txHash,
+    txEffects: (result.txEffects as unknown as Array<{ hash: string; index: string }>).map(te => ({
+      hash: te.hash,
       index: Number(te.index),
     })),
   };
