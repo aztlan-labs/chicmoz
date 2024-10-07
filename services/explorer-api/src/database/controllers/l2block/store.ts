@@ -31,7 +31,6 @@ import {
   txEffectToLogs,
   txEffectToPublicDataWrite,
 } from "../../../database/schema/l2block/index.js";
-import {logger} from "../../../logger.js";
 
 export const store = async (block: ChicmozL2Block): Promise<void> => {
   return await db().transaction(async (tx) => {
@@ -154,8 +153,6 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
       })
       .onConflictDoNothing();
 
-    logger.info(`timestamp: ${block.header.globalVariables.timestamp}`);
-    logger.info(`timestamp: ${new Date(block.header.globalVariables.timestamp).toLocaleString()}`);
     // Insert global variables
     await tx
       .insert(globalVariables)
