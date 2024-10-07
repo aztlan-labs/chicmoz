@@ -17,7 +17,7 @@ function TxEffects() {
   const latestTxEffects = latestBlocks.flatMap((block) => {
     return block.body.txEffects.map((txEffect) =>
       txEffectSchema.parse({
-        txHash: txEffect.txHash,
+        hash: txEffect.hash,
         transactionFee: parseInt(txEffect.transactionFee, 16),
         logCount:
           parseInt(txEffect.encryptedLogsLength, 16) +

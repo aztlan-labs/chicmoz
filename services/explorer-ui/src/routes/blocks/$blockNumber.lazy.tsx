@@ -88,7 +88,7 @@ function Block() {
         blockNumber: latestBlock.height,
         timestamp:
           parseInt(latestBlock.header.globalVariables.timestamp, 16) * 1000,
-        txHash: tx.txHash,
+        hash: tx.hash,
         transactionFee: Number(tx.transactionFee),
         logCount:
           parseInt(tx.encryptedLogsLength, 16) +

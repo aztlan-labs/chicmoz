@@ -1,0 +1,1 @@
+ALTER TABLE "tx_effect" RENAME COLUMN "tx_hash" TO "hash";

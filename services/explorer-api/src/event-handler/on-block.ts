@@ -32,7 +32,7 @@ const getTxEffectWithHashes = (txEffects: L2Block["body"]["txEffects"]) => {
   return txEffects.map((txEffect) => {
     return {
       ...txEffect,
-      txHash: "0x" + txEffect.hash().toString("hex"),
+      hash: "0x" + txEffect.hash().toString("hex"),
     };
   });
 };

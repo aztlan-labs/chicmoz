@@ -3,7 +3,7 @@ import { ChicmozL2TxEffect } from "@chicmoz-pkg/types";
 export const getTxEffectData = (data: ChicmozL2TxEffect) => [
   {
     label: "HASH",
-    value: data.txHash,
+    value: data.hash,
   },
   {
     label: "TRANSACTION FEE",

@@ -5,7 +5,7 @@ export const heightOrHash = 'heightOrHash';
 export const blockHeight = 'blockHeight';
 export const blockHash = 'blockHash';
 export const txEffectIndex = 'txEffectIndex';
-export const txHash = 'txHash';
+export const txEffectHash = 'txEffectHash';
 export const address = 'address';
 
 export const paths = {
@@ -15,7 +15,7 @@ export const paths = {
   blocks: '/l2/blocks',
   txEffectsByBlockHeight: `/l2/blocks/:${blockHeight}/txEffects`,
   txEffectByBlockHeightAndIndex: `/l2/blocks/:${blockHeight}/txEffects/:${txEffectIndex}`,
-  txEffectsByTxHash: `/l2/txEffects/:${txHash}`,
+  txEffectsByTxHash: `/l2/txEffects/:${txEffectHash}`,
   // contractClasses: '/l2/contract-classes',
   // contractClass: `/l2/contract-classes/:${contractClassId}`,
   // contractInstancesByContractClassId: `/l2/contract-classes/:${contractClassId}/contract-instances`,
@@ -58,7 +58,7 @@ export const getTxEffectByBlockHeightAndIndexSchema = z.object({
 
 export const getTxEffectsByTxHashSchema = z.object({
   params: z.object({
-    [txHash]: hexStringSchema,
+    [txEffectHash]: hexStringSchema,
   }),
 });
 
