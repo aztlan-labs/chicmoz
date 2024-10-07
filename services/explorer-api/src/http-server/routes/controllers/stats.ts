@@ -2,7 +2,6 @@ import asyncHandler from "express-async-handler";
 import { controllers as db } from "../../../database/index.js";
 import { dbWrapper } from "./utils/index.js";
 import { CACHE_LATEST_TTL_SECONDS } from "../../../environment.js";
-import {logger} from "../../../logger.js";
 
 export const GET_STATS_TOTAL_TX_EFFECTS = asyncHandler(async (_req, res) => {
   const total = await dbWrapper.get(
@@ -19,7 +18,6 @@ export const GET_STATS_TOTAL_TX_EFFECTS_LAST_24H = asyncHandler(async (_req, res
     () => db.l2TxEffect.getTotalTxEffectsLast24h(),
     CACHE_LATEST_TTL_SECONDS
   );
-  logger.info(`GET_STATS_TOTAL_TX_EFFECTS_LAST_24H: ${nbrOfTxEffects}`);
   res.status(200).send(JSON.stringify(nbrOfTxEffects));
 });
 
