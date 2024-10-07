@@ -2,7 +2,7 @@ import { z } from "zod";
 import { hexStringSchema } from "../general.js";
 import { deepPartial } from "../utils.js";
 import { chicmozL2TxEffectSchema } from "./l2TxEffect.js";
-import { bufferSchema, frNumberSchema, frSchema } from "./utils.js";
+import { bufferSchema, frSchema } from "./utils.js";
 
 export const chicmozL2BlockSchema = z.object({
   hash: hexStringSchema,
@@ -17,7 +17,7 @@ export const chicmozL2BlockSchema = z.object({
       nextAvailableLeafIndex: z.number(),
     }),
     contentCommitment: z.object({
-      numTxs: frNumberSchema,
+      numTxs: frSchema,
       txsEffectsHash: bufferSchema,
       inHash: bufferSchema,
       outHash: bufferSchema,
@@ -43,19 +43,19 @@ export const chicmozL2BlockSchema = z.object({
       }),
     }),
     globalVariables: z.object({
-      chainId: frNumberSchema,
-      version: frNumberSchema,
-      blockNumber: frNumberSchema,
-      slotNumber: frNumberSchema,
-      timestamp: frNumberSchema,
+      chainId: z.string(),
+      version: z.string(),
+      blockNumber: frSchema,
+      slotNumber: frSchema,
+      timestamp: frSchema,
       coinbase: z.string(),
       feeRecipient: z.string(),
       gasFees: z.object({
-        feePerDaGas: frNumberSchema,
-        feePerL2Gas: frNumberSchema,
+        feePerDaGas: frSchema,
+        feePerL2Gas: frSchema,
       }),
     }),
-    totalFees: frNumberSchema,
+    totalFees: frSchema,
   }),
   body: z.object({
     txEffects: z.array(chicmozL2TxEffectSchema),
