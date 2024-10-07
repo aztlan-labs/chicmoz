@@ -20,11 +20,11 @@ export const mapLatestTxEffects = (latestBlocks: ChicmozL2Block[]) => {
     return block.body.txEffects.map((txEffect) =>
       txEffectSchema.parse({
         hash: txEffect.hash,
-        transactionFee: parseInt(txEffect.transactionFee, 16),
+        transactionFee: txEffect.transactionFee,
         logCount:
-          parseInt(txEffect.encryptedLogsLength, 16) +
-          parseInt(txEffect.unencryptedLogsLength, 16) +
-          parseInt(txEffect.noteEncryptedLogsLength, 16),
+          txEffect.encryptedLogsLength +
+          txEffect.unencryptedLogsLength +
+          txEffect.noteEncryptedLogsLength,
         blockNumber: block.height,
         timestamp: block.header.globalVariables.timestamp,
       }),

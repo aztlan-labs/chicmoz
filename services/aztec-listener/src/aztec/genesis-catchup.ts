@@ -3,6 +3,8 @@ import { onCatchupBlock } from "../event-handler/index.js";
 import { logger } from "../logger.js";
 import { getBlock } from "./network-client.js";
 
+const ARTIFICIAL_WAIT = 1000;
+
 export const startCatchup = async ({
   from,
   to,
@@ -18,7 +20,7 @@ export const startCatchup = async ({
     await onCatchupBlock(blockRes);
     if (NODE_ENV === "development") {
       // NOTE: we are restarting our local cluster quiet often, so we shouldn't spam them unnecessarily
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, ARTIFICIAL_WAIT));
     }
   }
 };

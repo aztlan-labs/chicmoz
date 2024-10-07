@@ -21,7 +21,7 @@ export const BlockAPI = {
   },
   getBlocksByHeightRange: async (
     start?: number,
-    end?: number,
+    end?: number
   ): Promise<ChicmozL2Block[]> => {
     const params: { start?: number; end?: number } = {};
     if (start) params.start = start;

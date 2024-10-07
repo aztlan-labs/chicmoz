@@ -163,8 +163,8 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
         blockNumber: block.header.globalVariables.blockNumber,
         slotNumber: block.header.globalVariables.slotNumber,
         timestamp: block.header.globalVariables.timestamp,
-        coinbase: block.header.globalVariables.coinbase.toString(),
-        feeRecipient: block.header.globalVariables.feeRecipient.toString(),
+        coinbase: block.header.globalVariables.coinbase,
+        feeRecipient: block.header.globalVariables.feeRecipient,
         gasFeesId,
       })
       .onConflictDoNothing();
@@ -297,7 +297,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
       .insert(l2Block)
       .values({
         hash: block.hash ,
-        height: parseInt(block.header.globalVariables.blockNumber, 16),
+        height: block.header.globalVariables.blockNumber,
         archiveId,
         headerId,
         bodyId,

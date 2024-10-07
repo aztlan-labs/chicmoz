@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { hexStringSchema } from "../general.js";
-import { frSchema } from "./utils.js";
+import { aztecAddressSchema, frNumberSchema, frSchema } from "./utils.js";
 
 export const noteEncryptedLogEntrySchema = z.object({
   data: z.string(),
@@ -13,7 +13,7 @@ export const encryptedLogEntrySchema = z.object({
 
 export const unencryptedLogEntrySchema = z.object({
   data: z.string(),
-  contractAddress: z.string(),
+  contractAddress: aztecAddressSchema,
 });
 
 export const chicmozL2TxEffectSchema = z.object({
@@ -25,16 +25,16 @@ export const chicmozL2TxEffectSchema = z.object({
     z.object({ code: z.number() }),
   ),
   hash: hexStringSchema,
-  transactionFee: frSchema,
+  transactionFee: frNumberSchema,
   noteHashes: z.array(frSchema),
   nullifiers: z.array(frSchema),
   l2ToL1Msgs: z.array(frSchema),
   publicDataWrites: z.array(
     z.object({ leafIndex: frSchema, newValue: frSchema }),
   ),
-  noteEncryptedLogsLength: frSchema,
-  encryptedLogsLength: frSchema,
-  unencryptedLogsLength: frSchema,
+  noteEncryptedLogsLength: frNumberSchema,
+  encryptedLogsLength: frNumberSchema,
+  unencryptedLogsLength: frNumberSchema,
   noteEncryptedLogs: z.object({
     functionLogs: z.array(
       z.object({

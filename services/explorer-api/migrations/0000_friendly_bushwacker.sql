@@ -43,16 +43,16 @@ CREATE TABLE IF NOT EXISTS "public_data_write" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tx_effect" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"tx_hash" varchar NOT NULL,
+	"hash" varchar NOT NULL,
 	"index" integer NOT NULL,
 	"revert_code" smallint NOT NULL,
-	"transaction_fee" varchar(66) NOT NULL,
+	"transaction_fee" bigint NOT NULL,
 	"note_hashes" jsonb NOT NULL,
 	"nullifiers" jsonb NOT NULL,
 	"l2_to_l1_msgs" jsonb NOT NULL,
-	"note_encrypted_logs_length" varchar(66) NOT NULL,
-	"encrypted_logs_length" varchar(66) NOT NULL,
-	"unencrypted_logs_length" varchar(66) NOT NULL
+	"note_encrypted_logs_length" bigint NOT NULL,
+	"encrypted_logs_length" bigint NOT NULL,
+	"unencrypted_logs_length" bigint NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tx_effect_to_logs" (
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS "tx_effect_to_public_data_write" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "content_commitment" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"num_txs" varchar(66) NOT NULL,
+	"num_txs" bigint NOT NULL,
 	"txs_effects_hash" "bytea" NOT NULL,
 	"in_hash" "bytea" NOT NULL,
 	"out_hash" "bytea" NOT NULL
@@ -77,17 +77,17 @@ CREATE TABLE IF NOT EXISTS "content_commitment" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "gas_fees" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"fee_per_da_gas" varchar(66),
-	"fee_per_l2_gas" varchar(66)
+	"fee_per_da_gas" bigint,
+	"fee_per_l2_gas" bigint
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "global_variables" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"chain_id" varchar(66),
-	"version" varchar(66),
-	"block_number" varchar(66),
-	"slot_number" varchar(66),
-	"timestamp" varchar(66),
+	"chain_id" bigint NOT NULL,
+	"version" bigint NOT NULL,
+	"block_number" bigint NOT NULL,
+	"slot_number" bigint NOT NULL,
+	"timestamp" bigint NOT NULL,
 	"coinbase" varchar(42) NOT NULL,
 	"fee_recipient" varchar(66) NOT NULL,
 	"gas_fees_id" uuid NOT NULL
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS "header" (
 	"content_commitment_id" uuid NOT NULL,
 	"state_id" uuid NOT NULL,
 	"global_variables_id" uuid NOT NULL,
-	"total_fees" varchar(66) NOT NULL
+	"total_fees" bigint NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l1_to_l2_message_tree" (

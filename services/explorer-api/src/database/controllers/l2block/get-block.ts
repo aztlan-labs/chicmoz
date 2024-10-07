@@ -163,6 +163,7 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2Block[]> => {
 
   const blocks: ChicmozL2Block[] = [];
 
+
   for (const result of results) {
     const txEffectsData = await db()
       .select({
