@@ -7,7 +7,7 @@ export const getTxEffectData = (data: ChicmozL2TxEffect) => [
   },
   {
     label: "TRANSACTION FEE",
-    value: data.transactionFee,
+    value: data.transactionFee.toString(),
   },
   //TODO: get actual Block number and time stamp
   { label: "BLOCK NUMBER", value: "-1" },

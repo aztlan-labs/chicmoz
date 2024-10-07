@@ -90,9 +90,9 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
       />
     ),
     cell: ({ row }) => {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       const formattedTime = formatTimeSince(
-        (row.getValue("timestamp") as unknown as number) * 1000
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+        row.getValue("timestamp") as unknown as number
       );
       return <div className="text-purple-dark">{formattedTime}</div>;
     },

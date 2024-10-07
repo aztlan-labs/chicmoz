@@ -1,6 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { z } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -83,8 +82,3 @@ export const formatTimeSince = (unixTimestamp: number | null) => {
   }
   return "just now";
 };
-
-export const frNumberSchema = z.preprocess((val) => {
-  if (typeof val === "string") return parseInt(val, 16);
-  return val;
-}, z.coerce.number());

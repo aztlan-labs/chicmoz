@@ -35,13 +35,23 @@ export const frSchema = z.preprocess(
 );
 
 export const frNumberSchema = z.preprocess((val) => {
+  if (typeof val === "number") return val;
   const v = frToHexString(val);
   if (typeof v === "string") return parseInt(v, 16);
   return val;
 }, z.coerce.number());
 
+export const frTimestampSchema = z.preprocess((val) => {
+  if (typeof val === "number") return val;
+  const v = frToHexString(val);
+  if (typeof v === "string" && v.startsWith("0x")) return parseInt(v, 16) * 1000;
+  return val;
+}, z.coerce.number());
+
 // NOTE: it's technically not the same as Fr but practically it is
 export const aztecAddressSchema = frSchema;
+
+export const ethAddressSchema = z.string().length(42).regex(/^0x[0-9a-fA-F]+$/);
 
 export type StringifiedBuffer = {
   type: "Buffer";

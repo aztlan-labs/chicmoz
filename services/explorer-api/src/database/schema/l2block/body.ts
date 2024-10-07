@@ -7,7 +7,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
-import { generateFrColumn } from "../utils.js";
+import { generateAztecAddressColumn, generateFrColumn, generateFrNumberColumn } from "../utils.js";
 
 export const body = pgTable("body", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -29,16 +29,14 @@ export const txEffect = pgTable("tx_effect", {
   // TODO: move index to junction table
   index: integer("index").notNull(),
   revertCode: smallint("revert_code").notNull(),
-  transactionFee: generateFrColumn("transaction_fee").notNull(),
+  transactionFee: generateFrNumberColumn("transaction_fee").notNull(),
   // NOTE: below three are arrays of Fr they might be needed in separate tables
   noteHashes: jsonb("note_hashes").notNull(),
   nullifiers: jsonb("nullifiers").notNull(),
   l2ToL1Msgs: jsonb("l2_to_l1_msgs").notNull().$type<HexString[]>(),
-  noteEncryptedLogsLength: generateFrColumn(
-    "note_encrypted_logs_length"
-  ).notNull(),
-  encryptedLogsLength: generateFrColumn("encrypted_logs_length").notNull(),
-  unencryptedLogsLength: generateFrColumn("unencrypted_logs_length").notNull(),
+  noteEncryptedLogsLength: generateFrNumberColumn("note_encrypted_logs_length").notNull(),
+  encryptedLogsLength: generateFrNumberColumn("encrypted_logs_length").notNull(),
+  unencryptedLogsLength: generateFrNumberColumn("unencrypted_logs_length").notNull(),
 });
 
 export const txEffectToPublicDataWrite = pgTable(
@@ -68,7 +66,7 @@ export const logs = pgTable("logs", {
   type: varchar("type", { length: 20 }).notNull(), // 'noteEncrypted', 'encrypted', or 'unencrypted'
   data: varchar("data").notNull(),
   maskedContractAddress: generateFrColumn("masked_contract_address"),
-  contractAddress: generateFrColumn("contract_address"),
+  contractAddress: generateAztecAddressColumn("contract_address"),
 });
 
 export const functionLogs = pgTable("function_logs", {

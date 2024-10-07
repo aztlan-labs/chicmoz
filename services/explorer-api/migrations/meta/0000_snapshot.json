@@ -1,5 +1,5 @@
 {
-  "id": "e5266a9a-a408-4d41-af8d-121243dede01",
+  "id": "d9a36117-c38b-4595-a1ee-d120cde75b83",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -269,8 +269,8 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "tx_hash": {
-          "name": "tx_hash",
+        "hash": {
+          "name": "hash",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
@@ -289,7 +289,7 @@
         },
         "transaction_fee": {
           "name": "transaction_fee",
-          "type": "varchar(66)",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": true
         },
@@ -313,19 +313,19 @@
         },
         "note_encrypted_logs_length": {
           "name": "note_encrypted_logs_length",
-          "type": "varchar(66)",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": true
         },
         "encrypted_logs_length": {
           "name": "encrypted_logs_length",
-          "type": "varchar(66)",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": true
         },
         "unencrypted_logs_length": {
           "name": "unencrypted_logs_length",
-          "type": "varchar(66)",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": true
         }
@@ -451,7 +451,7 @@
         },
         "num_txs": {
           "name": "num_txs",
-          "type": "varchar(66)",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": true
         },
@@ -492,13 +492,13 @@
         },
         "fee_per_da_gas": {
           "name": "fee_per_da_gas",
-          "type": "varchar(66)",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": false
         },
         "fee_per_l2_gas": {
           "name": "fee_per_l2_gas",
-          "type": "varchar(66)",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": false
         }
@@ -521,33 +521,33 @@
         },
         "chain_id": {
           "name": "chain_id",
-          "type": "varchar(66)",
+          "type": "bigint",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "version": {
           "name": "version",
-          "type": "varchar(66)",
+          "type": "bigint",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "block_number": {
           "name": "block_number",
-          "type": "varchar(66)",
+          "type": "bigint",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "slot_number": {
           "name": "slot_number",
-          "type": "varchar(66)",
+          "type": "bigint",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "timestamp": {
           "name": "timestamp",
-          "type": "varchar(66)",
+          "type": "bigint",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "coinbase": {
           "name": "coinbase",
@@ -620,7 +620,7 @@
         },
         "total_fees": {
           "name": "total_fees",
-          "type": "varchar(66)",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": true
         }

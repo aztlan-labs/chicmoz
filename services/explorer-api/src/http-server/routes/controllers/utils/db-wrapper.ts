@@ -9,19 +9,20 @@ import {
 const LATEST_HEIGHT = "latestHeight";
 
 export const getLatestHeight = async () => {
-  let val = await c().get(LATEST_HEIGHT);
-  if (!val) {
+  const cachedVal = await c().get(LATEST_HEIGHT);
+  let dbVal = null;
+  if (!cachedVal) {
     // TODO: impl getLatestHeight in DB-controller
     const block = await db.l2Block.getLatestBlock().catch(dbParseErrorCallback);
-    val = block?.header.globalVariables.blockNumber ?? null;
-    if (val) {
-      await c().set(LATEST_HEIGHT, val, {
+    dbVal = block?.header.globalVariables.blockNumber ?? null;
+    if (dbVal) {
+      await c().set(LATEST_HEIGHT, dbVal, {
         EX: CACHE_LATEST_TTL_SECONDS,
       });
     }
   }
-  if (!val) throw new Error(`${LATEST_HEIGHT} not found`);
-  return val;
+  if (!cachedVal && !dbVal) throw new Error("CACHE_ERROR: latest height not found");
+  return cachedVal ?? dbVal;
 };
 
 export const getLatest = async <DbReturnType>(

@@ -2,7 +2,14 @@ import { z } from "zod";
 import { hexStringSchema } from "../general.js";
 import { deepPartial } from "../utils.js";
 import { chicmozL2TxEffectSchema } from "./l2TxEffect.js";
-import { bufferSchema, frNumberSchema, frSchema } from "./utils.js";
+import {
+  aztecAddressSchema,
+  bufferSchema,
+  ethAddressSchema,
+  frNumberSchema,
+  frSchema,
+  frTimestampSchema,
+} from "./utils.js";
 
 export const chicmozL2BlockSchema = z.object({
   hash: hexStringSchema,
@@ -47,9 +54,9 @@ export const chicmozL2BlockSchema = z.object({
       version: frNumberSchema,
       blockNumber: frNumberSchema,
       slotNumber: frNumberSchema,
-      timestamp: frNumberSchema,
-      coinbase: z.string(),
-      feeRecipient: z.string(),
+      timestamp: frTimestampSchema,
+      coinbase: ethAddressSchema,
+      feeRecipient: aztecAddressSchema,
       gasFees: z.object({
         feePerDaGas: frNumberSchema,
         feePerL2Gas: frNumberSchema,

@@ -26,6 +26,7 @@ import {
 import { DB_MAX_BLOCKS } from "../../../environment.js";
 import { getTxEffectNestedById } from "../l2TxEffect/get-tx-effect.js";
 import { getBlocksWhereRange } from "../utils.js";
+import {logger} from "../../../logger.js";
 
 enum GetTypes {
   BlockHeight,
@@ -163,6 +164,7 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2Block[]> => {
 
   const blocks: ChicmozL2Block[] = [];
 
+
   for (const result of results) {
     const txEffectsData = await db()
       .select({
@@ -250,5 +252,9 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2Block[]> => {
 
     blocks.push(await chicmozL2BlockSchema.parseAsync(blockData));
   }
+    logger.info(`TZ ${results[0].gvTimestamp}`);
+    logger.info(`TZ ${new Date(results[0].gvTimestamp).toLocaleString()}`);
+    logger.info(`TZ2 ${blocks[0].header.globalVariables.timestamp}`);
+    logger.info(`TZ2 ${new Date(blocks[0].header.globalVariables.timestamp).toLocaleString()}`);
   return blocks;
 };

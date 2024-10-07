@@ -23,16 +23,13 @@ function Block() {
 
   let bn;
   if (blockNumber === "latest") bn = "latest";
-  else if (blockNumber.startsWith("0x00")) bn = parseInt(blockNumber, 16);
-  // NOTE: ugly hack because we also allow hash as ID
   else bn = blockNumber;
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error.message}</p>;
   if (!latestBlock) return <p>No data</p>;
 
-  const timestamp =
-    parseInt(latestBlock.header.globalVariables.timestamp, 16) * 1000;
+  const timestamp = latestBlock.header.globalVariables.timestamp;
   const timeSince = formatTimeSince(timestamp);
   const getBlockDetails = () => {
     return [
@@ -45,39 +42,34 @@ function Block() {
       {
         // NOTE: this is not the same as txEffects.length!
         label: "Number of transactions",
-        value: "" + parseInt(latestBlock.header.contentCommitment.numTxs, 16),
+        value: "" + latestBlock.header.contentCommitment.numTxs,
       },
       // TODO: what is good block header data to display?
       {
         label: "slotNumber",
-        value: "" + parseInt(latestBlock.header.globalVariables.slotNumber, 16),
+        value: "" + latestBlock.header.globalVariables.slotNumber,
       },
       {
         label: "coinbase",
-        value: "" + parseInt(latestBlock.header.globalVariables.coinbase, 16),
+        value: "" + latestBlock.header.globalVariables.coinbase,
       },
       // TODO: stats on logs
       // TODO: better display of gas
       {
         label: "feeRecipient",
-        value:
-          "" + parseInt(latestBlock.header.globalVariables.feeRecipient, 16),
+        value: "" + latestBlock.header.globalVariables.feeRecipient,
       },
       {
         label: "totalFees",
-        value: "" + parseInt(latestBlock.header.totalFees, 16),
+        value: "" + latestBlock.header.totalFees,
       },
       {
         label: "feePerDaGas",
-        value:
-          "" +
-          parseInt(latestBlock.header.globalVariables.gasFees.feePerDaGas, 16),
+        value: "" + latestBlock.header.globalVariables.gasFees.feePerDaGas,
       },
       {
         label: "feePerL2Gas",
-        value:
-          "" +
-          parseInt(latestBlock.header.globalVariables.gasFees.feePerL2Gas, 16),
+        value: "" + latestBlock.header.globalVariables.gasFees.feePerL2Gas,
       },
     ];
   };
@@ -86,14 +78,13 @@ function Block() {
     return latestBlock.body.txEffects.map((tx) => {
       return txEffectSchema.parse({
         blockNumber: latestBlock.height,
-        timestamp:
-          parseInt(latestBlock.header.globalVariables.timestamp, 16) * 1000,
+        timestamp: latestBlock.header.globalVariables.timestamp,
         hash: tx.hash,
         transactionFee: Number(tx.transactionFee),
         logCount:
-          parseInt(tx.encryptedLogsLength, 16) +
-          parseInt(tx.unencryptedLogsLength, 16) +
-          parseInt(tx.noteEncryptedLogsLength, 16),
+          tx.encryptedLogsLength +
+          tx.unencryptedLogsLength +
+          tx.noteEncryptedLogsLength,
       });
     });
   };

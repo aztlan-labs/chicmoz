@@ -1,5 +1,11 @@
-import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
-import { bufferType, generateAztecAddressColumn, generateFrColumn, generateTreeTable } from "../utils.js";
+import { pgTable, uuid } from "drizzle-orm/pg-core";
+import {
+  bufferType,
+  generateAztecAddressColumn,
+  generateEthAddressColumn,
+  generateFrNumberColumn,
+  generateTreeTable,
+} from "../utils.js";
 
 export const header = pgTable("header", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -16,14 +22,14 @@ export const header = pgTable("header", {
   globalVariablesId: uuid("global_variables_id")
     .notNull()
     .references(() => globalVariables.id),
-  totalFees: generateFrColumn("total_fees").notNull(),
+  totalFees: generateFrNumberColumn("total_fees").notNull(),
 });
 
 export const lastArchive = generateTreeTable("last_archive");
 
 export const contentCommitment = pgTable("content_commitment", {
   id: uuid("id").primaryKey().defaultRandom(),
-  numTxs: generateFrColumn("num_txs").notNull(),
+  numTxs: generateFrNumberColumn("num_txs").notNull(),
   txsEffectsHash: bufferType("txs_effects_hash").notNull(),
   inHash: bufferType("in_hash").notNull(),
   outHash: bufferType("out_hash").notNull(),
@@ -62,12 +68,12 @@ export const publicDataTree = generateTreeTable("public_data_tree");
 
 export const globalVariables = pgTable("global_variables", {
   id: uuid("id").primaryKey().defaultRandom(),
-  chainId: generateFrColumn("chain_id"),
-  version: generateFrColumn("version"),
-  blockNumber: generateFrColumn("block_number"),
-  slotNumber: generateFrColumn("slot_number"),
-  timestamp: generateFrColumn("timestamp"),
-  coinbase: varchar("coinbase", { length: 42 }).notNull(),
+  chainId: generateFrNumberColumn("chain_id").notNull(),
+  version: generateFrNumberColumn("version").notNull(),
+  blockNumber: generateFrNumberColumn("block_number").notNull(),
+  slotNumber: generateFrNumberColumn("slot_number").notNull(),
+  timestamp: generateFrNumberColumn("timestamp").notNull(),
+  coinbase: generateEthAddressColumn("coinbase").notNull(),
   feeRecipient: generateAztecAddressColumn("fee_recipient").notNull(),
   gasFeesId: uuid("gas_fees_id")
     .notNull()
@@ -76,6 +82,6 @@ export const globalVariables = pgTable("global_variables", {
 
 export const gasFees = pgTable("gas_fees", {
   id: uuid("id").primaryKey().defaultRandom(),
-  feePerDaGas: generateFrColumn("fee_per_da_gas"),
-  feePerL2Gas: generateFrColumn("fee_per_l2_gas"),
+  feePerDaGas: generateFrNumberColumn("fee_per_da_gas"),
+  feePerL2Gas: generateFrNumberColumn("fee_per_l2_gas"),
 });
