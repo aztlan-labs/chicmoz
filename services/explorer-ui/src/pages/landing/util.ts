@@ -26,7 +26,7 @@ export const mapLatestTxEffects = (latestBlocks: ChicmozL2Block[]) => {
           parseInt(txEffect.unencryptedLogsLength, 16) +
           parseInt(txEffect.noteEncryptedLogsLength, 16),
         blockNumber: block.height,
-        timestamp: parseInt(block.header.globalVariables.timestamp, 16) * 1000,
+        timestamp: block.header.globalVariables.timestamp,
       }),
     );
   });

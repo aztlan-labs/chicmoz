@@ -8,7 +8,7 @@ import {
   useTotalContracts,
   useTotalTxEffects,
   useTotalTxEffectsLast24h,
-} from "~/hooks/status";
+} from "~/hooks/stats";
 import { mapLatestBlocks, mapLatestTxEffects } from "./util";
 
 export const Landing: FC = () => {
@@ -43,7 +43,7 @@ export const Landing: FC = () => {
   if (error) return <p className="text-red-500">{error.message}</p>;
   if (!latestBlocks) return <p>No data</p>;
 
-  const getStatusData = (
+  const getStatsData = (
     isLoading: boolean,
     error: Error | null,
     data?: string,
@@ -62,7 +62,7 @@ export const Landing: FC = () => {
       <div className="flex flex-row flex-wrap justify-center gap-2 m-8">
         <div className="bg-white w-3/12 rounded-lg shadow-md p-4">
           <p>Total Blocks</p>
-          {getStatusData(
+          {getStatsData(
             loadingTotalEffects,
             errorTotalEffects,
             totalTxEffects,
@@ -70,7 +70,7 @@ export const Landing: FC = () => {
         </div>
         <div className="bg-white w-3/12 rounded-lg shadow-md p-4">
           <p>TX-Effects last 24 hours </p>
-          {getStatusData(
+          {getStatsData(
             loadingTotalEffects24h,
             errorTotalEffects24h,
             totalTxEffects24h,
@@ -78,7 +78,7 @@ export const Landing: FC = () => {
         </div>
         <div className="bg-white w-3/12 rounded-lg shadow-md p-4">
           <p>Total amount of contracts</p>
-          {getStatusData(
+          {getStatsData(
             loadingAmountContracts,
             errorAmountContracts,
             totalAmountOfContracts,
@@ -86,11 +86,11 @@ export const Landing: FC = () => {
         </div>
         <div className="bg-white w-3/12 rounded-lg shadow-md p-4">
           <p>Average fee's</p>
-          {getStatusData(loadingAvarageFees, errorAvarageFees, avarageFees)}
+          {getStatsData(loadingAvarageFees, errorAvarageFees, avarageFees)}
         </div>
         <div className="bg-white w-3/12 rounded-lg shadow-md p-4">
           <p>Average block time</p>
-          {getStatusData(
+          {getStatsData(
             loadingAvarageBlockTime,
             errorAvarageBlockTime,
             avarageBlockTime,

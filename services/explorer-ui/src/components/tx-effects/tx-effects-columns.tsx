@@ -3,13 +3,14 @@ import { Link } from "@tanstack/react-router";
 import { routes } from "~/routes/__root";
 import { DataTableColumnHeader } from "~/components/data-table";
 import { type TxEffectTableSchema } from "./tx-effects-schema";
+import { formatTimeSince } from "~/lib/utils";
 
 const text = {
   txHash: "TX EFFECT HASH",
   transactionFee: "TRANSACTION FEE",
   logCount: "LOGS COUNT",
   blockHeight: "BLOCK HEIGHT",
-  timestamp: "TIMESTAMP",
+  timeSince: "TIME SINCE",
 };
 
 export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
@@ -24,16 +25,15 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
     ),
     cell: ({ row }) => {
       const txHash = row.getValue("txHash");
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-      const r = routes.txEffects.route + "/" + txHash;
+      if (typeof txHash !== "string") return null;
+      const r = `${routes.txEffects.route}/${txHash}`;
+      const truncatedTxHash = `${txHash.slice(0, 6)}...${txHash.slice(-4)}`;
       return (
-        <div className="text-purple-light font-mono">
-          <Link to={r}>{row.getValue("txHash")}</Link>
+        <div className="text-purple-light font-mono font-bold">
+          <Link to={r}>{truncatedTxHash}</Link>
         </div>
       );
     },
-    enableSorting: false,
-    enableHiding: false,
   },
   {
     accessorKey: "transactionFee",
@@ -84,14 +84,18 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
     accessorKey: "timestamp",
     header: ({ column }) => (
       <DataTableColumnHeader
-        className="text-purple-dark text-sm "
+        className="text-purple-dark text-sm"
         column={column}
-        title={text.timestamp}
+        title={text.timeSince}
       />
     ),
-    cell: ({ row }) => (
-      <div className="text-purple-dark">{new Date(row.getValue("timestamp")).toLocaleString()}</div>
-    ),
+    cell: ({ row }) => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      const formattedTime = formatTimeSince(
+        (row.getValue("timestamp") as unknown as number) * 1000
+      );
+      return <div className="text-purple-dark">{formattedTime}</div>;
+    },
     enableSorting: true,
     enableHiding: false,
   },

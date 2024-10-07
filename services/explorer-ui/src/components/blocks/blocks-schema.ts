@@ -1,11 +1,7 @@
 import { z } from "zod";
+import { frNumberSchema } from "~/lib/utils";
 
 export type BlockTableSchema = z.infer<typeof blockSchema>;
-
-const frNumberSchema = z.preprocess((val) => {
-  if (typeof val === "string") return parseInt(val, 16);
-  return val;
-}, z.coerce.number());
 
 export const blockSchema = z.object({
   height: z.number(),
