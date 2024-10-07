@@ -47,7 +47,7 @@ jobs:
           RETRY_DELAY=10
 
           for i in $(seq 1 $MAX_RETRIES); do
-            if skaffold run --filename "k8s/production/skaffold.production.yaml" --default-repo=registry.digitalocean.com/aztlan-containers; then
+            if skaffold run --filename "k8s/production/skaffold.production.full.yaml" --default-repo=registry.digitalocean.com/aztlan-containers; then
               echo "Deployment successful"
               exit 0
             fi
