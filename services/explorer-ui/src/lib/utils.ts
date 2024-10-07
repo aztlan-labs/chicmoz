@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { z } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -62,12 +63,12 @@ export const hexToHSL = (hex: string): string => {
   return `hsl(${h}, ${s}%, ${l}%)`;
 };
 
-  const intervals = [
-    { label: "day", seconds: 86400 },
-    { label: "hour", seconds: 3600 },
-    { label: "minute", seconds: 60 },
-    { label: "second", seconds: 1 },
-  ];
+const intervals = [
+  { label: "day", seconds: 86400 },
+  { label: "hour", seconds: 3600 },
+  { label: "minute", seconds: 60 },
+  { label: "second", seconds: 1 },
+];
 
 export const formatTimeSince = (unixTimestamp: number | null) => {
   if (unixTimestamp === null) return "no timestamp";
@@ -82,3 +83,8 @@ export const formatTimeSince = (unixTimestamp: number | null) => {
   }
   return "just now";
 };
+
+export const frNumberSchema = z.preprocess((val) => {
+  if (typeof val === "string") return parseInt(val, 16);
+  return val;
+}, z.coerce.number());
