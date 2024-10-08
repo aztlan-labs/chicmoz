@@ -61,6 +61,8 @@ spec:
               value: "admin"
             - name: POSTGRES_PASSWORD
               value: "secret-local-password"
+            - name: CACHE_TTL
+              value: 2
           readinessProbe:
             httpGet:
               path: /health
