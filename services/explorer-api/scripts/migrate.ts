@@ -23,7 +23,7 @@ const retries = 50;
 
 async function runMigrations() {
   console.log("🥸 Running migrations...");
-  console.log(`host: ${dbCredentials.host} port: ${dbCredentials.port} db: ${dbCredentials.database}`);
+  console.log(`host: ${dbCredentials.host} port: ${dbCredentials.port} db: ${dbCredentials.database} user: ${dbCredentials.user}`);
 
   const client = await pool.connect();
   try {
