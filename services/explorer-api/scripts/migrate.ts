@@ -7,6 +7,8 @@ import { backOff } from "exponential-backoff";
 import { dbCredentials } from "../src/environment.js";
 
 const pool = new pg.Pool(dbCredentials);
+const db = drizzle(pool);
+const retries = 50;
 
 async function printTableList(client: PoolClient) {
   const res = await client.query(
@@ -16,10 +18,6 @@ async function printTableList(client: PoolClient) {
   res.rows.forEach((row) => console.log(row.table_name));
   console.log("==============================");
 }
-
-const db = drizzle(pool);
-
-const retries = 50;
 
 async function runMigrations() {
   console.log("🥸 Running migrations...");
