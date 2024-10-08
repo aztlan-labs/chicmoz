@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websocket-event-publisher
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: websocket-event-publisher
+  template:
+    metadata:
+      labels:
+        app: websocket-event-publisher
+    spec:
+      containers:
+        - name: websocket-event-publisher
+          image: websocket-event-publisher
+          ports:
+            - containerPort: 3000
+          env:
+            - name: PORT
+              value: "3000"

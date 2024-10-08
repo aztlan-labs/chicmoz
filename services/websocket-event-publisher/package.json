@@ -1,0 +1,43 @@
+{
+  "name": "@chicmoz/websocket-event-publisher",
+  "version": "1.0.0",
+  "description": "Publish blockchain events to a websocket server",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "build"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@aztec/aztec.js": "0.55.1",
+    "@aztec/circuits.js": "0.55.1",
+    "@aztec/protocol-contracts": "0.55.1",
+    "@chicmoz-pkg/logger-server": "workspace:^",
+    "@chicmoz-pkg/message-bus": "workspace:^",
+    "@chicmoz-pkg/message-registry": "workspace:^",
+    "@chicmoz-pkg/types": "workspace:^",
+    "ws": "8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.5.0",
+    "@types/ws": "8.5.12",
+    "eslint": "8.53.0",
+    "eslint-config-prettier": "9.0.0",
+    "eslint-config-standard-with-typescript": "37.0.0",
+    "eslint-plugin-import": "2.29.0",
+    "eslint-plugin-n": "15.0.0 || 16.0.0 ",
+    "eslint-plugin-promise": "6.0.0",
+    "typescript": "5.2.2"
+  },
+  "scripts": {
+    "prebuild": "rm -rf build; mkdir build",
+    "build": "yarn tsc",
+    "postbuild": "ln -s ../public build/public",
+    "predev": "yarn build",
+    "dev": "yarn node build/index.js",
+    "start": "yarn node --unhandled-rejections=strict --enable-source-maps build/index.js",
+    "lint": "yarn run lint-base --ext .ts .",
+    "lint-base": "yarn run g:lint"
+  },
+  "type": "module"
+}
