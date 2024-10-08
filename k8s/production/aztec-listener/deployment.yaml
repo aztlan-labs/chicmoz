@@ -24,7 +24,7 @@ spec:
           command: ["yarn", run, "migrate"]
           env:
             - name: NODE_ENV
-              value: "development"
+              value: "production"
             - name: POSTGRES_IP
               value: "postgresql"
             - name: POSTGRES_PORT
@@ -44,7 +44,7 @@ spec:
               cpu: 250m
           env:
             - name: NODE_ENV
-              value: "development"
+              value: "production"
             - name: CHAIN_NAME
               value: "AZTEC"
             - name: NETWORK_NAME
