@@ -67,7 +67,7 @@ spec:
                   name: global
                   key: CHICMOZ_AZTEC_RPC
             - name: AZTEC_GENESIS_CATCHUP
-              value: "false" # CHANGEME
+              value: "true"
             - name: IGNORE_PROCESSED_HEIGHT
               value: "false"
             - name: AZTEC_LISTEN_FOR_BLOCKS

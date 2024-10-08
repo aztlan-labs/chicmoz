@@ -5,20 +5,13 @@ import {
   CACHE_LATEST_TTL_SECONDS,
   CACHE_TTL_SECONDS,
 } from "../../../../environment.js";
-import { logger } from "../../../../logger.js";
 
 const LATEST_HEIGHT = "latestHeight";
 
 export const getLatestHeight = async () => {
   const cachedVal = await c().get(LATEST_HEIGHT);
   let dbVal = null;
-  if (cachedVal) 
-    logger.info(`CACHE HIT: ${LATEST_HEIGHT} TTL: ${CACHE_LATEST_TTL_SECONDS}`);
-  
   if (!cachedVal) {
-    logger.info(
-      `CACHE MISS: ${LATEST_HEIGHT} TTL: ${CACHE_LATEST_TTL_SECONDS}`
-    );
     // TODO: impl getLatestHeight in DB-controller
     const block = await db.l2Block.getLatestBlock().catch(dbParseErrorCallback);
     dbVal = block?.header.globalVariables.blockNumber ?? null;
@@ -50,9 +43,7 @@ export const get = async <DbReturnType>(
 ): Promise<string> => {
   const cacheKey = keys.join("-");
   let val = await c().get(cacheKey);
-  if (val) logger.info(`CACHE HIT: ${cacheKey} TTL: ${ttl}`);
   if (!val) {
-    logger.info(`CACHE MISS: ${cacheKey} TTL: ${ttl}`);
     const dbRes = await dbFn().catch(dbParseErrorCallback);
     if (dbRes) {
       val = JSON.stringify(dbRes);
