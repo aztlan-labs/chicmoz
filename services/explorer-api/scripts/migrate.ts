@@ -1,13 +1,20 @@
 /* eslint-disable no-console, @typescript-eslint/no-unsafe-member-access */
 
+import { Logger } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
-import pg, { PoolClient } from "pg";
 import { backOff } from "exponential-backoff";
+import pg, { PoolClient } from "pg";
 import { dbCredentials } from "../src/environment.js";
 
+class MyLogger implements Logger {
+  logQuery(query: string): void {
+    console.log("QUERY:", query);
+  }
+}
+
 const pool = new pg.Pool(dbCredentials);
-const db = drizzle(pool);
+const db = drizzle(pool, { logger: new MyLogger() });
 const retries = 50;
 
 async function printTableList(client: PoolClient) {
@@ -21,7 +28,9 @@ async function printTableList(client: PoolClient) {
 
 async function runMigrations() {
   console.log("🥸 Running migrations...");
-  console.log(`host: ${dbCredentials.host} port: ${dbCredentials.port} db: ${dbCredentials.database} user: ${dbCredentials.user}`);
+  console.log(
+    `host: ${dbCredentials.host} port: ${dbCredentials.port} db: ${dbCredentials.database} user: ${dbCredentials.user}`
+  );
 
   const client = await pool.connect();
   try {
@@ -39,6 +48,7 @@ async function runMigrations() {
           console.log(`Retrying attempt ${attemptNumber} of ${retries}...`);
           return true;
         }
+        console.error(e);
         return false;
       },
     });
