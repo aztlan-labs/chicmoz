@@ -43,15 +43,16 @@ export const get = async <DbReturnType>(
 ): Promise<string> => {
   const cacheKey = keys.join("-");
   let val = await c().get(cacheKey);
-  if (!val) {
+  if (val === null || val === undefined) {
     const dbRes = await dbFn().catch(dbParseErrorCallback);
-    if (dbRes) {
+    if (dbRes !== null && dbRes !== undefined) {
       val = JSON.stringify(dbRes);
       await c().set(cacheKey, val, {
         EX: ttl,
       });
     }
   }
-  if (!val) throw new Error(`${cacheKey} not found`);
+  if (val === null || val === undefined)
+    throw new Error(`${cacheKey} not found`);
   return val;
 };

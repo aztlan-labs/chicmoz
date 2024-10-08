@@ -23,6 +23,7 @@ import {
   txEffectToLogs,
   txEffectToPublicDataWrite,
 } from "../../../database/schema/l2block/index.js";
+// TODO: this should be removed (and caught by dbWrapper)
 import { dbParseErrorCallback } from "../utils.js";
 
 enum GetTypes {
