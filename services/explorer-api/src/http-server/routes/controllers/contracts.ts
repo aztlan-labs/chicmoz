@@ -66,7 +66,7 @@ export const openapi_GET_L2_CONTRACT_INSTANCES = {
 
 export const GET_L2_CONTRACT_INSTANCES = asyncHandler(async (req, res) => {
   const { fromHeight, toHeight } = getContractInstancesSchema.parse(req).query;
-  const instances = await dbWrapper.get(
+  const instances = await dbWrapper.getLatest(
     ["l2", "contracts", fromHeight, toHeight],
     () =>
       db.l2Contract.getL2DeployedContractInstances({

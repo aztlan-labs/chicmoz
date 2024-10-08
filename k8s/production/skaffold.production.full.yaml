@@ -115,6 +115,15 @@ manifests:
         wait: false
         setValues:
           auth.enabled: false
+          master.configuration: |
+            maxmemory 100mb
+            maxmemory-policy volatile-ttl
+            lazyfree-lazy-eviction yes
+          replica.configuration: |
+            maxmemory 100mb
+            maxmemory-policy volatile-ttl
+            lazyfree-lazy-eviction yes
+          persistence.enabled: false
       - name: kafka
         version: 26.4.2
         remoteChart: kafka

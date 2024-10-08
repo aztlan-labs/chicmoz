@@ -2,7 +2,7 @@ import { CHAIN_NAME } from "./constants.js";
 
 export const PUBLIC_API_KEY = process.env.PUBLIC_API_KEY ?? "d1e2083a-660c-4314-a6f2-1d42f4b944f4";
 
-export const CACHE_TTL_SECONDS = Number(process.env.CACHE_TTL) || undefined;
+export const CACHE_TTL_SECONDS = Number(process.env.CACHE_TTL) || 60;
 export const CACHE_LATEST_TTL_SECONDS = Number(process.env.CACHE_LATEST_TTL) || 2;
 export const REDIS_HOST = process.env.REDIS_HOST ?? "redis-master";
 export const REDIS_PORT = Number(process.env.REDIS_PORT) || 6379;
@@ -24,7 +24,7 @@ export const KAFKA_SASL_PASSWORD = process.env.KAFKA_SASL_PASSWORD ?? "test";
 
 export const POSTGRES_IP = process.env.POSTGRES_IP ?? "localhost";
 export const POSTGRES_PORT = Number(process.env.POSTGRES_PORT) || 5432;
-export const POSTGRES_DB_NAME = process.env.POSTGRES_DB_NAME ?? "explorer-api";
+export const POSTGRES_DB_NAME = process.env.POSTGRES_DB_NAME ?? "explorer_api";
 export const POSTGRES_ADMIN = process.env.POSTGRES_ADMIN ?? "admin";
 export const POSTGRES_PASSWORD =
   process.env.POSTGRES_PASSWORD ?? "secret-local-password";

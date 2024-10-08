@@ -111,7 +111,7 @@ export const openapi_GET_BLOCKS = {
 
 export const GET_BLOCKS = asyncHandler(async (req, res) => {
   const { from, to } = getBlocksSchema.parse(req).query;
-  const blocksData = await dbWrapper.get(["l2", "blocks", from, to], () =>
+  const blocksData = await dbWrapper.getLatest(["l2", "blocks", from, to], () =>
     db.l2Block.getBlocks({ from, to })
   );
   res.status(200).send(blocksData);

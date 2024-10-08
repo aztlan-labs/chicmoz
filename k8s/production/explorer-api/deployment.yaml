@@ -24,7 +24,7 @@ spec:
           command: ["yarn", run, "migrate"]
           env:
             - name: NODE_ENV
-              value: "development"
+              value: "production"
             - name: POSTGRES_IP
               value: "postgresql"
             - name: POSTGRES_PORT
@@ -48,7 +48,7 @@ spec:
               protocol: TCP
           env:
             - name: NODE_ENV
-              value: "development"
+              value: "production"
             - name: PORT
               value: "80"
             - name: NETWORK_NAME

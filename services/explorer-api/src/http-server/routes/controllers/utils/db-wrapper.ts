@@ -21,12 +21,13 @@ export const getLatestHeight = async () => {
       });
     }
   }
-  if (!cachedVal && !dbVal) throw new Error("CACHE_ERROR: latest height not found");
+  if (!cachedVal && !dbVal)
+    throw new Error("CACHE_ERROR: latest height not found");
   return cachedVal ?? dbVal;
 };
 
 export const getLatest = async <DbReturnType>(
-  keys: string[],
+  keys: (string | number | undefined)[],
   dbFn: () => Promise<DbReturnType>
 ): Promise<string> => {
   const latestHeight = await getLatestHeight();
