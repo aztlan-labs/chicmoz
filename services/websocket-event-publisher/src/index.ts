@@ -1,8 +1,8 @@
-import Ws from "ws";
+import { WebSocketServer } from "ws";
 import { logger } from "./logger.js";
 
 const port = Number(process.env.PORT) || 3000;
-const wss = new Ws.Server({ port });
+const wss = new WebSocketServer({ port });
 
 wss.on("connection", function connection(ws) {
   logger.info("New client connected");
