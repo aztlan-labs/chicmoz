@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: websocket-event-publisher
+  name: websocket-event-publisher
+  namespace: chicmoz-prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: websocket-event-publisher
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: websocket-event-publisher
+    spec:
+      containers:
+        - image: registry.digitalocean.com/aztlan-containers/websocket-event-publisher:latest
+          ports:
+            - name: websocket-port
+              containerPort: 3000
+              protocol: TCP
+          env:
+            - name: PORT
+              value: "3000"
