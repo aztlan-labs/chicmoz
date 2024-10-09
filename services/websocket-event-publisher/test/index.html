@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <body>
+    <script>
+      const url = "ws://ws.localhost/";
+      const socket = new WebSocket(url);
+      console.log(`Connecting to ${url}`);
+
+      socket.onopen = function (e) {
+        console.log("Connection established");
+      };
+
+      socket.onmessage = function (event) {
+        console.log(`Data received from server: ${event.data}`);
+      };
+
+      socket.onclose = function (event) {
+        if (event.wasClean) {
+          console.log(
+            `Connection closed cleanly, code=${event.code} reason=${event.reason}`,
+          );
+        } else {
+          console.log("Connection died");
+        }
+      };
+
+      socket.onerror = function (error) {
+        console.log(`[error] ${error.message}`);
+      };
+    </script>
+  </body>
+</html>

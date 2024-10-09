@@ -4,6 +4,8 @@ import { logger } from "./logger.js";
 const port = Number(process.env.PORT) || 3000;
 const wss = new WebSocketServer({ port });
 
+logger.info(`WebSocket server started on port ${port}`);
+
 wss.on("connection", function connection(ws) {
   logger.info("New client connected");
 

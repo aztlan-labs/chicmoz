@@ -1,12 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    app: websocket-event-publisher
   name: websocket-event-publisher
+  namespace: chicmoz
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: websocket-event-publisher
+  strategy: {}
   template:
     metadata:
       labels:
@@ -16,7 +20,9 @@ spec:
         - name: websocket-event-publisher
           image: websocket-event-publisher
           ports:
-            - containerPort: 3000
+            - name: websocket-port
+              containerPort: 3000
+              protocol: TCP
           env:
             - name: PORT
               value: "3000"

@@ -2,11 +2,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: websocket-event-publisher
+  namespace: chicmoz
 spec:
   selector:
     app: websocket-event-publisher
   ports:
-    - protocol: TCP
+    - name: websocket
+      protocol: TCP
       port: 80
-      targetPort: 3000
-  type: ClusterIP
+      targetPort: websocket-port
