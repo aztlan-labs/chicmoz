@@ -25,6 +25,7 @@
 !packages/logger-server
 !packages/message-bus
 !packages/message-registry
+!packages/backend-utils
 !packages/types
 !packages/error-middleware
 !packages/auth0-middleware

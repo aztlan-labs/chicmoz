@@ -9,6 +9,7 @@ export const onBlock = async (block: L2Block) => {
   const blockStr = block.toString();
   await publishMessage("NEW_BLOCK_EVENT", {
     block: blockStr,
+    blockNumber: height,
     nodeInfo: getNodeInfo(),
   });
 };
@@ -17,6 +18,7 @@ export const onCatchupBlock = async (block: L2Block) => {
   const blockStr = block.toString();
   await publishMessage("CATCHUP_BLOCK_EVENT", {
     block: blockStr,
+    blockNumber: Number(block.header.globalVariables.blockNumber),
     nodeInfo: getNodeInfo(),
   });
 }

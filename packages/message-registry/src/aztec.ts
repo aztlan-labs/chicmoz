@@ -2,6 +2,7 @@ import { NodeInfo } from '@chicmoz-pkg/types';
 
 export type NewBlockEvent = {
   nodeInfo: NodeInfo;
+  blockNumber: number;
   block?: string;
 };
 

@@ -5,8 +5,8 @@ import {
 } from "@aztec/circuits.js";
 import { ClassRegistererAddress } from "@aztec/protocol-contracts/class-registerer";
 import { NewBlockEvent } from "@chicmoz-pkg/message-registry";
+import { parseBlock, blockFromString } from "@chicmoz-pkg/backend-utils";
 import {
-  chicmozL2BlockSchema,
   chicmozL2ContractClassRegisteredEventSchema,
   chicmozL2ContractInstanceDeployedEventSchema,
   type ChicmozL2Block,
@@ -16,58 +16,37 @@ import {
 import { controllers } from "../database/index.js";
 import { logger } from "../logger.js";
 
-export const onBlock = async ({ block }: NewBlockEvent) => {
+export const onBlock = async ({ block, blockNumber }: NewBlockEvent) => {
   // TODO: start storing NODE_INFO connected to the block
   if (!block) {
     logger.error("🚫 Block is empty");
     return;
   }
-  const b = L2Block.fromString(block);
-  const hash = b.hash().toString();
-  await storeBlock(b, hash);
-  await storeContracts(b, hash);
-};
-
-const getTxEffectWithHashes = (txEffects: L2Block["body"]["txEffects"]) => {
-  return txEffects.map((txEffect) => {
-    return {
-      ...txEffect,
-      hash: "0x" + txEffect.hash().toString("hex"),
-    };
-  });
-};
-
-const storeBlock = async (b: L2Block, hash: string) => {
-  let parsedBlock: ChicmozL2Block;
-  const blockWithTxEffectsHashesAdded = {
-    ...b,
-    body: {
-      ...b.body,
-      txEffects: getTxEffectWithHashes(b.body.txEffects),
-    },
-  };
+  logger.info(`👓 Parsing block ${blockNumber}`);
+  const b = blockFromString(block);
+  let parsedBlock;
   try {
-    logger.info(`👓 Parsing block ${b.number}`);
-    parsedBlock = chicmozL2BlockSchema.parse({
-      hash,
-      height: b.number,
-      ...JSON.parse(JSON.stringify(blockWithTxEffectsHashesAdded)),
-    });
+    parsedBlock = parseBlock(b);
   } catch (e) {
     logger.error(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      `Failed to parse block ${b.number}: ${e}`
+      `Failed to parse block ${blockNumber}: ${e}`
     );
     return;
   }
+  await storeBlock(parsedBlock);
+  await storeContracts(b, parsedBlock.hash);
+};
+
+const storeBlock = async (parsedBlock: ChicmozL2Block) => {
   try {
-    logger.info(`🧢 Storing block ${b.number} (hash: ${parsedBlock.hash})`);
+    logger.info(`🧢 Storing block ${parsedBlock.height} (hash: ${parsedBlock.hash})`);
     // logger.info(JSON.stringify(parsedBlock));
     await controllers.l2Block.store(parsedBlock);
   } catch (e) {
     logger.error(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      `Failed to store block ${b.number}: ${(e as Error)?.stack ?? e}`
+      `Failed to store block ${parsedBlock.height}: ${(e as Error)?.stack ?? e}`
     );
   }
 };
