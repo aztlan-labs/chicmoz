@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - production
+      - feat/websockets_in_production
   pull_request:
     branches:
       - production

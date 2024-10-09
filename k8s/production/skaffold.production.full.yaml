@@ -40,6 +40,13 @@ build:
       requires:
         - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
           alias: BASE
+    - image: registry.digitalocean.com/aztlan-containers/websocket-event-publisher
+      context: services/websocket-event-publisher
+      docker:
+        dockerfile: Dockerfile
+      requires:
+        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
+          alias: BASE
 manifests:
   rawYaml:
     - k8s/production/common/namespace.yaml
