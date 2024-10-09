@@ -1,4 +1,3 @@
-// TODO: update url values
 export const aztecExplorer = {
   getL2LatestHeight: "l2/latest-height",
   getL2LatestBlock: "l2/blocks/latest",
@@ -23,3 +22,4 @@ export const aztecExplorer = {
 };
 
 export const API_URL = import.meta.env.VITE_API_URL;
+export const WS_URL = import.meta.env.VITE_WS_URL;

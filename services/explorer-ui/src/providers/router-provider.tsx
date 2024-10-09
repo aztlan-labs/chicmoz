@@ -1,7 +1,8 @@
 // Import the generated route tree
-import { FC } from "react";
+import { type FC } from "react";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "../routeTree.gen";
+import { useWebSocketConnection } from "~/hooks";
 
 // Create a new router instance
 const router = createRouter({ routeTree });
@@ -14,5 +15,6 @@ declare module "@tanstack/react-router" {
 }
 
 export const TanstackRouterProvider: FC = () => {
+  useWebSocketConnection();
   return <RouterProvider router={router} />;
 };
