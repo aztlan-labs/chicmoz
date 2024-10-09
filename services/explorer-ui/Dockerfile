@@ -11,6 +11,9 @@ ENV NODE_ENV $NODE_ENV
 ARG VITE_API_URL
 ENV VITE_API_URL $VITE_API_URL
 
+ARG VITE_WS_URL
+ENV VITE_WS_URL $VITE_WS_URL
+
 RUN yarn workspaces focus @chicmoz/explorer-ui
 
 FROM deps as build
