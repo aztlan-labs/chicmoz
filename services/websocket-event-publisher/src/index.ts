@@ -1,22 +1,19 @@
-import { WebSocketServer } from "ws";
+import { SERVICE_NAME } from "./constants.js";
 import { logger } from "./logger.js";
+import { start } from "./start.js";
+import { gracefulShutdown } from "./stop.js";
 
-const port = Number(process.env.PORT) || 3000;
-const wss = new WebSocketServer({ port });
+const main = async () => {
+  logger.info(`🚀 ${SERVICE_NAME} starting...`);
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  process.on("SIGINT", gracefulShutdown());
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  process.on("SIGTERM", gracefulShutdown());
+  await start();
+  logger.info(`🥳 ${SERVICE_NAME} started!`);
+};
 
-logger.info(`WebSocket server started on port ${port}`);
-
-wss.on("connection", function connection(ws) {
-  logger.info("New client connected");
-
-  ws.on("message", function incoming(message) {
-    logger.info(`Received message: ${JSON.stringify(message)}`);
-    ws.send(`Server received: ${JSON.stringify(message)}`);
-  });
-
-  ws.on("close", function close() {
-    logger.info("Client disconnected");
-  });
-
-  ws.send("Welcome to the WebSocket server!");
+main().catch((e) => {
+  logger.error(`during startup of ${SERVICE_NAME}: ${e}`);
+  process.exit(1);
 });
