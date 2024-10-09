@@ -7,7 +7,6 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
     nginx.ingress.kubernetes.io/websocket-services: "websocket-event-publisher"
-    nginx.ingress.kubernetes.io/backend-protocol: "WS"
     cert-manager.io/cluster-issuer: "chicmoz-issuer-production"
 spec:
   ingressClassName: nginx
