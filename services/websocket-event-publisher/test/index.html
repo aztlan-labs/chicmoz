@@ -11,7 +11,7 @@
       };
 
       socket.onmessage = function (event) {
-        console.log(`Data received from server: ${event.data}`);
+        console.log(`DATA RECEIVED: ${event.data.toString().length}`);
       };
 
       socket.onclose = function (event) {
