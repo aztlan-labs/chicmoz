@@ -61,7 +61,7 @@ export const Landing: FC = () => {
     <div className="mx-auto px-[70px] max-w-[1440px]">
       <div className="flex flex-row flex-wrap justify-center gap-2 m-8">
         <div className="bg-white w-3/12 rounded-lg shadow-md p-4">
-          <p>Total Blocks</p>
+          <p>Total Tx Effects</p>
           {getStatsData(
             loadingTotalEffects,
             errorTotalEffects,

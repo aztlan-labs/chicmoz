@@ -11,24 +11,20 @@ import {
 } from "../../../database/schema/l2contract/index.js";
 
 export const storeContractInstance = async (
-  instance: ChicmozL2ContractInstanceDeployedEvent,
+  instance: ChicmozL2ContractInstanceDeployedEvent
 ): Promise<void> => {
-
   await db()
     .insert(l2ContractInstanceDeployed)
     .values({
       ...instance,
-    })
-    .onConflictDoNothing();
+    });
 };
 export const storeContractClass = async (
-  contractClass: ChicmozL2ContractClassRegisteredEvent,
+  contractClass: ChicmozL2ContractClassRegisteredEvent
 ): Promise<void> => {
-
   await db()
     .insert(l2ContractClassRegistered)
     .values({
       ...contractClass,
-    })
-    .onConflictDoNothing();
+    });
 };

@@ -4,12 +4,12 @@ import {
   ContractInstanceDeployedEvent,
 } from "@aztec/circuits.js";
 import { ClassRegistererAddress } from "@aztec/protocol-contracts/class-registerer";
+import { blockFromString, parseBlock } from "@chicmoz-pkg/backend-utils";
 import { NewBlockEvent } from "@chicmoz-pkg/message-registry";
-import { parseBlock, blockFromString } from "@chicmoz-pkg/backend-utils";
 import {
+  ChicmozL2Block,
   chicmozL2ContractClassRegisteredEventSchema,
   chicmozL2ContractInstanceDeployedEventSchema,
-  type ChicmozL2Block,
   type ChicmozL2ContractClassRegisteredEvent,
   type ChicmozL2ContractInstanceDeployedEvent,
 } from "@chicmoz-pkg/types";
@@ -30,7 +30,7 @@ export const onBlock = async ({ block, blockNumber }: NewBlockEvent) => {
   } catch (e) {
     logger.error(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      `Failed to parse block ${blockNumber}: ${e}`
+      `Failed to parse block ${blockNumber}: ${(e as Error)?.stack ?? e}`
     );
     return;
   }
@@ -38,21 +38,39 @@ export const onBlock = async ({ block, blockNumber }: NewBlockEvent) => {
   await storeContracts(b, parsedBlock.hash);
 };
 
-const storeBlock = async (parsedBlock: ChicmozL2Block) => {
-  try {
-    logger.info(`🧢 Storing block ${parsedBlock.height} (hash: ${parsedBlock.hash})`);
-    // logger.info(JSON.stringify(parsedBlock));
-    await controllers.l2Block.store(parsedBlock);
-  } catch (e) {
+type PartialDbError = {
+  code: string;
+};
+
+const handleDuplicateError = (
+  e: Error | PartialDbError,
+  additionalInfo: string
+) => {
+  if ((e as PartialDbError).code === "23505") {
+    logger.warn(`DB Duplicate: ${additionalInfo}`);
+    return;
+  }
+  if ((e as Error).stack) {
     logger.error(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      `Failed to store block ${parsedBlock.height}: ${(e as Error)?.stack ?? e}`
+      `Failed to store ${additionalInfo}: ${(e as Error)?.stack}`
     );
+    return;
   }
+  logger.warn(JSON.stringify(e));
+  logger.error(new Error(`Failed to store ${additionalInfo}`).stack);
+};
+
+const storeBlock = async (parsedBlock: ChicmozL2Block) => {
+  logger.info(
+    `🧢 Storing block ${parsedBlock.height} (hash: ${parsedBlock.hash})`
+  );
+  await controllers.l2Block.store(parsedBlock).catch((e) => {
+    handleDuplicateError(e as Error, `block ${parsedBlock.height}`);
+  });
 };
 
 const storeContracts = async (b: L2Block, blockHash: string) => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
   const blockLogs = b.body.txEffects
     .flatMap((txEffect) => (txEffect ? [txEffect.unencryptedLogs] : []))
     .flatMap((txLog) => txLog.unrollLogs());
@@ -103,27 +121,23 @@ const storeContracts = async (b: L2Block, blockHash: string) => {
   }
 
   for (const contractClass of parsedContractClasses) {
-    try {
-      await controllers.l2Contract.storeContractClass(contractClass);
-    } catch (e) {
-      logger.error(
-        `Failed to store contractClass (${
-          contractClass.contractClassId
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        }) in block ${blockHash}): ${(e as Error)?.stack ?? e}`
-      );
-    }
+    await controllers.l2Contract
+      .storeContractClass(contractClass)
+      .catch((e) => {
+        handleDuplicateError(
+          e as Error,
+          `contractClass ${contractClass.contractClassId}`
+        );
+      });
   }
   for (const contractInstance of parsedContractInstances) {
-    try {
-      await controllers.l2Contract.storeContractInstance(contractInstance);
-    } catch (e) {
-      logger.error(
-        `Failed to store contractInstance (${
-          contractInstance.address
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        }) in block ${blockHash}): ${(e as Error)?.stack ?? e}`
-      );
-    }
+    await controllers.l2Contract
+      .storeContractInstance(contractInstance)
+      .catch((e) => {
+        handleDuplicateError(
+          e as Error,
+          `contractInstance ${contractInstance.address}`
+        );
+      });
   }
 };
