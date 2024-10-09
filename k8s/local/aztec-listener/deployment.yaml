@@ -62,11 +62,11 @@ spec:
             - name: POSTGRES_PASSWORD
               value: "secret-local-password"
             - name: IGNORE_PROCESSED_HEIGHT
-              value: "true"
+              value: "false"
             - name: AZTEC_DISABLED
               value: "false"
             - name: AZTEC_GENESIS_CATCHUP
-              value: "false"
+              value: "true"
             - name: AZTEC_LISTEN_FOR_BLOCKS
               value: "true"
             - name: AZTEC_RPC_URL
