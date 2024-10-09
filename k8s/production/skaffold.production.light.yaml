@@ -3,51 +3,48 @@ kind: Config
 metadata:
   name: chicmoz-prod
 build:
-  local:
-    push: false
   artifacts:
-    - image: chicmoz-base
+    - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
       context: .
       docker:
         dockerfile: Dockerfile
-    - image: explorer-ui
+    - image: registry.digitalocean.com/aztlan-containers/explorer-ui
       context: services/explorer-ui
       docker:
         dockerfile: Dockerfile
         buildArgs:
           NODE_ENV: "production"
-          VITE_API_URL: "https://api.chicmoz.info/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4"
-          VITE_WS_URL: "wss://ws.chicmoz.info"
+          VITE_API_URL: "https://api.chicmoz.info/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4" # TODO: change the api key
       requires:
-        - image: chicmoz-base
+        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
           alias: BASE
-    - image: auth
+    - image: registry.digitalocean.com/aztlan-containers/auth
       context: services/auth
       docker:
         dockerfile: Dockerfile
       requires:
-        - image: chicmoz-base
+        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
           alias: BASE
-    - image: aztec-listener
+    - image: registry.digitalocean.com/aztlan-containers/aztec-listener
       context: services/aztec-listener
       docker:
         dockerfile: Dockerfile
       requires:
-        - image: chicmoz-base
+        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
           alias: BASE
-    - image: explorer-api
+    - image: registry.digitalocean.com/aztlan-containers/explorer-api
       context: services/explorer-api
       docker:
         dockerfile: Dockerfile
       requires:
-        - image: chicmoz-base
+        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
           alias: BASE
-    - image: websocket-event-publisher
+    - image: registry.digitalocean.com/aztlan-containers/websocket-event-publisher
       context: services/websocket-event-publisher
       docker:
         dockerfile: Dockerfile
       requires:
-        - image: chicmoz-base
+        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
           alias: BASE
 manifests:
   rawYaml:
