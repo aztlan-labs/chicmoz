@@ -37,6 +37,8 @@ do
     if [ -n "$LATEST_IMAGE" ]; then
       echo "Tagging and pushing $LATEST_IMAGE as registry.digitalocean.com/aztlan-containers/$image:$TAG"
       docker tag "$LATEST_IMAGE" "registry.digitalocean.com/aztlan-containers/$image:$TAG"
+      echo "Tagging and pushing $LATEST_IMAGE as registry.digitalocean.com/aztlan-containers/$image:latest"
+      docker tag "$LATEST_IMAGE" "registry.digitalocean.com/aztlan-containers/$image:latest"
       docker push "registry.digitalocean.com/aztlan-containers/$image:$TAG"
     else
       echo "Failed to find latest image for $image"
