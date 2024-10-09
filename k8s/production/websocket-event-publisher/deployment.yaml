@@ -21,8 +21,8 @@ spec:
           name: websocket-event-publisher
           resources:
             limits:
-              memory: 4096Mi
-              cpu: 350m
+              memory: 2048Mi
+              cpu: 250m
           ports:
             - name: websocket-port
               containerPort: 3000
