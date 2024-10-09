@@ -27,7 +27,8 @@ export const useWebSocketConnection = () => {
     const d = JSON.parse(data);
     const block = chicmozL2BlockSchema.parse(d);
     queryClient.setQueryData(["latestBlock"], block);
-    queryClient.setQueryData(["latestBlocks"], (oldData: ChicmozL2Block[]) => {
+    queryClient.setQueryData(["latestBlocks"], (oldData: ChicmozL2Block[] | undefined) => {
+      if (!oldData) return [block];
       if (oldData.find((b) => b.hash === block.hash)) return oldData;
       return [block, ...oldData];
     });
