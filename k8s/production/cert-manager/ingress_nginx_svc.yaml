@@ -1,4 +1,4 @@
-# this is a workaroung for deploying cert-manager with nginx-ingress on digital ocean
+# this is a workaround for deploying cert-manager with nginx-ingress on digital ocean
 # for reference see: https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nginx-ingress-with-cert-manager-on-digitalocean-kubernetes#step-5-enabling-pod-communication-through-the-load-balancer-optional
 apiVersion: v1
 kind: Service
