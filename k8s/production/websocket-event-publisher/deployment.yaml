@@ -18,6 +18,11 @@ spec:
     spec:
       containers:
         - image: registry.digitalocean.com/aztlan-containers/websocket-event-publisher:latest
+          name: websocket-event-publisher
+          resources:
+            limits:
+              memory: 4096Mi
+              cpu: 350m
           ports:
             - name: websocket-port
               containerPort: 3000
@@ -25,3 +30,4 @@ spec:
           env:
             - name: PORT
               value: "3000"
+status: {}
