@@ -17,13 +17,22 @@ const pool = new pg.Pool(dbCredentials);
 const db = drizzle(pool, { logger: new MyLogger() });
 const retries = 50;
 
-async function printTableList(client: PoolClient) {
+async function printTableList(client: PoolClient, ID: string): Promise<void> {
   const res = await client.query(
     "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name"
   );
-  console.log("==============================");
+  console.log(`=========== ${ID} ============`);
   res.rows.forEach((row) => console.log(row.table_name));
   console.log("==============================");
+}
+
+async function tryMigrate() {
+  const client = await pool.connect();
+  await printTableList(client, "BEFORE MIGRATION");
+  await migrate(db, { migrationsFolder: "./migrations" });
+  await printTableList(client, "AFTER MIGRATION");
+  client.release();
+  console.log("👌 Client released");
 }
 
 async function runMigrations() {
@@ -31,40 +40,26 @@ async function runMigrations() {
   console.log(
     `host: ${dbCredentials.host} port: ${dbCredentials.port} db: ${dbCredentials.database} user: ${dbCredentials.user}`
   );
-
-  const client = await pool.connect();
-  try {
-    console.log("TABLES BEFORE MIGRATION:");
-    await printTableList(client);
-
-    const tryIt = async () =>
-      await migrate(db, { migrationsFolder: "./migrations" });
-
-    await backOff(tryIt, {
-      maxDelay: 10000,
-      numOfAttempts: retries,
-      retry: (e, attemptNumber: number) => {
-        if (e.code === "ECONNREFUSED") {
-          console.log(`Retrying attempt ${attemptNumber} of ${retries}...`);
-          return true;
-        }
-        console.error(e);
-        return false;
-      },
-    });
-
-    console.log("TABLES AFTER MIGRATION:");
-    await printTableList(client);
-
-    console.log("🤩 Migrations complete!");
-  } finally {
-    client.release();
-    await pool.end();
-  }
+  await backOff(() => tryMigrate(), {
+    maxDelay: 10000,
+    numOfAttempts: retries,
+    retry: (e, attemptNumber: number) => {
+      if (e.code === "ECONNREFUSED") {
+        console.log(`Retrying attempt ${attemptNumber} of ${retries}...`);
+        return true;
+      }
+      console.error(e);
+      return false;
+    },
+  });
+  console.log("🤩 Migrations complete!");
+  await pool.end();
+  console.log("👋 Pool closed!");
 }
 
 runMigrations().catch(async (e) => {
   console.error(e);
   await pool.end();
+  console.log("👋 Pool closed!");
   process.exit(1);
 });
