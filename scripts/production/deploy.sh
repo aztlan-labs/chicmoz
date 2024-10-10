@@ -13,6 +13,7 @@ IMAGES_TO_PUSH=(
   "websocket-event-publisher"
 )
 
+echo "⚠  Building images - this may take a while..."
 # Build images and get the build output
 BUILD_OUTPUT=$(skaffold build --filename "k8s/production/skaffold.production.light.yaml" --quiet)
 
