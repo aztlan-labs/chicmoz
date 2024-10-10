@@ -92,11 +92,9 @@ manifests:
           controller.config.enable-real-ip: "true"
           controller.config.proxy-add-original-uri-header: "true"
           controller.config.real-ip-header: "proxy_protocol"
-          #controller.config.use-forwarded-headers: "true" # AI told me to do it
+          controller.config.use-forwarded-headers: "true"
           controller.config.use-proxy-protocol: "true"
           controller.config.set-real-ip-from: "0.0.0.0/0"
-          controller.extraArgs.enable-ssl-passthrough: "" # AI told me to do it
-          controller.config.proxy-protocol-header-timeout: "5s" # AI told me to do it
           controller.service.annotations.service\.beta\.kubernetes\.io/do-loadbalancer-protocol: "tcp"
           controller.service.annotations.service\.beta\.kubernetes\.io/do-loadbalancer-enable-proxy-protocol: "true"
       - name: postgresql

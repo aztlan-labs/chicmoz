@@ -40,6 +40,7 @@ do
       echo "Tagging and pushing $LATEST_IMAGE as registry.digitalocean.com/aztlan-containers/$image:latest"
       docker tag "$LATEST_IMAGE" "registry.digitalocean.com/aztlan-containers/$image:latest"
       docker push "registry.digitalocean.com/aztlan-containers/$image:$TAG"
+      docker push "registry.digitalocean.com/aztlan-containers/$image:latest"
     else
       echo "Failed to find latest image for $image"
       exit 1
