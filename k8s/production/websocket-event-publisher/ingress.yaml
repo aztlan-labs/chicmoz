@@ -2,15 +2,19 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress-websocket-event-publisher
-  namespace: chicmoz
+  namespace: chicmoz-prod
   annotations:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-    nginx.ingress.kubernetes.io/websocket-services: "websocket-event-publisher"
+    cert-manager.io/cluster-issuer: "chicmoz-issuer-production"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - ws.chicmoz.info
+      secretName: chicmoz-ws-tls
   rules:
-    - host: ws.localhost
+    - host: ws.chicmoz.info
       http:
         paths:
           - path: /

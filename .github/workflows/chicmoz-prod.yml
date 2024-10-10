@@ -35,8 +35,7 @@ jobs:
 
       - name: Cleanup old images
         run: |
-          chmod +x ".github/workflows/cleanup-script.sh"
-          bash -x ".github/workflows/cleanup-script.sh"
+          bash -x "scripts/production/cleanup-registry.sh"
 
       - name: Save DigitalOcean kubeconfig
         run: doctl kubernetes cluster kubeconfig save "chicmoz-prod"
@@ -47,7 +46,7 @@ jobs:
           RETRY_DELAY=10
 
           for i in $(seq 1 $MAX_RETRIES); do
-            if skaffold run --filename "k8s/production/skaffold.production.light.yaml" --default-repo=registry.digitalocean.com/aztlan-containers; then
+            if bash -x scripts/production/deploy.sh; then
               echo "Deployment successful"
               exit 0
             fi

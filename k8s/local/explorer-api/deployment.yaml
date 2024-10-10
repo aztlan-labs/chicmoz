@@ -37,8 +37,8 @@ spec:
         - image: explorer-api:latest
           resources:
             limits:
-              memory: 4096Mi
-              cpu: 350m
+              memory: 2048Mi
+              cpu: 250m
           ports:
             - name: http-app
               containerPort: 80
