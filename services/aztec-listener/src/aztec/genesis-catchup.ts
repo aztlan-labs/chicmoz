@@ -12,7 +12,7 @@ export const startCatchup = async ({
   from: number;
   to: number;
 }) => {
-  logger.info("Starting genesis catchup...");
+  logger.info(`🐨 starting catchup from ${from} to ${to-1}`);
   for (let i = from; i < to; i++) {
     const blockRes = await getBlock(i);
     if (!blockRes) throw new Error("FATAL: Catchup received no block.");
