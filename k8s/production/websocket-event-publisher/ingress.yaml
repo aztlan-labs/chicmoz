@@ -6,7 +6,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-    cert-manager.io/cluster-issuer: "chicmoz-issuer-staging"
+    cert-manager.io/cluster-issuer: "chicmoz-issuer-production"
 spec:
   ingressClassName: nginx
   tls:
