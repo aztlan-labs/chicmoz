@@ -15,6 +15,7 @@ export const logFetchFailedCause = (e: Error) => {
 };
 
 export const init = async () => {
+  logger.info(`Initializing Aztec node client with ${AZTEC_RPC_URL}`);
   aztecNode = createAztecNodeClient(AZTEC_RPC_URL);
   return getNodeInfo().catch(logFetchFailedCause);
 };
