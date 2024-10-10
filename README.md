@@ -16,7 +16,8 @@ minikube start --kubernetes-version=v1.25.3 --cpus max --memory max && skaffold 
 
 terminal 2:
 
-_Make sure you have .chicmoz-local.env file in the root_
+⚠ _will ask for your password in order to port forward_
+⚠ _Make sure you have .chicmoz-local.env file in the root_
 
 ```sh
 # It will end with keeping the terminal open for the tunnel. (Also it will ask for your password)
