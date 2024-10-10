@@ -64,7 +64,7 @@ manifests:
     - k8s/production/websocket-event-publisher/deployment.yaml
     - k8s/production/websocket-event-publisher/service.yaml
     - k8s/production/cert-manager/cert-staging-issuer.yaml
-    - k8s/production/cert-manager/cert-prod-issuer.yaml
+    - k8s/production/cert-manager/cert-production-issuer.yaml
     - k8s/production/cert-manager/ingress_nginx_svc.yaml
   helm:
     releases:
