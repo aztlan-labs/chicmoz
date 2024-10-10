@@ -3,12 +3,14 @@ kind: Config
 metadata:
   name: chicmoz-prod
 build:
+  local:
+    push: false
   artifacts:
-    - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
+    - image: chicmoz-base
       context: .
       docker:
         dockerfile: Dockerfile
-    - image: registry.digitalocean.com/aztlan-containers/explorer-ui
+    - image: explorer-ui
       context: services/explorer-ui
       docker:
         dockerfile: Dockerfile
@@ -17,35 +19,35 @@ build:
           VITE_API_URL: "https://api.chicmoz.info/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4" # TODO: change the api key
           VITE_WS_URL: "wss://ws.chicmoz.info"
       requires:
-        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
+        - image: chicmoz-base
           alias: BASE
-    - image: registry.digitalocean.com/aztlan-containers/auth
+    - image: auth
       context: services/auth
       docker:
         dockerfile: Dockerfile
       requires:
-        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
+        - image: chicmoz-base
           alias: BASE
-    - image: registry.digitalocean.com/aztlan-containers/aztec-listener
+    - image: aztec-listener
       context: services/aztec-listener
       docker:
         dockerfile: Dockerfile
       requires:
-        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
+        - image: chicmoz-base
           alias: BASE
-    - image: registry.digitalocean.com/aztlan-containers/explorer-api
+    - image: explorer-api
       context: services/explorer-api
       docker:
         dockerfile: Dockerfile
       requires:
-        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
+        - image: chicmoz-base
           alias: BASE
-    - image: registry.digitalocean.com/aztlan-containers/websocket-event-publisher
+    - image: websocket-event-publisher
       context: services/websocket-event-publisher
       docker:
         dockerfile: Dockerfile
       requires:
-        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
+        - image: chicmoz-base
           alias: BASE
 manifests:
   rawYaml:
