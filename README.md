@@ -8,21 +8,37 @@ Requirements:
 - [skaffold](https://skaffold.dev/docs/install/)
 - [yarn](https://yarnpkg.com/getting-started/install)
 
-terminal 1:
+**terminal 1:**
 
 ```sh
 minikube start --kubernetes-version=v1.25.3 --cpus max --memory max && skaffold run
 ```
 
-terminal 2:
+**terminal 2:**
 
-⚠ _will ask for your password in order to port forward_
-⚠ _Make sure you have .chicmoz-local.env file in the root_
+⚠️ _will ask for your password in order to port forward_
+
+⚠️ _Make sure you have .chicmoz-local.env file in the root_
 
 ```sh
-# It will end with keeping the terminal open for the tunnel. (Also it will ask for your password)
+# It will end with keeping the terminal open for the tunnel.
 ./scripts/miscallaneous.sh
 ```
+
+### with Sandbox
+
+Default settings is to run against the Devnet, if you want to run against the Sandbox you need to do one of the following:
+
+#### Option 1 - your own existing sandbox running on your machine
+
+Update the `CHICMOZ_AZTEC_RPC` in the `.chicmoz-local.env` to your sandbox rpc url.
+
+#### Option 2 - run the sandbox in the local cluster
+
+Update to the commented out config in both...
+
+- `k8s/local/skaffold.local.yaml`
+- `k8s/local/aztec-listener/deployment.yaml`
 
 ## Pro tip
 
