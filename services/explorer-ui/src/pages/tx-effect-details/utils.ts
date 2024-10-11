@@ -1,6 +1,6 @@
-import { ChicmozL2TxEffect } from "@chicmoz-pkg/types";
+import { type ChicmozL2TxEffectDeluxe } from "@chicmoz-pkg/types";
 
-export const getTxEffectData = (data: ChicmozL2TxEffect) => [
+export const getTxEffectData = (data: ChicmozL2TxEffectDeluxe) => [
   {
     label: "HASH",
     value: data.hash,
