@@ -4,7 +4,10 @@ import {
   AZTEC_GENESIS_CATCHUP,
   AZTEC_LISTEN_FOR_BLOCKS,
 } from "../constants.js";
-import { getHeight as getLatestProcessedHeight } from "../database/latestProcessedHeight.controller.js";
+import {
+  getHeight as getLatestProcessedHeight,
+  storeHeight,
+} from "../database/latestProcessedHeight.controller.js";
 import { logger } from "../logger.js";
 import {
   getLatestHeight,
@@ -33,14 +36,21 @@ export const init = async () => {
   }, backOffOptions);
   logger.info(`AZTEC: initialized: ${JSON.stringify(nodeInfo)}`);
 
-  const latestProcessedHeight = await getLatestProcessedHeight();
-  const pollFromHeight = latestProcessedHeight
+  const latestProcessedHeight = (await getLatestProcessedHeight()) ?? 0;
+  const chainHeight = await getLatestHeight();
+  const isOffSync = chainHeight < latestProcessedHeight;
+  if (isOffSync) {
+    logger.warn(
+      `🤡 AZTEC: chain height is ${chainHeight} but we've processed up to ${latestProcessedHeight}`
+    );
+    await storeHeight(0);
+  }
+  const pollFromHeight = !isOffSync && latestProcessedHeight
     ? latestProcessedHeight + 1
-    : await getLatestHeight();
+    : chainHeight;
   if (AZTEC_GENESIS_CATCHUP)
     await startCatchup({ from: 1, to: pollFromHeight });
-  if (AZTEC_LISTEN_FOR_BLOCKS)
-    startPolling({ fromHeight: pollFromHeight });
+  if (AZTEC_LISTEN_FOR_BLOCKS) startPolling({ fromHeight: pollFromHeight });
 
   return {
     id: "AZTEC",
