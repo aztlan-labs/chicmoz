@@ -7,11 +7,36 @@ let wss: WebSocketServer;
 
 export const sendBlockToClients = (block: ChicmozL2Block) => {
   if (!wss) throw new Error("WebSocket server is not initialized");
+  const clientStatuses: {
+    sent: number;
+    failed: number;
+  } = {
+    sent: 0,
+    failed: 0,
+  };
   wss.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN)
-      client.send(JSON.stringify(block));
-    else logger.warn(`WS: client not connected!`);
+    if (client.readyState === WebSocket.OPEN) {
+      try {
+        client.send(JSON.stringify(block));
+        clientStatuses.sent++;
+      } catch (e) {
+        logger.warn(
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          `Encountered error while sending block: ${e}, continuing...`
+        );
+        clientStatuses.failed++;
+      }
+    } else {
+      logger.warn(
+        `Client is not open, skipping... (readyState: ${client.readyState})`
+      );
+      clientStatuses.failed++;
+    }
   });
+  const totalClients = wss.clients.size;
+  logger.info(
+    `📡 Sent block ${block.header.globalVariables.blockNumber} to ${clientStatuses.sent} clients (failed: ${clientStatuses.failed}, total: ${totalClients})`
+  );
 };
 
 export const init = async () => {
@@ -27,14 +52,9 @@ export const init = async () => {
   });
 
   wss.on("connection", (connectedWs) => {
-    logger.info(`🧍 WS: client connected`);
-    connectedWs.on("message", (incomingMessage) => {
-      // REMOVEME
-      logger.info(`Received message: ${JSON.stringify(incomingMessage)}`);
-      connectedWs.send(`SERVER ECHO: ${JSON.stringify(incomingMessage)}`);
-    });
+    logger.info(`🧍 WS: client connected    (total: ${wss.clients.size})`);
     connectedWs.on("close", function close() {
-      logger.info(`🚪 WS: client disconnected`);
+      logger.info(`🚪 WS: client disconnected (total: ${wss.clients.size})`);
     });
   });
 

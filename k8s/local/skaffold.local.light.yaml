@@ -22,6 +22,7 @@ build:
         buildArgs:
           NODE_ENV: "development"
           VITE_API_URL: "http://explorer-api.localhost:80/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4"
+          VITE_WS_URL: "ws://ws.localhost:80" # TODO: use API_KEY
       requires:
         - image: chicmoz-base
           alias: BASE
@@ -46,6 +47,13 @@ build:
       requires:
         - image: chicmoz-base
           alias: BASE
+    - image: websocket-event-publisher
+      context: services/websocket-event-publisher
+      docker:
+        dockerfile: Dockerfile
+      requires:
+        - image: chicmoz-base
+          alias: BASE
 manifests:
   rawYaml:
     - k8s/local/common/namespace.yaml
@@ -55,6 +63,9 @@ manifests:
     - k8s/local/explorer-api/ingress.yaml
     - k8s/local/explorer-api/deployment.yaml
     - k8s/local/explorer-api/service.yaml
+    - k8s/local/websocket-event-publisher/ingress.yaml
+    - k8s/local/websocket-event-publisher/deployment.yaml
+    - k8s/local/websocket-event-publisher/service.yaml
     - k8s/local/auth/deployment.yaml
     - k8s/local/auth/service.yaml
     # - k8s/local/dummy-node/ingress.yaml
