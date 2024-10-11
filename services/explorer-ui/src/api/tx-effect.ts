@@ -1,25 +1,25 @@
 import {
-  chicmozL2TxEffectSchema,
-  type ChicmozL2TxEffect,
+  chicmozL2TxEffectDeluxeSchema,
+  type ChicmozL2TxEffectDeluxe,
 } from "@chicmoz-pkg/types";
 import { z } from "zod";
 import { aztecExplorer } from "~/service/constants";
 import client, { validateResponse } from "./client";
 
 export const TxEffectsAPI = {
-  getTxEffectByHash: async (hash: string): Promise<ChicmozL2TxEffect> => {
+  getTxEffectByHash: async (hash: string): Promise<ChicmozL2TxEffectDeluxe> => {
     const response = await client.get(
       `${aztecExplorer.getL2TxEffectByHash}/${hash}`,
     );
-    return validateResponse(chicmozL2TxEffectSchema, response.data);
+    return validateResponse(chicmozL2TxEffectDeluxeSchema, response.data);
   },
   getTxEffectsByHeight: async (
     height: number,
-  ): Promise<ChicmozL2TxEffect[]> => {
+  ): Promise<ChicmozL2TxEffectDeluxe[]> => {
     const response = await client.get(
       aztecExplorer.getL2TxEffectsByHeight(height),
     );
-    return validateResponse(z.array(chicmozL2TxEffectSchema), response.data);
+    return validateResponse(z.array(chicmozL2TxEffectDeluxeSchema), response.data);
   },
   getTxEffectByHeightAndIndex: async (
     height: number,

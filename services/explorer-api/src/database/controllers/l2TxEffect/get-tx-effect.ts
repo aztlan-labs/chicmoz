@@ -1,10 +1,11 @@
 import {
   ChicmozL2TxEffect,
+  ChicmozL2TxEffectDeluxe,
   EncryptedLogEntry,
   HexString,
   NoteEncryptedLogEntry,
   UnencryptedLogEntry,
-  chicmozL2TxEffectSchema,
+  chicmozL2TxEffectDeluxeSchema,
   encryptedLogEntrySchema,
   noteEncryptedLogEntrySchema,
   unencryptedLogEntrySchema,
@@ -13,9 +14,10 @@ import { and, asc, eq, getTableColumns } from "drizzle-orm";
 import { z } from "zod";
 import { getDb as db } from "../../../database/index.js";
 import {
-  body,
   bodyToTxEffects,
   functionLogs,
+  globalVariables,
+  header,
   l2Block,
   logs,
   publicDataWrite,
@@ -154,7 +156,7 @@ export const getTxEffectNestedById = async (
 export const getTxEffectByBlockHeightAndIndex = async (
   blockHeight: number,
   txEffectIndex: number
-): Promise<ChicmozL2TxEffect | null> => {
+): Promise<ChicmozL2TxEffectDeluxe | null> => {
   const res = await _getTxEffects({
     blockHeight,
     txEffectIndex,
@@ -168,21 +170,24 @@ export const getTxEffectByBlockHeightAndIndex = async (
 
 export const getTxEffectsByBlockHeight = async (
   height: number
-): Promise<ChicmozL2TxEffect[]> => {
+): Promise<ChicmozL2TxEffectDeluxe[]> => {
   return _getTxEffects({ blockHeight: height, getType: GetTypes.BlockHeight });
 };
 
 const _getTxEffects = async (
   args: GetTxEffectByBlockHeightAndIndex | GetTxEffectsByBlockHeight
-) => {
+): Promise<ChicmozL2TxEffectDeluxe[]> => {
   const joinQuery = db()
     .select({
-      txEffect: getTableColumns(txEffect),
+      ...getTableColumns(txEffect),
+      blockHeight: l2Block.height,
+      timestamp: globalVariables.timestamp,
     })
     .from(l2Block)
-    .innerJoin(body, eq(l2Block.bodyId, body.id))
-    .innerJoin(bodyToTxEffects, eq(body.id, bodyToTxEffects.bodyId))
-    .innerJoin(txEffect, eq(bodyToTxEffects.txEffectId, txEffect.id));
+    .innerJoin(bodyToTxEffects, eq(txEffect.id, bodyToTxEffects.txEffectId))
+    .innerJoin(l2Block, eq(bodyToTxEffects.bodyId, l2Block.bodyId))
+    .innerJoin(header, eq(l2Block.headerId, header.id))
+    .innerJoin(globalVariables, eq(header.globalVariablesId, globalVariables.id))
 
   let whereQuery;
 
@@ -208,28 +213,34 @@ const _getTxEffects = async (
 
   const txEffects = await Promise.all(
     dbRes.map(async (txEffect) => {
-      const nestedData = await getTxEffectNestedById(txEffect.txEffect.id);
+      const nestedData = await getTxEffectNestedById(txEffect.id);
       return {
-        ...txEffect.txEffect,
+        ...txEffect,
         ...nestedData,
       };
     })
   );
 
   return z
-    .array(chicmozL2TxEffectSchema)
+    .array(chicmozL2TxEffectDeluxeSchema)
     .parseAsync(txEffects)
     .catch(dbParseErrorCallback);
 };
 
 export const getTxeffectByHash = async (
   hash: HexString,
-): Promise<ChicmozL2TxEffect | null> => {
+): Promise<ChicmozL2TxEffectDeluxe | null> => {
   const dbRes = await db()
     .select({
       ...getTableColumns(txEffect),
+      blockHeight: l2Block.height,
+      timestamp: globalVariables.timestamp
     })
     .from(txEffect)
+    .innerJoin(bodyToTxEffects, eq(txEffect.id, bodyToTxEffects.txEffectId))
+    .innerJoin(l2Block, eq(bodyToTxEffects.bodyId, l2Block.bodyId))
+    .innerJoin(header, eq(l2Block.headerId, header.id))
+    .innerJoin(globalVariables, eq(header.globalVariablesId, globalVariables.id))
     .where(eq(txEffect.hash, hash))
     .limit(1)
     .execute();
@@ -238,7 +249,7 @@ export const getTxeffectByHash = async (
 
   const nestedData = await getTxEffectNestedById(dbRes[0].id);
 
-  return chicmozL2TxEffectSchema
+  return chicmozL2TxEffectDeluxeSchema
     .parseAsync({
       ...dbRes[0],
       ...nestedData,

@@ -3,7 +3,7 @@ import { z } from "zod";
 import {
   chicmozL2BlockSchema,
   chicmozL2ContractInstanceDeluxeSchema,
-  chicmozL2TxEffectSchema,
+  chicmozL2TxEffectDeluxeSchema,
 } from "@chicmoz-pkg/types";
 import { generateSchema } from "@anatine/zod-openapi";
 
@@ -34,7 +34,7 @@ export const txEffectResponse = {
     description: "Successful response",
     content: {
       "application/json": {
-        schema: generateSchema(chicmozL2TxEffectSchema),
+        schema: generateSchema(chicmozL2TxEffectDeluxeSchema),
       },
     },
   },
@@ -45,7 +45,7 @@ export const txEffectResponseArray = {
     description: "Successful response",
     content: {
       "application/json": {
-        schema: generateSchema(z.array(chicmozL2TxEffectSchema)),
+        schema: generateSchema(z.array(chicmozL2TxEffectDeluxeSchema)),
       },
     },
   },
