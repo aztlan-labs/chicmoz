@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { hexStringSchema } from "../general.js";
 import { aztecAddressSchema, frNumberSchema, frSchema } from "./utils.js";
-import { chicmozL2BlockSchema } from "./l2Block.js";
 
 export const noteEncryptedLogEntrySchema = z.object({
   data: z.string(),
@@ -59,15 +58,8 @@ export const chicmozL2TxEffectSchema = z.object({
   }),
 });
 
-export const chicmozL2TxEffectDeluxeSchema = z.object({
-  ...chicmozL2TxEffectSchema.shape,
-  blockHeight: chicmozL2BlockSchema.shape.height,
-  timestamp: chicmozL2BlockSchema.shape.header.shape.globalVariables.shape.timestamp,
-});
-
 export type NoteEncryptedLogEntry = z.infer<typeof noteEncryptedLogEntrySchema>;
 export type EncryptedLogEntry = z.infer<typeof encryptedLogEntrySchema>;
 export type UnencryptedLogEntry = z.infer<typeof unencryptedLogEntrySchema>;
 
 export type ChicmozL2TxEffect = z.infer<typeof chicmozL2TxEffectSchema>;
-export type ChicmozL2TxEffectDeluxe = z.infer<typeof chicmozL2TxEffectDeluxeSchema>;
