@@ -14,7 +14,6 @@ import { and, asc, eq, getTableColumns } from "drizzle-orm";
 import { z } from "zod";
 import { getDb as db } from "../../../database/index.js";
 import {
-  body,
   bodyToTxEffects,
   functionLogs,
   globalVariables,
@@ -180,16 +179,15 @@ const _getTxEffects = async (
 ): Promise<ChicmozL2TxEffectDeluxe[]> => {
   const joinQuery = db()
     .select({
-      txEffect: getTableColumns(txEffect),
+      ...getTableColumns(txEffect),
       blockHeight: l2Block.height,
       timestamp: globalVariables.timestamp,
     })
     .from(l2Block)
-    .innerJoin(body, eq(l2Block.bodyId, body.id))
-    .innerJoin(bodyToTxEffects, eq(body.id, bodyToTxEffects.bodyId))
-    .innerJoin(txEffect, eq(bodyToTxEffects.txEffectId, txEffect.id))
+    .innerJoin(bodyToTxEffects, eq(txEffect.id, bodyToTxEffects.txEffectId))
+    .innerJoin(l2Block, eq(bodyToTxEffects.bodyId, l2Block.bodyId))
     .innerJoin(header, eq(l2Block.headerId, header.id))
-    .innerJoin(globalVariables, eq(header.globalVariablesId, globalVariables.id));
+    .innerJoin(globalVariables, eq(header.globalVariablesId, globalVariables.id))
 
   let whereQuery;
 
@@ -215,9 +213,9 @@ const _getTxEffects = async (
 
   const txEffects = await Promise.all(
     dbRes.map(async (txEffect) => {
-      const nestedData = await getTxEffectNestedById(txEffect.txEffect.id);
+      const nestedData = await getTxEffectNestedById(txEffect.id);
       return {
-        ...txEffect.txEffect,
+        ...txEffect,
         ...nestedData,
       };
     })
@@ -240,7 +238,8 @@ export const getTxeffectByHash = async (
     })
     .from(txEffect)
     .innerJoin(bodyToTxEffects, eq(txEffect.id, bodyToTxEffects.txEffectId))
-    .innerJoin(header, eq(bodyToTxEffects.bodyId, header.id))
+    .innerJoin(l2Block, eq(bodyToTxEffects.bodyId, l2Block.bodyId))
+    .innerJoin(header, eq(l2Block.headerId, header.id))
     .innerJoin(globalVariables, eq(header.globalVariablesId, globalVariables.id))
     .where(eq(txEffect.hash, hash))
     .limit(1)
