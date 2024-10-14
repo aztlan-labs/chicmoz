@@ -13,6 +13,8 @@ export const PARAMETER_LIMIT = Number(process.env.PARAMETER_LIMIT) || 100;
 export const NODE_ENV = process.env.NODE_ENV ?? "development";
 
 export const DB_MAX_BLOCKS = 20;
+export const DB_MAX_TX_EFFECTS = 20;
+export const DB_MAX_CONTRACTS = 20;
 
 export const NETWORK_NAME = process.env.NETWORK_NAME ?? "SANDBOX";
 

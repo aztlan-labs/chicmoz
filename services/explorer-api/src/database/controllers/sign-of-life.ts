@@ -67,6 +67,7 @@ export const getABlockWithContractInstances = async () => {
       hash: l2Block.hash,
     },
     l2ContractInstanceDeployed: {
+      classId: l2ContractInstanceDeployed.contractClassId,
       address: l2ContractInstanceDeployed.address,
       version: l2ContractInstanceDeployed.version,
       // TODO: classId: l2ContractInstanceDeployed.contractClassId,
@@ -86,6 +87,7 @@ export const getABlockWithContractInstances = async () => {
       hash: dbRes[0].l2Block.hash,
     },
     contractInstance: {
+      classId: dbRes[0].l2ContractInstanceDeployed.classId,
       address: dbRes[0].l2ContractInstanceDeployed.address,
       version: dbRes[0].l2ContractInstanceDeployed.version,
     },

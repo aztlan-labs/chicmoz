@@ -8,9 +8,11 @@ import {
   paths,
   txEffectIndex,
   txEffectHash,
+  classId,
+  version,
 } from "../paths_and_validation.js";
 import { NODE_ENV, PUBLIC_API_KEY } from "../../../environment.js";
-import {getCache} from "../../../cache/index.js";
+import { getCache } from "../../../cache/index.js";
 
 const SUB_PATH = `/v1/${PUBLIC_API_KEY}`;
 
@@ -61,6 +63,18 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
   }
 
   if (blockAndAContractInstance) {
+    r.push(
+      paths.contractClass
+        .replace(`:${classId}`, blockAndAContractInstance.contractInstance.classId)
+        .replace(`:${version}`, blockAndAContractInstance.contractInstance.version.toString())
+    );
+    r.push(
+      paths.contractClassesByClassId.replace(
+        `:${classId}`,
+        blockAndAContractInstance.contractInstance.classId
+      )
+    );
+    r.push(paths.contractClasses);
     r.push(
       paths.contractInstancesByBlockHash.replace(
         `:${blockHash}`,
