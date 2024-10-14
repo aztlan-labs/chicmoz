@@ -82,6 +82,12 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
       )
     );
     r.push(
+      paths.contractInstancesByContractClassId.replace(
+        `:${classId}`,
+        blockAndAContractInstance.contractInstance.classId
+      )
+    );
+    r.push(
       paths.contractInstance.replace(
         `:${address}`,
         blockAndAContractInstance.contractInstance.address

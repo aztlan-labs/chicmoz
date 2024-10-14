@@ -5,6 +5,7 @@ import {
   getContractClassesByClassIdSchema,
   getContractInstanceSchema,
   getContractInstancesByBlockHashSchema,
+  getContractInstancesByContractClassIdSchema,
   getContractInstancesSchema,
 } from "../paths_and_validation.js";
 import {
@@ -189,6 +190,36 @@ export const GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH = asyncHandler(
       ["l2", "contracts", "block", blockHash],
       () =>
         db.l2Contract.getL2DeployedContractInstancesByBlockHash(blockHash)
+    );
+    res.status(200).send(instances);
+  }
+);
+
+export const openapi_GET_L2_CONTRACT_INSTANCES_BY_CONTRACT_CLASS_ID = {
+  "/l2/contracts/class/{classId}": {
+    get: {
+      summary: "Get contract instances by contract class id",
+      parameters: [
+        {
+          name: "classId",
+          in: "path",
+          required: true,
+          schema: {
+            type: "string",
+          },
+        },
+      ],
+      responses: contractInstanceResponseArray,
+    },
+  },
+};
+
+export const GET_L2_CONTRACT_INSTANCES_BY_CONTRACT_CLASS_ID = asyncHandler(
+  async (req, res) => {
+    const { classId } = getContractInstancesByContractClassIdSchema.parse(req).params;
+    const instances = await dbWrapper.getLatest(
+      ["l2", "contracts", "class", classId],
+      () => db.l2Contract.getL2DeployedContractInstancesByContractClassId(classId)
     );
     res.status(200).send(instances);
   }

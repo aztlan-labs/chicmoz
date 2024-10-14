@@ -32,7 +32,7 @@ export const init = ({ router }: { router: Router }) => {
   router.get(paths.contractClasses, controller.GET_L2_REGISTERED_CONTRACT_CLASSES);
 
   router.get(paths.contractInstancesByBlockHash, controller.GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH);
-  // TODO: get contract instances by contract class id
+  router.get(paths.contractInstancesByContractClassId, controller.GET_L2_CONTRACT_INSTANCES_BY_CONTRACT_CLASS_ID);
   router.get(paths.contractInstance, controller.GET_L2_CONTRACT_INSTANCE);
   router.get(paths.contractInstances, controller.GET_L2_CONTRACT_INSTANCES);
 
