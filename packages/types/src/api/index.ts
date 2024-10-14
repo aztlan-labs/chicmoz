@@ -11,7 +11,7 @@ export const chicmozSearchQuerySchema = z.object({
   q: z.preprocess((val: unknown) => {
     if (typeof val === "string") {
       if (val.startsWith("0x")) return val;
-      else if (!val.match(/^\d+$/)) return parseInt(val);
+      else if (val.match(/^\d+$/)?.length) return parseInt(val);
       else return `0x${val}`;
     }
     return val;

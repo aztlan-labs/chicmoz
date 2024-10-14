@@ -1,13 +1,13 @@
 import asyncHandler from "express-async-handler";
-import {getSearchSchema} from "../paths_and_validation.js";
-import {
-  searchResultResponse,
-} from "./utils/index.js";
+import { controllers as db } from "../../../database/index.js";
+import { getSearchSchema } from "../paths_and_validation.js";
+import { searchResultResponse } from "./utils/index.js";
 
 export const openapi_SEARCH = {
   "l2/search": {
     get: {
-      summary: "Search for blocks, txEffects, contract classes and contract instances on Aztec",
+      summary:
+        "Search for blocks, txEffects, contract classes and contract instances on Aztec",
       parameters: [
         {
           name: "q",
@@ -18,7 +18,7 @@ export const openapi_SEARCH = {
           },
         },
       ],
-      responses: searchResultResponse
+      responses: searchResultResponse,
     },
   },
 };
@@ -26,7 +26,6 @@ export const openapi_SEARCH = {
 // eslint-disable-next-line @typescript-eslint/require-await
 export const L2_SEARCH = asyncHandler(async (req, res) => {
   const { q } = getSearchSchema.parse(req).query;
-  //const searchResults = await db.l2.search(q);
-  const searchResults = {q};
+  const searchResults = await db.l2.search(q);
   res.status(200).send(searchResults);
 });
