@@ -4,7 +4,19 @@ import {
   chicmozL2TxEffectSchema,
   chicmozL2ContractClassRegisteredEventSchema,
   chicmozL2ContractInstanceDeployedEventSchema,
+  hexStringSchema,
 } from "../index.js";
+
+export const chicmozSearchQuerySchema = z.object({
+  q: z.preprocess((val: unknown) => {
+    if (typeof val === "string") {
+      if (val.startsWith("0x")) return val;
+      else if (!val.match(/^\d+$/)) return parseInt(val);
+      else return `0x${val}`;
+    }
+    return val;
+  }, hexStringSchema.or(chicmozL2BlockSchema.shape.height)),
+});
 
 export const chicmozSearchResultsSchema = z.object({
   searchPhrase: z.string(),
@@ -38,3 +50,4 @@ export const chicmozSearchResultsSchema = z.object({
 });
 
 export type ChicmozSearchResults = z.infer<typeof chicmozSearchResultsSchema>;
+export type ChicmozSearchQuery = z.infer<typeof chicmozSearchQuerySchema>;
