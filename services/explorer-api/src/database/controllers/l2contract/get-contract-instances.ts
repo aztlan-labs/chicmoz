@@ -7,6 +7,7 @@ import {
 } from "../../schema/l2contract/index.js";
 import { getBlocksWhereRange } from "../utils.js";
 import {l2Block} from "../../schema/index.js";
+import {DB_MAX_CONTRACTS} from "../../../environment.js";
 
 export const getL2DeployedContractInstances = async ({
   fromHeight,
@@ -47,7 +48,8 @@ export const getL2DeployedContractInstances = async ({
     )
     .innerJoin(l2Block, eq(l2Block.hash, l2ContractInstanceDeployed.blockHash))
     .where(whereRange)
-    .orderBy(desc(l2ContractInstanceDeployed.version), desc(l2Block.height));
+    .orderBy(desc(l2ContractInstanceDeployed.version), desc(l2Block.height))
+    .limit(DB_MAX_CONTRACTS);
 
   return result.map((r) => chicmozL2ContractInstanceDeluxeSchema.parse(r));
 };
@@ -121,7 +123,8 @@ export const getL2DeployedContractInstancesByContractClassId = async (
       )
     )
     .where(eq(l2ContractInstanceDeployed.contractClassId, contractClassId))
-    .orderBy(desc(l2ContractInstanceDeployed.version));
+    .orderBy(desc(l2ContractInstanceDeployed.version))
+    .limit(DB_MAX_CONTRACTS);
 
   return result;
 }
