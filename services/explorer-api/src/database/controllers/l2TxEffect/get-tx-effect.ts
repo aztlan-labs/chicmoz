@@ -12,6 +12,7 @@ import {
 } from "@chicmoz-pkg/types";
 import { and, asc, eq, getTableColumns } from "drizzle-orm";
 import { z } from "zod";
+import { DB_MAX_TX_EFFECTS } from "../../../environment.js";
 import { getDb as db } from "../../../database/index.js";
 import {
   bodyToTxEffects,
@@ -187,7 +188,10 @@ const _getTxEffects = async (
     .innerJoin(bodyToTxEffects, eq(txEffect.id, bodyToTxEffects.txEffectId))
     .innerJoin(l2Block, eq(bodyToTxEffects.bodyId, l2Block.bodyId))
     .innerJoin(header, eq(l2Block.headerId, header.id))
-    .innerJoin(globalVariables, eq(header.globalVariablesId, globalVariables.id))
+    .innerJoin(
+      globalVariables,
+      eq(header.globalVariablesId, globalVariables.id)
+    );
 
   let whereQuery;
 
@@ -195,7 +199,8 @@ const _getTxEffects = async (
     case GetTypes.BlockHeight:
       whereQuery = joinQuery
         .where(eq(l2Block.height, args.blockHeight))
-        .orderBy(asc(txEffect.index));
+        .orderBy(asc(txEffect.index))
+        .limit(DB_MAX_TX_EFFECTS);
       break;
     case GetTypes.BlockHeightAndIndex:
       whereQuery = joinQuery
@@ -228,19 +233,22 @@ const _getTxEffects = async (
 };
 
 export const getTxeffectByHash = async (
-  hash: HexString,
+  hash: HexString
 ): Promise<ChicmozL2TxEffectDeluxe | null> => {
   const dbRes = await db()
     .select({
       ...getTableColumns(txEffect),
       blockHeight: l2Block.height,
-      timestamp: globalVariables.timestamp
+      timestamp: globalVariables.timestamp,
     })
     .from(txEffect)
     .innerJoin(bodyToTxEffects, eq(txEffect.id, bodyToTxEffects.txEffectId))
     .innerJoin(l2Block, eq(bodyToTxEffects.bodyId, l2Block.bodyId))
     .innerJoin(header, eq(l2Block.headerId, header.id))
-    .innerJoin(globalVariables, eq(header.globalVariablesId, globalVariables.id))
+    .innerJoin(
+      globalVariables,
+      eq(header.globalVariablesId, globalVariables.id)
+    )
     .where(eq(txEffect.hash, hash))
     .limit(1)
     .execute();

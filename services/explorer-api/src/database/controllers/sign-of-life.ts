@@ -69,7 +69,7 @@ export const getABlockWithContractInstances = async () => {
     l2ContractInstanceDeployed: {
       address: l2ContractInstanceDeployed.address,
       version: l2ContractInstanceDeployed.version,
-      // TODO: classId: l2ContractInstanceDeployed.contractClassId,
+      classId: l2ContractInstanceDeployed.contractClassId,
     },
   })
   .from(l2Block)
@@ -88,6 +88,7 @@ export const getABlockWithContractInstances = async () => {
     contractInstance: {
       address: dbRes[0].l2ContractInstanceDeployed.address,
       version: dbRes[0].l2ContractInstanceDeployed.version,
+      classId: dbRes[0].l2ContractInstanceDeployed.classId,
     },
   };
 }

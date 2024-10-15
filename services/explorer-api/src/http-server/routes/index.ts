@@ -27,7 +27,12 @@ export const init = ({ router }: { router: Router }) => {
   router.get(paths.txEffectByBlockHeightAndIndex, controller.GET_L2_TX_EFFECT_BY_BLOCK_HEIGHT_AND_INDEX);
   router.get(paths.txEffectsByTxHash, controller.GET_L2_TX_EFFECT_BY_TX_HASH);
 
+  router.get(paths.contractClass, controller.GET_L2_REGISTERED_CONTRACT_CLASS);
+  router.get(paths.contractClassesByClassId, controller.GET_L2_REGISTERED_CONTRACT_CLASSES_ALL_VERSIONS);
+  router.get(paths.contractClasses, controller.GET_L2_REGISTERED_CONTRACT_CLASSES);
+
   router.get(paths.contractInstancesByBlockHash, controller.GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH);
+  router.get(paths.contractInstancesByContractClassId, controller.GET_L2_CONTRACT_INSTANCES_BY_CONTRACT_CLASS_ID);
   router.get(paths.contractInstance, controller.GET_L2_CONTRACT_INSTANCE);
   router.get(paths.contractInstances, controller.GET_L2_CONTRACT_INSTANCES);
 
