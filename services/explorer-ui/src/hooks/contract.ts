@@ -32,11 +32,18 @@ export const useContractInstance = (
   });
 };
 
-export const useLatestContractInstances = (
-  classId?: string,
-): UseQueryResult<ChicmozL2ContractInstanceDeluxe[], Error> => {
+export const useLatestContractInstances = (): UseQueryResult<ChicmozL2ContractInstanceDeluxe[], Error> => {
   return useQuery<ChicmozL2ContractInstanceDeluxe[], Error>({
     queryKey: ["latestContractInstances"],
-    queryFn: () => classId ? ContractL2API.getContractInstancesByClassId(classId) : ContractL2API.getContractInstances(),
+    queryFn: () => ContractL2API.getContractInstances(),
+  });
+}
+
+export const useDeployedContractInstances = (
+  classId: string,
+): UseQueryResult<ChicmozL2ContractInstanceDeluxe[], Error> => {
+  return useQuery<ChicmozL2ContractInstanceDeluxe[], Error>({
+    queryKey: ["deployedContractInstances", classId],
+    queryFn: () => ContractL2API.getContractInstancesByClassId(classId),
   });
 }
