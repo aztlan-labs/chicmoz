@@ -1,10 +1,10 @@
 import { type FC } from "react";
 import { DataTable } from "~/components/data-table";
-import { type ContractInstancesTable } from "./schema";
+import { type ContractInstance } from "./schema";
 import { contractsTableColumns } from "./columns";
 
 interface Props {
-  contracts: ContractInstancesTable[];
+  contracts: ContractInstance[];
 }
 
 export const ContractInstancesTable: FC<Props> = ({ contracts }) => {

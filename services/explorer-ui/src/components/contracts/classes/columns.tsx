@@ -14,27 +14,6 @@ const text = {
 
 export const contractsTableColumns: ColumnDef<ContractClass>[] = [
   {
-    accessorKey: "blockHash",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        className="text-purple-dark text-sm "
-        column={column}
-        title={text.blockHash}
-      />
-    ),
-    cell: ({ row }) => {
-      const hash = row.getValue("hash");
-      if (typeof hash !== "string") return null;
-      const r = `${routes.blocks.route}/${hash}`;
-      const truncatedTxHash = `${hash.slice(0, 6)}...${hash.slice(-4)}`;
-      return (
-        <div className="text-purple-light font-mono font-bold">
-          <Link to={r}>{truncatedTxHash}</Link>
-        </div>
-      );
-    },
-  },
-  {
     accessorKey: "contractClassId",
     header: ({ column }) => (
       <DataTableColumnHeader
@@ -108,5 +87,26 @@ export const contractsTableColumns: ColumnDef<ContractClass>[] = [
     ),
     enableSorting: false,
     enableHiding: true,
+  },
+  {
+    accessorKey: "blockHash",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className="text-purple-dark text-sm "
+        column={column}
+        title={text.blockHash}
+      />
+    ),
+    cell: ({ row }) => {
+      const hash = row.getValue("blockHash");
+      if (typeof hash !== "string") return null;
+      const r = `${routes.blocks.route}/${hash}`;
+      const truncatedTxHash = `${hash.slice(0, 6)}...${hash.slice(-4)}`;
+      return (
+        <div className="text-purple-light font-mono font-bold">
+          <Link to={r}>{truncatedTxHash}</Link>
+        </div>
+      );
+    },
   },
 ];

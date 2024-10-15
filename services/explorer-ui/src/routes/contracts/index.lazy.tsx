@@ -1,26 +1,46 @@
 import { Outlet, createLazyFileRoute, useParams } from "@tanstack/react-router";
+import { contractClassSchema } from "~/components/contracts/classes/schema";
 import { ContractClassesTable } from "~/components/contracts/classes/table";
-import { contractInstancesSchema } from "~/components/contracts/instances/schema";
+import { contractInstanceSchema } from "~/components/contracts/instances/schema";
 import { ContractInstancesTable } from "~/components/contracts/instances/table";
-import { useLatestContractInstances } from "~/hooks";
+import { useLatestContractClasses, useLatestContractInstances } from "~/hooks";
 
 export const Route = createLazyFileRoute("/contracts/")({
   component: TxEffects,
 });
 
 function TxEffects() {
-  const { data, isLoading, error } = useLatestContractInstances();
-  const latestContractInstances = data?.map((contractInstance) =>
-                                            // TODO: !
-    contractInstancesSchema.parse({
-      address: contractInstance.address,
-      blockHash: contractInstance.blockHash,
-      blockHeight: contractInstance.blockHeight,
-      version: contractInstance.version,
-      contractClassId: contractInstance.contractClassId,
-      publicKeysHash: contractInstance.publicKeysHash,
-      deployer: contractInstance.deployer,
-    })
+  const {
+    data: latestContractClassesData,
+    isLoading: isLoadingClasses,
+    error: errorClasses,
+  } = useLatestContractClasses();
+  const latestContractClasses = latestContractClassesData?.map(
+    (contractClass) =>
+      contractClassSchema.parse({
+        blockHash: contractClass.blockHash,
+        contractClassId: contractClass.contractClassId,
+        version: contractClass.version,
+        artifactHash: contractClass.artifactHash,
+        privateFunctionsRoot: contractClass.privateFunctionsRoot,
+      })
+  );
+  const {
+    data: latestContractInstancesData,
+    isLoading: isLoadingInstances,
+    error: errorInstances,
+  } = useLatestContractInstances();
+  const latestContractInstances = latestContractInstancesData?.map(
+    (contractInstance) =>
+      contractInstanceSchema.parse({
+        address: contractInstance.address,
+        blockHash: contractInstance.blockHash,
+        blockHeight: contractInstance.blockHeight,
+        version: contractInstance.version,
+        contractClassId: contractInstance.contractClassId,
+        publicKeysHash: contractInstance.publicKeysHash,
+        deployer: contractInstance.deployer,
+      })
   );
   let isAddress = false;
   let isClass = false;
@@ -39,10 +59,6 @@ function TxEffects() {
   }
   isIndex = !isAddress && !isClass;
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p className="text-red-500">{error.message}</p>;
-  if (!latestContractInstances) return <p>No data</p>;
-
   const text = {
     title: isIndex ? "All Contract Instances" : "Contract Instance Details",
   };
@@ -53,11 +69,27 @@ function TxEffects() {
         <div className="flex flex-row gap-4">
           <div className="bg-white w-1/2 rounded-lg shadow-md p-4">
             <h2>Latest Contract Classes</h2>
-            <ContractClassesTable contracts={latestContractClasses} />
+            {isLoadingClasses ? (
+              <p>Loading...</p>
+            ) : errorClasses ? (
+              <p className="text-red-500">{errorClasses.message}</p>
+            ) : !latestContractClasses ? (
+              <p>No data</p>
+            ) : (
+              <ContractClassesTable contracts={latestContractClasses} />
+            )}
           </div>
           <div className="bg-white w-1/2 rounded-lg shadow-md p-4">
             <h2>Latest Contract Instances</h2>
-            <ContractInstancesTable contracts={latestContractInstances} />
+            {isLoadingInstances ? (
+              <p>Loading...</p>
+            ) : errorInstances ? (
+              <p className="text-red-500">{errorInstances.message}</p>
+            ) : !latestContractInstances ? (
+              <p>No data</p>
+            ) : (
+              <ContractInstancesTable contracts={latestContractInstances} />
+            )}
           </div>
         </div>
       ) : (
