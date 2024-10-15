@@ -85,19 +85,21 @@ export const contractsTableColumns: ColumnDef<ContractInstance>[] = [
         title={text.contractClassId}
       />
     ),
-    cell: ({ row }) => (
-      //const blockHash = row.getValue("blockHash");
-      //if (typeof blockHash !== "string") return null;
-      //const r = `${routes.blocks.route}/${blockHash}`;
-      //const truncatedBlockHash = `${blockHash.slice(0, 6)}...${blockHash.slice(-4)}`;
-      //return (
-      //  <div className="text-purple-light font-mono font-bold">
-      //    <Link to={r}>{truncatedBlockHash}</Link>
-      //  </div>
-      //);
-      <div className="text-purple-dark font-mono">{row.getValue("contractClassId")}</div>
-    ),
-    enableSorting: true,
+    cell: ({ row }) => {
+      const contractClassId = row.getValue("contractClassId");
+      if (typeof contractClassId !== "string") return null;
+      const r = `${routes.contracts.route}/${routes.contracts.children.classes.route}/${contractClassId}`;
+      const truncatedContractClassId = `${contractClassId.slice(
+        0,
+        6
+      )}...${contractClassId.slice(-4)}`;
+      return (
+        <div className="text-purple-light font-mono font-bold">
+          <Link to={r}>{truncatedContractClassId}</Link>
+        </div>
+      );
+    },
+    enableSorting: false,
     enableHiding: false,
   },
   {
