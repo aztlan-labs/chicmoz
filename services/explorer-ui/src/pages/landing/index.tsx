@@ -73,7 +73,7 @@ export const Landing: FC = () => {
           )}
         </div>
         <div className="bg-white w-96 rounded-lg shadow-md p-4">
-          <p>Total amount of contract</p>
+          <p>Total amount of contracts</p>
           {getStatsData(
             loadingAmountContracts,
             errorAmountContracts,
