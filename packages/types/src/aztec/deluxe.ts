@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ChicmozL2Block, chicmozL2BlockSchema } from "./l2Block.js";
+import { chicmozL2BlockSchema } from "./l2Block.js";
 import {
   chicmozL2ContractClassRegisteredEventSchema,
   chicmozL2ContractInstanceDeployedEventSchema,
@@ -26,8 +26,5 @@ export const chicmozL2TxEffectDeluxeSchema = z.object({
 });
 
 export type ChicmozL2TxEffectDeluxe = z.infer<
-  typeof chicmozL2TxEffectSchema & {
-    blockHeight: ChicmozL2Block["height"];
-    timestamp: ChicmozL2Block["header"]["globalVariables"]["timestamp"];
-  }
+  typeof chicmozL2TxEffectDeluxeSchema
 >;

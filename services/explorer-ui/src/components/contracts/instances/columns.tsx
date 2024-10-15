@@ -2,7 +2,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { Link } from "@tanstack/react-router";
 import { routes } from "~/routes/__root";
 import { DataTableColumnHeader } from "~/components/data-table";
-import { type ContractTableSchema } from "./contract-schema";
+import { type ContractInstancesTableSchema } from "./schema";
 
 const text = {
   address: "ADDRESS",
@@ -14,7 +14,7 @@ const text = {
   deployer: "DEPLOYER",
 };
 
-export const contractsTableColumns: ColumnDef<ContractTableSchema>[] = [
+export const contractsTableColumns: ColumnDef<ContractInstancesTableSchema>[] = [
   {
     accessorKey: "address",
     header: ({ column }) => (
@@ -27,7 +27,7 @@ export const contractsTableColumns: ColumnDef<ContractTableSchema>[] = [
     cell: ({ row }) => {
       const address = row.getValue("address");
       if (typeof address !== "string") return null;
-      const r = `${routes.contracts.route}/${address}`;
+      const r = `${routes.contracts.route}/${routes.contracts.children.instances.route}/${address}`;
       const truncatedAddress = `${address.slice(0, 6)}...${address.slice(-4)}`;
       return (
         // TODO: make text chars equally wide (and not truncate)
@@ -86,6 +86,15 @@ export const contractsTableColumns: ColumnDef<ContractTableSchema>[] = [
       />
     ),
     cell: ({ row }) => (
+      //const blockHash = row.getValue("blockHash");
+      //if (typeof blockHash !== "string") return null;
+      //const r = `${routes.blocks.route}/${blockHash}`;
+      //const truncatedBlockHash = `${blockHash.slice(0, 6)}...${blockHash.slice(-4)}`;
+      //return (
+      //  <div className="text-purple-light font-mono font-bold">
+      //    <Link to={r}>{truncatedBlockHash}</Link>
+      //  </div>
+      //);
       <div className="text-purple-dark font-mono">{row.getValue("contractClassId")}</div>
     ),
     enableSorting: true,
