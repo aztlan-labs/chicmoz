@@ -21,17 +21,17 @@ export const ContractL2API = {
     );
   },
   getContractClasses: async (
-    address?: string
+    classId?: string
   ): Promise<ChicmozL2ContractClassRegisteredEvent[]> => {
     const response = await client.get(
-      aztecExplorer.getL2ContractClasses(address)
+      aztecExplorer.getL2ContractClasses(classId)
     );
     return validateResponse(
       chicmozL2ContractClassRegisteredEventSchema.array(),
       response.data
     );
   },
-  getContracInstance: async (
+  getContractInstance: async (
     address: string
   ): Promise<ChicmozL2ContractInstanceDeluxe> => {
     const response = await client.get(

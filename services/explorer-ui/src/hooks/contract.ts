@@ -6,11 +6,11 @@ import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ContractL2API } from "~/api";
 
 export const useContractClasses = (
-  address?: string,
+  classId?: string,
 ): UseQueryResult<ChicmozL2ContractClassRegisteredEvent[], Error> => {
   return useQuery<ChicmozL2ContractClassRegisteredEvent[], Error>({
-    queryKey: ["contractClass", address],
-    queryFn: () => ContractL2API.getContractClasses(address),
+    queryKey: ["contractClass", classId],
+    queryFn: () => ContractL2API.getContractClasses(classId),
   });
 };
 
@@ -28,13 +28,15 @@ export const useContractInstance = (
 ): UseQueryResult<ChicmozL2ContractInstanceDeluxe, Error> => {
   return useQuery<ChicmozL2ContractInstanceDeluxe, Error>({
     queryKey: ["contractInstance", address],
-    queryFn: () => ContractL2API.getContracInstance(address),
+    queryFn: () => ContractL2API.getContractInstance(address),
   });
 };
 
-export const useLatestContractInstances = (): UseQueryResult<ChicmozL2ContractInstanceDeluxe[], Error> => {
+export const useLatestContractInstances = (
+  classId?: string,
+): UseQueryResult<ChicmozL2ContractInstanceDeluxe[], Error> => {
   return useQuery<ChicmozL2ContractInstanceDeluxe[], Error>({
     queryKey: ["latestContractInstances"],
-    queryFn: () => ContractL2API.getContractInstances(),
+    queryFn: () => classId ? ContractL2API.getContractInstancesByClassId(classId) : ContractL2API.getContractInstances(),
   });
 }
