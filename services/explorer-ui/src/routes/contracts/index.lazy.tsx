@@ -1,9 +1,5 @@
 import { Outlet, createLazyFileRoute, useParams } from "@tanstack/react-router";
 import { ContractClassesAndInstancesTable } from "~/components/contracts/class-and-instance-tables";
-import { contractClassSchema } from "~/components/contracts/classes/schema";
-import { ContractClassesTable } from "~/components/contracts/classes/table";
-import { contractInstanceSchema } from "~/components/contracts/instances/schema";
-import { ContractInstancesTable } from "~/components/contracts/instances/table";
 import { useLatestContractClasses, useLatestContractInstances } from "~/hooks";
 
 export const Route = createLazyFileRoute("/contracts/")({
@@ -32,7 +28,7 @@ function TxEffects() {
   isIndex = !isAddress && !isClass;
 
   const text = {
-    title: isIndex ? "All Contract Instances" : "Contract Instance Details",
+    title: isIndex ? "All Contracts" : isClass ? "Contract Class Details" : "Contract Instance Details",
   };
   return (
     <div className="mx-auto px-[70px] max-w-[1440px]">

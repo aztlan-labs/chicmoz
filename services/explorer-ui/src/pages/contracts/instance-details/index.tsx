@@ -33,16 +33,20 @@ export const ContractInstanceDetails: FC = () => {
 
   return (
     <div className="mx-auto px-[70px] max-w-[1440px]">
-      <div>
+      <div className="flex flex-col gap-4 mt-8">
         <div>
-          <h2>Contract instance details</h2>
-          <a href={apiEndpointUrl} target="_blank" rel="noreferrer">
-            (API Endpoint)
-          </a>
-        </div>
-        <div className="flex flex-col gap-4 mt-8">
-          <div className="bg-white rounded-lg shadow-md p-4">
-            <KeyValueDisplay data={getContractData(contractInstanceDetails)} />
+          <div>
+            <h2>Contract instance details</h2>
+            <a href={apiEndpointUrl} target="_blank" rel="noreferrer">
+              (API Endpoint)
+            </a>
+          </div>
+          <div className="flex flex-col gap-4 mt-8">
+            <div className="bg-white rounded-lg shadow-md p-4">
+              <KeyValueDisplay
+                data={getContractData(contractInstanceDetails)}
+              />
+            </div>
           </div>
         </div>
       </div>

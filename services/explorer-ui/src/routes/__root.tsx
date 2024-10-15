@@ -67,7 +67,7 @@ export const routes = {
     children: {
       index: {
         route: "/",
-        title: "All Contract Instances",
+        title: "All Contracts",
       },
       instances: {
         route: "/instances",
