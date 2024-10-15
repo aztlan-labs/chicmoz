@@ -27,10 +27,15 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
   const blockAndAContractInstance =
     await db.signOfLife.getABlockWithContractInstances();
   const r = [paths.latestHeight, paths.latestBlock, `${paths.blocks}?from=0`];
+  const searchRoutes = [];
 
   if (block) {
     r.push(paths.block.replace(`:${heightOrHash}`, block.height.toString()));
     r.push(paths.block.replace(`:${heightOrHash}`, block.hash));
+    searchRoutes.push(
+      `${paths.search}?q=${block.height.toString()}`,
+      `${paths.search}?q=${block.hash}`
+    );
   } else {
     r.push(paths.block + "NOT FOUND");
   }
@@ -55,6 +60,9 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
         `:${txEffectHash}`,
         blockAndTxEffect.txEffects[0].hash
       )
+    );
+    searchRoutes.push(
+      `${paths.search}?q=${blockAndTxEffect.txEffects[0].hash}`
     );
   } else {
     r.push(paths.txEffectsByBlockHeight + "NOT FOUND");
@@ -94,6 +102,10 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
       )
     );
     r.push(paths.contractInstances);
+    searchRoutes.push(
+      `${paths.search}?q=${blockAndAContractInstance.contractInstance.address}`,
+      `${paths.search}?q=${blockAndAContractInstance.contractInstance.classId}`
+    );
   } else {
     r.push(paths.contractInstancesByBlockHash + "NOT FOUND");
     r.push(paths.contractInstance + "NOT FOUND");
@@ -113,16 +125,26 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
       <title>CHICMOZ API ROUTES</title>
     </head>
     <body>
+      <h2>General routes</h2>
       <ul>
         ${r
           .map((route) => `<li><a href=${SUB_PATH + route}>${route}</a></li>`)
           .join("")}
       </ul>
       <br>
+      <h2>Search routes</h2>
+      <ul>
+        ${searchRoutes
+          .map((route) => `<li><a href=${SUB_PATH + route}>${route}</a></li>`)
+          .join("")}
+      </ul>
+      <br>
+      <h2>Stats routes</h2>
       <ul>
         ${statsRoutes
           .map((route) => `<li><a href=${SUB_PATH + route}>${route}</a></li>`)
           .join("")}
+      </ul>
     </body>
   </html>
   `;

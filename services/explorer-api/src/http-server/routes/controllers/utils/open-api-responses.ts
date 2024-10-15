@@ -5,6 +5,7 @@ import {
   chicmozL2ContractClassRegisteredEventSchema,
   chicmozL2ContractInstanceDeluxeSchema,
   chicmozL2TxEffectDeluxeSchema,
+  chicmozSearchResultsSchema,
 } from "@chicmoz-pkg/types";
 import { generateSchema } from "@anatine/zod-openapi";
 
@@ -31,3 +32,5 @@ export const contractClassResponseArray = getResponse(z.array(chicmozL2ContractC
 
 export const contractInstanceResponse = getResponse(chicmozL2ContractInstanceDeluxeSchema);
 export const contractInstanceResponseArray = getResponse(z.array(chicmozL2ContractInstanceDeluxeSchema));
+
+export const searchResultResponse = getResponse(chicmozSearchResultsSchema);

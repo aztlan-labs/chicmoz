@@ -36,6 +36,8 @@ export const init = ({ router }: { router: Router }) => {
   router.get(paths.contractInstance, controller.GET_L2_CONTRACT_INSTANCE);
   router.get(paths.contractInstances, controller.GET_L2_CONTRACT_INSTANCES);
 
+  router.get(paths.search, controller.L2_SEARCH);
+
   router.get(paths.statsTotalTxEffects, controller.GET_STATS_TOTAL_TX_EFFECTS);
   router.get(paths.statsTotalTxEffectsLast24h, controller.GET_STATS_TOTAL_TX_EFFECTS_LAST_24H);
   router.get(paths.statsTotalContracts, controller.GET_STATS_TOTAL_CONTRACTS);
