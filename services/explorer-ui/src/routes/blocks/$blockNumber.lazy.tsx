@@ -107,10 +107,10 @@ function Block() {
               <KeyValueDisplay data={getBlockDetails()} />
             </div>
             <div className="flex flex-row gap-4 w-10 mb-4">
-              <Button variant={"primary"}>
+              <Button variant={"default"}>
                 <p>View TxEffects</p>
               </Button>
-              <Button variant={"primary"}>View TxEffects</Button>
+              <Button variant={"default"}>View TxEffects</Button>
             </div>
             <TxEffectsTable txEffects={getTxEffects()} />
           </div>
