@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export type ContractInstancesTableSchema = z.infer<typeof contractInstancesSchema>;
+export type ContractInstancesTable = z.infer<typeof contractInstancesSchema>;
 
 export const contractInstancesSchema = z.object({
   address: z.string(),

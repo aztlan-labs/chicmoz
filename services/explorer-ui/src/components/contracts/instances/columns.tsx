@@ -2,7 +2,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { Link } from "@tanstack/react-router";
 import { routes } from "~/routes/__root";
 import { DataTableColumnHeader } from "~/components/data-table";
-import { type ContractInstancesTableSchema } from "./schema";
+import { type ContractInstancesTable } from "./schema";
 
 const text = {
   address: "ADDRESS",
@@ -14,7 +14,7 @@ const text = {
   deployer: "DEPLOYER",
 };
 
-export const contractsTableColumns: ColumnDef<ContractInstancesTableSchema>[] = [
+export const contractsTableColumns: ColumnDef<ContractInstancesTable>[] = [
   {
     accessorKey: "address",
     header: ({ column }) => (

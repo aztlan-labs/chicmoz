@@ -1,4 +1,5 @@
 import { Outlet, createLazyFileRoute, useParams } from "@tanstack/react-router";
+import { ContractClassesTable } from "~/components/contracts/classes/table";
 import { contractInstancesSchema } from "~/components/contracts/instances/schema";
 import { ContractInstancesTable } from "~/components/contracts/instances/table";
 import { useLatestContractInstances } from "~/hooks";
@@ -10,6 +11,7 @@ export const Route = createLazyFileRoute("/contracts/")({
 function TxEffects() {
   const { data, isLoading, error } = useLatestContractInstances();
   const latestContractInstances = data?.map((contractInstance) =>
+                                            // TODO: !
     contractInstancesSchema.parse({
       address: contractInstance.address,
       blockHash: contractInstance.blockHash,
@@ -51,7 +53,7 @@ function TxEffects() {
         <div className="flex flex-row gap-4">
           <div className="bg-white w-1/2 rounded-lg shadow-md p-4">
             <h2>Latest Contract Classes</h2>
-            <ContractInstancesTable contracts={latestContractInstances} />
+            <ContractClassesTable contracts={latestContractClasses} />
           </div>
           <div className="bg-white w-1/2 rounded-lg shadow-md p-4">
             <h2>Latest Contract Instances</h2>
