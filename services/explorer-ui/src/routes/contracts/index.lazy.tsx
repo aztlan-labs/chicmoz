@@ -20,13 +20,22 @@ function TxEffects() {
       deployer: contractInstance.deployer,
     })
   );
+  let isAddress = false;
+  let isClass = false;
   let isIndex = false;
   try {
     useParams({ from: "/contracts/instances/$address" });
-    useParams({ from: "/contracts/classes/$id" });
+    isAddress = true;
   } catch (e) {
-    isIndex = true;
+    // TODO
   }
+  try {
+    useParams({ from: "/contracts/classes/$id" });
+    isClass = true;
+  } catch (e) {
+    // TODO
+  }
+  isIndex = !isAddress && !isClass;
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error.message}</p>;

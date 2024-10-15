@@ -6,9 +6,16 @@ import { API_URL, aztecExplorer } from "~/service/constants";
 import { getContractData } from "./util";
 
 export const ContractInstanceDetails: FC = () => {
-  const { address } = useParams({
-    from: "/contracts/instances/$address",
-  });
+  let address = "";
+  try {
+    const params = useParams({
+      from: "/contracts/instances/$address",
+    });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    address = params.address;
+  } catch (e) {
+    // TODO
+  }
   const {
     data: contractInstanceDetails,
     isLoading,
@@ -20,7 +27,9 @@ export const ContractInstanceDetails: FC = () => {
   if (error) return <div>Error</div>;
   if (!contractInstanceDetails) return <div>No data</div>;
 
-  const apiEndpointUrl = `${API_URL}/${aztecExplorer.getL2ContractInstance(address)}`;
+  const apiEndpointUrl = `${API_URL}/${aztecExplorer.getL2ContractInstance(
+    address
+  )}`;
 
   return (
     <div className="mx-auto px-[70px] max-w-[1440px]">
