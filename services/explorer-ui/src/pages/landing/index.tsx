@@ -59,16 +59,12 @@ export const Landing: FC = () => {
 
   return (
     <div className="mx-auto px-[70px] max-w-[1440px]">
-      <div className="flex flex-row flex-wrap justify-center gap-2 m-8">
-        <div className="bg-white w-3/12 rounded-lg shadow-md p-4">
+      <div className="flex flex-row flex-wrap justify-center gap-3 m-8">
+        <div className="bg-white w-96 rounded-lg shadow-md p-4">
           <p>Total Tx Effects</p>
-          {getStatsData(
-            loadingTotalEffects,
-            errorTotalEffects,
-            totalTxEffects,
-          )}
+          {getStatsData(loadingTotalEffects, errorTotalEffects, totalTxEffects)}
         </div>
-        <div className="bg-white w-3/12 rounded-lg shadow-md p-4">
+        <div className="bg-white w-96 rounded-lg shadow-md p-4">
           <p>TX-Effects last 24 hours </p>
           {getStatsData(
             loadingTotalEffects24h,
@@ -76,7 +72,7 @@ export const Landing: FC = () => {
             totalTxEffects24h,
           )}
         </div>
-        <div className="bg-white w-3/12 rounded-lg shadow-md p-4">
+        <div className="bg-white w-96 rounded-lg shadow-md p-4">
           <p>Total amount of contracts</p>
           {getStatsData(
             loadingAmountContracts,
@@ -84,11 +80,11 @@ export const Landing: FC = () => {
             totalAmountOfContracts,
           )}
         </div>
-        <div className="bg-white w-3/12 rounded-lg shadow-md p-4">
+        <div className="bg-white w-96 rounded-lg shadow-md p-4">
           <p>Average fee's</p>
           {getStatsData(loadingAvarageFees, errorAvarageFees, avarageFees)}
         </div>
-        <div className="bg-white w-3/12 rounded-lg shadow-md p-4">
+        <div className="bg-white w-96 rounded-lg shadow-md p-4">
           <p>Average block time</p>
           {getStatsData(
             loadingAvarageBlockTime,
@@ -96,7 +92,7 @@ export const Landing: FC = () => {
             avarageBlockTime,
           )}
         </div>
-        <div className="bg-white w-3/12 rounded-lg shadow-md p-4">
+        <div className="bg-white w-96 rounded-lg shadow-md p-4">
           <p>Todo</p>
           <h2 className="text-primary">TODO</h2>
         </div>
