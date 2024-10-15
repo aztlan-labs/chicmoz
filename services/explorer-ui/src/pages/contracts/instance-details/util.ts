@@ -1,4 +1,4 @@
-import { ChicmozL2ContractInstanceDeluxe } from "@chicmoz-pkg/types";
+import { type ChicmozL2ContractInstanceDeluxe } from "@chicmoz-pkg/types";
 
 export const getContractData = (data: ChicmozL2ContractInstanceDeluxe) => [
   {
