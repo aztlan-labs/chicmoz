@@ -15,6 +15,7 @@ import {
 } from "./network-client.js";
 import { startPolling, stopPolling } from "./poller.js";
 import { startCatchup } from "./genesis-catchup.js";
+import { onConnectedToAztec } from "../event-handler/index.js";
 
 const backOffOptions: Partial<IBackOffOptions> = {
   numOfAttempts: 10,
@@ -38,6 +39,7 @@ export const init = async () => {
 
   const latestProcessedHeight = (await getLatestProcessedHeight()) ?? 0;
   const chainHeight = await getLatestHeight();
+  await onConnectedToAztec(nodeInfo, chainHeight, latestProcessedHeight);
   const isOffSync = chainHeight < latestProcessedHeight;
   if (isOffSync) {
     logger.warn(
@@ -45,9 +47,10 @@ export const init = async () => {
     );
     await storeHeight(0);
   }
-  const pollFromHeight = !isOffSync && latestProcessedHeight
-    ? latestProcessedHeight + 1
-    : chainHeight;
+  const pollFromHeight =
+    !isOffSync && latestProcessedHeight
+      ? latestProcessedHeight + 1
+      : chainHeight;
   if (AZTEC_GENESIS_CATCHUP)
     await startCatchup({ from: 1, to: pollFromHeight });
   if (AZTEC_LISTEN_FOR_BLOCKS) startPolling({ fromHeight: pollFromHeight });
