@@ -41,7 +41,7 @@ export const TxEffectDetails: FC = () => {
             {txEffectTabs.map((tab) => (
               <Button
                 key={tab.id}
-                variant="primary"
+                variant="default"
                 onClick={() => setSelectedTab(tab.id)}
               >
                 {tab.label}
@@ -70,7 +70,7 @@ export const TxEffectDetails: FC = () => {
                         <KeyValueDisplay key={index} data={flattenedEntries} />
                       </div>
                     );
-                  }
+                  },
                 )}
               </div>
             )}
@@ -95,7 +95,7 @@ export const TxEffectDetails: FC = () => {
                         <KeyValueDisplay key={index} data={flattenedEntries} />
                       </div>
                     );
-                  }
+                  },
                 )}
               </div>
             )}
@@ -129,7 +129,7 @@ export const TxEffectDetails: FC = () => {
                         <KeyValueDisplay key={index} data={flattenedEntries} />
                       </div>
                     );
-                  }
+                  },
                 )}
               </div>
             )}
