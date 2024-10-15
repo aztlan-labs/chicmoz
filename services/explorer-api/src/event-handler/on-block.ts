@@ -79,6 +79,9 @@ const storeContracts = async (b: L2Block, blockHash: string) => {
     ClassRegistererAddress
   );
   const contractInstances = ContractInstanceDeployedEvent.fromLogs(blockLogs);
+  logger.info(
+    `Parsing and storing ${contractClasses.length} contract classes and ${contractInstances.length} contract instances`
+  );
 
   const parsedContractClasses: ChicmozL2ContractClassRegisteredEvent[] = [];
   const parsedContractInstances: ChicmozL2ContractInstanceDeployedEvent[] = [];
