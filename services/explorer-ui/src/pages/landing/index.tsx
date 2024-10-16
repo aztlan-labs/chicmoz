@@ -47,37 +47,37 @@ export const Landing: FC = () => {
   return (
     <div className="mx-auto px-5 max-w-[1440px] md:px-[70px]">
       <div className="flex flex-row flex-wrap justify-center gap-3 m-5 ">
-        <InfoBadge
+        <InfoPil
           title="Total TX-Effects"
           isLoading={loadingTotalEffects}
           error={errorTotalEffects}
           data={totalTxEffects}
         />
-        <InfoBadge
+        <InfoPil
           title="Total TX-Effects last 24h"
           isLoading={loadingTotalEffects24h}
           error={errorTotalEffects24h}
           data={totalTxEffects24h}
         />
-        <InfoBadge
+        <InfoPil
           title="Total Amount of Contracts"
           isLoading={loadingAmountContracts}
           error={errorAmountContracts}
           data={totalAmountOfContracts}
         />
-        <InfoBadge
+        <InfoPil
           title="Average fees"
           isLoading={loadingAvarageFees}
           error={errorAvarageFees}
           data={avarageFees}
         />
-        <InfoBadge
+        <InfoPil
           title="Average block time"
           isLoading={loadingAvarageBlockTime}
           error={errorAvarageBlockTime}
           data={avarageBlockTime}
         />
-        <InfoBadge title="TODO" isLoading={false} error={null} data="TODO" />
+        <InfoPil title="TODO" isLoading={false} error={null} data="TODO" />
       </div>
       <div className="flex flex-col gap-4 md:flex-row">
         <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">

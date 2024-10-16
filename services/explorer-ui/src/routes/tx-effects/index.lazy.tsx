@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { InfoBadge } from "~/components/info-badge";
-import { txEffectSchema } from "~/components/tx-effects/tx-effects-schema";
+import { getTxEffectTableObj } from "~/components/tx-effects/tx-effects-schema";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { useLatestBlocks } from "~/hooks";
 
@@ -17,16 +17,7 @@ function TxEffects() {
 
   const latestTxEffects = latestBlocks.flatMap((block) => {
     return block.body.txEffects.map((txEffect) =>
-      txEffectSchema.parse({
-        hash: txEffect.hash,
-        transactionFee: txEffect.transactionFee,
-        logCount:
-          txEffect.encryptedLogsLength +
-          txEffect.unencryptedLogsLength +
-          txEffect.noteEncryptedLogsLength,
-        blockNumber: block.height,
-        timestamp: block.header.globalVariables.timestamp,
-      }),
+      getTxEffectTableObj(txEffect, block)
     );
   });
 
