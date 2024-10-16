@@ -30,7 +30,7 @@ export const GET_STATS_AVERAGE_FEES = asyncHandler(async (_req, res) => {
   const average = await dbWrapper.getLatest(["stats", "averageFees"], () =>
     db.l2Block.getAverageFees()
   );
-  res.status(200).send(JSON.stringify(average));
+  res.status(200).send(average);
 });
 
 export const GET_STATS_AVERAGE_BLOCK_TIME = asyncHandler(async (_req, res) => {
