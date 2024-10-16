@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import { getDb as db } from "../../../database/index.js";
-import { header } from "../../../database/schema/index.js";
+import { globalVariables, header } from "../../../database/schema/index.js";
 
 export const getAverageFees = async (): Promise<string> => {
   const dbRes = await db()
@@ -12,8 +12,17 @@ export const getAverageFees = async (): Promise<string> => {
   return dbRes[0].average.split(".")[0];
 };
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export const getAverageBlockTime = async (): Promise<number> => {
-  // TODO: we need l2Block.header.globalVariables.timestamp as number to average this
-  return -1;
+export const getAverageBlockTime = async (): Promise<string> => {
+  const dbRes = await db()
+    .select({
+      count: sql<number>`count(${globalVariables.id})`,
+      firstTimestamp: sql<number>`min(${globalVariables.timestamp})`,
+      lastTimestamp: sql<number>`max(${globalVariables.timestamp})`,
+    })
+    .from(globalVariables)
+    .execute();
+
+  if (dbRes[0].count < 2) return "0";
+  const averageBlockTime = (dbRes[0].lastTimestamp - dbRes[0].firstTimestamp) / (dbRes[0].count - 1);
+  return Math.round(averageBlockTime).toString();
 };

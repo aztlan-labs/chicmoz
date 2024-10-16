@@ -37,5 +37,5 @@ export const GET_STATS_AVERAGE_BLOCK_TIME = asyncHandler(async (_req, res) => {
   const average = await dbWrapper.getLatest(["stats", "averageBlockTime"], () =>
     db.l2Block.getAverageBlockTime()
   );
-  res.status(200).send(JSON.stringify(average));
+  res.status(200).send(average);
 });
