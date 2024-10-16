@@ -8,7 +8,7 @@ import { formatTimeSince } from "~/lib/utils";
 const text = {
   hash: "TX EFFECT HASH",
   transactionFee: "TRANSACTION FEE",
-  logCount: "LOGS COUNT",
+  totalLengthOfLogs: "TOTAL LOGS LENGTH",
   blockHeight: "BLOCK HEIGHT",
   timeSince: "TIME SINCE",
 };
@@ -51,16 +51,16 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "logCount",
+    accessorKey: "totalLengthOfLogs",
     header: ({ column }) => (
       <DataTableColumnHeader
         className="text-purple-dark text-sm "
         column={column}
-        title={text.logCount}
+        title={text.totalLengthOfLogs}
       />
     ),
     cell: ({ row }) => (
-      <div className="text-purple-dark">{row.getValue("logCount")}</div>
+      <div className="text-purple-dark">{row.getValue("totalLengthOfLogs")}</div>
     ),
     enableSorting: true,
     enableHiding: false,

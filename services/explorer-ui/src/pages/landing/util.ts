@@ -1,6 +1,6 @@
-import { ChicmozL2Block } from "@chicmoz-pkg/types";
+import { type ChicmozL2Block } from "@chicmoz-pkg/types";
 import { blockSchema } from "~/components/blocks/blocks-schema";
-import { txEffectSchema } from "~/components/tx-effects/tx-effects-schema";
+import { getTxEffectTableObj } from "~/components/tx-effects/tx-effects-schema";
 
 export const mapLatestBlocks = (latestBlocks: ChicmozL2Block[]) => {
   return latestBlocks.map((block) => {
@@ -18,16 +18,7 @@ export const mapLatestBlocks = (latestBlocks: ChicmozL2Block[]) => {
 export const mapLatestTxEffects = (latestBlocks: ChicmozL2Block[]) => {
   return latestBlocks.flatMap((block) => {
     return block.body.txEffects.map((txEffect) =>
-      txEffectSchema.parse({
-        hash: txEffect.hash,
-        transactionFee: txEffect.transactionFee,
-        logCount:
-          txEffect.encryptedLogsLength +
-          txEffect.unencryptedLogsLength +
-          txEffect.noteEncryptedLogsLength,
-        blockNumber: block.height,
-        timestamp: block.header.globalVariables.timestamp,
-      }),
+      getTxEffectTableObj(txEffect, block)
     );
   });
 };

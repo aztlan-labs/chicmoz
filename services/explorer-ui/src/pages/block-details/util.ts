@@ -1,5 +1,5 @@
-import { ChicmozL2Block } from "@chicmoz-pkg/types";
-import { txEffectSchema } from "~/components/tx-effects/tx-effects-schema";
+import { type ChicmozL2Block } from "@chicmoz-pkg/types";
+import { getTxEffectTableObj } from "~/components/tx-effects/tx-effects-schema";
 import { formatTimeSince } from "~/lib/utils";
 
 export const getBlockDetails = (latestBlock: ChicmozL2Block) => {
@@ -49,16 +49,7 @@ export const getBlockDetails = (latestBlock: ChicmozL2Block) => {
 };
 
 export const getTxEffects = (latestBlock: ChicmozL2Block) => {
-  return latestBlock.body.txEffects.map((tx) => {
-    return txEffectSchema.parse({
-      blockNumber: latestBlock.height,
-      timestamp: latestBlock.header.globalVariables.timestamp,
-      hash: tx.hash,
-      transactionFee: Number(tx.transactionFee),
-      logCount:
-        tx.encryptedLogsLength +
-        tx.unencryptedLogsLength +
-        tx.noteEncryptedLogsLength,
-    });
-  });
+  return latestBlock.body.txEffects.map((tx) =>
+    getTxEffectTableObj(tx, latestBlock)
+  );
 };
