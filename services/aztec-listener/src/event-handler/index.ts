@@ -3,6 +3,7 @@ import { L2Block } from "@aztec/aztec.js";
 import { getNodeInfo } from "../aztec/index.js";
 import { logger } from "../logger.js";
 import { publishMessage } from "../message-bus/index.js";
+import {AZTEC_RPC_URL} from "../constants.js";
 
 export const onBlock = async (block: L2Block) => {
   const height = Number(block.header.globalVariables.blockNumber);
@@ -32,6 +33,7 @@ export const onConnectedToAztec = async (
 ) => {
   await publishMessage("CONNECTED_TO_AZTEC", {
     nodeInfo,
+    rpcUrl: AZTEC_RPC_URL,
     chainHeight,
     latestProcessedHeight,
   });

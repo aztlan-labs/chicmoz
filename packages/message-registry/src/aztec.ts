@@ -2,6 +2,7 @@ import { NodeInfo } from '@chicmoz-pkg/types';
 
 export type ConnectedToAztecEvent = {
   nodeInfo: NodeInfo;
+  rpcUrl: string;
   chainHeight: number;
   latestProcessedHeight: number;
 };
@@ -18,7 +19,7 @@ export function generateAztecTopicName(networkId: string, topic: keyof AZTEC_MES
 }
 
 export type AZTEC_MESSAGES = {
-  CONNECTED_TO_AZTEC: ConnectedToAztecEvent
+  CONNECTED_TO_AZTEC_EVENT: ConnectedToAztecEvent
   NEW_BLOCK_EVENT: NewBlockEvent
   CATCHUP_BLOCK_EVENT: CatchupBlockEvent
 };
