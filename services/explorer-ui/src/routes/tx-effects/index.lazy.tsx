@@ -1,14 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-<<<<<<< HEAD
-import { InfoPil } from "~/components/info-pil";
-import { getTxEffectTableObj } from "~/components/tx-effects/tx-effects-schema";
-||||||| 23e357b
-import { InfoPil } from "~/components/info-pil";
-import { txEffectSchema } from "~/components/tx-effects/tx-effects-schema";
-=======
 import { InfoBadge } from "~/components/info-badge";
-import { txEffectSchema } from "~/components/tx-effects/tx-effects-schema";
->>>>>>> fabcc5e207c9c8f1b26fa1d82dc95504159e0202
+import { getTxEffectTableObj } from "~/components/tx-effects/tx-effects-schema";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { useLatestBlocks } from "~/hooks";
 
