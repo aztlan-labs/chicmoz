@@ -2,7 +2,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { Link } from "@tanstack/react-router";
 import { routes } from "~/routes/__root";
 import { DataTableColumnHeader } from "~/components/data-table";
-import { type ContractTableSchema } from "./contract-schema";
+import { type ContractInstance } from "./schema";
 
 const text = {
   address: "ADDRESS",
@@ -14,7 +14,7 @@ const text = {
   deployer: "DEPLOYER",
 };
 
-export const contractsTableColumns: ColumnDef<ContractTableSchema>[] = [
+export const contractsTableColumns: ColumnDef<ContractInstance>[] = [
   {
     accessorKey: "address",
     header: ({ column }) => (
@@ -27,7 +27,7 @@ export const contractsTableColumns: ColumnDef<ContractTableSchema>[] = [
     cell: ({ row }) => {
       const address = row.getValue("address");
       if (typeof address !== "string") return null;
-      const r = `${routes.contracts.route}/${address}`;
+      const r = `${routes.contracts.route}/${routes.contracts.children.instances.route}/${address}`;
       const truncatedAddress = `${address.slice(0, 6)}...${address.slice(-4)}`;
       return (
         // TODO: make text chars equally wide (and not truncate)
@@ -85,10 +85,21 @@ export const contractsTableColumns: ColumnDef<ContractTableSchema>[] = [
         title={text.contractClassId}
       />
     ),
-    cell: ({ row }) => (
-      <div className="text-purple-dark font-mono">{row.getValue("contractClassId")}</div>
-    ),
-    enableSorting: true,
+    cell: ({ row }) => {
+      const contractClassId = row.getValue("contractClassId");
+      if (typeof contractClassId !== "string") return null;
+      const r = `${routes.contracts.route}/${routes.contracts.children.classes.route}/${contractClassId}`;
+      const truncatedContractClassId = `${contractClassId.slice(
+        0,
+        6
+      )}...${contractClassId.slice(-4)}`;
+      return (
+        <div className="text-purple-light font-mono font-bold">
+          <Link to={r}>{truncatedContractClassId}</Link>
+        </div>
+      );
+    },
+    enableSorting: false,
     enableHiding: false,
   },
   {

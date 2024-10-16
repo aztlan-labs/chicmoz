@@ -1,51 +1,45 @@
 import { Outlet, createLazyFileRoute, useParams } from "@tanstack/react-router";
-import { contractSchema } from "~/components/contracts/contract-schema";
-import { ContractsTable } from "~/components/contracts/contract-table";
-import { useLatestContractInstances } from "~/hooks";
+import { ContractClassesAndInstancesTable } from "~/components/contracts/class-and-instance-tables";
+import { useLatestContractClasses, useLatestContractInstances } from "~/hooks";
 
 export const Route = createLazyFileRoute("/contracts/")({
   component: TxEffects,
 });
 
 function TxEffects() {
-  const {
-    data,
-    isLoading,
-    error,
-  } = useLatestContractInstances();
-  const latestContractInstances = data?.map(
-    (contractInstance) =>
-      contractSchema.parse({
-        address: contractInstance.address,
-        blockHash: contractInstance.blockHash,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        blockHeight: contractInstance.blockHeight,
-        version: contractInstance.version,
-        contractClassId: contractInstance.contractClassId,
-        publicKeysHash: contractInstance.publicKeysHash,
-        deployer: contractInstance.deployer,
-      })
-  );
-  let isIndex = true;
+  const latestClassesData = useLatestContractClasses();
+  const latestInstancesData = useLatestContractInstances();
+
+  let isAddress = false;
+  let isClass = false;
+  let isIndex = false;
   try {
-    const params = useParams({ from: "/contracts/$contractAddress" });
-    isIndex = !params.contractAddress;
+    useParams({ from: "/contracts/instances/$address" });
+    isAddress = true;
   } catch (e) {
-    console.error(e);
-    isIndex = true;
+    // TODO
   }
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p className="text-red-500">{error.message}</p>;
-  if (!latestContractInstances) return <p>No data</p>;
+  try {
+    useParams({ from: "/contracts/classes/$id" });
+    isClass = true;
+  } catch (e) {
+    // TODO
+  }
+  isIndex = !isAddress && !isClass;
 
   const text = {
-    title: isIndex ? "All Contract Instances" : "Contract Instance Details",
+    title: isIndex ? "All Contracts" : isClass ? "Contract Class Details" : "Contract Instance Details",
   };
   return (
     <div className="mx-auto px-[70px] max-w-[1440px]">
       <h1 className="mt-16">{text.title}</h1>
       {isIndex ? (
-        <ContractsTable contracts={latestContractInstances} />
+        <ContractClassesAndInstancesTable
+          classesTitle="Latest Contract Classes"
+          contractClassesData={latestClassesData}
+          instancesTitle="Latest Contract Instances"
+          contractInstancesData={latestInstancesData}
+        />
       ) : (
         <Outlet />
       )}
