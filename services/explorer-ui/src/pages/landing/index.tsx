@@ -10,7 +10,7 @@ import {
   useTotalTxEffectsLast24h,
 } from "~/hooks/stats";
 import { mapLatestBlocks, mapLatestTxEffects } from "./util";
-import { InfoPil } from "~/components/info-pil";
+import { InfoBadge } from "~/components/info-badge";
 
 export const Landing: FC = () => {
   const { data: latestBlocks, isLoading, error } = useLatestBlocks();

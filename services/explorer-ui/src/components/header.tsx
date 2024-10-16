@@ -1,9 +1,4 @@
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "@tanstack/react-router";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { AztecIconWhite, AztecLogoWhite } from "~/assets";
 import { Input } from "~/components/ui/input";
 import { routes } from "~/routes/__root.tsx";

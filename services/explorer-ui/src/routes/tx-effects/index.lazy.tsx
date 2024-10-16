@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { InfoPil } from "~/components/info-pil";
+import { InfoBadge } from "~/components/info-badge";
 import { getTxEffectTableObj } from "~/components/tx-effects/tx-effects-schema";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { useLatestBlocks } from "~/hooks";
@@ -28,13 +28,13 @@ function TxEffects() {
         <h1 className="hidden md:block md:mt-16">All tx-effects</h1>
       </div>
       <div className="flex flex-row justify-center gap-4 m-8">
-        <InfoPil
+        <InfoBadge
           title="TxEffects in the last 24 hours"
           isLoading={false}
           error={null}
           data="TODO"
         />
-        <InfoPil
+        <InfoBadge
           title="TxEffects in the last hour"
           isLoading={false}
           error={null}
