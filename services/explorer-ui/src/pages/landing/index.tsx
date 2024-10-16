@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { type FC } from "react";
 import { BlocksTable } from "~/components/blocks/blocks-table";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { useLatestBlocks } from "~/hooks";
@@ -11,6 +11,7 @@ import {
 } from "~/hooks/stats";
 import { mapLatestBlocks, mapLatestTxEffects } from "./util";
 import { InfoBadge } from "~/components/info-badge";
+import { formatDuration } from "~/lib/utils";
 
 export const Landing: FC = () => {
   const { data: latestBlocks, isLoading, error } = useLatestBlocks();
@@ -44,40 +45,42 @@ export const Landing: FC = () => {
   if (error) return <p className="text-red-500">{error.message}</p>;
   if (!latestBlocks) return <p>No data</p>;
 
+  const averageBlockTimeFormatted = formatDuration(Number(avarageBlockTime) / 1000);
+
   return (
     <div className="mx-auto px-5 max-w-[1440px] md:px-[70px]">
       <div className="flex flex-row flex-wrap justify-center gap-3 m-5 ">
-        <InfoPil
+        <InfoBadge
           title="Total TX-Effects"
           isLoading={loadingTotalEffects}
           error={errorTotalEffects}
           data={totalTxEffects}
         />
-        <InfoPil
+        <InfoBadge
           title="Total TX-Effects last 24h"
           isLoading={loadingTotalEffects24h}
           error={errorTotalEffects24h}
           data={totalTxEffects24h}
         />
-        <InfoPil
+        <InfoBadge
           title="Total Amount of Contracts"
           isLoading={loadingAmountContracts}
           error={errorAmountContracts}
           data={totalAmountOfContracts}
         />
-        <InfoPil
-          title="Average fees"
+        <InfoBadge
+          title="Average fees (FPA)"
           isLoading={loadingAvarageFees}
           error={errorAvarageFees}
           data={avarageFees}
         />
-        <InfoPil
+        <InfoBadge
           title="Average block time"
           isLoading={loadingAvarageBlockTime}
           error={errorAvarageBlockTime}
-          data={avarageBlockTime}
+          data={averageBlockTimeFormatted}
         />
-        <InfoPil title="TODO" isLoading={false} error={null} data="TODO" />
+        <InfoBadge title="TODO" isLoading={false} error={null} data="TODO" />
       </div>
       <div className="flex flex-col gap-4 md:flex-row">
         <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">

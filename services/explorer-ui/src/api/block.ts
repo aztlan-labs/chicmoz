@@ -32,7 +32,10 @@ export const BlockAPI = {
         params,
       }
     );
-    return validateResponse(z.array(chicmozL2BlockSchema), response.data);
+    //return validateResponse(z.array(chicmozL2BlockSchema), response.data);
+    const validResponse = validateResponse(z.array(chicmozL2BlockSchema), response.data);
+    console.log(validResponse[0].header.globalVariables.timestamp);
+    return validResponse;
   },
   getBlockByHash: async (hash: string): Promise<ChicmozL2Block> => {
     const response = await client.get(
