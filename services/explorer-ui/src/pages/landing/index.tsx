@@ -10,6 +10,7 @@ import {
   useTotalTxEffectsLast24h,
 } from "~/hooks/stats";
 import { mapLatestBlocks, mapLatestTxEffects } from "./util";
+import { InfoPil } from "~/components/info-pil";
 
 export const Landing: FC = () => {
   const { data: latestBlocks, isLoading, error } = useLatestBlocks();
@@ -43,67 +44,48 @@ export const Landing: FC = () => {
   if (error) return <p className="text-red-500">{error.message}</p>;
   if (!latestBlocks) return <p>No data</p>;
 
-  const getStatsData = (
-    isLoading: boolean,
-    error: Error | null,
-    data?: string,
-  ) => {
-    let text;
-    if (!data) text = "No Data";
-    if (isLoading) text = "Loading";
-    if (error) text = error.message;
-    if (data) text = data;
-
-    return <h2 className="text-primary">{text}</h2>;
-  };
-
   return (
-    <div className="mx-auto px-[70px] max-w-[1440px]">
-      <div className="flex flex-row flex-wrap justify-center gap-3 m-8">
-        <div className="bg-white w-96 rounded-lg shadow-md p-4">
-          <p>Total Tx Effects</p>
-          {getStatsData(loadingTotalEffects, errorTotalEffects, totalTxEffects)}
-        </div>
-        <div className="bg-white w-96 rounded-lg shadow-md p-4">
-          <p>TX-Effects last 24 hours </p>
-          {getStatsData(
-            loadingTotalEffects24h,
-            errorTotalEffects24h,
-            totalTxEffects24h,
-          )}
-        </div>
-        <div className="bg-white w-96 rounded-lg shadow-md p-4">
-          <p>Total amount of contracts</p>
-          {getStatsData(
-            loadingAmountContracts,
-            errorAmountContracts,
-            totalAmountOfContracts,
-          )}
-        </div>
-        <div className="bg-white w-96 rounded-lg shadow-md p-4">
-          <p>Average fee's</p>
-          {getStatsData(loadingAvarageFees, errorAvarageFees, avarageFees)}
-        </div>
-        <div className="bg-white w-96 rounded-lg shadow-md p-4">
-          <p>Average block time</p>
-          {getStatsData(
-            loadingAvarageBlockTime,
-            errorAvarageBlockTime,
-            avarageBlockTime,
-          )}
-        </div>
-        <div className="bg-white w-96 rounded-lg shadow-md p-4">
-          <p>Todo</p>
-          <h2 className="text-primary">TODO</h2>
-        </div>
+    <div className="mx-auto px-5 max-w-[1440px] md:px-[70px]">
+      <div className="flex flex-row flex-wrap justify-center gap-3 m-5 ">
+        <InfoPil
+          title="Total TX-Effects"
+          isLoading={loadingTotalEffects}
+          error={errorTotalEffects}
+          data={totalTxEffects}
+        />
+        <InfoPil
+          title="Total TX-Effects last 24h"
+          isLoading={loadingTotalEffects24h}
+          error={errorTotalEffects24h}
+          data={totalTxEffects24h}
+        />
+        <InfoPil
+          title="Total Amount of Contracts"
+          isLoading={loadingAmountContracts}
+          error={errorAmountContracts}
+          data={totalAmountOfContracts}
+        />
+        <InfoPil
+          title="Average fees"
+          isLoading={loadingAvarageFees}
+          error={errorAvarageFees}
+          data={avarageFees}
+        />
+        <InfoPil
+          title="Average block time"
+          isLoading={loadingAvarageBlockTime}
+          error={errorAvarageBlockTime}
+          data={avarageBlockTime}
+        />
+        <InfoPil title="TODO" isLoading={false} error={null} data="TODO" />
       </div>
-      <div className="flex flex-row gap-4">
-        <div className="bg-white w-1/2 rounded-lg shadow-md p-4">
+      <div className="flex flex-col gap-4 md:flex-row">
+        <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
           <h2>Latest Blocks</h2>
           <BlocksTable blocks={mapLatestBlocks(latestBlocks)} />
         </div>
 
-        <div className="bg-white w-1/2 rounded-lg shadow-md p-4">
+        <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
           <h2>Latest TX-Effects</h2>
           <TxEffectsTable txEffects={mapLatestTxEffects(latestBlocks)} />
         </div>
