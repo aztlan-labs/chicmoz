@@ -69,10 +69,10 @@ const intervals = [
   { label: "second", seconds: 1 },
 ];
 
-export const formatDuration = (durationMs: number) => {
+export const formatDuration = (durationSeconds: number) => {
   for (let i = 0; i < intervals.length; i++) {
     const interval = intervals[i];
-    const count = Math.floor(durationMs / interval.seconds);
+    const count = Math.floor(durationSeconds / interval.seconds);
     if (count >= 1) {
       return `${count} ${interval.label}${count > 1 ? "s" : ""}`;
     }
