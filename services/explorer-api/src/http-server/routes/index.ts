@@ -17,6 +17,7 @@ export const openApiPaths = {
 
 export const init = ({ router }: { router: Router }) => {
   router.get("/l2/index", controller.GET_ROUTES);
+  router.get("/aztec-chain-connection", controller.GET_AZTEC_CHAIN_CONNECTION);
 
   router.get(paths.latestHeight, controller.GET_LATEST_HEIGHT);
   router.get(paths.latestBlock, controller.GET_LATEST_BLOCK);
