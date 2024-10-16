@@ -2,10 +2,10 @@ import asyncHandler from "express-async-handler";
 import { logger } from "./logger.js";
 
 enum componentState {
-  INITIALIZING,
-  UP,
-  DOWN,
-  SHUTTING_DOWN,
+  INITIALIZING = "INITIALIZING",
+  UP = "UP",
+  DOWN = "DOWN",
+  SHUTTING_DOWN = "SHUTTING_DOWN",
 }
 
 const healthComponents: Record<string, componentState> = {};
@@ -33,6 +33,7 @@ export const getHandler = asyncHandler((_req, res) => {
   const httpStatus = isHealthy ? 200 : isInitializing || isShuttingDown ? 503 : 500;
   res.status(httpStatus).json({
     isInitializing,
+    isShuttingDown,
     components,
   });
 });

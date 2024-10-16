@@ -1,7 +1,7 @@
-import { NodeInfo } from '@chicmoz-pkg/types';
+import { StringifiedNodeInfo } from '@chicmoz-pkg/types';
 
 export type ConnectedToAztecEvent = {
-  nodeInfo: NodeInfo;
+  nodeInfo: StringifiedNodeInfo;
   rpcUrl: string;
   chainHeight: number;
   latestProcessedHeight: number;

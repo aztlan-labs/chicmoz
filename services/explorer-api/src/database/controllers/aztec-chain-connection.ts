@@ -9,36 +9,62 @@ const hashString = (str: string) => {
   return createHash("sha256").update(str).digest("hex");
 };
 
-const hash = (connectionInfo: ConnectedToAztecEvent) => {
+const generateStoreObject = (connectionInfo: ConnectedToAztecEvent) => {
+  logger.info(`🔗 Storing connection info ${JSON.stringify(connectionInfo)}`);
+
   const jsonString = JSON.stringify({
     ...connectionInfo.nodeInfo,
     rpcUrl: connectionInfo.rpcUrl,
   });
-  return hashString(jsonString);
+  return {
+    hash: hashString(jsonString),
+    chainHeight: connectionInfo.chainHeight,
+    latestProcessedHeight: connectionInfo.latestProcessedHeight,
+    rpcUrl: connectionInfo.rpcUrl,
+    ...connectionInfo.nodeInfo,
+  };
 };
 
 export const store = async (connectionInfo: ConnectedToAztecEvent) => {
-  const hashValue = hash(connectionInfo);
+  const storeObject = generateStoreObject(connectionInfo);
   return await db().transaction(async (dbTx) => {
     await dbTx
       .insert(aztecChainConnection)
-      .values({
-        hash: hashValue,
-        updatedAt: new Date(),
-        chainHeight: connectionInfo.chainHeight,
-        latestProcessedHeight: connectionInfo.latestProcessedHeight,
-        rpcUrl: connectionInfo.rpcUrl,
-        ...connectionInfo.nodeInfo,
-      })
+      .values(storeObject)
+      .onConflictDoNothing()
       .execute();
     await dbTx
       .update(aztecChainConnection)
       .set({
         counter: sql`${aztecChainConnection.counter} + 1`,
+        latestProcessedHeight: storeObject.latestProcessedHeight,
+        chainHeight: storeObject.chainHeight,
+        updatedAt: new Date(),
       })
-      .where(eq(aztecChainConnection.hash, hashValue))
+      .where(eq(aztecChainConnection.hash, storeObject.hash))
       .execute();
   });
+};
+
+const intervals = [
+  { label: "day", seconds: 86400 },
+  { label: "hour", seconds: 3600 },
+  { label: "minute", seconds: 60 },
+  { label: "second", seconds: 1 },
+];
+
+const formatTimeSince = (unixTimestamp: number | null) => {
+  if (unixTimestamp === null) return "no timestamp";
+  const now = new Date().getTime();
+  const secondsSince = Math.round((now - unixTimestamp) / 1000);
+  // eslint-disable-next-line @typescript-eslint/prefer-for-of
+  for (let i = 0; i < intervals.length; i++) {
+    const interval = intervals[i];
+    const count = Math.floor(secondsSince / interval.seconds);
+    if (count >= 1)
+      return `${count} ${interval.label}${count > 1 ? "s" : ""} ago`;
+  }
+  return "just now";
 };
 
 export const getLatestWithRedactedRpc = async () => {
@@ -49,9 +75,11 @@ export const getLatestWithRedactedRpc = async () => {
     .limit(1)
     .execute();
   if (res.length === 0) return null;
-  logger.info(`🔍 Latest connection info ${JSON.stringify(res[0])}`);
+  logger.info(`🔍 Latest connection url: ${JSON.stringify(res[0].rpcUrl)}`);
   return {
     ...res[0],
-    rpcUrl: hashString(res[0].rpcUrl),
+    timeSinceCreated: formatTimeSince(res[0].createdAt.getTime()),
+    timeSinceUpdated: formatTimeSince(res[0].updatedAt.getTime()),
+    rpcUrlHASH: hashString(res[0].rpcUrl),
   };
 };
