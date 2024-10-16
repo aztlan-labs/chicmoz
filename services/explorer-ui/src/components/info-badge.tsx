@@ -1,12 +1,12 @@
 import { type FC, useMemo } from "react";
 
-interface InfoPilProps {
+interface InfoBadgeProps {
   title: string;
   data?: string;
   isLoading: boolean;
   error: Error | null;
 }
-export const InfoPil: FC<InfoPilProps> = ({
+export const InfoBadge: FC<InfoBadgeProps> = ({
   title,
   data,
   isLoading,

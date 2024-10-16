@@ -1,10 +1,15 @@
-// import { getDb as db } from "../../../database/index.js";
-// import { l2Block } from "../../../database/schema/index.js";
+import { sql } from "drizzle-orm";
+import { getDb as db } from "../../../database/index.js";
+import { header } from "../../../database/schema/index.js";
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export const getAverageFees = async (): Promise<number> => {
-  // TODO: we need l2Block.header.totalFees as number to average this
-  return -1;
+  const dbRes = await db()
+    .select({
+      average: sql<number>`COALESCE(avg(${header.totalFees}), 0)`.as("average"),
+    })
+    .from(header)
+    .execute();
+  return dbRes[0].average;
 };
 
 // eslint-disable-next-line @typescript-eslint/require-await
