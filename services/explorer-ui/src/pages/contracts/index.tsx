@@ -5,6 +5,7 @@ import { useTotalContracts, useTotalContractsLast24h } from "~/hooks/stats";
 import { mapContractClasses, mapContractInstances } from "./util";
 import { ContractInstancesTable } from "~/components/contracts/instances/table";
 import { ContractClassesTable } from "~/components/contracts/classes/table";
+import { TableBadge } from "~/components/table-badge";
 
 export const Contracts: FC = () => {
   const {
@@ -50,30 +51,27 @@ export const Contracts: FC = () => {
       </div>
 
       <div className="flex flex-col gap-4 md:flex-row ">
-        <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
-          <h3>Contract classes</h3>
-          {isLoadingClasses && <p>Loading...</p>}
-          {errorClasses && (
-            <p className="text-red-500">{errorClasses.message}</p>
-          )}
-          {!classesData && <p>No data</p>}
+        <TableBadge
+          title="Total Contract Instances"
+          isLoading={isLoadingClasses}
+          error={errorClasses}
+        >
           {classesData && (
             <ContractClassesTable contracts={mapContractClasses(classesData)} />
           )}
-        </div>
-        <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
-          <h3>Contract instances</h3>
-          {isLoadingInstances && <p>Loading...</p>}
-          {errorInstances && (
-            <p className="text-red-500">{errorInstances.message}</p>
-          )}
-          {!instancesData && <p>No data</p>}
+        </TableBadge>
+
+        <TableBadge
+          title="Total Contract Instances"
+          isLoading={isLoadingInstances}
+          error={errorInstances}
+        >
           {instancesData && (
             <ContractInstancesTable
               contracts={mapContractInstances(instancesData)}
             />
           )}
-        </div>
+        </TableBadge>
       </div>
     </div>
   );
