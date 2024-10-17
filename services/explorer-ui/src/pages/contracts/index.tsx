@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { ContractClassesAndInstancesTable } from "~/components/contracts/class-and-instance-tables";
 import { InfoBadge } from "~/components/info-badge";
 import { useLatestContractClasses, useLatestContractInstances } from "~/hooks";
 import { useTotalContracts, useTotalContractsLast24h } from "~/hooks/stats";
