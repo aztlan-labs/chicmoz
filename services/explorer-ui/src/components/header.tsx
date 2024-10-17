@@ -32,7 +32,7 @@ export const Header = () => {
     <div className="mx-auto px-4 mt-10 max-w-[1440px] md:px-[70px]">
       <div className="flex flex-row w-full items-center bg-purple-light rounded-[40px] pl-7 py-4 pr-4 md:pl-10">
         <div className="mr-auto flex flex-row items-center">
-          <ChicmozHomeLink className="hidden md:block" />
+          <ChicmozHomeLink textClasses="hidden md:block" />
         </div>
 
         <div className="md:hidden">
