@@ -42,6 +42,7 @@ export const init = ({ router }: { router: Router }) => {
   router.get(paths.statsTotalTxEffects, controller.GET_STATS_TOTAL_TX_EFFECTS);
   router.get(paths.statsTotalTxEffectsLast24h, controller.GET_STATS_TOTAL_TX_EFFECTS_LAST_24H);
   router.get(paths.statsTotalContracts, controller.GET_STATS_TOTAL_CONTRACTS);
+  router.get(paths.statsTotalContractsLast24h, controller.GET_STATS_TOTAL_CONTRACTS_LAST_24H);
   router.get(paths.statsAverageFees, controller.GET_STATS_AVERAGE_FEES);
   router.get(paths.statsAverageBlockTime, controller.GET_STATS_AVERAGE_BLOCK_TIME);
 

@@ -15,6 +15,10 @@ export const statsL2Api = {
     const response = await client.get(aztecExplorer.getL2TotalContracts);
     return validateResponse(z.string(), response.data);
   },
+  getL2TotalContractsLast24h: async (): Promise<string> => {
+    const response = await client.get(aztecExplorer.getL2TotalContractsLast24h);
+    return validateResponse(z.string(), response.data);
+  },
   getL2AverageFees: async (): Promise<string> => {
     const response = await client.get(aztecExplorer.getL2AverageFees);
     return validateResponse(z.string(), response.data);

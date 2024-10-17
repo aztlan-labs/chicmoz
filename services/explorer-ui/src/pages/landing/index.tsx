@@ -6,6 +6,7 @@ import {
   useAvarageBlockTime,
   useAvarageFees,
   useTotalContracts,
+  useTotalContractsLast24h,
   useTotalTxEffects,
   useTotalTxEffectsLast24h,
 } from "~/hooks/stats";
@@ -36,6 +37,12 @@ export const Landing: FC = () => {
     error: errorAmountContracts,
   } = useTotalContracts();
   const {
+    data: totalAmountOfContracts24h,
+    isLoading: loadingAmountContracts24h,
+    error: errorAmountContracts24h,
+  } = useTotalContractsLast24h();
+
+  const {
     data: avarageBlockTime,
     isLoading: loadingAvarageBlockTime,
     error: errorAvarageBlockTime,
@@ -51,19 +58,13 @@ export const Landing: FC = () => {
     <div className="mx-auto px-5 max-w-[1440px] md:px-[70px]">
       <div className="flex flex-row flex-wrap justify-center gap-3 m-5 ">
         <InfoBadge
-          title="Total TX-Effects"
+          title="Total transactions"
           isLoading={loadingTotalEffects}
           error={errorTotalEffects}
           data={totalTxEffects}
         />
         <InfoBadge
-          title="Total TX-Effects last 24h"
-          isLoading={loadingTotalEffects24h}
-          error={errorTotalEffects24h}
-          data={totalTxEffects24h}
-        />
-        <InfoBadge
-          title="Total Amount of Contracts"
+          title="Total Contracts"
           isLoading={loadingAmountContracts}
           error={errorAmountContracts}
           data={totalAmountOfContracts}
@@ -75,12 +76,23 @@ export const Landing: FC = () => {
           data={avarageFees}
         />
         <InfoBadge
+          title="Total transactions last 24h"
+          isLoading={loadingTotalEffects24h}
+          error={errorTotalEffects24h}
+          data={totalTxEffects24h}
+        />
+        <InfoBadge
+          title="Total contracts last 24h"
+          isLoading={loadingAmountContracts24h}
+          error={errorAmountContracts24h}
+          data={totalAmountOfContracts24h}
+        />
+        <InfoBadge
           title="Average block time"
           isLoading={loadingAvarageBlockTime}
           error={errorAvarageBlockTime}
           data={averageBlockTimeFormatted}
         />
-        <InfoBadge title="TODO" isLoading={false} error={null} data="TODO" />
       </div>
       <div className="flex flex-col gap-4 md:flex-row">
         <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
