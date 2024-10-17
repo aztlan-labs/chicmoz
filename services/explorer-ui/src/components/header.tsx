@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { AztecIconWhite, AztecLogoWhite } from "~/assets";
+import { AztecIconWhite } from "~/assets";
 import { Input } from "~/components/ui/input";
 import { routes } from "~/routes/__root.tsx";
 import {
@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui";
+import { ChicmozHomeLink } from "./ui/chicmoz-home-link";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -31,12 +32,9 @@ export const Header = () => {
   return (
     <div className="mx-auto px-4 mt-10 max-w-[1440px] md:px-[70px]">
       <div className="flex flex-row w-full items-center bg-purple-light rounded-[40px] pl-7 py-4 pr-4 md:pl-10">
-        <Link to={routes.home.route} className="mr-auto hidden md:block">
-          <AztecLogoWhite />
-        </Link>
-        <Link to={routes.home.route} className="mr-auto md:hidden">
-          <AztecIconWhite />
-        </Link>
+        <div className="mr-auto flex flex-row items-center">
+          <ChicmozHomeLink className="hidden md:block" />
+        </div>
 
         <div className="md:hidden">
           <Select onValueChange={getSelectedItem}>
