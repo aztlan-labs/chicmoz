@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { FC } from "react";
-import { createHashString } from "~/lib/create-hash-string";
+import { truncateHashString } from "~/lib/create-hash-string";
 
 interface KeyValueRowProps {
   label: string;
@@ -16,7 +16,7 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
   link,
 }) => {
   const isHashSring = value.includes("0x");
-  value = isHashSring ? createHashString(value) : value;
+  value = isHashSring ? truncateHashString(value) : value;
   return (
     <div
       className={`flex flex-col justify-start gap-2 py-3 ${

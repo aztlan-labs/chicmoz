@@ -4,6 +4,7 @@ import { DataTableColumnHeader } from "~/components/data-table";
 import { formatTimeSince } from "~/lib/utils";
 import { routes } from "~/routes/__root";
 import type { BlockTableSchema } from "./blocks-schema";
+import { truncateHashString } from "~/lib/create-hash-string";
 
 const text = {
   height: "BLOCK HEIGHT",
@@ -50,12 +51,9 @@ export const BlockTableColumns: ColumnDef<BlockTableSchema>[] = [
       const blockHash = row.getValue("blockHash");
       if (typeof blockHash !== "string") return null;
       const r = `${routes.blocks.route}/${blockHash}`;
-      const truncatedBlockHash = `${blockHash.slice(0, 6)}...${blockHash.slice(
-        -4
-      )}`;
       return (
         <div className="text-purple-light font-mono font-bold">
-          <Link to={r}>{truncatedBlockHash}</Link>
+          <Link to={r}>{truncateHashString(blockHash)}</Link>
         </div>
       );
     },
@@ -121,7 +119,7 @@ export const BlockTableColumns: ColumnDef<BlockTableSchema>[] = [
     cell: ({ row }) => {
       const formattedTime = formatTimeSince(
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-        (row.getValue("timestamp") as unknown as number)
+        row.getValue("timestamp") as unknown as number,
       );
       return <div className="text-purple-dark">{formattedTime}</div>;
     },

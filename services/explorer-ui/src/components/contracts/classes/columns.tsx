@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { routes } from "~/routes/__root";
 import { DataTableColumnHeader } from "~/components/data-table";
 import { type ContractClass } from "./schema";
+import { truncateHashString } from "~/lib/create-hash-string";
 
 const text = {
   blockHash: "BLOCK HASH",
@@ -26,13 +27,9 @@ export const contractsTableColumns: ColumnDef<ContractClass>[] = [
       const contractClassId = row.getValue("contractClassId");
       if (typeof contractClassId !== "string") return null;
       const r = `${routes.contracts.route}/${routes.contracts.children.classes.route}/${contractClassId}`;
-      const truncatedContractClassId = `${contractClassId.slice(
-        0,
-        6
-      )}...${contractClassId.slice(-4)}`;
       return (
         <div className="text-purple-light font-mono font-bold">
-          <Link to={r}>{truncatedContractClassId}</Link>
+          <Link to={r}>{truncateHashString(contractClassId)}</Link>
         </div>
       );
     },
