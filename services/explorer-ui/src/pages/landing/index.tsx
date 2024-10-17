@@ -41,7 +41,6 @@ export const Landing: FC = () => {
     isLoading: loadingAmountContracts24h,
     error: errorAmountContracts24h,
   } = useTotalContractsLast24h();
-
   const {
     data: avarageBlockTime,
     isLoading: loadingAvarageBlockTime,
@@ -64,7 +63,7 @@ export const Landing: FC = () => {
           data={totalTxEffects}
         />
         <InfoBadge
-          title="Total Contracts"
+          title="Total Contract Classes"
           isLoading={loadingAmountContracts}
           error={errorAmountContracts}
           data={totalAmountOfContracts}
@@ -82,7 +81,7 @@ export const Landing: FC = () => {
           data={totalTxEffects24h}
         />
         <InfoBadge
-          title="Total contracts last 24h"
+          title="Total Contract Classes last 24h"
           isLoading={loadingAmountContracts24h}
           error={errorAmountContracts24h}
           data={totalAmountOfContracts24h}
