@@ -21,8 +21,8 @@ export const InfoBadge: FC<InfoBadgeProps> = ({
 
   return (
     <div className="flex flex-col bg-white w-5/12 justify-between rounded-lg shadow-md p-4 md:w-96">
-      <p>{title}</p>
-      <h2 className="text-primary">{text}</h2>
+      <p className="text-sm">{title}</p>
+      <h3 className="text-primary">{text}</h3>
     </div>
   );
 };
