@@ -23,12 +23,15 @@ export const Blocks: FC = () => {
   if (error) return <p className="text-red-500">{error.message}</p>;
   if (!latestBlocks) return <p>No data</p>;
   const averageBlockTimeFormatted = formatDuration(
-    Number(avarageBlockTime) / 1000
+    Number(avarageBlockTime) / 1000,
   );
 
   return (
-    <div className="mx-auto px-[70px] max-w-[1440px]">
-      <h1 className="mt-16">Latest Blocks</h1>
+    <div className="mx-auto px-5 max-w-[1440px] md:px-[70px]">
+      <div className="flex flex-wrap justify-center gap-3 m-5 ">
+        <h2 className="mt-2 text-primary md:hidden">Blocks</h2>
+        <h1 className="hidden md:block md:mt-16">Blocks</h1>
+      </div>
       <div className="flex flex-row justify-center gap-4 m-8">
         <InfoBadge
           title="Average fees (FPA)"
