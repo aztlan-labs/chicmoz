@@ -43,6 +43,7 @@ export const TxEffectDetails: FC = () => {
                 key={tab.id}
                 variant="default"
                 onClick={() => setSelectedTab(tab.id)}
+                className="shadow-[0px_0px_1px_2px_rgba(0,0,0,1)]"
               >
                 {tab.label}
               </Button>

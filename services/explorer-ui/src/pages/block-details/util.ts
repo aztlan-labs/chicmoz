@@ -14,12 +14,6 @@ export const getBlockDetails = (latestBlock: ChicmozL2Block) => {
       value: new Date(timestamp).toLocaleString() + ` (${timeSince})`,
     },
     {
-      // NOTE: this is not the same as txEffects.length!
-      label: "Number of transactions",
-      value: "" + latestBlock.header.contentCommitment.numTxs,
-    },
-    // TODO: what is good block header data to display?
-    {
       label: "slotNumber",
       value: "" + latestBlock.header.globalVariables.slotNumber,
     },
@@ -28,13 +22,16 @@ export const getBlockDetails = (latestBlock: ChicmozL2Block) => {
       value: "" + latestBlock.header.globalVariables.coinbase,
     },
     // TODO: stats on logs
-    // TODO: better display of gas
+    {
+      label: "number of transactions",
+      value: "" + latestBlock.body.txEffects.length,
+    },
     {
       label: "feeRecipient",
       value: "" + latestBlock.header.globalVariables.feeRecipient,
     },
     {
-      label: "totalFees",
+      label: "totalFees (FPA)",
       value: "" + latestBlock.header.totalFees,
     },
     {
