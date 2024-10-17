@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Input } from "~/components/ui/input";
 import { routes } from "~/routes/__root.tsx";
 import {
@@ -12,19 +12,10 @@ import { ChicmozHomeLink } from "./ui/chicmoz-home-link";
 
 export const Header = () => {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const getSelectedItem = (value: string) => {
     void navigate({
       to: value,
-    });
-  };
-
-  const getPlaceholder = () => {
-    const array = Object.values(routes);
-    const route = location.pathname;
-    return array.find((item) => {
-      if (item.route === route) return item.title;
     });
   };
 
@@ -38,7 +29,7 @@ export const Header = () => {
         <div className="md:hidden">
           <Select onValueChange={getSelectedItem}>
             <SelectTrigger className="h-8 w-40 text-gray-50">
-              <SelectValue placeholder={getPlaceholder()?.title} />
+              <SelectValue placeholder="Menu" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value={routes.home.route}>

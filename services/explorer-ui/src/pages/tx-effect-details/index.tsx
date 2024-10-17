@@ -1,11 +1,19 @@
 import { useParams } from "@tanstack/react-router";
 import { useState, type FC } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
-import { Button } from "~/components/ui";
+import {
+  Button,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui";
 import { useGetTxEffectByHash } from "~/hooks/";
 import { API_URL, aztecExplorer } from "~/service/constants";
 import { txEffectTabs, type TabId } from "./constants";
 import { getTxEffectData } from "./utils";
+import { truncateHashString } from "~/lib/create-hash-string";
 
 const API_ENDPOINT_URL = `${API_URL}/${aztecExplorer.getL2TxEffectByHash}`;
 
@@ -16,6 +24,9 @@ export const TxEffectDetails: FC = () => {
   });
   const { data: txEffects, isLoading, error } = useGetTxEffectByHash(hash);
 
+  const getSelectedItem = (value: string) => {
+    setSelectedTab(value as TabId);
+  };
   if (!hash) <div> No txEffect hash</div>;
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error</div>;
@@ -24,11 +35,11 @@ export const TxEffectDetails: FC = () => {
   const apiEndpointUrl = `${API_ENDPOINT_URL}${hash}`;
 
   return (
-    <div className="mx-auto px-[70px] max-w-[1440px]">
+    <div className="mx-auto px-7 max-w-[1440px] md:px-[70px]">
       <div>
         <div>
           <h2>TxEffect details</h2>
-          <p>{txEffects.hash}</p>
+          <p>{truncateHashString(txEffects.hash)}</p>
           <a href={apiEndpointUrl} target="_blank" rel="noreferrer">
             (API Endpoint)
           </a>
@@ -37,7 +48,7 @@ export const TxEffectDetails: FC = () => {
           <div className="bg-white rounded-lg shadow-md p-4">
             <KeyValueDisplay data={getTxEffectData(txEffects)} />
           </div>
-          <div className="flex flex-row gap-4 w-10 mb-4">
+          <div className="hidden lg:flex flex-row gap-4 w-10 mb-4">
             {txEffectTabs.map((tab) => (
               <Button
                 key={tab.id}
@@ -48,6 +59,20 @@ export const TxEffectDetails: FC = () => {
                 {tab.label}
               </Button>
             ))}
+          </div>
+          <div className="mb-1 mt-4 lg:hidden">
+            <Select onValueChange={getSelectedItem}>
+              <SelectTrigger className="h-8 w-3/5 bg-primary text-white">
+                <SelectValue placeholder="encryptedLogs" />
+              </SelectTrigger>
+              <SelectContent>
+                {txEffectTabs.map((tab) => (
+                  <SelectItem key={tab.id} value={tab.id}>
+                    {tab.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="bg-white rounded-lg shadow-md p-4">
             {selectedTab === "ecryptedLogs" && (
