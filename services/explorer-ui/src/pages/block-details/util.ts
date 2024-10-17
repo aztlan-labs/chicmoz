@@ -1,5 +1,5 @@
-import { ChicmozL2Block } from "@chicmoz-pkg/types";
-import { txEffectSchema } from "~/components/tx-effects/tx-effects-schema";
+import { type ChicmozL2Block } from "@chicmoz-pkg/types";
+import { getTxEffectTableObj } from "~/components/tx-effects/tx-effects-schema";
 import { formatTimeSince } from "~/lib/utils";
 
 export const getBlockDetails = (latestBlock: ChicmozL2Block) => {
@@ -14,12 +14,6 @@ export const getBlockDetails = (latestBlock: ChicmozL2Block) => {
       value: new Date(timestamp).toLocaleString() + ` (${timeSince})`,
     },
     {
-      // NOTE: this is not the same as txEffects.length!
-      label: "Number of transactions",
-      value: "" + latestBlock.header.contentCommitment.numTxs,
-    },
-    // TODO: what is good block header data to display?
-    {
       label: "slotNumber",
       value: "" + latestBlock.header.globalVariables.slotNumber,
     },
@@ -28,13 +22,16 @@ export const getBlockDetails = (latestBlock: ChicmozL2Block) => {
       value: "" + latestBlock.header.globalVariables.coinbase,
     },
     // TODO: stats on logs
-    // TODO: better display of gas
+    {
+      label: "number of transactions",
+      value: "" + latestBlock.body.txEffects.length,
+    },
     {
       label: "feeRecipient",
       value: "" + latestBlock.header.globalVariables.feeRecipient,
     },
     {
-      label: "totalFees",
+      label: "totalFees (FPA)",
       value: "" + latestBlock.header.totalFees,
     },
     {
@@ -49,16 +46,7 @@ export const getBlockDetails = (latestBlock: ChicmozL2Block) => {
 };
 
 export const getTxEffects = (latestBlock: ChicmozL2Block) => {
-  return latestBlock.body.txEffects.map((tx) => {
-    return txEffectSchema.parse({
-      blockNumber: latestBlock.height,
-      timestamp: latestBlock.header.globalVariables.timestamp,
-      hash: tx.hash,
-      transactionFee: Number(tx.transactionFee),
-      logCount:
-        tx.encryptedLogsLength +
-        tx.unencryptedLogsLength +
-        tx.noteEncryptedLogsLength,
-    });
-  });
+  return latestBlock.body.txEffects.map((tx) =>
+    getTxEffectTableObj(tx, latestBlock)
+  );
 };

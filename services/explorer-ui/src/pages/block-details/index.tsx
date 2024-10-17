@@ -35,7 +35,21 @@ export const BlockDetails: FC = () => {
           <a href={apiEndpointUrl} target="_blank" rel="noreferrer">
             (API Endpoint)
           </a>
-        </div>
+          </div>
+          <div className="flex flex-col gap-4 mt-8">
+            <div className="bg-white rounded-lg shadow-md p-4">
+              <KeyValueDisplay data={getBlockDetails(latestBlock)} />
+            </div>
+            <div className="flex flex-row gap-4 w-10 mb-4">
+              <Button
+                variant={"default"}
+                className={"shadow-[0px_0px_1px_2px_rgba(0,0,0,1)]"}
+              >
+                <p>View TxEffects</p>
+              </Button>
+            </div>
+            <TxEffectsTable txEffects={getTxEffects(latestBlock)} />
+          </div>
         <div className="flex flex-col gap-4 mt-8">
           <div className="bg-white rounded-lg shadow-md p-4">
             <KeyValueDisplay data={getBlockDetails(latestBlock)} />

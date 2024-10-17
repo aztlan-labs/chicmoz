@@ -9,9 +9,8 @@ import { truncateHashString } from "~/lib/create-hash-string";
 const text = {
   height: "BLOCK HEIGHT",
   blockHash: "BLOCK HASH",
-  numberOfTransactions: "TRANSACTIONS",
-  txEffectsLength: "TX EFFECTS",
-  totalFees: "TOTAL FEES",
+  txEffectsLength: "NUMBER OF TRANSACTIONS",
+  totalFees: "TOTAL FEES (FPA)",
   timeSince: "TIME SINCE",
 };
 
@@ -58,23 +57,6 @@ export const BlockTableColumns: ColumnDef<BlockTableSchema>[] = [
       );
     },
     enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "numberOfTransactions",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        className="text-purple-dark text-sm"
-        column={column}
-        title={text.numberOfTransactions}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="text-purple-dark">
-        {row.getValue("numberOfTransactions")}
-      </div>
-    ),
-    enableSorting: true,
     enableHiding: false,
   },
   {

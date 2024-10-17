@@ -1,8 +1,9 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { InfoBadge } from "~/components/info-badge";
-import { txEffectSchema } from "~/components/tx-effects/tx-effects-schema";
+import { getTxEffectTableObj } from "~/components/tx-effects/tx-effects-schema";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { useLatestBlocks } from "~/hooks";
+import { useTotalTxEffects, useTotalTxEffectsLast24h } from "~/hooks/stats";
 
 export const Route = createLazyFileRoute("/tx-effects/")({
   component: TxEffects,
@@ -10,6 +11,16 @@ export const Route = createLazyFileRoute("/tx-effects/")({
 
 function TxEffects() {
   const { data: latestBlocks, isLoading, error } = useLatestBlocks();
+  const {
+    data: totalTxEffects,
+    isLoading: loadingTotalEffects,
+    error: errorTotalEffects,
+  } = useTotalTxEffects();
+  const {
+    data: totalTxEffects24h,
+    isLoading: loadingTotalEffects24h,
+    error: errorTotalEffects24h,
+  } = useTotalTxEffectsLast24h();
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error.message}</p>;
@@ -17,16 +28,7 @@ function TxEffects() {
 
   const latestTxEffects = latestBlocks.flatMap((block) => {
     return block.body.txEffects.map((txEffect) =>
-      txEffectSchema.parse({
-        hash: txEffect.hash,
-        transactionFee: txEffect.transactionFee,
-        logCount:
-          txEffect.encryptedLogsLength +
-          txEffect.unencryptedLogsLength +
-          txEffect.noteEncryptedLogsLength,
-        blockNumber: block.height,
-        timestamp: block.header.globalVariables.timestamp,
-      }),
+      getTxEffectTableObj(txEffect, block)
     );
   });
 
@@ -38,16 +40,16 @@ function TxEffects() {
       </div>
       <div className="flex flex-row justify-center gap-4 m-8">
         <InfoBadge
-          title="TxEffects in the last 24 hours"
-          isLoading={false}
-          error={null}
-          data="TODO"
+          title="Total transactions"
+          isLoading={loadingTotalEffects}
+          error={errorTotalEffects}
+          data={totalTxEffects}
         />
         <InfoBadge
-          title="TxEffects in the last hour"
-          isLoading={false}
-          error={null}
-          data="TODO"
+          title="Total transactions last 24h"
+          isLoading={loadingTotalEffects24h}
+          error={errorTotalEffects24h}
+          data={totalTxEffects24h}
         />
       </div>
       <TxEffectsTable txEffects={latestTxEffects} />

@@ -22,6 +22,13 @@ export const useTotalContracts = (): UseQueryResult<string, Error> => {
   });
 };
 
+export const useTotalContractsLast24h = (): UseQueryResult<string, Error> => {
+  return useQuery<string, Error>({
+    queryKey: ["useTotalContractsLast24h"],
+    queryFn: statsL2Api.getL2TotalContractsLast24h,
+  });
+};
+
 export const useAvarageFees = (): UseQueryResult<string, Error> => {
   return useQuery<string, Error>({
     queryKey: ["useAvarageFees"],
