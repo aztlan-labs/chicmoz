@@ -13,7 +13,7 @@ import { useGetTxEffectByHash } from "~/hooks/";
 import { API_URL, aztecExplorer } from "~/service/constants";
 import { txEffectTabs, type TabId } from "./constants";
 import { getTxEffectData } from "./utils";
-import { createHashString } from "~/lib/create-hash-string";
+import { truncateHashString } from "~/lib/create-hash-string";
 
 const API_ENDPOINT_URL = `${API_URL}/${aztecExplorer.getL2TxEffectByHash}`;
 
@@ -39,7 +39,7 @@ export const TxEffectDetails: FC = () => {
       <div>
         <div>
           <h2>TxEffect details</h2>
-          <p>{createHashString(txEffects.hash)}</p>
+          <p>{truncateHashString(txEffects.hash)}</p>
           <a href={apiEndpointUrl} target="_blank" rel="noreferrer">
             (API Endpoint)
           </a>

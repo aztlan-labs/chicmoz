@@ -6,7 +6,7 @@ import { Button } from "~/components/ui";
 import { useGetBlockByHeight } from "~/hooks";
 import { API_URL, aztecExplorer } from "~/service/constants";
 import { getBlockDetails, getTxEffects } from "./util";
-import { createHashString } from "~/lib/create-hash-string";
+import { truncateHashString } from "~/lib/create-hash-string";
 
 const API_ENDPOINT_URL = `${API_URL}/${aztecExplorer.getL2BlockByHash}`;
 
@@ -31,7 +31,7 @@ export const BlockDetails: FC = () => {
       <div>
         <div>
           <h2>Block Details</h2>
-          <p>{createHashString(latestBlock.hash)}</p>
+          <p>{truncateHashString(latestBlock.hash)}</p>
           <a href={apiEndpointUrl} target="_blank" rel="noreferrer">
             (API Endpoint)
           </a>
