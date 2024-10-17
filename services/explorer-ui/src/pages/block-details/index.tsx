@@ -45,9 +45,9 @@ export const BlockDetails: FC = () => {
               <KeyValueDisplay data={getBlockDetails(latestBlock)} />
             </div>
             <div className="flex flex-row gap-4 w-10 mb-4">
-              <Button 
-              variant={"default"}
-              className={"shadow-[0px_0px_1px_2px_rgba(0,0,0,1)]"}
+              <Button
+                variant={"default"}
+                className={"shadow-[0px_0px_1px_2px_rgba(0,0,0,1)]"}
               >
                 <p>View TxEffects</p>
               </Button>
