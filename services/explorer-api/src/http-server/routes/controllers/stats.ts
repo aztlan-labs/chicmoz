@@ -26,6 +26,16 @@ export const GET_STATS_TOTAL_CONTRACTS = asyncHandler(async (_req, res) => {
   res.status(200).send(JSON.stringify(total));
 });
 
+export const GET_STATS_TOTAL_CONTRACTS_LAST_24H = asyncHandler(
+  async (_req, res) => {
+    const total = await dbWrapper.getLatest(
+      ["stats", "totalContractsLast24h"],
+      () => db.l2Contract.getTotalContractsLast24h()
+    );
+    res.status(200).send(JSON.stringify(total));
+  }
+);
+
 export const GET_STATS_AVERAGE_FEES = asyncHandler(async (_req, res) => {
   const average = await dbWrapper.getLatest(["stats", "averageFees"], () =>
     db.l2Block.getAverageFees()

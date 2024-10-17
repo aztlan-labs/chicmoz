@@ -115,6 +115,7 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
     paths.statsTotalTxEffects,
     paths.statsTotalTxEffectsLast24h,
     paths.statsTotalContracts,
+    paths.statsTotalContractsLast24h,
     paths.statsAverageFees,
     paths.statsAverageBlockTime,
   ];
