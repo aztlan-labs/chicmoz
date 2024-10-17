@@ -7,27 +7,19 @@ import { getContractData } from "./util";
 import { ContractClassesAndInstancesTable } from "~/components/contracts/class-and-instance-tables";
 
 export const ContractClassDetails: FC = () => {
-  let classId = "";
-  try {
-    const params = useParams({
-      from: "/contracts/classes/$id",
-    });
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    classId = params.id;
-  } catch (e) {
-    // TODO
-  }
-  const contractClassVersions = useContractClasses(classId);
-  const contractDeployedInstances = useDeployedContractInstances(classId);
+  const { id } = useParams({
+    from: "/contracts/classes/$id",
+  });
+  const contractClassVersions = useContractClasses(id);
+  const contractDeployedInstances = useDeployedContractInstances(id);
 
-  if (!classId) return <div>No classId</div>;
+  if (!id) return <div>No classId</div>;
   if (contractClassVersions.isLoading) return <div>Loading...</div>;
   if (contractClassVersions.error) return <div>Error</div>;
   if (!contractClassVersions.data) return <div>No data</div>;
 
-  const apiEndpointUrl = `${API_URL}/${aztecExplorer.getL2ContractClasses(
-    classId
-  )}`;
+  const apiEndpointUrl = `${API_URL}/${aztecExplorer.getL2ContractClasses(id)}`;
+
   return (
     <div className="mx-auto px-[70px] max-w-[1440px]">
       <div className="flex flex-col gap-4 mt-8">
