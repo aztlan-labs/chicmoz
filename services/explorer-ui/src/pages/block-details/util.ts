@@ -31,7 +31,7 @@ export const getBlockDetails = (latestBlock: ChicmozL2Block) => {
       value: "" + latestBlock.header.globalVariables.feeRecipient,
     },
     {
-      label: "totalFees",
+      label: "totalFees (FPA)",
       value: "" + latestBlock.header.totalFees,
     },
     {
