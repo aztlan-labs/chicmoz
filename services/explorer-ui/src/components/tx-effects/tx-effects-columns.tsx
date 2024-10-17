@@ -7,7 +7,7 @@ import { formatTimeSince } from "~/lib/utils";
 
 const text = {
   hash: "TX EFFECT HASH",
-  transactionFee: "TRANSACTION FEE",
+  transactionFee: "TRANSACTION FEE (FPA)",
   totalLengthOfLogs: "TOTAL LOGS LENGTH",
   blockHeight: "BLOCK HEIGHT",
   timeSince: "TIME SINCE",

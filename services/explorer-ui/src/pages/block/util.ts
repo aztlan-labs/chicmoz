@@ -6,7 +6,6 @@ export const parseLatestBlocks = (latestBlocks: ChicmozL2Block[]) => {
     return blockSchema.parse({
       height: block.height,
       blockHash: block.hash,
-      numberOfTransactions: block.header.contentCommitment.numTxs,
       txEffectsLength: block.body.txEffects.length,
       totalFees: block.header.totalFees,
       timestamp: block.header.globalVariables.timestamp,
