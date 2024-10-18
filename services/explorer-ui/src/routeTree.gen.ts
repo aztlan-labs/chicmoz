@@ -16,6 +16,7 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
+const AboutUsLazyImport = createFileRoute('/about-us')()
 const IndexLazyImport = createFileRoute('/')()
 const TxEffectsIndexLazyImport = createFileRoute('/tx-effects/')()
 const ContractsIndexLazyImport = createFileRoute('/contracts/')()
@@ -28,6 +29,11 @@ const ContractsInstancesAddressLazyImport = createFileRoute(
 const ContractsClassesIdLazyImport = createFileRoute('/contracts/classes/$id')()
 
 // Create/Update Routes
+
+const AboutUsLazyRoute = AboutUsLazyImport.update({
+  path: '/about-us',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/about-us.lazy').then((d) => d.Route))
 
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
@@ -93,6 +99,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/about-us': {
+      id: '/about-us'
+      path: '/about-us'
+      fullPath: '/about-us'
+      preLoaderRoute: typeof AboutUsLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/blocks/$blockNumber': {
       id: '/blocks/$blockNumber'
       path: '/blocks/$blockNumber'
@@ -149,6 +162,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
+  AboutUsLazyRoute,
   BlocksBlockNumberLazyRoute,
   TxEffectsHashLazyRoute,
   BlocksIndexLazyRoute,
@@ -167,6 +181,7 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/about-us",
         "/blocks/$blockNumber",
         "/tx-effects/$hash",
         "/blocks/",
@@ -178,6 +193,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/": {
       "filePath": "index.lazy.tsx"
+    },
+    "/about-us": {
+      "filePath": "about-us.lazy.tsx"
     },
     "/blocks/$blockNumber": {
       "filePath": "blocks/$blockNumber.lazy.tsx"
