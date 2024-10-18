@@ -31,7 +31,8 @@ export const BlockDetails: FC = () => {
       <div>
         <div>
           <h2>Block Details</h2>
-          <p>{truncateHashString(latestBlock.hash)}</p>
+          <p className="md:hidden">{truncateHashString(latestBlock.hash)}</p>
+          <p className="hidden md:block">{latestBlock.hash}</p>
           <a href={apiEndpointUrl} target="_blank" rel="noreferrer">
             (API Endpoint)
           </a>

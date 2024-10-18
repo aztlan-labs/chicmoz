@@ -5,6 +5,8 @@ import { QueryProvider, TanstackRouterProvider } from "./providers";
 
 // NOTE: these two lines are necessary for proper parsing of ChicmozL2Block
 import { Buffer } from "buffer";
+import { Toaster } from "./components/ui/sonner";
+import { SuccessIcon } from "./assets";
 window.Buffer = window.Buffer || Buffer;
 
 // Render the app
@@ -15,6 +17,11 @@ if (!rootElement.innerHTML) {
     <StrictMode>
       <QueryProvider>
         <TanstackRouterProvider />
+        <Toaster
+          icons={{
+            success: <SuccessIcon />,
+          }}
+        />
       </QueryProvider>
     </StrictMode>,
   );
