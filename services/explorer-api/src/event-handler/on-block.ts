@@ -3,7 +3,7 @@ import {
   ContractClassRegisteredEvent,
   ContractInstanceDeployedEvent,
 } from "@aztec/circuits.js";
-import { ClassRegistererAddress } from "@aztec/protocol-contracts/class-registerer";
+import { ProtocolContractAddress } from '@aztec/protocol-contracts';
 import { blockFromString, parseBlock } from "@chicmoz-pkg/backend-utils";
 import { NewBlockEvent } from "@chicmoz-pkg/message-registry";
 import {
@@ -76,7 +76,7 @@ const storeContracts = async (b: L2Block, blockHash: string) => {
     .flatMap((txLog) => txLog.unrollLogs());
   const contractClasses = ContractClassRegisteredEvent.fromLogs(
     blockLogs,
-    ClassRegistererAddress
+    ProtocolContractAddress.ContractClassRegisterer
   );
   const contractInstances = ContractInstanceDeployedEvent.fromLogs(blockLogs);
   logger.info(
