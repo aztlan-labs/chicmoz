@@ -1029,14 +1029,14 @@ __metadata:
     eslint-plugin-react-refresh: "npm:0.4.7"
     eslint-plugin-tailwindcss: "npm:3.13.0"
     lucide-react: "npm:0.356.0"
-    next-themes: "npm:^0.3.0"
+    next-themes: "npm:0.3.0"
     postcss: "npm:8.4.39"
     prettier: "npm:3.1.0"
     prettier-plugin-organize-imports: "npm:3.2.4"
     prettier-plugin-sort-json: "npm:3.1.0"
     react: "npm:18.3.1"
     react-dom: "npm:18.3.1"
-    sonner: "npm:^1.5.0"
+    sonner: "npm:1.5.0"
     tailwind-merge: "npm:2.4.0"
     tailwindcss: "npm:3.4.6"
     tailwindcss-animate: "npm:1.0.7"
@@ -10396,7 +10396,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-themes@npm:^0.3.0":
+"next-themes@npm:0.3.0":
   version: 0.3.0
   resolution: "next-themes@npm:0.3.0"
   peerDependencies:
@@ -12089,7 +12089,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sonner@npm:^1.5.0":
+"sonner@npm:1.5.0":
   version: 1.5.0
   resolution: "sonner@npm:1.5.0"
   peerDependencies:
