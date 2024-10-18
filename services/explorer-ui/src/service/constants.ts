@@ -9,9 +9,12 @@ export const aztecExplorer = {
   getL2TxEffectByHeightAndIndex: (height: number, index: number) =>
     `l2/blocks/${height}/txEffects/${index}`,
   getL2TxEffectsByHeightRange: "",
-  getL2ContractClassByIdAndVersion: (classId: string, version: string) => `l2/contract-classes/${classId}/versions/${version}`,
-  getL2ContractClasses: (classId?: string) => classId ? `l2/contract-classes/${classId}` : "l2/contract-classes",
-  getL2ContractInstance: (address: string) => `l2/contract-instances/${address}`,
+  getL2ContractClassByIdAndVersion: (classId: string, version: string) =>
+    `l2/contract-classes/${classId}/versions/${version}`,
+  getL2ContractClasses: (classId?: string) =>
+    classId ? `l2/contract-classes/${classId}` : "l2/contract-classes",
+  getL2ContractInstance: (address: string) =>
+    `l2/contract-instances/${address}`,
   getL2ContractInstances: "l2/contract-instances",
   getL2ContractInstancesByBlockHash: (hash: string) =>
     `l2/blocks/${hash}/contract-instances`,
