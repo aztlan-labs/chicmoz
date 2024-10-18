@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { routes } from "~/routes/__root";
-import { ObscuraLogoWhite } from "~/assets";
+import { DiscordIcon, GithubIcon, ObscuraLogoWhite, XIcon } from "~/assets";
 import { ChicmozHomeLink } from "./ui/chicmoz-home-link";
 
 // TODO: add the footer links
@@ -20,38 +20,59 @@ export const Footer = () => {
                   className="flex flex-col lg:items-start items-center opacity-75 hover:opacity-100"
                 >
                   <span className="text-grey-light text-xs text-center lg:text-left">
-                    {text.buildAndPoweredBy}
+                    {text.builtAndPoweredBy}
                   </span>
                   <ObscuraLogoWhite className="size-3/4" />
                 </a>
               </p>
-              <Link
-                to={routes.aboutUs.route}
-                className="[&.active]:text-white mr-0 mb-[40px] lg:mb-0 lg:mr-[30px]  text-grey-light hover:text-white"
-              >
-                {routes.aboutUs.title}
-              </Link>
-              <a
-                // TODO: remove?
-                className="[&.active]:text-white mr-0 mb-[40px] lg:mb-0 lg:mr-[30px]  text-grey-light hover:text-white"
-              >
-                {text.joinOurDiscord}
-              </a>
-              <Link
-                to={routes.privacyPolicy.route}
-                className="[&.active]:text-white mr-0 mb-[40px] lg:mb-0 lg:mr-[30px]  text-grey-light hover:text-white"
-              >
-                {routes.privacyPolicy.title}
-              </Link>
-              <Link
-                to={routes.termsAndConditions.route}
-                className="[&.active]:text-white mr-0 mb-[100px] lg:mb-0 lg:mr-[30px]  text-grey-light hover:text-white"
-              >
-                {routes.termsAndConditions.title}
-              </Link>
-              <p className="flex text-center flex-col ml-0 gap-1 lg:mt-0 lg:ml-[100px] text-white">
-                {text.copyright}
-              </p>
+              <div className="mx-auto flex items-center lg:flex-row flex-col">
+                <Link
+                  to={routes.aboutUs.route}
+                  className="[&.active]:text-white mr-0 mb-[40px] lg:mb-0 lg:mr-[30px]  text-grey-light hover:text-white"
+                >
+                  {routes.aboutUs.title}
+                </Link>
+                <Link
+                  to={routes.privacyPolicy.route}
+                  className="[&.active]:text-white mr-0 mb-[40px] lg:mb-0 lg:mr-[30px]  text-grey-light hover:text-white"
+                >
+                  {routes.privacyPolicy.title}
+                </Link>
+                <Link
+                  to={routes.termsAndConditions.route}
+                  className="[&.active]:text-white mr-0 mb-[100px] lg:mb-0 lg:mr-[30px]  text-grey-light hover:text-white"
+                >
+                  {routes.termsAndConditions.title}
+                </Link>
+              </div>
+              <div className="flex lg:flex-row flex-col px-5">
+                <div className="flex flex-row gap-5 lg:gap-0 lg:ml-auto">
+                  <a
+                    href="https://discord.gg/obscura-network"
+                    target="_blank"
+                    className="mx-auto opacity-75 hover:opacity-100"
+                  >
+                    <DiscordIcon className="size-3/4" />
+                  </a>
+                  <a
+                    href="https://x.com/Obscura_Network"
+                    target="_blank"
+                    className="mx-auto opacity-75 hover:opacity-100"
+                  >
+                    <XIcon className="size-3/4" />
+                  </a>
+                  <a
+                    href="https://github.com/aztlan-labs/chicmoz"
+                    target="_blank"
+                    className="mx-auto opacity-75 hover:opacity-100"
+                  >
+                    <GithubIcon className="size-3/4" />
+                  </a>
+                </div>
+                <p className="text-center gap-1 lg:ml-[100px] text-white">
+                  {text.copyright}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -61,7 +82,7 @@ export const Footer = () => {
 };
 
 export const text = {
-  buildAndPoweredBy: "Build and powered by ",
+  builtAndPoweredBy: "Built and powered by ",
   aboutUs: "About Us",
   privacyPolicy: "Privacy Policy",
   joinOurDiscord: "Join our Discord",

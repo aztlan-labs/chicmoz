@@ -11,11 +11,13 @@ export const AboutUs: FC = () => {
           over 5 years and have a deep understanding of the technology and the
           community.
         </p>
+          <br />
         <p>
           Since 3 years back we have been building with ZK. And are now building
           a new platform that will simplify for developers that are building on
           privacy-focused blockchains.
         </p>
+        <br />
         <p>
           The easiest way to find us is following <a href="https://x.com/Obscura_Network"
             className="text-purple-light hover:font-bold"
