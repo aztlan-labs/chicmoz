@@ -5,7 +5,7 @@ import { useContractClasses, useContractInstance } from "~/hooks";
 import { API_URL, aztecExplorer } from "~/service/constants";
 import { getContractData } from "./util";
 import { ContractInstancesTable } from "~/components/contracts/instances/table";
-import { mapContractClasses, mapContractInstances } from "../contracts/util";
+import { mapContractClasses, mapContractInstances } from "../contract/util";
 import { TableBadge } from "~/components/table-badge";
 import { ContractClassesTable } from "~/components/contracts/classes/table";
 
