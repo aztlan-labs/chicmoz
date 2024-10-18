@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { routes } from "~/routes/__root";
 import { DiscordIcon, GithubIcon, ObscuraLogoWhite, XIcon } from "~/assets";
-import { ChicmozHomeLink } from "./ui/chicmoz-home-link";
+import { DISCORD_URL, GITHUB_URL, X_URL } from "~/service/constants";
+import { ChicmozHomeLink } from "~/components/ui/chicmoz-home-link";
 
 // TODO: add the footer links
 export const Footer = () => {
@@ -48,21 +49,21 @@ export const Footer = () => {
               <div className="flex lg:flex-row flex-col px-5">
                 <div className="flex flex-row gap-5 lg:gap-0 lg:ml-auto">
                   <a
-                    href="https://discord.gg/obscura-network"
+                    href={DISCORD_URL}
                     target="_blank"
                     className="mx-auto opacity-75 hover:opacity-100"
                   >
                     <DiscordIcon className="size-3/4" />
                   </a>
                   <a
-                    href="https://x.com/Obscura_Network"
+                    href={X_URL}
                     target="_blank"
                     className="mx-auto opacity-75 hover:opacity-100"
                   >
                     <XIcon className="size-3/4" />
                   </a>
                   <a
-                    href="https://github.com/aztlan-labs/chicmoz"
+                    href={GITHUB_URL}
                     target="_blank"
                     className="mx-auto opacity-75 hover:opacity-100"
                   >

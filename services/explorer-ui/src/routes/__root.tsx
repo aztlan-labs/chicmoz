@@ -5,7 +5,7 @@ import { Header } from "~/components/header";
 import { TailwindIndicator } from "~/components/ui/tailwind-indicator";
 
 const TanStackRouterDevtools =
-  process.env.NODE_ENV === "development"
+  process.env.NODE_ENV !== "development"
     ? lazy(() =>
         import("@tanstack/router-devtools").then((res) => ({
           default: res.TanStackRouterDevtools,
