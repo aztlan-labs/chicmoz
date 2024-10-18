@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { FC } from "react";
 import { truncateHashString } from "~/lib/create-hash-string";
+import { CopyableText } from "../copy-text";
 
 interface KeyValueRowProps {
   label: string;
@@ -16,14 +17,14 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
   link,
 }) => {
   const isHashSring = value.includes("0x");
-  value = isHashSring ? truncateHashString(value) : value;
+  const truncatedValue = isHashSring ? truncateHashString(value) : value;
   return (
     <div
-      className={`flex flex-col justify-start gap-2 py-3 ${
+      className={`flex flex-col justify-between gap-2 py-3 ${
         !isLast ? "border-b border-gray-200" : ""
       } md:flex-row md:items-center`}
     >
-      <span className="text-gray-600 w-full">{label}</span>
+      <span className="text-gray-600 w-1/3">{label}</span>
       {link ? (
         <Link
           to={link}
@@ -33,11 +34,15 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
           <span className="ml-1">🔗</span>
         </Link>
       ) : (
-        <span
-          className={`text-sm flex-grow overflow-hidden md:w-1/3  md:text-end`}
-        >
-          {value}
-        </span>
+        <>
+          <span className={`text-sm flex-grow md:text-end`}>
+            {isHashSring ? (
+              <CopyableText text={truncatedValue} toCopy={value} />
+            ) : (
+              truncatedValue
+            )}
+          </span>
+        </>
       )}
     </div>
   );
