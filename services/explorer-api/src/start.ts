@@ -1,24 +1,45 @@
-import { init as initCache } from "./cache/index.js";
-import { init as initDb } from "./database/index.js";
-import { blockHandler, catchupHandler } from "./event-handler/index.js";
-import { init as initHttpServer } from "./http-server/index.js";
-import { logger } from "./logger.js";
-import { init as initMb, startSubscribe } from "./message-bus/index.js";
+import * as cache from "./cache/index.js";
+import * as db from "./database/index.js";
+import {
+  blockHandler,
+  catchupHandler,
+  connectedToAztecHandler,
+} from "./event-handler/index.js";
+import { setComponentInitializing, setComponentUp } from "./health.js";
+import * as httpServer from "./http-server/index.js";
+import * as mb from "./message-bus/index.js";
 import { registerShutdownCallback } from "./stop.js";
 
+const initialize = async ({ ID, init }: { ID: string; init: () => Promise<{ shutdownCb: () => Promise<void> }> }) => {
+  setComponentInitializing(ID);
+  const { shutdownCb } = await init();
+  registerShutdownCallback({
+    id: ID,
+    shutdownCb,
+  });
+  setComponentUp(ID);
+}
+
 export const start = async () => {
-  const shutdownDb = await initDb();
-  logger.info("✅ DB");
-  registerShutdownCallback(shutdownDb);
-  const shutdownCache = await initCache();
-  logger.info("✅ CACHE");
-  registerShutdownCallback(shutdownCache);
-  const shutdownHttpServer = await initHttpServer();
-  logger.info("✅ SERVER");
-  registerShutdownCallback(shutdownHttpServer);
-  const shutdownMb = await initMb();
-  logger.info("✅ MB");
-  registerShutdownCallback(shutdownMb);
-  await startSubscribe(blockHandler);
-  await startSubscribe(catchupHandler);
+  await initialize({
+    ID: cache.ID,
+    init: cache.init,
+  });
+  await initialize({
+    ID: db.ID,
+    init: db.init,
+  });
+  await initialize({
+    ID: httpServer.ID,
+    init: httpServer.init,
+  });
+  await initialize({
+    ID: mb.ID,
+    init: mb.init,
+  });
+  setComponentInitializing("SUBSCRIPTIONS");
+  await mb.startSubscribe(blockHandler);
+  await mb.startSubscribe(catchupHandler);
+  await mb.startSubscribe(connectedToAztecHandler);
+  setComponentUp("SUBSCRIPTIONS");
 };

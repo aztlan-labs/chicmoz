@@ -4,6 +4,8 @@ import { BODY_LIMIT, NODE_ENV, PARAMETER_LIMIT, PORT } from "../environment.js";
 import { logger } from "../logger.js";
 import { setup } from "./express-config.js";
 
+export const ID = "SERVER";
+
 export const init = async () => {
   let resolveInit: () => void;
   const initPromise = new Promise<void>((resolve) => {
@@ -48,7 +50,6 @@ export const init = async () => {
   await initPromise;
 
   return {
-    id: "SERVER",
     shutdownCb: gracefulShutdown,
   };
 };

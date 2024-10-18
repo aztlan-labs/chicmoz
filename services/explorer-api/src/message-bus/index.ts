@@ -15,6 +15,8 @@ let mb: MessageBus;
 let isInitialized = false;
 let isShutdown = false;
 
+export const ID = "MB";
+
 // eslint-disable-next-line @typescript-eslint/require-await
 export const init = async () => {
   logger.info(`Initializing Kafka client...`);
@@ -39,7 +41,6 @@ export const init = async () => {
   isInitialized = true;
 
   return {
-    id: "MB",
     shutdownCb: gracefulShutdown,
   };
 };

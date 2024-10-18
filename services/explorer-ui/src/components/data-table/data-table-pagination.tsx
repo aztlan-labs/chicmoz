@@ -1,12 +1,21 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
 import { type Table } from "@tanstack/react-table";
-import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui";
+import {
+  Button,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
 }
 
-export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
+export function DataTablePagination<TData>({
+  table,
+}: DataTablePaginationProps<TData>) {
   return (
     <div className="flex items-center justify-center px-2">
       <PaginationControls table={table} />
@@ -14,15 +23,18 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
   );
 }
 
-
-const PaginationControls = <TData,>({ table }: DataTablePaginationProps<TData>) => (
+const PaginationControls = <TData,>({
+  table,
+}: DataTablePaginationProps<TData>) => (
   <div className="flex items-center w-full justify-center">
     <PageSizeSelector table={table} />
     <PageNavigation table={table} />
   </div>
 );
 
-const PageSizeSelector = <TData,>({ table }: DataTablePaginationProps<TData>) => (
+const PageSizeSelector = <TData,>({
+  table,
+}: DataTablePaginationProps<TData>) => (
   <div className="flex items-center space-x-2">
     <p className="mb-1 h-full text-sm text-muted-foreground">Rows per page</p>
     <Select
@@ -34,10 +46,7 @@ const PageSizeSelector = <TData,>({ table }: DataTablePaginationProps<TData>) =>
       </SelectTrigger>
       <SelectContent side="top">
         {[10, 20, 30, 40, 50].map((pageSize) => (
-          <SelectItem
-            key={pageSize}
-            value={`${pageSize}`}
-          >
+          <SelectItem key={pageSize} value={`${pageSize}`}>
             {pageSize}
           </SelectItem>
         ))}
@@ -49,17 +58,17 @@ const PageSizeSelector = <TData,>({ table }: DataTablePaginationProps<TData>) =>
 const PageNavigation = <TData,>({ table }: DataTablePaginationProps<TData>) => {
   const getPreviousPage = () => table.getState().pagination.pageIndex;
 
-  const getCurrentPage  = () => table.getState().pagination.pageIndex + 1;
+  const getCurrentPage = () => table.getState().pagination.pageIndex + 1;
   const getNextPage = () => table.getState().pagination.pageIndex + 2;
 
   return (
-  <div className="flex items-center justify-center w-full">
-    {/*<p className="flex w-[100px] items-center justify-center text-sm text-muted-foreground">*/}
-    {/*  Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}*/}
-    {/*</p>*/}
-    {/*<div className="flex items-center justify-center w-full">*/}
+    <div className="flex items-center justify-center w-full">
+      {/*<p className="flex w-[100px] items-center justify-center text-sm text-muted-foreground">*/}
+      {/*  Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}*/}
+      {/*</p>*/}
+      {/*<div className="flex items-center justify-center w-full">*/}
       <Button
-        variant="icon"
+        variant="link"
         className="hidden h-8 w-8 p-0 lg:flex"
         onClick={() => table.setPageIndex(0)}
         disabled={!table.getCanPreviousPage()}
@@ -67,25 +76,52 @@ const PageNavigation = <TData,>({ table }: DataTablePaginationProps<TData>) => {
         <span className="sr-only">{text.first}</span>
         <ArrowLeftIcon className="h-4 w-4 text-purple-light" />
       </Button>
-      <Button variant="icon" className="h-8 w-16 p-0" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+      <Button
+        variant="link"
+        className="h-8 w-16 p-0"
+        onClick={() => table.previousPage()}
+        disabled={!table.getCanPreviousPage()}
+      >
         <span className="sr-only">{text.previous}</span>
         <span className="capitalize text-purple-light">{text.previousBtn}</span>
       </Button>
-      <Button variant="icon" className="h-8 w-8 p-0" onClick={() => table.setPageIndex(getPreviousPage)} disabled={!table.getCanPreviousPage()}>
-        <span className="capitalize text-purple-light">{getPreviousPage()}</span>
+      <Button
+        variant="link"
+        className="h-8 w-8 p-0"
+        onClick={() => table.setPageIndex(getPreviousPage)}
+        disabled={!table.getCanPreviousPage()}
+      >
+        <span className="capitalize text-purple-light">
+          {getPreviousPage()}
+        </span>
       </Button>
-      <Button variant="icon" className="h-8 w-8 p-0 bg-purple-light" onClick={() => table.setPageIndex(getCurrentPage)} disabled={!table.getCanPreviousPage()}>
+      <Button
+        variant="link"
+        className="h-8 w-8 p-0 bg-purple-light"
+        onClick={() => table.setPageIndex(getCurrentPage)}
+        disabled={!table.getCanPreviousPage()}
+      >
         <span className="capitalize text-white">{getCurrentPage()}</span>
       </Button>
-      <Button variant="icon" className="h-8 w-8 p-0" onClick={() => table.setPageIndex(getNextPage)} disabled={!table.getCanPreviousPage()}>
+      <Button
+        variant="link"
+        className="h-8 w-8 p-0"
+        onClick={() => table.setPageIndex(getNextPage)}
+        disabled={!table.getCanPreviousPage()}
+      >
         <span className="capitalize text-purple-light">{getNextPage()}</span>
       </Button>
-      <Button variant="icon" className="h-8 w-16 p-0" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+      <Button
+        variant="link"
+        className="h-8 w-16 p-0"
+        onClick={() => table.nextPage()}
+        disabled={!table.getCanNextPage()}
+      >
         <span className="sr-only">{text.last}</span>
         <span className="capitalize text-purple-light">{text.nextBtn}</span>
       </Button>
       <Button
-        variant="icon"
+        variant="link"
         className="hidden h-8 w-8 p-0 lg:flex"
         onClick={() => table.setPageIndex(table.getPageCount() - 1)}
         disabled={!table.getCanNextPage()}
@@ -93,11 +129,12 @@ const PageNavigation = <TData,>({ table }: DataTablePaginationProps<TData>) => {
         <span className="sr-only">{text.last}</span>
         <ArrowRightIcon className="h-4 w-4 text-purple-light" />
       </Button>
-  </div>
-  )};
+    </div>
+  );
+};
 
 const text = {
-  previousBtn: "Previous", 
+  previousBtn: "Previous",
   nextBtn: "Next",
   first: "Go to first page",
   previous: "Go to previous page",

@@ -6,6 +6,8 @@ let cache: ReturnType<typeof createClient>;
 let isInitialized = false;
 let isShutDown = false;
 
+export const ID = "CACHE";
+
 export const init = async () => {
   cache = createClient({
     socket: {
@@ -17,8 +19,6 @@ export const init = async () => {
   isInitialized = true;
 
   return {
-    id: "CACHE",
-    // eslint-disable-next-line @typescript-eslint/require-await
     shutdownCb: async () => {
       logger.info(`Shutting down cache...`);
       isShutDown = true;

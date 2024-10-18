@@ -13,7 +13,7 @@ import {
 
 export const chicmozL2BlockSchema = z.object({
   hash: hexStringSchema,
-  height: z.number(),
+  height: z.number().nonnegative(),
   archive: z.object({
     root: frSchema,
     nextAvailableLeafIndex: z.number(),

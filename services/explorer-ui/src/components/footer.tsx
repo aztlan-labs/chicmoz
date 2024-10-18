@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { AztecLogoWhite } from "~/assets";
 import { routes } from "~/routes/__root";
-
+import { ChicmozHomeLink } from "./ui/chicmoz-home-link";
 
 // TODO: add the footer links
 export const Footer = () => {
@@ -11,15 +10,12 @@ export const Footer = () => {
       <div className="bg-purple-light py-10">
         <div className="mx-auto px-[70px] max-w-[1440px]">
           <div className="flex flex-col w-full">
-            <Link to={routes.home.route} className="hidden lg:block mb-[60px]">
-              <AztecLogoWhite className="" />
-            </Link>
             <div className="flex flex-col w-full items-center lg:items-end lg:text-center lg:flex-row">
-              <Link to={routes.home.route} className="block lg:hidden">
-                <AztecLogoWhite className="" />
-              </Link>
+              <ChicmozHomeLink textClasses="block lg:hidden" />
               <p className="flex flex-col mt-[60px] lg:mb-0 mb-[100px] mr-0 gap-1 lg:mt-0 lg:mr-auto">
-                <span className="text-grey-light text-xs text-center lg:text-left">{text.buildAndPoweredBy}</span>
+                <span className="text-grey-light text-xs text-center lg:text-left">
+                  {text.buildAndPoweredBy}
+                </span>
               </p>
               <Link
                 to={routes.aboutUs.route}
@@ -45,7 +41,9 @@ export const Footer = () => {
               >
                 {routes.termsAndConditions.title}
               </Link>
-              <p className="flex text-center flex-col ml-0 gap-1 lg:mt-0 lg:ml-[100px] text-white">{text.copyright}</p>
+              <p className="flex text-center flex-col ml-0 gap-1 lg:mt-0 lg:ml-[100px] text-white">
+                {text.copyright}
+              </p>
             </div>
           </div>
         </div>
@@ -60,9 +58,8 @@ export const text = {
   privacyPolicy: "Privacy Policy",
   joinOurDiscord: "Join our Discord",
   termsAndConditions: "Terms and Conditions",
-  copyright: "© TODO"
+  copyright: "© TODO",
 };
-
 
 const Strips = () => {
   return (

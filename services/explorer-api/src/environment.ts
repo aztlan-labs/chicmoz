@@ -3,7 +3,7 @@ import { CHAIN_NAME } from "./constants.js";
 export const PUBLIC_API_KEY = process.env.PUBLIC_API_KEY ?? "d1e2083a-660c-4314-a6f2-1d42f4b944f4";
 
 export const CACHE_TTL_SECONDS = Number(process.env.CACHE_TTL) || 60;
-export const CACHE_LATEST_TTL_SECONDS = Number(process.env.CACHE_LATEST_TTL) || 2;
+export const CACHE_LATEST_TTL_SECONDS = Number(process.env.CACHE_LATEST_TTL) || 10;
 export const REDIS_HOST = process.env.REDIS_HOST ?? "redis-master";
 export const REDIS_PORT = Number(process.env.REDIS_PORT) || 6379;
 
@@ -13,6 +13,8 @@ export const PARAMETER_LIMIT = Number(process.env.PARAMETER_LIMIT) || 100;
 export const NODE_ENV = process.env.NODE_ENV ?? "development";
 
 export const DB_MAX_BLOCKS = 20;
+export const DB_MAX_TX_EFFECTS = 20;
+export const DB_MAX_CONTRACTS = 20;
 
 export const NETWORK_NAME = process.env.NETWORK_NAME ?? "SANDBOX";
 

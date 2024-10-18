@@ -1,6 +1,7 @@
 import { AZTEC_MESSAGES, NewBlockEvent } from "@chicmoz-pkg/message-registry";
-import {logger} from "../logger.js";
+import { logger } from "../logger.js";
 import { onBlock } from "./on-block.js";
+import { onAztecConnectionEvent } from "./on-aztec-connection-event.js";
 
 export type EventHandler = {
   consumerGroup: string;
@@ -21,5 +22,11 @@ export const catchupHandler: EventHandler = {
     logger.info(`Catchup block event`);
     return onBlock(event);
   }) as (arg0: unknown) => Promise<void>,
-  topicBase: "CATCHUP_BLOCK_EVENT"
+  topicBase: "CATCHUP_BLOCK_EVENT",
+};
+
+export const connectedToAztecHandler: EventHandler = {
+  consumerGroup: "connectedToAztec",
+  cb: onAztecConnectionEvent as (arg0: unknown) => Promise<void>,
+  topicBase: "CONNECTED_TO_AZTEC_EVENT",
 };

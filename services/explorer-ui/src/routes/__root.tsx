@@ -9,7 +9,7 @@ const TanStackRouterDevtools =
     ? lazy(() =>
         import("@tanstack/router-devtools").then((res) => ({
           default: res.TanStackRouterDevtools,
-        }))
+        })),
       )
     : () => null;
 
@@ -64,6 +64,30 @@ export const routes = {
   contracts: {
     route: "/contracts",
     title: "Contracts",
+    children: {
+      index: {
+        route: "/",
+        title: "All Contracts",
+      },
+      instances: {
+        route: "/instances",
+        children: {
+          address: {
+            route: "/$address",
+            title: "Contract Instance Details",
+          },
+        },
+      },
+      classes: {
+        route: "/classes",
+        children: {
+          id: {
+            route: "/$id",
+            title: "Contract Class Details",
+          },
+        },
+      },
+    },
   },
   aboutUs: {
     route: "/about-us",

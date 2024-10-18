@@ -2,73 +2,35 @@
 import { z } from "zod";
 import {
   chicmozL2BlockSchema,
+  chicmozL2ContractClassRegisteredEventSchema,
   chicmozL2ContractInstanceDeluxeSchema,
   chicmozL2TxEffectDeluxeSchema,
+  chicmozSearchResultsSchema,
 } from "@chicmoz-pkg/types";
 import { generateSchema } from "@anatine/zod-openapi";
 
-export const blockResponse = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getResponse = (schema: z.ZodType<any, any>) => ({
   "200": {
     description: "Successful response",
     content: {
       "application/json": {
-        schema: generateSchema(chicmozL2BlockSchema),
+        schema: generateSchema(schema),
       },
     },
   },
-};
+});
 
-export const blockResponseArray = {
-  "200": {
-    description: "Successful response",
-    content: {
-      "application/json": {
-        schema: generateSchema(z.array(chicmozL2BlockSchema)),
-      },
-    },
-  },
-};
+export const blockResponse = getResponse(chicmozL2BlockSchema);
+export const blockResponseArray = getResponse(z.array(chicmozL2BlockSchema));
 
-export const txEffectResponse = {
-  "200": {
-    description: "Successful response",
-    content: {
-      "application/json": {
-        schema: generateSchema(chicmozL2TxEffectDeluxeSchema),
-      },
-    },
-  },
-};
+export const txEffectResponse = getResponse(chicmozL2TxEffectDeluxeSchema);
+export const txEffectResponseArray = getResponse(z.array(chicmozL2TxEffectDeluxeSchema));
 
-export const txEffectResponseArray = {
-  "200": {
-    description: "Successful response",
-    content: {
-      "application/json": {
-        schema: generateSchema(z.array(chicmozL2TxEffectDeluxeSchema)),
-      },
-    },
-  },
-};
+export const contractClassResponse = getResponse(chicmozL2ContractClassRegisteredEventSchema);
+export const contractClassResponseArray = getResponse(z.array(chicmozL2ContractClassRegisteredEventSchema));
 
-export const contractInstanceResponse = {
-  "200": {
-    description: "Successful response",
-    content: {
-      "application/json": {
-        schema: generateSchema(chicmozL2ContractInstanceDeluxeSchema),
-      },
-    },
-  },
-};
+export const contractInstanceResponse = getResponse(chicmozL2ContractInstanceDeluxeSchema);
+export const contractInstanceResponseArray = getResponse(z.array(chicmozL2ContractInstanceDeluxeSchema));
 
-export const contractInstanceResponseArray = {
-  "200": {
-    description: "Successful response",
-    content: {
-      "application/json": {
-        schema: generateSchema(z.array(chicmozL2ContractInstanceDeluxeSchema)),
-      },
-    },
-  },
-};
+export const searchResultResponse = getResponse(chicmozSearchResultsSchema);

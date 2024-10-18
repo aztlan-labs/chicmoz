@@ -1,12 +1,12 @@
 import { desc, eq, sql } from "drizzle-orm";
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { getDb as db } from "../../database/index.js";
 import {
   bodyToTxEffects,
   l2Block,
   txEffect,
 } from "../../database/schema/l2block/index.js";
-import {l2ContractInstanceDeployed} from "../schema/index.js";
+import { l2ContractInstanceDeployed } from "../schema/index.js";
 
 export const getABlock = async () => {
   const res = await db()
@@ -33,8 +33,11 @@ export const getABlockWithTxEffects = async () => {
         height: l2Block.height,
         hash: l2Block.hash,
       },
-      txEffects: sql<string>`COALESCE(json_agg(json_build_object('hash', ${txEffect.hash}, 'index', ${txEffect.index})) FILTER (WHERE ${txEffect.id} IS NOT NULL), '[]'::json)`.as('txEffects'),
-      txEffectCount: sql<number>`count(${txEffect.id})`.as('txEffectCount'),
+      txEffects:
+        sql<string>`COALESCE(json_agg(json_build_object('hash', ${txEffect.hash}, 'index', ${txEffect.index})) FILTER (WHERE ${txEffect.id} IS NOT NULL), '[]'::json)`.as(
+          "txEffects"
+        ),
+      txEffectCount: sql<number>`count(${txEffect.id})`.as("txEffectCount"),
     })
     .from(bodyToTxEffects)
     .innerJoin(txEffect, eq(bodyToTxEffects.txEffectId, txEffect.id))
@@ -52,7 +55,9 @@ export const getABlockWithTxEffects = async () => {
       height: Number(result.block.height),
       hash: result.block.hash,
     },
-    txEffects: (result.txEffects as unknown as Array<{ hash: string; index: string }>).map(te => ({
+    txEffects: (
+      result.txEffects as unknown as Array<{ hash: string; index: string }>
+    ).map((te) => ({
       hash: te.hash,
       index: Number(te.index),
     })),
@@ -61,24 +66,24 @@ export const getABlockWithTxEffects = async () => {
 
 export const getABlockWithContractInstances = async () => {
   const dbRes = await db()
-  .select({
-    l2Block: {
-      height: l2Block.height,
-      hash: l2Block.hash,
-    },
-    l2ContractInstanceDeployed: {
-      address: l2ContractInstanceDeployed.address,
-      version: l2ContractInstanceDeployed.version,
-      // TODO: classId: l2ContractInstanceDeployed.contractClassId,
-    },
-  })
-  .from(l2Block)
-  .innerJoin(
-    l2ContractInstanceDeployed,
-    eq(l2Block.hash, l2ContractInstanceDeployed.blockHash)
-  )
-  .limit(1)
-  .execute();
+    .select({
+      l2Block: {
+        height: l2Block.height,
+        hash: l2Block.hash,
+      },
+      l2ContractInstanceDeployed: {
+        address: l2ContractInstanceDeployed.address,
+        version: l2ContractInstanceDeployed.version,
+        classId: l2ContractInstanceDeployed.contractClassId,
+      },
+    })
+    .from(l2Block)
+    .innerJoin(
+      l2ContractInstanceDeployed,
+      eq(l2Block.hash, l2ContractInstanceDeployed.blockHash)
+    )
+    .limit(1)
+    .execute();
   if (dbRes.length === 0) return null;
   return {
     block: {
@@ -88,6 +93,7 @@ export const getABlockWithContractInstances = async () => {
     contractInstance: {
       address: dbRes[0].l2ContractInstanceDeployed.address,
       version: dbRes[0].l2ContractInstanceDeployed.version,
+      classId: dbRes[0].l2ContractInstanceDeployed.classId,
     },
   };
-}
+};
