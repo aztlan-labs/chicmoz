@@ -3,6 +3,8 @@ import { Link } from "@tanstack/react-router";
 import { routes } from "~/routes/__root";
 import { DataTableColumnHeader } from "~/components/data-table";
 import { type ContractInstance } from "./schema";
+import { CopyableText } from "~/components/copy-text";
+import { truncateHashString } from "~/lib/create-hash-string";
 
 const text = {
   address: "ADDRESS",
@@ -112,7 +114,10 @@ export const contractsTableColumns: ColumnDef<ContractInstance>[] = [
       />
     ),
     cell: ({ row }) => (
-      <div className="text-purple-dark font-mono">{row.getValue("publicKeysHash")}</div>
+      <CopyableText
+        toCopy={row.getValue("publicKeysHash")}
+        text={truncateHashString(row.getValue("publicKeysHash"))}
+      />
     ),
     enableSorting: false,
     enableHiding: false,
@@ -127,7 +132,10 @@ export const contractsTableColumns: ColumnDef<ContractInstance>[] = [
       />
     ),
     cell: ({ row }) => (
-      <div className="text-purple-dark font-mono">{row.getValue("deployer")}</div>
+      <CopyableText
+        toCopy={row.getValue("deployer")}
+        text={truncateHashString(row.getValue("deployer"))}
+      />
     ),
     enableSorting: false,
     enableHiding: false,
@@ -145,7 +153,9 @@ export const contractsTableColumns: ColumnDef<ContractInstance>[] = [
       const blockHash = row.getValue("blockHash");
       if (typeof blockHash !== "string") return null;
       const r = `${routes.blocks.route}/${blockHash}`;
-      const truncatedBlockHash = `${blockHash.slice(0, 6)}...${blockHash.slice(-4)}`;
+      const truncatedBlockHash = `${blockHash.slice(0, 6)}...${blockHash.slice(
+        -4
+      )}`;
       return (
         <div className="text-purple-light font-mono font-bold">
           <Link to={r}>{truncatedBlockHash}</Link>

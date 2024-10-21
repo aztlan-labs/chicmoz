@@ -25,7 +25,7 @@ export const CopyableText: FC<Props> = ({ toCopy, text }) => {
         className="flex flex-row gap-2 w-fit"
       >
         <CopyIcon />
-        <span className="relative inline-block">{text}</span>
+        <span className="relative inline-block font-mono">{text}</span>
       </div>
     </div>
   );

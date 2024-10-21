@@ -4,6 +4,7 @@ import { routes } from "~/routes/__root";
 import { DataTableColumnHeader } from "~/components/data-table";
 import { type ContractClass } from "./schema";
 import { truncateHashString } from "~/lib/create-hash-string";
+import { CopyableText } from "~/components/copy-text";
 
 const text = {
   blockHash: "BLOCK HASH",
@@ -61,9 +62,10 @@ export const contractsTableColumns: ColumnDef<ContractClass>[] = [
       />
     ),
     cell: ({ row }) => (
-      <div className="text-purple-dark font-mono">
-        {row.getValue("artifactHash")}
-      </div>
+      <CopyableText
+        toCopy={row.getValue("artifactHash")}
+        text={truncateHashString(row.getValue("artifactHash"))}
+      />
     ),
     enableSorting: false,
     enableHiding: true,
@@ -78,9 +80,10 @@ export const contractsTableColumns: ColumnDef<ContractClass>[] = [
       />
     ),
     cell: ({ row }) => (
-      <div className="text-purple-dark font-mono">
-        {row.getValue("privateFunctionsRoot")}
-      </div>
+      <CopyableText
+        toCopy={row.getValue("privateFunctionsRoot")}
+        text={truncateHashString(row.getValue("privateFunctionsRoot"))}
+      />
     ),
     enableSorting: false,
     enableHiding: true,

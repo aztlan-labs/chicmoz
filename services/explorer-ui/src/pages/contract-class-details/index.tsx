@@ -48,7 +48,7 @@ export const ContractClassDetails: FC = () => {
         </div>
         <div className="flex flex-col gap-4 md:flex-row ">
           <TableBadge
-            title="Total Contract Instances"
+            title="Versions"
             isLoading={isLoadingClasses}
             error={errorClasses}
           >
