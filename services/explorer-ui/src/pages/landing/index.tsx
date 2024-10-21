@@ -13,6 +13,8 @@ import {
 import { mapLatestBlocks, mapLatestTxEffects } from "./util";
 import { InfoBadge } from "~/components/info-badge";
 import { formatDuration } from "~/lib/utils";
+import { SearchBar } from "~/components/search-bar";
+import { SearchInput } from "~/components/ui";
 
 export const Landing: FC = () => {
   const { data: latestBlocks, isLoading, error } = useLatestBlocks();
@@ -51,10 +53,15 @@ export const Landing: FC = () => {
   if (error) return <p className="text-red-500">{error.message}</p>;
   if (!latestBlocks) return <p>No data</p>;
 
-  const averageBlockTimeFormatted = formatDuration(Number(avarageBlockTime) / 1000);
+  const averageBlockTimeFormatted = formatDuration(
+    Number(avarageBlockTime) / 1000,
+  );
 
   return (
     <div className="mx-auto px-5 max-w-[1440px] md:px-[70px]">
+      <div className="flex flex-row items-center justify-center bg-transparent w-full pt-9">
+        <SearchInput className="w-full" />
+      </div>
       <div className="flex flex-row flex-wrap justify-center gap-3 m-5 ">
         <InfoBadge
           title="Total transactions"
