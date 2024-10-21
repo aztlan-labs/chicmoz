@@ -186,6 +186,7 @@ const _getTxEffects = async (
     })
     .from(l2Block)
     .innerJoin(bodyToTxEffects, eq(txEffect.id, bodyToTxEffects.txEffectId))
+    .innerJoin(txEffect, eq(bodyToTxEffects.txEffectId, txEffect.id))
     .innerJoin(l2Block, eq(bodyToTxEffects.bodyId, l2Block.bodyId))
     .innerJoin(header, eq(l2Block.headerId, header.id))
     .innerJoin(
