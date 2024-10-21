@@ -10,8 +10,8 @@ import { TableBadge } from "~/components/table-badge";
 import { ContractClassesTable } from "~/components/contracts/classes/table";
 
 export const ContractClassDetails: FC = () => {
-  const { id } = useParams({
-    from: "/contracts/classes/$id",
+  const { id, version } = useParams({
+    from: "/contracts/classes/$id/versions/$version",
   });
   const {
     data: classesData,
@@ -25,6 +25,10 @@ export const ContractClassDetails: FC = () => {
   } = useContractInstance(id);
 
   if (!id) return <div>No classId</div>;
+  const selectedVersion = classesData?.find(
+    (contract) => contract.version === Number(version)
+  );
+  if (!selectedVersion) return <div>No data</div>;
 
   const apiEndpointUrl = `${API_URL}/${aztecExplorer.getL2ContractClasses(id)}`;
 
@@ -41,7 +45,7 @@ export const ContractClassDetails: FC = () => {
           <div className="flex flex-col gap-4 mt-8">
             <div className="bg-white rounded-lg shadow-md p-4">
               <KeyValueDisplay
-                data={classesData ? getContractData(classesData[0]) : []}
+                data={getContractData(selectedVersion)}
               />
             </div>
           </div>

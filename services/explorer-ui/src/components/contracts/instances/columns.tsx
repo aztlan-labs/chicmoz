@@ -89,8 +89,10 @@ export const contractsTableColumns: ColumnDef<ContractInstance>[] = [
     ),
     cell: ({ row }) => {
       const contractClassId = row.getValue("contractClassId");
+      const version = row.getValue("version");
       if (typeof contractClassId !== "string") return null;
-      const r = `${routes.contracts.route}/${routes.contracts.children.classes.route}/${contractClassId}`;
+      if (typeof version !== "string") return null;
+      const r = `${routes.contracts.route}/${routes.contracts.children.classes.route}/${contractClassId}/versions/${version}`;
       const truncatedContractClassId = `${contractClassId.slice(
         0,
         6
