@@ -9,6 +9,6 @@ export const getTxEffectData = (data: ChicmozL2TxEffectDeluxe) => [
     label: "TRANSACTION FEE (FPA)",
     value: data.transactionFee.toString(),
   },
-  { label: "BLOCK NUMBER", value: data.blockHeight.toString() },
+  { label: "BLOCK NUMBER", value: data.blockHeight.toString(), link: `/blocks/${data.blockHeight}` },
   { label: "TIMESTAMP", value: data.timestamp.toString() },
 ];

@@ -83,7 +83,17 @@ export const routes = {
         children: {
           id: {
             route: "/$id",
-            title: "Contract Class Details",
+            children: {
+              versions: {
+                route: "/versions",
+                children: {
+                  version: {
+                    route: "/$version",
+                    title: "Contract Class Details",
+                  },
+                },
+              },
+            },
           },
         },
       },

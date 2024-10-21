@@ -26,7 +26,9 @@ const BlocksBlockNumberLazyImport = createFileRoute('/blocks/$blockNumber')()
 const ContractsInstancesAddressLazyImport = createFileRoute(
   '/contracts/instances/$address',
 )()
-const ContractsClassesIdLazyImport = createFileRoute('/contracts/classes/$id')()
+const ContractsClassesIdVersionsVersionLazyImport = createFileRoute(
+  '/contracts/classes/$id/versions/$version',
+)()
 
 // Create/Update Routes
 
@@ -81,12 +83,15 @@ const ContractsInstancesAddressLazyRoute =
     import('./routes/contracts/instances.$address.lazy').then((d) => d.Route),
   )
 
-const ContractsClassesIdLazyRoute = ContractsClassesIdLazyImport.update({
-  path: '/contracts/classes/$id',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/contracts/classes.$id.lazy').then((d) => d.Route),
-)
+const ContractsClassesIdVersionsVersionLazyRoute =
+  ContractsClassesIdVersionsVersionLazyImport.update({
+    path: '/contracts/classes/$id/versions/$version',
+    getParentRoute: () => rootRoute,
+  } as any).lazy(() =>
+    import('./routes/contracts/classes.$id.versions.$version.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 
 // Populate the FileRoutesByPath interface
 
@@ -141,18 +146,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TxEffectsIndexLazyImport
       parentRoute: typeof rootRoute
     }
-    '/contracts/classes/$id': {
-      id: '/contracts/classes/$id'
-      path: '/contracts/classes/$id'
-      fullPath: '/contracts/classes/$id'
-      preLoaderRoute: typeof ContractsClassesIdLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/contracts/instances/$address': {
       id: '/contracts/instances/$address'
       path: '/contracts/instances/$address'
       fullPath: '/contracts/instances/$address'
       preLoaderRoute: typeof ContractsInstancesAddressLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/contracts/classes/$id/versions/$version': {
+      id: '/contracts/classes/$id/versions/$version'
+      path: '/contracts/classes/$id/versions/$version'
+      fullPath: '/contracts/classes/$id/versions/$version'
+      preLoaderRoute: typeof ContractsClassesIdVersionsVersionLazyImport
       parentRoute: typeof rootRoute
     }
   }
@@ -168,8 +173,8 @@ export const routeTree = rootRoute.addChildren({
   BlocksIndexLazyRoute,
   ContractsIndexLazyRoute,
   TxEffectsIndexLazyRoute,
-  ContractsClassesIdLazyRoute,
   ContractsInstancesAddressLazyRoute,
+  ContractsClassesIdVersionsVersionLazyRoute,
 })
 
 /* prettier-ignore-end */
@@ -187,8 +192,8 @@ export const routeTree = rootRoute.addChildren({
         "/blocks/",
         "/contracts/",
         "/tx-effects/",
-        "/contracts/classes/$id",
-        "/contracts/instances/$address"
+        "/contracts/instances/$address",
+        "/contracts/classes/$id/versions/$version"
       ]
     },
     "/": {
@@ -212,11 +217,11 @@ export const routeTree = rootRoute.addChildren({
     "/tx-effects/": {
       "filePath": "tx-effects/index.lazy.tsx"
     },
-    "/contracts/classes/$id": {
-      "filePath": "contracts/classes.$id.lazy.tsx"
-    },
     "/contracts/instances/$address": {
       "filePath": "contracts/instances.$address.lazy.tsx"
+    },
+    "/contracts/classes/$id/versions/$version": {
+      "filePath": "contracts/classes.$id.versions.$version.lazy.tsx"
     }
   }
 }

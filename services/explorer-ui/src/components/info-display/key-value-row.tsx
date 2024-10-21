@@ -28,7 +28,7 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
       {link ? (
         <Link
           to={link}
-          className="text-sm flex-grow text-primary-600 text-primary cursor-pointer"
+          className="text-sm flex-grow text-primary-600 text-primary cursor-pointer md:text-end"
         >
           {value}
           <span className="ml-1">🔗</span>
