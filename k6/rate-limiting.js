@@ -49,7 +49,7 @@ const BASE_URL = "https://api.chicmoz.info/v1/d1e2083a-660c-4314-a6f2-1d42f4b944
 let VALID_BLOCK_HEIGHT = 2;
 
 const ENDPOINTS = {
-  // latestHeight: "/l2/latest-height",
+  latestHeight: "/l2/latest-height",
   latestBlock: "/l2/blocks/latest",
   blocks: "/l2/blocks",
   specificBlock: `/l2/blocks/${VALID_BLOCK_HEIGHT}`,
