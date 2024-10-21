@@ -15,6 +15,7 @@ import {
   contractInstanceResponseArray,
   dbWrapper,
 } from "./utils/index.js";
+import {logger} from "../../../logger.js";
 
 export const openapi_GET_L2_REGISTERED_CONTRACT_CLASS = {
   "/l2/contract-classes/{classId}/versions/{version}": {
@@ -221,6 +222,7 @@ export const GET_L2_CONTRACT_INSTANCES_BY_CONTRACT_CLASS_ID = asyncHandler(
       ["l2", "contracts", "class", classId],
       () => db.l2Contract.getL2DeployedContractInstancesByContractClassId(classId)
     );
+    logger.info(`GET_L2_CONTRACT_INSTANCES_BY_CONTRACT_CLASS_ID: ${instances}`);
     res.status(200).send(instances);
   }
 );

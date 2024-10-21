@@ -26,8 +26,8 @@ export const contractsTableColumns: ColumnDef<ContractClass>[] = [
     ),
     cell: ({ row }) => (
       <CopyableText
-        toCopy={row.getValue("artifactHash")}
-        text={truncateHashString(row.getValue("artifactHash"))}
+        toCopy={row.getValue("contractClassId")}
+        text={truncateHashString(row.getValue("contractClassId"))}
       />
     ),
     enableSorting: false,

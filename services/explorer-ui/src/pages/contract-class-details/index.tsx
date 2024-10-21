@@ -1,7 +1,7 @@
 import { useParams } from "@tanstack/react-router";
 import { type FC } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
-import { useContractClasses, useContractInstance } from "~/hooks";
+import { useContractClasses, useDeployedContractInstances } from "~/hooks";
 import { API_URL, aztecExplorer } from "~/service/constants";
 import { getContractData } from "./util";
 import { ContractInstancesTable } from "~/components/contracts/instances/table";
@@ -22,7 +22,7 @@ export const ContractClassDetails: FC = () => {
     data: instancesData,
     isLoading: isLoadingInstances,
     error: errorInstances,
-  } = useContractInstance(id);
+  } = useDeployedContractInstances(id);
 
   if (!id) return <div>No classId</div>;
   const selectedVersion = classesData?.find(
@@ -44,9 +44,7 @@ export const ContractClassDetails: FC = () => {
           </div>
           <div className="flex flex-col gap-4 mt-8">
             <div className="bg-white rounded-lg shadow-md p-4">
-              <KeyValueDisplay
-                data={getContractData(selectedVersion)}
-              />
+              <KeyValueDisplay data={getContractData(selectedVersion)} />
             </div>
           </div>
         </div>
@@ -70,7 +68,7 @@ export const ContractClassDetails: FC = () => {
           >
             {instancesData && (
               <ContractInstancesTable
-                contracts={mapContractInstances([instancesData])}
+                contracts={mapContractInstances(instancesData)}
               />
             )}
           </TableBadge>
