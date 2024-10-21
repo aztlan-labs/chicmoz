@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Input } from "~/components/ui/input";
+import { Input, SearchInput } from "~/components/ui/input";
 import { routes } from "~/routes/__root.tsx";
 import {
   Select,
@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "./ui";
 import { ChicmozHomeLink } from "./ui/chicmoz-home-link";
+import { SearchBar } from "./search-bar";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ export const Header = () => {
           </Select>
         </div>
 
-        <div className="hidden md:block">
+        <div className="hidden md:flex flex-row justify-center items-center">
           <Link
             to={routes.home.route}
             className="[&.active]:text-white mr-[30px] [&.active]:font-bold text-grey-light hover:text-white"
@@ -73,17 +74,9 @@ export const Header = () => {
           >
             {routes.contracts.title}
           </Link>
-          <SearchBar />
+          <SearchInput placeholder="Search" />
         </div>
       </div>
-    </div>
-  );
-};
-
-export const SearchBar = () => {
-  return (
-    <div className="ml-[30px]">
-      <Input className="bg-white hidden lg:w-[450px]" />
     </div>
   );
 };
