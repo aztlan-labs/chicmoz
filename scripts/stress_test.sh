@@ -1,3 +1,3 @@
 #!/bin/bash
 
-k6 run k6/rate-limiting.js
+k6 run k6/stress-test.js
