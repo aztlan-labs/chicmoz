@@ -11,14 +11,10 @@ const cacheCounter: Record<string, { hits: number; misses: number }> = {};
 const LATEST_HEIGHT = "latestHeight";
 
 const incrementCounter = (key: string, isHit: boolean) => {
-  if (!cacheCounter[key]) 
-    cacheCounter[key] = { hits: 0, misses: 0 };
-  
-  if (isHit) 
-    cacheCounter[key].hits += 1;
-   else 
-    cacheCounter[key].misses += 1;
-  
+  if (!cacheCounter[key]) cacheCounter[key] = { hits: 0, misses: 0 };
+
+  if (isHit) cacheCounter[key].hits += 1;
+  else cacheCounter[key].misses += 1;
 };
 
 export const getLogCounter = () => {
@@ -32,9 +28,7 @@ export const getLatestHeight = async () => {
     incrementCounter(LATEST_HEIGHT, true);
     return cachedVal;
   }
-  // TODO: impl getLatestHeight in DB-controller
-  const block = await db.l2Block.getLatestBlock().catch(dbParseErrorCallback);
-  const dbVal = block?.header.globalVariables.blockNumber ?? null;
+  const dbVal = await db.l2Block.getLatestHeight().catch(dbParseErrorCallback);
   if (dbVal) {
     await c().set(LATEST_HEIGHT, dbVal, {
       EX: CACHE_LATEST_TTL_SECONDS,
