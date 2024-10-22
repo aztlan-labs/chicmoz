@@ -14,7 +14,6 @@ export const chicmozL2ContractInstanceDeployedEventSchema = z.object({
   salt: frSchema,
   contractClassId: frSchema,
   initializationHash: frSchema,
-  publicKeysHash: frSchema,
   deployer: aztecAddressSchema,
   publicKeys: z.object({
     masterNullifierPublicKey: frPointSchema,
