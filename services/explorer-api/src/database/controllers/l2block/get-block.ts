@@ -24,7 +24,7 @@ import {
   txEffect,
 } from "../../../database/schema/l2block/index.js";
 import { DB_MAX_BLOCKS } from "../../../environment.js";
-import { getTxEffectNestedById } from "../l2TxEffect/get-tx-effect.js";
+import { getTxEffectNestedByHash } from "../l2TxEffect/get-tx-effect.js";
 import { getBlocksWhereRange } from "../utils.js";
 
 enum GetTypes {
@@ -170,7 +170,7 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2Block[]> => {
         txEffect: getTableColumns(txEffect),
       })
       .from(bodyToTxEffects)
-      .innerJoin(txEffect, eq(bodyToTxEffects.txEffectId, txEffect.id))
+      .innerJoin(txEffect, eq(bodyToTxEffects.txEffectHash, txEffect.hash))
       .where(eq(bodyToTxEffects.bodyId, result.bodyId))
       .orderBy(asc(txEffect.index))
       .execute();
@@ -178,7 +178,7 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2Block[]> => {
     // TODO: might be better to do this async
     const txEffects = await Promise.all(
       txEffectsData.map(async (data) => {
-        const nestedData = await getTxEffectNestedById(data.txEffect.id);
+        const nestedData = await getTxEffectNestedByHash(data.txEffect.hash);
         return {
           ...data.txEffect,
           ...nestedData,

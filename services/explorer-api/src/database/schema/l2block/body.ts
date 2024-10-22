@@ -17,15 +17,13 @@ export const bodyToTxEffects = pgTable("body_to_tx_effects", {
   bodyId: uuid("body_id")
     .notNull()
     .references(() => body.id),
-  txEffectId: uuid("tx_effect_id")
+  txEffectHash: uuid("tx_effect_hash")
     .notNull()
-    .references(() => txEffect.id),
+    .references(() => txEffect.hash),
 });
 
 export const txEffect = pgTable("tx_effect", {
-  // TODO: replace id with hash as PK - maybe?
-  id: uuid("id").primaryKey().defaultRandom(),
-  hash: varchar("hash").notNull().$type<HexString>(),
+  hash: varchar("hash").notNull().$type<HexString>().primaryKey(),
   // TODO: move index to junction table
   index: integer("index").notNull(),
   revertCode: smallint("revert_code").notNull(),
@@ -42,9 +40,9 @@ export const txEffect = pgTable("tx_effect", {
 export const txEffectToPublicDataWrite = pgTable(
   "tx_effect_to_public_data_write",
   {
-    txEffectId: uuid("tx_effect_id")
+    txEffectHash: uuid("tx_effect_hash")
       .notNull()
-      .references(() => txEffect.id),
+      .references(() => txEffect.hash),
     index: integer("index").notNull(),
     publicDataWriteId: uuid("public_data_write_id")
       .notNull()
@@ -75,9 +73,9 @@ export const functionLogs = pgTable("function_logs", {
 });
 
 export const txEffectToLogs = pgTable("tx_effect_to_logs", {
-  txEffectId: uuid("tx_effect_id")
+  txEffectHash: uuid("tx_effect_hash")
     .notNull()
-    .references(() => txEffect.id),
+    .references(() => txEffect.hash),
   functionLogId: uuid("function_log_id")
     .notNull()
     .references(() => functionLogs.id),

@@ -19,7 +19,7 @@ export const getTotalTxEffectsLast24h = async (): Promise<number> => {
   const dbRes = await db()
     .select({ count: count() })
     .from(txEffect)
-    .innerJoin(bodyToTxEffects, eq(txEffect.id, bodyToTxEffects.txEffectId))
+    .innerJoin(bodyToTxEffects, eq(txEffect.hash, bodyToTxEffects.txEffectHash))
     .innerJoin(body, eq(body.id, bodyToTxEffects.bodyId))
     .innerJoin(l2Block, eq(l2Block.bodyId, body.id))
     .innerJoin(header, eq(header.id, l2Block.headerId))
