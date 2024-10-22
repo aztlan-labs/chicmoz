@@ -34,16 +34,16 @@ export const getABlockWithTxEffects = async () => {
         hash: l2Block.hash,
       },
       txEffects:
-        sql<string>`COALESCE(json_agg(json_build_object('hash', ${txEffect.hash}, 'index', ${txEffect.index})) FILTER (WHERE ${txEffect.id} IS NOT NULL), '[]'::json)`.as(
+        sql<string>`COALESCE(json_agg(json_build_object('hash', ${txEffect.hash}, 'index', ${txEffect.index})) FILTER (WHERE ${txEffect.hash} IS NOT NULL), '[]'::json)`.as(
           "txEffects"
         ),
-      txEffectCount: sql<number>`count(${txEffect.id})`.as("txEffectCount"),
+      txEffectCount: sql<number>`count(${txEffect.hash})`.as("txEffectCount"),
     })
     .from(bodyToTxEffects)
-    .innerJoin(txEffect, eq(bodyToTxEffects.txEffectId, txEffect.id))
+    .innerJoin(txEffect, eq(bodyToTxEffects.txEffectHash, txEffect.hash))
     .innerJoin(l2Block, eq(bodyToTxEffects.bodyId, l2Block.bodyId))
     .groupBy(l2Block.height, l2Block.hash)
-    .orderBy(sql`count(${txEffect.id}) DESC, ${l2Block.height} DESC`)
+    .orderBy(sql`count(${txEffect.hash}) DESC, ${l2Block.height} DESC`)
     .limit(1)
     .execute();
 

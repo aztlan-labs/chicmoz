@@ -45,8 +45,8 @@ type GetTxEffectsByBlockHeight = {
   getType: GetTypes.BlockHeight;
 };
 
-export const getTxEffectNestedById = async (
-  txId: string
+export const getTxEffectNestedByHash = async (
+  txEffectHash: string
 ): Promise<
   Pick<
     ChicmozL2TxEffect,
@@ -65,7 +65,7 @@ export const getTxEffectNestedById = async (
       publicDataWrite,
       eq(txEffectToPublicDataWrite.publicDataWriteId, publicDataWrite.id)
     )
-    .where(eq(txEffectToPublicDataWrite.txEffectId, txId))
+    .where(eq(txEffectToPublicDataWrite.txEffectHash, txEffectHash))
     .orderBy(asc(txEffectToPublicDataWrite.index))
     .execute();
 
@@ -77,7 +77,7 @@ export const getTxEffectNestedById = async (
     .from(txEffectToLogs)
     .innerJoin(logs, eq(txEffectToLogs.logId, logs.id))
     .innerJoin(functionLogs, eq(txEffectToLogs.functionLogId, functionLogs.id))
-    .where(eq(txEffectToLogs.txEffectId, txId))
+    .where(eq(txEffectToLogs.txEffectHash, txEffectHash))
     .orderBy(asc(functionLogs.index), asc(logs.index))
     .execute();
 
@@ -186,7 +186,7 @@ const _getTxEffects = async (
     })
     .from(l2Block)
     .innerJoin(bodyToTxEffects, eq(l2Block.bodyId, bodyToTxEffects.bodyId))
-    .innerJoin(txEffect, eq(bodyToTxEffects.txEffectId, txEffect.id))
+    .innerJoin(txEffect, eq(bodyToTxEffects.txEffectHash, txEffect.hash))
     .innerJoin(header, eq(l2Block.headerId, header.id))
     .innerJoin(
       globalVariables,
@@ -218,7 +218,7 @@ const _getTxEffects = async (
 
   const txEffects = await Promise.all(
     dbRes.map(async (txEffect) => {
-      const nestedData = await getTxEffectNestedById(txEffect.id);
+      const nestedData = await getTxEffectNestedByHash(txEffect.hash);
       return {
         ...txEffect,
         ...nestedData,
@@ -242,7 +242,7 @@ export const getTxeffectByHash = async (
       timestamp: globalVariables.timestamp,
     })
     .from(txEffect)
-    .innerJoin(bodyToTxEffects, eq(txEffect.id, bodyToTxEffects.txEffectId))
+    .innerJoin(bodyToTxEffects, eq(txEffect.hash, bodyToTxEffects.txEffectHash))
     .innerJoin(l2Block, eq(bodyToTxEffects.bodyId, l2Block.bodyId))
     .innerJoin(header, eq(l2Block.headerId, header.id))
     .innerJoin(
@@ -255,7 +255,7 @@ export const getTxeffectByHash = async (
 
   if (dbRes.length === 0) return null;
 
-  const nestedData = await getTxEffectNestedById(dbRes[0].id);
+  const nestedData = await getTxEffectNestedByHash(dbRes[0].hash);
 
   return chicmozL2TxEffectDeluxeSchema
     .parseAsync({
