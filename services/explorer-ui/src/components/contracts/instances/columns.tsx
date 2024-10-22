@@ -5,6 +5,7 @@ import { DataTableColumnHeader } from "~/components/data-table";
 import { type ContractInstance } from "./schema";
 import { CopyableText } from "~/components/copy-text";
 import { truncateHashString } from "~/lib/create-hash-string";
+import { getClassVersionLink } from "../utils";
 
 const text = {
   address: "ADDRESS",
@@ -49,18 +50,11 @@ export const contractsTableColumns: ColumnDef<ContractInstance>[] = [
         title={text.version}
       />
     ),
-    cell: ({ row }) => {
-      const contractClassId = row.getValue("contractClassId");
-      const version = row.getValue("version");
-      if (typeof contractClassId !== "string") return null;
-      if (typeof version !== "number") return null;
-      const r = `${routes.contracts.route}/${routes.contracts.children.classes.route}/${contractClassId}/versions/${version}`;
-      return (
-        <div className="text-purple-light font-mono font-bold">
-          <Link to={r}>{version}</Link>
-        </div>
-      );
-    },
+    cell: ({ row }) =>
+      getClassVersionLink(
+        row.getValue("contractClassId"),
+        row.getValue("version")
+      ),
     enableSorting: true,
     enableHiding: false,
   },
