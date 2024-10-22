@@ -4,8 +4,8 @@ export const aztecExplorer = {
   getL2BlockByHash: "l2/blocks/",
   getL2BlockByHeight: "l2/blocks/",
   getL2BlocksByHeightRange: "l2/blocks",
-  getL2TxEffectByHash: "l2/txEffects/",
-  getL2TxEffectsByHeight: (height: number) => `l2/blocks/${height}/txEffects`,
+  getL2TxEffectByHash: "l2/tx-effects/",
+  getL2TxEffectsByHeight: (height: number) => `l2/blocks/${height}/tx-effects`,
   getL2TxEffectByHeightAndIndex: (height: number, index: number) =>
     `l2/blocks/${height}/txEffects/${index}`,
   getL2TxEffectsByHeightRange: "",
@@ -29,5 +29,8 @@ export const aztecExplorer = {
   getL2AverageBlockTime: "/l2/stats/average-block-time",
 };
 
-export const API_URL = import.meta.env.VITE_API_URL;
-export const WS_URL = import.meta.env.VITE_WS_URL;
+export const API_URL = typeof import.meta.env.VITE_API_URL === "string" ? import.meta.env.VITE_API_URL : "";
+export const WS_URL = typeof import.meta.env.VITE_WS_URL === "string" ? import.meta.env.VITE_WS_URL : "";
+export const DISCORD_URL = typeof import.meta.env.VITE_DISCORD_URL === "string" ? import.meta.env.VITE_DISCORD_URL : "";
+export const GITHUB_URL = typeof import.meta.env.VITE_GITHUB_URL === "string" ? import.meta.env.VITE_GITHUB_URL : "";
+export const X_URL = typeof import.meta.env.VITE_X_URL === "string" ? import.meta.env.VITE_X_URL : "";

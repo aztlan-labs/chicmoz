@@ -74,9 +74,16 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
         title={text.blockHeight}
       />
     ),
-    cell: ({ row }) => (
-      <div className="text-purple-dark">{row.getValue("blockNumber")}</div>
-    ),
+    cell: ({ row }) => {
+      const blockNumber = row.getValue("blockNumber");
+      if (typeof blockNumber !== "number") return null;
+      const r = `${routes.blocks.route}/${blockNumber}`;
+      return (
+        <div className="text-purple-light font-mono font-bold">
+          <Link to={r}>{blockNumber}</Link>
+        </div>
+      );
+    },
     enableSorting: true,
     enableHiding: true,
   },

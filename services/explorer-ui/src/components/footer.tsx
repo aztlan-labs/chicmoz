@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { routes } from "~/routes/__root";
-import { ChicmozHomeLink } from "./ui/chicmoz-home-link";
+import { DiscordIcon, GithubIcon, ObscuraLogoWhite, XIcon } from "~/assets";
+import { DISCORD_URL, GITHUB_URL, X_URL } from "~/service/constants";
+import { ChicmozHomeLink } from "~/components/ui/chicmoz-home-link";
 
 // TODO: add the footer links
 export const Footer = () => {
@@ -10,40 +12,68 @@ export const Footer = () => {
       <div className="bg-purple-light py-10">
         <div className="mx-auto px-[70px] max-w-[1440px]">
           <div className="flex flex-col w-full">
+            <ChicmozHomeLink className="hidden lg:block opacity-75 hover:opacity-100" />
             <div className="flex flex-col w-full items-center lg:items-end lg:text-center lg:flex-row">
-              <ChicmozHomeLink textClasses="block lg:hidden" />
-              <p className="flex flex-col mt-[60px] lg:mb-0 mb-[100px] mr-0 gap-1 lg:mt-0 lg:mr-auto">
-                <span className="text-grey-light text-xs text-center lg:text-left">
-                  {text.buildAndPoweredBy}
-                </span>
+              <ChicmozHomeLink className="lg:hidden opacity-75 hover:opacity-100" />
+              <p className="flex flex-col mt-[60px] lg:mb-0 mb-[100px] mr-0 gap-1 lg:mt-0 lg:mr-auto lg:items-start items-center">
+                <a
+                  href="https://obscura.network"
+                  className="flex flex-col lg:items-start items-center opacity-75 hover:opacity-100"
+                >
+                  <span className="text-grey-light text-xs text-center lg:text-left">
+                    {text.builtAndPoweredBy}
+                  </span>
+                  <ObscuraLogoWhite className="size-3/4" />
+                </a>
               </p>
-              <Link
-                to={routes.aboutUs.route}
-                className="[&.active]:text-white mr-0 mb-[40px] lg:mb-0 lg:mr-[30px]  text-grey-light hover:text-white"
-              >
-                {routes.aboutUs.title}
-              </Link>
-              <a
-                // TODO: remove?
-                className="[&.active]:text-white mr-0 mb-[40px] lg:mb-0 lg:mr-[30px]  text-grey-light hover:text-white"
-              >
-                {text.joinOurDiscord}
-              </a>
-              <Link
-                to={routes.privacyPolicy.route}
-                className="[&.active]:text-white mr-0 mb-[40px] lg:mb-0 lg:mr-[30px]  text-grey-light hover:text-white"
-              >
-                {routes.privacyPolicy.title}
-              </Link>
-              <Link
-                to={routes.termsAndConditions.route}
-                className="[&.active]:text-white mr-0 mb-[100px] lg:mb-0 lg:mr-[30px]  text-grey-light hover:text-white"
-              >
-                {routes.termsAndConditions.title}
-              </Link>
-              <p className="flex text-center flex-col ml-0 gap-1 lg:mt-0 lg:ml-[100px] text-white">
-                {text.copyright}
-              </p>
+              <div className="mx-auto flex items-center lg:flex-row flex-col">
+                <Link
+                  to={routes.aboutUs.route}
+                  className="[&.active]:text-white mr-0 mb-[40px] lg:mb-0 lg:mr-[30px]  text-grey-light hover:text-white"
+                >
+                  {routes.aboutUs.title}
+                </Link>
+                <Link
+                  to={routes.privacyPolicy.route}
+                  className="[&.active]:text-white mr-0 mb-[40px] lg:mb-0 lg:mr-[30px]  text-grey-light hover:text-white"
+                >
+                  {routes.privacyPolicy.title}
+                </Link>
+                <Link
+                  to={routes.termsAndConditions.route}
+                  className="[&.active]:text-white mr-0 mb-[100px] lg:mb-0 lg:mr-[30px]  text-grey-light hover:text-white"
+                >
+                  {routes.termsAndConditions.title}
+                </Link>
+              </div>
+              <div className="flex lg:flex-row flex-col px-5">
+                <div className="flex flex-row gap-5 lg:gap-0 lg:ml-auto">
+                  <a
+                    href={DISCORD_URL}
+                    target="_blank"
+                    className="mx-auto opacity-75 hover:opacity-100"
+                  >
+                    <DiscordIcon className="size-3/4" />
+                  </a>
+                  <a
+                    href={X_URL}
+                    target="_blank"
+                    className="mx-auto opacity-75 hover:opacity-100"
+                  >
+                    <XIcon className="size-3/4" />
+                  </a>
+                  <a
+                    href={GITHUB_URL}
+                    target="_blank"
+                    className="mx-auto opacity-75 hover:opacity-100"
+                  >
+                    <GithubIcon className="size-3/4" />
+                  </a>
+                </div>
+                <p className="text-center gap-1 lg:ml-[100px] text-white">
+                  {text.copyright}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -53,7 +83,7 @@ export const Footer = () => {
 };
 
 export const text = {
-  buildAndPoweredBy: "Build and powered by ",
+  builtAndPoweredBy: "Built and powered by ",
   aboutUs: "About Us",
   privacyPolicy: "Privacy Policy",
   joinOurDiscord: "Join our Discord",

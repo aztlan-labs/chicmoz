@@ -4,6 +4,8 @@ import { routes } from "~/routes/__root";
 import { DataTableColumnHeader } from "~/components/data-table";
 import { type ContractClass } from "./schema";
 import { truncateHashString } from "~/lib/create-hash-string";
+import { CopyableText } from "~/components/copy-text";
+import { getClassVersionLink } from "../utils";
 
 const text = {
   blockHash: "BLOCK HASH",
@@ -23,16 +25,12 @@ export const contractsTableColumns: ColumnDef<ContractClass>[] = [
         title={text.contractClassId}
       />
     ),
-    cell: ({ row }) => {
-      const contractClassId = row.getValue("contractClassId");
-      if (typeof contractClassId !== "string") return null;
-      const r = `${routes.contracts.route}/${routes.contracts.children.classes.route}/${contractClassId}`;
-      return (
-        <div className="text-purple-light font-mono font-bold">
-          <Link to={r}>{truncateHashString(contractClassId)}</Link>
-        </div>
-      );
-    },
+    cell: ({ row }) => (
+      <CopyableText
+        toCopy={row.getValue("contractClassId")}
+        text={truncateHashString(row.getValue("contractClassId"))}
+      />
+    ),
     enableSorting: false,
     enableHiding: false,
   },
@@ -45,9 +43,11 @@ export const contractsTableColumns: ColumnDef<ContractClass>[] = [
         title={text.version}
       />
     ),
-    cell: ({ row }) => (
-      <div className="text-purple-dark">{row.getValue("version")}</div>
-    ),
+    cell: ({ row }) =>
+      getClassVersionLink(
+        row.getValue("contractClassId"),
+        row.getValue("version")
+      ),
     enableSorting: true,
     enableHiding: false,
   },
@@ -61,9 +61,10 @@ export const contractsTableColumns: ColumnDef<ContractClass>[] = [
       />
     ),
     cell: ({ row }) => (
-      <div className="text-purple-dark font-mono">
-        {row.getValue("artifactHash")}
-      </div>
+      <CopyableText
+        toCopy={row.getValue("artifactHash")}
+        text={truncateHashString(row.getValue("artifactHash"))}
+      />
     ),
     enableSorting: false,
     enableHiding: true,
@@ -78,9 +79,10 @@ export const contractsTableColumns: ColumnDef<ContractClass>[] = [
       />
     ),
     cell: ({ row }) => (
-      <div className="text-purple-dark font-mono">
-        {row.getValue("privateFunctionsRoot")}
-      </div>
+      <CopyableText
+        toCopy={row.getValue("privateFunctionsRoot")}
+        text={truncateHashString(row.getValue("privateFunctionsRoot"))}
+      />
     ),
     enableSorting: false,
     enableHiding: true,
