@@ -2,6 +2,7 @@ import { HexString } from "@chicmoz-pkg/types";
 import { relations } from "drizzle-orm";
 import {
   bigint,
+  boolean,
   foreignKey,
   integer,
   pgTable,
@@ -31,8 +32,24 @@ export const l2ContractInstanceDeployed = pgTable(
     salt: generateFrColumn("salt").notNull(),
     contractClassId: generateFrColumn("contract_class_id").notNull(),
     initializationHash: generateFrColumn("initialization_hash").notNull(),
-    publicKeysHash: generateFrColumn("public_keys_hash").notNull(),
     deployer: generateAztecAddressColumn("deployer").notNull(),
+    publicKeys_masterNullifierPublicKey_x: generateFrColumn("public_keys_master_nullifier_public_key_x").notNull(),
+    publicKeys_masterNullifierPublicKey_y: generateFrColumn("public_keys_master_nullifier_public_key_y").notNull(),
+    publicKeys_masterNullifierPublicKey_isInfinite: boolean("public_keys_master_nullifier_public_key_is_infinite").notNull(),
+    publicKeys_masterNullifierPublicKey_kind: varchar("public_keys_master_nullifier_public_key_kind").notNull(),
+    publicKeys_masterIncomingViewingPublicKey_x: generateFrColumn("public_keys_master_incoming_viewing_public_key_x").notNull(),
+    publicKeys_masterIncomingViewingPublicKey_y: generateFrColumn("public_keys_master_incoming_viewing_public_key_y").notNull(),
+    publicKeys_masterIncomingViewingPublicKey_isInfinite: boolean("public_keys_master_incoming_viewing_public_key_is_infinite").notNull(),
+    publicKeys_masterIncomingViewingPublicKey_kind: varchar("public_keys_master_incoming_viewing_public_key_kind").notNull(),
+    publicKeys_masterOutgoingViewingPublicKey_x: generateFrColumn("public_keys_master_outgoing_viewing_public_key_x").notNull(),
+    publicKeys_masterOutgoingViewingPublicKey_y: generateFrColumn("public_keys_master_outgoing_viewing_public_key_y").notNull(),
+    publicKeys_masterOutgoingViewingPublicKey_isInfinite: boolean("public_keys_master_outgoing_viewing_public_key_is_infinite").notNull(),
+    publicKeys_masterOutgoingViewingPublicKey_kind: varchar("public_keys_master_outgoing_viewing_public_key_kind").notNull(),
+    publicKeys_masterTaggingPublicKey_x: generateFrColumn("public_keys_master_tagging_public_key_x").notNull(),
+    publicKeys_masterTaggingPublicKey_y: generateFrColumn("public_keys_master_tagging_public_key_y").notNull(),
+    publicKeys_masterTaggingPublicKey_isInfinite: boolean("public_keys_master_tagging_public_key_is_infinite").notNull(),
+    publicKeys_masterTaggingPublicKey_kind: varchar("public_keys_master_tagging_public_key_kind").notNull(),
+
   },
   (t) => ({
     unq: unique().on(t.contractClassId, t.address, t.version),

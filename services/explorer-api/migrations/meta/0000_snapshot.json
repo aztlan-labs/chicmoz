@@ -1,5 +1,5 @@
 {
-  "id": "177dfa4b-bc61-4f77-ab15-3d982f4d4c1b",
+  "id": "de38ae50-ad29-4c71-86ab-fbb76a538277",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1115,15 +1115,105 @@
           "primaryKey": false,
           "notNull": true
         },
-        "public_keys_hash": {
-          "name": "public_keys_hash",
+        "deployer": {
+          "name": "deployer",
           "type": "varchar(66)",
           "primaryKey": false,
           "notNull": true
         },
-        "deployer": {
-          "name": "deployer",
+        "public_keys_master_nullifier_public_key_x": {
+          "name": "public_keys_master_nullifier_public_key_x",
           "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_nullifier_public_key_y": {
+          "name": "public_keys_master_nullifier_public_key_y",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_nullifier_public_key_is_infinite": {
+          "name": "public_keys_master_nullifier_public_key_is_infinite",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_nullifier_public_key_kind": {
+          "name": "public_keys_master_nullifier_public_key_kind",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_incoming_viewing_public_key_x": {
+          "name": "public_keys_master_incoming_viewing_public_key_x",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_incoming_viewing_public_key_y": {
+          "name": "public_keys_master_incoming_viewing_public_key_y",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_incoming_viewing_public_key_is_infinite": {
+          "name": "public_keys_master_incoming_viewing_public_key_is_infinite",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_incoming_viewing_public_key_kind": {
+          "name": "public_keys_master_incoming_viewing_public_key_kind",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_outgoing_viewing_public_key_x": {
+          "name": "public_keys_master_outgoing_viewing_public_key_x",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_outgoing_viewing_public_key_y": {
+          "name": "public_keys_master_outgoing_viewing_public_key_y",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_outgoing_viewing_public_key_is_infinite": {
+          "name": "public_keys_master_outgoing_viewing_public_key_is_infinite",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_outgoing_viewing_public_key_kind": {
+          "name": "public_keys_master_outgoing_viewing_public_key_kind",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_tagging_public_key_x": {
+          "name": "public_keys_master_tagging_public_key_x",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_tagging_public_key_y": {
+          "name": "public_keys_master_tagging_public_key_y",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_tagging_public_key_is_infinite": {
+          "name": "public_keys_master_tagging_public_key_is_infinite",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_tagging_public_key_kind": {
+          "name": "public_keys_master_tagging_public_key_kind",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         }
