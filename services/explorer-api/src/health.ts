@@ -1,6 +1,5 @@
 import asyncHandler from "express-async-handler";
 import { logger } from "./logger.js";
-import { getLogCounter } from "./http-server/routes/controllers/utils/db-wrapper.js";
 
 enum componentState {
   INITIALIZING = "INITIALIZING",
@@ -36,12 +35,10 @@ export const getHandler = asyncHandler((_req, res) => {
     : isInitializing || isShuttingDown
       ? 503
       : 500;
-  const cacheStatus = getLogCounter();
   res.status(httpStatus).json({
     isInitializing,
     isShuttingDown,
     components,
-    cacheStatus,
   });
 });
 
