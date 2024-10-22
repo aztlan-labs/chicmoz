@@ -17,7 +17,7 @@ export const bodyToTxEffects = pgTable("body_to_tx_effects", {
   bodyId: uuid("body_id")
     .notNull()
     .references(() => body.id),
-  txEffectHash: uuid("tx_effect_hash")
+  txEffectHash: varchar("tx_effect_hash")
     .notNull()
     .references(() => txEffect.hash),
 });
@@ -40,7 +40,7 @@ export const txEffect = pgTable("tx_effect", {
 export const txEffectToPublicDataWrite = pgTable(
   "tx_effect_to_public_data_write",
   {
-    txEffectHash: uuid("tx_effect_hash")
+    txEffectHash: varchar("tx_effect_hash")
       .notNull()
       .references(() => txEffect.hash),
     index: integer("index").notNull(),
@@ -73,7 +73,7 @@ export const functionLogs = pgTable("function_logs", {
 });
 
 export const txEffectToLogs = pgTable("tx_effect_to_logs", {
-  txEffectHash: uuid("tx_effect_hash")
+  txEffectHash: varchar("tx_effect_hash")
     .notNull()
     .references(() => txEffect.hash),
   functionLogId: uuid("function_log_id")

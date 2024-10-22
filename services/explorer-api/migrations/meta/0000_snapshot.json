@@ -1,9 +1,100 @@
 {
-  "id": "1546764d-c77b-4d7b-b16d-f2ffbe453dd1",
+  "id": "177dfa4b-bc61-4f77-ab15-3d982f4d4c1b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.aztec-chain-connection": {
+      "name": "aztec-chain-connection",
+      "schema": "",
+      "columns": {
+        "hash": {
+          "name": "hash",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "chain_height": {
+          "name": "chain_height",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "latest_processed_height": {
+          "name": "latest_processed_height",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "counter": {
+          "name": "counter",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "rpc_url": {
+          "name": "rpc_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "node_version": {
+          "name": "node_version",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "l1_chain_id": {
+          "name": "l1_chain_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "protocol_version": {
+          "name": "protocol_version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "enr": {
+          "name": "enr",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "l1_contract_addresses": {
+          "name": "l1_contract_addresses",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "protocol_contract_addresses": {
+          "name": "protocol_contract_addresses",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.archive": {
       "name": "archive",
       "schema": "",
@@ -128,9 +219,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "tx_effect_id": {
-          "name": "tx_effect_id",
-          "type": "uuid",
+        "tx_effect_hash": {
+          "name": "tx_effect_hash",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         }
@@ -146,12 +237,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "body_to_tx_effects_tx_effect_id_tx_effect_id_fk": {
-          "name": "body_to_tx_effects_tx_effect_id_tx_effect_id_fk",
+        "body_to_tx_effects_tx_effect_hash_tx_effect_hash_fk": {
+          "name": "body_to_tx_effects_tx_effect_hash_tx_effect_hash_fk",
           "tableFrom": "body_to_tx_effects",
           "tableTo": "tx_effect",
-          "columnsFrom": ["tx_effect_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": ["tx_effect_hash"],
+          "columnsTo": ["hash"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -262,17 +353,10 @@
       "name": "tx_effect",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
         "hash": {
           "name": "hash",
           "type": "varchar",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
         },
         "index": {
@@ -339,9 +423,9 @@
       "name": "tx_effect_to_logs",
       "schema": "",
       "columns": {
-        "tx_effect_id": {
-          "name": "tx_effect_id",
-          "type": "uuid",
+        "tx_effect_hash": {
+          "name": "tx_effect_hash",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -360,12 +444,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "tx_effect_to_logs_tx_effect_id_tx_effect_id_fk": {
-          "name": "tx_effect_to_logs_tx_effect_id_tx_effect_id_fk",
+        "tx_effect_to_logs_tx_effect_hash_tx_effect_hash_fk": {
+          "name": "tx_effect_to_logs_tx_effect_hash_tx_effect_hash_fk",
           "tableFrom": "tx_effect_to_logs",
           "tableTo": "tx_effect",
-          "columnsFrom": ["tx_effect_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": ["tx_effect_hash"],
+          "columnsTo": ["hash"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -395,9 +479,9 @@
       "name": "tx_effect_to_public_data_write",
       "schema": "",
       "columns": {
-        "tx_effect_id": {
-          "name": "tx_effect_id",
-          "type": "uuid",
+        "tx_effect_hash": {
+          "name": "tx_effect_hash",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -416,12 +500,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "tx_effect_to_public_data_write_tx_effect_id_tx_effect_id_fk": {
-          "name": "tx_effect_to_public_data_write_tx_effect_id_tx_effect_id_fk",
+        "tx_effect_to_public_data_write_tx_effect_hash_tx_effect_hash_fk": {
+          "name": "tx_effect_to_public_data_write_tx_effect_hash_tx_effect_hash_fk",
           "tableFrom": "tx_effect_to_public_data_write",
           "tableTo": "tx_effect",
-          "columnsFrom": ["tx_effect_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": ["tx_effect_hash"],
+          "columnsTo": ["hash"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
