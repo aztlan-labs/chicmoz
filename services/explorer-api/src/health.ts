@@ -30,7 +30,11 @@ export const getHandler = asyncHandler((_req, res) => {
       (component) => component.value === componentState.SHUTTING_DOWN
     );
   }
-  const httpStatus = isHealthy ? 200 : isInitializing || isShuttingDown ? 503 : 500;
+  const httpStatus = isHealthy
+    ? 200
+    : isInitializing || isShuttingDown
+      ? 503
+      : 500;
   res.status(httpStatus).json({
     isInitializing,
     isShuttingDown,

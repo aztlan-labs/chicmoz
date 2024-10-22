@@ -28,7 +28,7 @@ export const openapi_GET_LATEST_HEIGHT = {
 
 export const GET_LATEST_HEIGHT = asyncHandler(async (_req, res) => {
   const latestHeight = await dbWrapper.getLatestHeight();
-  res.status(200).send(latestHeight);
+  res.status(200).send(JSON.stringify(latestHeight));
 });
 
 export const openapi_GET_LATEST_BLOCK = {
