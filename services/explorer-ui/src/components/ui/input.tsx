@@ -1,5 +1,5 @@
 import * as React from "react";
-import { SearchIcon } from "~/assets";
+import { CrossIcon, LoadingIcon, SearchIcon } from "~/assets";
 
 import { cn } from "~/lib/utils";
 
@@ -23,21 +23,32 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 );
 Input.displayName = "Input";
 
-const SearchInput = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, ...props }, ref) => {
+export interface SearchInputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  onIconClick: () => void;
+  isLoading?: boolean;
+  noResults?: boolean;
+}
+const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
+  ({ className, type, onIconClick, isLoading, noResults, ...props }, ref) => {
     return (
-      <div
-        className="flex items-center  pl-3 w-fit bg-white rounded-md border-input focus-visible:ring-1 focus-visible:ring-ring"
-        {...props}
-      >
-        <SearchIcon className="h-4 w-4" />
+      <div className="flex items-center pl-3 w-fit bg-white rounded-md focus-visible:ring-1 focus-visible:ring-ring">
+        {noResults ? (
+          <div>
+            <CrossIcon />
+          </div>
+        ) : (
+          <div className="w-4 cursor-pointer" onClick={() => onIconClick()}>
+            {isLoading ? <LoadingIcon /> : <SearchIcon />}
+          </div>
+        )}
         <input
           type={type}
           className={cn(
             "flex h-9 rounded-md bg-transparent px-3 py-1 text-sm w-full transition-colors focus-visible:outline-none  file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground  disabled:cursor-not-allowed disabled:opacity-50",
             className,
           )}
-          placeholder="Search"
+          {...props}
           ref={ref}
         />
       </div>
