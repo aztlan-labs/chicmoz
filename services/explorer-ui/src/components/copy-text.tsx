@@ -18,15 +18,15 @@ export const CopyableText: FC<Props> = ({ toCopy, text }) => {
   };
 
   return (
-    <div className="flex flex-row items-center w-full gap-2 md:justify-end md:text-end">
-      <CopyIcon />
-      <span
+    <div className="flex md:justify-end md:text-end w-full">
+      <div
         onClick={handleCopy}
         style={{ cursor: "pointer", userSelect: "none" }}
-        className="relative inline-block"
+        className="flex flex-row gap-2 w-fit"
       >
-        {text}
-      </span>
+        <CopyIcon />
+        <span className="relative inline-block font-mono">{text}</span>
+      </div>
     </div>
   );
 };

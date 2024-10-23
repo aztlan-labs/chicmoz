@@ -46,33 +46,28 @@ export const Footer = () => {
                   {routes.termsAndConditions.title}
                 </Link>
               </div>
-              <div className="flex lg:flex-row flex-col px-5">
-                <div className="flex flex-row gap-5 lg:gap-0 lg:ml-auto">
-                  <a
-                    href={DISCORD_URL}
-                    target="_blank"
-                    className="mx-auto opacity-75 hover:opacity-100"
-                  >
-                    <DiscordIcon className="size-3/4" />
-                  </a>
-                  <a
-                    href={X_URL}
-                    target="_blank"
-                    className="mx-auto opacity-75 hover:opacity-100"
-                  >
-                    <XIcon className="size-3/4" />
-                  </a>
-                  <a
-                    href={GITHUB_URL}
-                    target="_blank"
-                    className="mx-auto opacity-75 hover:opacity-100"
-                  >
-                    <GithubIcon className="size-3/4" />
-                  </a>
-                </div>
-                <p className="text-center gap-1 lg:ml-[100px] text-white">
-                  {text.copyright}
-                </p>
+              <div className="flex flex-row gap-5 lg:gap-0 lg:ml-auto">
+                <a
+                  href={DISCORD_URL}
+                  target="_blank"
+                  className="mx-auto opacity-75 hover:opacity-100"
+                >
+                  <DiscordIcon className="size-3/4" />
+                </a>
+                <a
+                  href={X_URL}
+                  target="_blank"
+                  className="mx-auto opacity-75 hover:opacity-100"
+                >
+                  <XIcon className="size-3/4" />
+                </a>
+                <a
+                  href={GITHUB_URL}
+                  target="_blank"
+                  className="mx-auto opacity-75 hover:opacity-100"
+                >
+                  <GithubIcon className="size-3/4" />
+                </a>
               </div>
             </div>
           </div>
@@ -88,7 +83,6 @@ export const text = {
   privacyPolicy: "Privacy Policy",
   joinOurDiscord: "Join our Discord",
   termsAndConditions: "Terms and Conditions",
-  copyright: "© TODO",
 };
 
 const Strips = () => {
