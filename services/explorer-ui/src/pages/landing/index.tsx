@@ -59,9 +59,6 @@ export const Landing: FC = () => {
 
   return (
     <div className="mx-auto px-5 max-w-[1440px] md:px-[70px]">
-      <div className="flex flex-row items-center justify-center bg-transparent w-full pt-9">
-        <SearchInput className="w-full" />
-      </div>
       <div className="flex flex-row flex-wrap justify-center gap-3 m-5 ">
         <InfoBadge
           title="Total transactions"
