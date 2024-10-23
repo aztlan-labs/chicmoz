@@ -47,8 +47,6 @@ export const Landing: FC = () => {
     error: errorAvarageBlockTime,
   } = useAvarageBlockTime();
 
-  if (error) return <p className="text-red-500">{error.message}</p>;
-
   const averageBlockTimeFormatted = formatDuration(
     Number(avarageBlockTime) / 1000,
   );
@@ -107,6 +105,7 @@ export const Landing: FC = () => {
           <TxEffectsTable
             txEffects={mapLatestTxEffects(latestBlocks)}
             isLoading={isLoading}
+            error={error}
           />
         </div>
       </div>

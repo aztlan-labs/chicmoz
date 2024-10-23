@@ -19,9 +19,6 @@ export const Blocks: FC = () => {
     error: errorAvarageBlockTime,
   } = useAvarageBlockTime();
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p className="text-red-500">{error.message}</p>;
-  if (!latestBlocks) return <p>No data</p>;
   const averageBlockTimeFormatted = formatDuration(
     Number(avarageBlockTime) / 1000,
   );
@@ -46,7 +43,11 @@ export const Blocks: FC = () => {
           data={averageBlockTimeFormatted}
         />
       </div>
-      <BlocksTable blocks={parseLatestBlocks(latestBlocks)} />
+      <BlocksTable
+        blocks={parseLatestBlocks(latestBlocks)}
+        isLoading={isLoading}
+        error={error}
+      />
     </div>
   );
 };

@@ -18,11 +18,7 @@ export const TxEffects: FC = () => {
     error: errorTotalEffects24h,
   } = useTotalTxEffectsLast24h();
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p className="text-red-500">{error.message}</p>;
-  if (!latestBlocks) return <p>No data</p>;
-
-  const latestTxEffects = latestBlocks.flatMap((block) => {
+  const latestTxEffects = latestBlocks?.flatMap((block) => {
     return block.body.txEffects.map((txEffect) =>
       getTxEffectTableObj(txEffect, block),
     );
@@ -48,7 +44,11 @@ export const TxEffects: FC = () => {
           data={totalTxEffects24h}
         />
       </div>
-      <TxEffectsTable txEffects={latestTxEffects} />
+      <TxEffectsTable
+        txEffects={latestTxEffects}
+        isLoading={isLoading}
+        error={error}
+      />
     </div>
   );
 };
