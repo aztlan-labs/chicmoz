@@ -6,7 +6,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { WS_URL } from "~/service/constants";
-import { queryKeyGenerator } from "./utils";
+import { queryKeyGenerator, statsKey } from "./utils";
 
 const updateBlock = (
   queryClient: ReturnType<typeof useQueryClient>,
@@ -44,13 +44,18 @@ const updateTxEffects = (
   );
 };
 
-const handleWebSocketMessage = (
+const invalidateStats = async (
+  queryClient: ReturnType<typeof useQueryClient>
+) => queryClient.invalidateQueries({ queryKey: [statsKey], exact: false });
+
+const handleWebSocketMessage = async (
   queryClient: ReturnType<typeof useQueryClient>,
   data: string
 ) => {
   const block = chicmozL2BlockLightSchema.parse(JSON.parse(data));
   updateBlock(queryClient, block);
   updateTxEffects(queryClient, block);
+  await invalidateStats(queryClient);
 };
 
 export const useWebSocketConnection = () => {
@@ -61,10 +66,10 @@ export const useWebSocketConnection = () => {
 
     websocket.onopen = () => console.log("WebSocket Connected");
 
-    websocket.onmessage = (event) => {
+    websocket.onmessage = async (event) => {
       if (typeof event.data !== "string")
         console.error("WebSocket message is not a string");
-      handleWebSocketMessage(queryClient, event.data as string);
+      await handleWebSocketMessage(queryClient, event.data as string);
     };
 
     websocket.onclose = () => console.log("WebSocket Disconnected");
