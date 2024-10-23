@@ -2,6 +2,8 @@ import {
   chicmozL2BlockLightSchema,
   chicmozL2TxEffectSchema,
   type ChicmozL2BlockLight,
+  type ChicmozL2Block,
+  chicmozL2BlockSchema,
 } from "@chicmoz-pkg/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
@@ -25,7 +27,7 @@ const updateBlock = (
 
 const updateTxEffects = (
   queryClient: ReturnType<typeof useQueryClient>,
-  block: ChicmozL2BlockLight
+  block: ChicmozL2Block
 ) => {
   const txEffects = block.body.txEffects.map((txEffect) => {
     const effects = chicmozL2TxEffectSchema.parse({
@@ -52,7 +54,7 @@ const handleWebSocketMessage = async (
   queryClient: ReturnType<typeof useQueryClient>,
   data: string
 ) => {
-  const block = chicmozL2BlockLightSchema.parse(JSON.parse(data));
+  const block = chicmozL2BlockSchema.parse(JSON.parse(data));
   updateBlock(queryClient, block);
   updateTxEffects(queryClient, block);
   await invalidateStats(queryClient);
@@ -69,7 +71,11 @@ export const useWebSocketConnection = () => {
     websocket.onmessage = async (event) => {
       if (typeof event.data !== "string")
         console.error("WebSocket message is not a string");
-      await handleWebSocketMessage(queryClient, event.data as string);
+      try {
+        await handleWebSocketMessage(queryClient, event.data as string);
+      } catch (error) {
+        console.error("Error handling WebSocket message", error);
+      }
     };
 
     websocket.onclose = () => console.log("WebSocket Disconnected");
