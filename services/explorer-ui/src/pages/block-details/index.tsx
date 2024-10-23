@@ -20,11 +20,10 @@ export const BlockDetails: FC = () => {
     error,
   } = useGetBlockByHeight(blockNumber);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p className="text-red-500">{error.message}</p>;
-  if (!latestBlock) return <p>No data</p>;
-
   const apiEndpointUrl = `${API_ENDPOINT_URL}${blockNumber}`;
+
+  //TODO: Check for better solution
+  if (!latestBlock) return <div> No block hash</div>;
 
   return (
     <div className="mx-auto px-7 max-w-[1440px] md:px-[70px]">
@@ -49,7 +48,11 @@ export const BlockDetails: FC = () => {
               <p>View TxEffects</p>
             </Button>
           </div>
-          <TxEffectsTable txEffects={getTxEffects(latestBlock)} />
+          <TxEffectsTable
+            txEffects={getTxEffects(latestBlock)}
+            isLoading={isLoading}
+            error={error}
+          />
         </div>
       </div>
     </div>

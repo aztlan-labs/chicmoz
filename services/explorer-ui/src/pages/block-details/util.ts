@@ -45,8 +45,9 @@ export const getBlockDetails = (latestBlock: ChicmozL2Block) => {
   ];
 };
 
-export const getTxEffects = (latestBlock: ChicmozL2Block) => {
+export const getTxEffects = (latestBlock?: ChicmozL2Block) => {
+  if (!latestBlock) return undefined;
   return latestBlock.body.txEffects.map((tx) =>
-    getTxEffectTableObj(tx, latestBlock)
+    getTxEffectTableObj(tx, latestBlock),
   );
 };
