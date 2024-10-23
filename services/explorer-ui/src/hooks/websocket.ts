@@ -1,7 +1,57 @@
-import { useEffect } from "react";
+import {
+  chicmozL2BlockLightSchema,
+  chicmozL2TxEffectSchema,
+  type ChicmozL2BlockLight,
+} from "@chicmoz-pkg/types";
 import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { WS_URL } from "~/service/constants";
-import { type ChicmozL2Block, chicmozL2BlockSchema } from "@chicmoz-pkg/types";
+import { queryKeyGenerator } from "./utils";
+
+const updateBlock = (
+  queryClient: ReturnType<typeof useQueryClient>,
+  block: ChicmozL2BlockLight
+) => {
+  queryClient.setQueryData(queryKeyGenerator.latestBlock, block);
+  queryClient.setQueryData(
+    queryKeyGenerator.latestBlocks,
+    (oldData: ChicmozL2BlockLight[] | undefined) => {
+      if (!oldData) return [block];
+      if (oldData.find((b) => b.hash === block.hash)) return oldData;
+      return [block, ...oldData];
+    }
+  );
+};
+
+const updateTxEffects = (
+  queryClient: ReturnType<typeof useQueryClient>,
+  block: ChicmozL2BlockLight
+) => {
+  const txEffects = block.body.txEffects.map((txEffect) => {
+    const effects = chicmozL2TxEffectSchema.parse({
+      ...txEffect,
+      blockHeight: block.height,
+      timestamp: block.header.globalVariables.timestamp,
+    });
+    queryClient.setQueryData(
+      queryKeyGenerator.txEffectByHash(effects.hash),
+      effects
+    );
+  });
+  queryClient.setQueryData(
+    queryKeyGenerator.txEffectsByBlockHeight(block.height),
+    txEffects
+  );
+};
+
+const handleWebSocketMessage = (
+  queryClient: ReturnType<typeof useQueryClient>,
+  data: string
+) => {
+  const block = chicmozL2BlockLightSchema.parse(JSON.parse(data));
+  updateBlock(queryClient, block);
+  updateTxEffects(queryClient, block);
+};
 
 export const useWebSocketConnection = () => {
   const queryClient = useQueryClient();
@@ -14,23 +64,11 @@ export const useWebSocketConnection = () => {
     websocket.onmessage = (event) => {
       if (typeof event.data !== "string")
         console.error("WebSocket message is not a string");
-      handleWebSocketMessage(event.data as string);
+      handleWebSocketMessage(queryClient, event.data as string);
     };
 
     websocket.onclose = () => console.log("WebSocket Disconnected");
 
     return () => websocket.close();
   }, []);
-
-  const handleWebSocketMessage = (data: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const d = JSON.parse(data);
-    const block = chicmozL2BlockSchema.parse(d);
-    queryClient.setQueryData(["latestBlock"], block);
-    queryClient.setQueryData(["latestBlocks"], (oldData: ChicmozL2Block[] | undefined) => {
-      if (!oldData) return [block];
-      if (oldData.find((b) => b.hash === block.hash)) return oldData;
-      return [block, ...oldData];
-    });
-  };
 };
