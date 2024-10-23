@@ -8,6 +8,5 @@ export const contractInstanceSchema = z.object({
   blockHeight: z.number().optional(),
   version: z.number(),
   contractClassId: z.string(),
-  publicKeysHash: z.string(),
   deployer: z.string(),
 });

@@ -10,8 +10,6 @@ const hashString = (str: string) => {
 };
 
 const generateStoreObject = (connectionInfo: ConnectedToAztecEvent) => {
-  logger.info(`🔗 Storing connection info ${JSON.stringify(connectionInfo)}`);
-
   const jsonString = JSON.stringify({
     ...connectionInfo.nodeInfo,
     rpcUrl: connectionInfo.rpcUrl,

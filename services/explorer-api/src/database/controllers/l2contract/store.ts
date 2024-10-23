@@ -13,10 +13,27 @@ import {
 export const storeContractInstance = async (
   instance: ChicmozL2ContractInstanceDeployedEvent
 ): Promise<void> => {
+  const { publicKeys, ...rest } = instance;
   await db()
     .insert(l2ContractInstanceDeployed)
     .values({
-      ...instance,
+      ...rest,
+      publicKeys_masterNullifierPublicKey_x: publicKeys.masterNullifierPublicKey.x,
+      publicKeys_masterNullifierPublicKey_y: publicKeys.masterNullifierPublicKey.y,
+      publicKeys_masterNullifierPublicKey_isInfinite: publicKeys.masterNullifierPublicKey.isInfinite,
+      publicKeys_masterNullifierPublicKey_kind: publicKeys.masterNullifierPublicKey.kind,
+      publicKeys_masterIncomingViewingPublicKey_x: publicKeys.masterIncomingViewingPublicKey.x,
+      publicKeys_masterIncomingViewingPublicKey_y: publicKeys.masterIncomingViewingPublicKey.y,
+      publicKeys_masterIncomingViewingPublicKey_isInfinite: publicKeys.masterIncomingViewingPublicKey.isInfinite,
+      publicKeys_masterIncomingViewingPublicKey_kind: publicKeys.masterIncomingViewingPublicKey.kind,
+      publicKeys_masterOutgoingViewingPublicKey_x: publicKeys.masterOutgoingViewingPublicKey.x,
+      publicKeys_masterOutgoingViewingPublicKey_y: publicKeys.masterOutgoingViewingPublicKey.y,
+      publicKeys_masterOutgoingViewingPublicKey_isInfinite: publicKeys.masterOutgoingViewingPublicKey.isInfinite,
+      publicKeys_masterOutgoingViewingPublicKey_kind: publicKeys.masterOutgoingViewingPublicKey.kind,
+      publicKeys_masterTaggingPublicKey_x: publicKeys.masterTaggingPublicKey.x,
+      publicKeys_masterTaggingPublicKey_y: publicKeys.masterTaggingPublicKey.y,
+      publicKeys_masterTaggingPublicKey_isInfinite: publicKeys.masterTaggingPublicKey.isInfinite,
+      publicKeys_masterTaggingPublicKey_kind: publicKeys.masterTaggingPublicKey.kind
     });
 };
 export const storeContractClass = async (

@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import { BlocksTable } from "~/components/blocks/blocks-table";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
-import { useLatestBlocks } from "~/hooks";
+import { useGetTxEffectsByBlockHeightRange, useLatestBlocks } from "~/hooks";
 import {
   useAvarageBlockTime,
   useAvarageFees,
@@ -10,7 +10,7 @@ import {
   useTotalTxEffects,
   useTotalTxEffectsLast24h,
 } from "~/hooks/stats";
-import { mapLatestBlocks, mapLatestTxEffects } from "./util";
+import { mapLatestBlocks, parseTxEffectsData } from "./util";
 import { InfoBadge } from "~/components/info-badge";
 import { formatDuration } from "~/lib/utils";
 
@@ -47,13 +47,21 @@ export const Landing: FC = () => {
     error: errorAvarageBlockTime,
   } = useAvarageBlockTime();
 
+  const latestTxEffectsData = useGetTxEffectsByBlockHeightRange(
+    latestBlocks?.at(-1)?.height,
+    latestBlocks?.at(0)?.height
+  );
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error.message}</p>;
   if (!latestBlocks) return <p>No data</p>;
 
-  const averageBlockTimeFormatted = formatDuration(
-    Number(avarageBlockTime) / 1000,
-  );
+  const {
+    isLoadingTxEffects,
+    txEffectsErrorMsg: txEffectsError,
+    latestTxEffects,
+  } = parseTxEffectsData(latestTxEffectsData, latestBlocks);
+
+  const averageBlockTimeFormatted = formatDuration(Number(avarageBlockTime) / 1000);
 
   return (
     <div className="mx-auto px-5 max-w-[1440px] md:px-[70px]">
@@ -103,7 +111,9 @@ export const Landing: FC = () => {
 
         <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
           <h2>Latest TX-Effects</h2>
-          <TxEffectsTable txEffects={mapLatestTxEffects(latestBlocks)} />
+          {isLoadingTxEffects && <p>Loading...</p>}
+          {txEffectsError && <p className="text-red-500">{txEffectsError}</p>}
+          {latestTxEffects && <TxEffectsTable txEffects={latestTxEffects} />}
         </div>
       </div>
     </div>

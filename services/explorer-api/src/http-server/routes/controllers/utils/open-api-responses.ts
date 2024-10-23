@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { z } from "zod";
 import {
-  chicmozL2BlockSchema,
+  chicmozL2BlockLightSchema,
   chicmozL2ContractClassRegisteredEventSchema,
   chicmozL2ContractInstanceDeluxeSchema,
   chicmozL2TxEffectDeluxeSchema,
@@ -15,14 +14,15 @@ const getResponse = (schema: z.ZodType<any, any>) => ({
     description: "Successful response",
     content: {
       "application/json": {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         schema: generateSchema(schema),
       },
     },
   },
 });
 
-export const blockResponse = getResponse(chicmozL2BlockSchema);
-export const blockResponseArray = getResponse(z.array(chicmozL2BlockSchema));
+export const blockResponse = getResponse(chicmozL2BlockLightSchema);
+export const blockResponseArray = getResponse(z.array(chicmozL2BlockLightSchema));
 
 export const txEffectResponse = getResponse(chicmozL2TxEffectDeluxeSchema);
 export const txEffectResponseArray = getResponse(z.array(chicmozL2TxEffectDeluxeSchema));

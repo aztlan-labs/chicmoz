@@ -1,9 +1,9 @@
 import {
-  ChicmozL2Block,
+  ChicmozL2BlockLight,
   HexString,
-  chicmozL2BlockSchema,
+  chicmozL2BlockLightSchema,
 } from "@chicmoz-pkg/types";
-import { asc, desc, eq, getTableColumns } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import { getDb as db } from "../../../database/index.js";
 import {
   archive,
@@ -24,8 +24,7 @@ import {
   txEffect,
 } from "../../../database/schema/l2block/index.js";
 import { DB_MAX_BLOCKS } from "../../../environment.js";
-import { getTxEffectNestedById } from "../l2TxEffect/get-tx-effect.js";
-import { getBlocksWhereRange } from "../utils.js";
+import { getBlocksWhereRange, getTableColumnsWithoutId } from "../utils.js";
 
 enum GetTypes {
   BlockHeight,
@@ -55,13 +54,13 @@ export const getBlocks = async ({
 }: {
   from: number | undefined;
   to: number | undefined;
-}): Promise<ChicmozL2Block[]> => {
+}): Promise<ChicmozL2BlockLight[]> => {
   return _getBlocks({ from, to, getType: GetTypes.Range });
 };
 
 export const getBlock = async (
   heightOrHash: number | HexString
-): Promise<ChicmozL2Block | null> => {
+): Promise<ChicmozL2BlockLight | null> => {
   const res = await _getBlocks(
     typeof heightOrHash === "number"
       ? { height: heightOrHash, getType: GetTypes.BlockHeight }
@@ -73,49 +72,27 @@ export const getBlock = async (
 
 type GetBlocksArgs = GetBlocksByHeight | GetBlocksByHash | GetBlocksByRange;
 
-const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2Block[]> => {
+const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2BlockLight[]> => {
   const whereRange =
     args.getType === GetTypes.Range ? getBlocksWhereRange(args) : undefined;
 
   if (args.getType === GetTypes.BlockHeight)
-    if (args.height < 0) throw new Error("Invalid height");
+    if (args.height < -1) throw new Error("Invalid height");
 
   const joinQuery = db()
     .select({
-      // TODO: can this be simplified using getTableColumns?
       hash: l2Block.hash,
       height: l2Block.height,
-      archiveRoot: archive.root,
-      archiveNextAvailableLeafIndex: archive.nextAvailableLeafIndex,
-      headerLastArchiveRoot: lastArchive.root,
-      headerLastArchiveNextAvailableLeafIndex:
-        lastArchive.nextAvailableLeafIndex,
-      headerTotalFees: header.totalFees,
-      ccNumTxs: contentCommitment.numTxs,
-      ccTxsEffectsHash: contentCommitment.txsEffectsHash,
-      ccInHash: contentCommitment.inHash,
-      ccOutHash: contentCommitment.outHash,
-      stateL1ToL2MessageTreeRoot: l1ToL2MessageTree.root,
-      stateL1ToL2MessageTreeNextAvailableLeafIndex:
-        l1ToL2MessageTree.nextAvailableLeafIndex,
-      stateNoteHashTreeRoot: noteHashTree.root,
-      stateNoteHashTreeNextAvailableLeafIndex:
-        noteHashTree.nextAvailableLeafIndex,
-      stateNullifierTreeRoot: nullifierTree.root,
-      stateNullifierTreeNextAvailableLeafIndex:
-        nullifierTree.nextAvailableLeafIndex,
-      statePublicDataTreeRoot: publicDataTree.root,
-      statePublicDataTreeNextAvailableLeafIndex:
-        publicDataTree.nextAvailableLeafIndex,
-      gvChainId: globalVariables.chainId,
-      gvVersion: globalVariables.version,
-      gvBlockNumber: globalVariables.blockNumber,
-      gvSlotNumber: globalVariables.slotNumber,
-      gvTimestamp: globalVariables.timestamp,
-      gvCoinbase: globalVariables.coinbase,
-      gvFeeRecipient: globalVariables.feeRecipient,
-      gvGasFeesFeePerDaGas: gasFees.feePerDaGas,
-      gvGasFeesFeePerL2Gas: gasFees.feePerL2Gas,
+      archive: getTableColumnsWithoutId(archive),
+      header_LastArchive: getTableColumnsWithoutId(lastArchive),
+      header_TotalFees: header.totalFees,
+      header_ContentCommitment: getTableColumnsWithoutId(contentCommitment),
+      header_State_L1ToL2MessageTree: getTableColumnsWithoutId(l1ToL2MessageTree),
+      header_State_Partial_NoteHashTree: getTableColumnsWithoutId(noteHashTree),
+      header_State_Partial_NullifierTree: getTableColumnsWithoutId(nullifierTree),
+      headerState_Partial_PublicDataTree: getTableColumnsWithoutId(publicDataTree),
+      header_GlobalVariables: getTableColumnsWithoutId(globalVariables),
+      header_GlobalVariables_GasFees: getTableColumnsWithoutId(gasFees),
       bodyId: body.id,
     })
     .from(l2Block)
@@ -146,7 +123,10 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2Block[]> => {
 
   switch (args.getType) {
     case GetTypes.BlockHeight:
-      whereQuery = joinQuery.where(eq(l2Block.height, args.height)).limit(1);
+      whereQuery =
+        args.height === -1
+          ? joinQuery.orderBy(desc(l2Block.height)).limit(1)
+          : joinQuery.where(eq(l2Block.height, args.height)).limit(1);
       break;
     case GetTypes.BlockHash:
       whereQuery = joinQuery.where(eq(l2Block.hash, args.hash)).limit(1);
@@ -161,95 +141,46 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2Block[]> => {
 
   const results = await whereQuery.execute();
 
-  const blocks: ChicmozL2Block[] = [];
-
+  const blocks: ChicmozL2BlockLight[] = [];
 
   for (const result of results) {
-    const txEffectsData = await db()
+    const txEffectsHashes = await db()
       .select({
-        txEffect: getTableColumns(txEffect),
+        hash: txEffect.hash,
       })
       .from(bodyToTxEffects)
-      .innerJoin(txEffect, eq(bodyToTxEffects.txEffectId, txEffect.id))
+      .innerJoin(txEffect, eq(bodyToTxEffects.txEffectHash, txEffect.hash))
       .where(eq(bodyToTxEffects.bodyId, result.bodyId))
       .orderBy(asc(txEffect.index))
       .execute();
 
-    // TODO: might be better to do this async
-    const txEffects = await Promise.all(
-      txEffectsData.map(async (data) => {
-        const nestedData = await getTxEffectNestedById(data.txEffect.id);
-        return {
-          ...data.txEffect,
-          ...nestedData,
-        };
-      })
-    );
-
     const blockData = {
       hash: result.hash,
       height: result.height,
-      archive: {
-        root: result.archiveRoot,
-        nextAvailableLeafIndex: result.archiveNextAvailableLeafIndex,
-      },
+      archive: result.archive,
       header: {
-        lastArchive: {
-          root: result.headerLastArchiveRoot,
-          nextAvailableLeafIndex:
-            result.headerLastArchiveNextAvailableLeafIndex,
-        },
-        totalFees: result.headerTotalFees,
-        contentCommitment: {
-          numTxs: result.ccNumTxs,
-          txsEffectsHash: result.ccTxsEffectsHash,
-          inHash: result.ccInHash,
-          outHash: result.ccOutHash,
-        },
+        lastArchive: result.header_LastArchive,
+        totalFees: result.header_TotalFees,
+        contentCommitment: result.header_ContentCommitment,
         state: {
-          l1ToL2MessageTree: {
-            root: result.stateL1ToL2MessageTreeRoot,
-            nextAvailableLeafIndex:
-              result.stateL1ToL2MessageTreeNextAvailableLeafIndex,
-          },
+          l1ToL2MessageTree: result.header_State_L1ToL2MessageTree,
           partial: {
-            noteHashTree: {
-              root: result.stateNoteHashTreeRoot,
-              nextAvailableLeafIndex:
-                result.stateNoteHashTreeNextAvailableLeafIndex,
-            },
-            nullifierTree: {
-              root: result.stateNullifierTreeRoot,
-              nextAvailableLeafIndex:
-                result.stateNullifierTreeNextAvailableLeafIndex,
-            },
-            publicDataTree: {
-              root: result.statePublicDataTreeRoot,
-              nextAvailableLeafIndex:
-                result.statePublicDataTreeNextAvailableLeafIndex,
-            },
+            noteHashTree: result.header_State_Partial_NoteHashTree,
+            nullifierTree: result.header_State_Partial_NullifierTree,
+            publicDataTree: result.headerState_Partial_PublicDataTree,
           },
         },
         globalVariables: {
-          chainId: result.gvChainId,
-          version: result.gvVersion,
-          blockNumber: result.gvBlockNumber,
-          slotNumber: result.gvSlotNumber,
-          timestamp: result.gvTimestamp,
-          coinbase: result.gvCoinbase,
-          feeRecipient: result.gvFeeRecipient,
-          gasFees: {
-            feePerDaGas: result.gvGasFeesFeePerDaGas,
-            feePerL2Gas: result.gvGasFeesFeePerL2Gas,
-          },
+          ...result.header_GlobalVariables,
+          gasFees: result.header_GlobalVariables_GasFees,
         },
       },
       body: {
-        txEffects: txEffects,
+        txEffects: txEffectsHashes,
       },
     };
 
-    blocks.push(await chicmozL2BlockSchema.parseAsync(blockData));
+    blocks.push(await chicmozL2BlockLightSchema.parseAsync(blockData));
   }
   return blocks;
 };

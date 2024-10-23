@@ -1,9 +1,9 @@
-import { FC } from "react";
+import { type FC } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { useParams } from "@tanstack/react-router";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { Button } from "~/components/ui";
-import { useGetBlockByHeight } from "~/hooks";
+import { useGetBlockByHeight, useGetTxEffectsByBlockHeight } from "~/hooks";
 import { API_URL, aztecExplorer } from "~/service/constants";
 import { getBlockDetails, getTxEffects } from "./util";
 import { truncateHashString } from "~/lib/create-hash-string";
@@ -19,6 +19,12 @@ export const BlockDetails: FC = () => {
     isLoading,
     error,
   } = useGetBlockByHeight(blockNumber);
+
+  const {
+    data: blockTxEffects,
+    isLoading: txEffectsLoading,
+    error: txEffectsError,
+  } = useGetTxEffectsByBlockHeight(Number(blockNumber));
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error.message}</p>;
@@ -49,7 +55,9 @@ export const BlockDetails: FC = () => {
               <p>View TxEffects</p>
             </Button>
           </div>
-          <TxEffectsTable txEffects={getTxEffects(latestBlock)} />
+          { txEffectsLoading ? <p>Loading...</p> : null }
+          { txEffectsError ? <p className="text-red-500">{txEffectsError.message}</p> : null }
+          { blockTxEffects ? <TxEffectsTable txEffects={getTxEffects(blockTxEffects, latestBlock)} /> : null }
         </div>
       </div>
     </div>
