@@ -10,11 +10,10 @@ interface Props {
   error?: Error | null;
 }
 
-export const xEffectsTable: FC<Props> = ({ txEffects, isLoading, error }) => {
+export const TxEffectsTable: FC<Props> = ({ txEffects, isLoading, error }) => {
   if (isLoading) return <Loader amout={5} />;
   if (!txEffects) return <div>No data</div>;
   if (error) return <p className="text-red-500">{error.message}</p>;
-
   return (
     <section className="relative mx-0 w-full transition-all">
       <DataTable data={txEffects} columns={TxEffectsTableColumns} />
