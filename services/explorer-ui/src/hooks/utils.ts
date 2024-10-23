@@ -1,4 +1,6 @@
+export const REFETCH_INTERVAL = 1_000; // NOTE: delay for queries dependant on "latest" data
 export const statsKey = "stats";
+
 export const queryKeyGenerator = {
   txEffectsByBlockHeight: (height: number) => [
     "txEffectsByBlockHeight",
@@ -14,4 +16,9 @@ export const queryKeyGenerator = {
   totalContractsLast24h: [statsKey, "totalContractsLast24h"],
   averageFees: [statsKey, "averageFees"],
   averageBlockTime: [statsKey, "averageBlockTime"],
+  contractClass: (classId?: string) => ["contractClass", classId],
+  latestContractClasses: (classId?: string) => ["latestContractClasses", classId],
+  contractInstance: (address: string) => ["contractInstance", address],
+  latestContractInstances: ["latestContractInstances"],
+  deployedContractInstances: (classId: string) => ["deployedContractInstances", classId],
 };

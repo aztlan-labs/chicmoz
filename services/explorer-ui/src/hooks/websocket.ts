@@ -49,6 +49,19 @@ const invalidateStats = async (
   queryClient: ReturnType<typeof useQueryClient>
 ) => queryClient.invalidateQueries({ queryKey: [statsKey], exact: false });
 
+const invalidateContracts = async (
+  queryClient: ReturnType<typeof useQueryClient>
+) => {
+  await Promise.all([
+    queryClient.invalidateQueries({
+      queryKey: queryKeyGenerator.latestContractClasses(),
+    }),
+    queryClient.invalidateQueries({
+      queryKey: queryKeyGenerator.latestContractInstances,
+    }),
+  ]);
+};
+
 const handleWebSocketMessage = async (
   queryClient: ReturnType<typeof useQueryClient>,
   data: string
@@ -56,7 +69,10 @@ const handleWebSocketMessage = async (
   const block = chicmozL2BlockSchema.parse(JSON.parse(data));
   updateBlock(queryClient, block);
   updateTxEffects(queryClient, block);
-  await invalidateStats(queryClient);
+  await Promise.all([
+    invalidateStats(queryClient),
+    invalidateContracts(queryClient),
+  ]);
 };
 
 export const useWebSocketConnection = () => {
