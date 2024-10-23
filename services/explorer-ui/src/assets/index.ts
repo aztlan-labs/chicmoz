@@ -8,14 +8,18 @@ import XIcon from "./x-icon.svg?react";
 import GithubIcon from "./github-icon.svg?react";
 import SearchIcon from "./search-icon.svg?react";
 import DiscordIcon from "./discord-icon.svg?react";
+import LoadingIcon from "./loading-icon.svg?react";
+import CrossIcon from "./cross-icon.svg?react";
 
 export {
   AztecIcon,
+  LoadingIcon,
   BackgroundArt,
   AztecIconWhite,
   ObscuraLogoWhite,
   CopyIcon,
   SuccessIcon,
+  CrossIcon,
   XIcon,
   GithubIcon,
   DiscordIcon,
