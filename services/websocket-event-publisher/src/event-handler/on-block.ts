@@ -21,5 +21,4 @@ export const onBlock = ({ block, blockNumber }: NewBlockEvent) => {
     return;
   }
   sendBlockToClients(parsedBlock);
-  // TODO: add contracts!
 };
