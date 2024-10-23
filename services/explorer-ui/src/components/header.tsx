@@ -34,7 +34,7 @@ export const Header = () => {
         void navigate({ to: `/contracts/instances/${instance.address}` });
       } else if (contractClass) {
         void navigate({
-          to: `/contracts/classes/${contractClass.contractClassId}`,
+          to: `/contracts/classes/${contractClass.contractClassId}/versions/${contractClass.version}`,
         });
       } else if (Object.values(data.results).every((arr) => !arr.length)) {
         setHasNoResults(true);
