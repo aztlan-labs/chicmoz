@@ -17,8 +17,14 @@ export const queryKeyGenerator = {
   averageFees: [statsKey, "averageFees"],
   averageBlockTime: [statsKey, "averageBlockTime"],
   contractClass: (classId?: string) => ["contractClass", classId],
-  latestContractClasses: (classId?: string) => ["latestContractClasses", classId],
+  latestContractClasses: (classId?: string) => [
+    "latestContractClasses",
+    classId,
+  ],
   contractInstance: (address: string) => ["contractInstance", address],
   latestContractInstances: ["latestContractInstances"],
-  deployedContractInstances: (classId: string) => ["deployedContractInstances", classId],
+  deployedContractInstances: (classId: string) => [
+    "deployedContractInstances",
+    classId,
+  ],
 };
