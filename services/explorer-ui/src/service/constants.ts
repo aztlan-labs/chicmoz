@@ -27,10 +27,26 @@ export const aztecExplorer = {
   getL2TotalContractsLast24h: "/l2/stats/total-contracts-last-24h",
   getL2AverageFees: "/l2/stats/average-fees",
   getL2AverageBlockTime: "/l2/stats/average-block-time",
+  getL2SearchResult: "/l2/search",
 };
 
-export const API_URL = typeof import.meta.env.VITE_API_URL === "string" ? import.meta.env.VITE_API_URL : "";
-export const WS_URL = typeof import.meta.env.VITE_WS_URL === "string" ? import.meta.env.VITE_WS_URL : "";
-export const DISCORD_URL = typeof import.meta.env.VITE_DISCORD_URL === "string" ? import.meta.env.VITE_DISCORD_URL : "";
-export const GITHUB_URL = typeof import.meta.env.VITE_GITHUB_URL === "string" ? import.meta.env.VITE_GITHUB_URL : "";
-export const X_URL = typeof import.meta.env.VITE_X_URL === "string" ? import.meta.env.VITE_X_URL : "";
+export const API_URL =
+  typeof import.meta.env.VITE_API_URL === "string"
+    ? import.meta.env.VITE_API_URL
+    : "";
+export const WS_URL =
+  typeof import.meta.env.VITE_WS_URL === "string"
+    ? import.meta.env.VITE_WS_URL
+    : "";
+export const DISCORD_URL =
+  typeof import.meta.env.VITE_DISCORD_URL === "string"
+    ? import.meta.env.VITE_DISCORD_URL
+    : "";
+export const GITHUB_URL =
+  typeof import.meta.env.VITE_GITHUB_URL === "string"
+    ? import.meta.env.VITE_GITHUB_URL
+    : "";
+export const X_URL =
+  typeof import.meta.env.VITE_X_URL === "string"
+    ? import.meta.env.VITE_X_URL
+    : "";
