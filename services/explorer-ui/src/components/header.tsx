@@ -1,5 +1,5 @@
-import { Link, useMatchRoute, useNavigate } from "@tanstack/react-router";
-import { Input, SearchInput } from "~/components/ui/input";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { SearchInput } from "~/components/ui/input";
 import { routes } from "~/routes/__root.tsx";
 import {
   Select,
@@ -88,30 +88,6 @@ export const Header = () => {
         </div>
 
         <div className="hidden md:flex flex-row justify-center items-center">
-          <Link
-            to={routes.home.route}
-            className="[&.active]:text-white mr-[30px] [&.active]:font-bold text-grey-light hover:text-white"
-          >
-            {routes.home.title}
-          </Link>
-          <Link
-            to={routes.blocks.route}
-            className="[&.active]:text-white mr-[30px] [&.active]:font-bold text-grey-light hover:text-white"
-          >
-            {routes.blocks.title}
-          </Link>
-          <Link
-            to={routes.txEffects.route}
-            className="[&.active]:text-white mr-[30px] [&.active]:font-bold text-grey-light hover:text-white"
-          >
-            {routes.txEffects.title}
-          </Link>
-          <Link
-            to={routes.contracts.route}
-            className="[&.active]:text-white mr-[30px] [&.active]:font-bold text-grey-light hover:text-white"
-          >
-            {routes.contracts.title}
-          </Link>
           <SearchInput
             placeholder="Search"
             onIconClick={handleSearch}
@@ -120,6 +96,30 @@ export const Header = () => {
             isLoading={isLoading}
             noResults={hasNoResults}
           />
+          <Link
+            to={routes.home.route}
+            className="[&.active]:text-white mr-8 [&.active]:font-bold text-grey-light hover:text-white md:mr-4"
+          >
+            {routes.home.title}
+          </Link>
+          <Link
+            to={routes.blocks.route}
+            className="[&.active]:text-white mr-8 [&.active]:font-bold text-grey-light hover:text-white md:mr-4"
+          >
+            {routes.blocks.title}
+          </Link>
+          <Link
+            to={routes.txEffects.route}
+            className="[&.active]:text-white mr-8 [&.active]:font-bold text-grey-light hover:text-white md:mr-4"
+          >
+            {routes.txEffects.title}
+          </Link>
+          <Link
+            to={routes.contracts.route}
+            className="[&.active]:text-white mr-8 [&.active]:font-bold text-grey-light hover:text-white md:mr-4"
+          >
+            {routes.contracts.title}
+          </Link>
         </div>
       </div>
     </div>

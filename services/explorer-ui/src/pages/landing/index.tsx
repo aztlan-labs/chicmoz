@@ -13,8 +13,6 @@ import {
 import { mapLatestBlocks, mapLatestTxEffects } from "./util";
 import { InfoBadge } from "~/components/info-badge";
 import { formatDuration } from "~/lib/utils";
-import { SearchBar } from "~/components/search-bar";
-import { SearchInput } from "~/components/ui";
 
 export const Landing: FC = () => {
   const { data: latestBlocks, isLoading, error } = useLatestBlocks();
