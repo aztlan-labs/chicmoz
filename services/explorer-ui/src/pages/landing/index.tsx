@@ -47,11 +47,11 @@ export const Landing: FC = () => {
     error: errorAvarageBlockTime,
   } = useAvarageBlockTime();
 
-  if (isLoading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error.message}</p>;
-  if (!latestBlocks) return <p>No data</p>;
 
-  const averageBlockTimeFormatted = formatDuration(Number(avarageBlockTime) / 1000);
+  const averageBlockTimeFormatted = formatDuration(
+    Number(avarageBlockTime) / 1000,
+  );
 
   return (
     <div className="mx-auto px-5 max-w-[1440px] md:px-[70px]">
@@ -96,12 +96,18 @@ export const Landing: FC = () => {
       <div className="flex flex-col gap-4 md:flex-row">
         <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
           <h2>Latest Blocks</h2>
-          <BlocksTable blocks={mapLatestBlocks(latestBlocks)} />
+          <BlocksTable
+            blocks={mapLatestBlocks(latestBlocks)}
+            isLoading={isLoading}
+          />
         </div>
 
         <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
           <h2>Latest TX-Effects</h2>
-          <TxEffectsTable txEffects={mapLatestTxEffects(latestBlocks)} />
+          <TxEffectsTable
+            txEffects={mapLatestTxEffects(latestBlocks)}
+            isLoading={isLoading}
+          />
         </div>
       </div>
     </div>

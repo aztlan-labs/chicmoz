@@ -2,7 +2,8 @@ import { type ChicmozL2Block } from "@chicmoz-pkg/types";
 import { blockSchema } from "~/components/blocks/blocks-schema";
 import { getTxEffectTableObj } from "~/components/tx-effects/tx-effects-schema";
 
-export const mapLatestBlocks = (latestBlocks: ChicmozL2Block[]) => {
+export const mapLatestBlocks = (latestBlocks?: ChicmozL2Block[]) => {
+  if (!latestBlocks) return undefined;
   return latestBlocks.map((block) => {
     return blockSchema.parse({
       height: block.height,
@@ -14,10 +15,11 @@ export const mapLatestBlocks = (latestBlocks: ChicmozL2Block[]) => {
   });
 };
 
-export const mapLatestTxEffects = (latestBlocks: ChicmozL2Block[]) => {
+export const mapLatestTxEffects = (latestBlocks?: ChicmozL2Block[]) => {
+  if (!latestBlocks) return undefined;
   return latestBlocks.flatMap((block) => {
     return block.body.txEffects.map((txEffect) =>
-      getTxEffectTableObj(txEffect, block)
+      getTxEffectTableObj(txEffect, block),
     );
   });
 };

@@ -1,4 +1,5 @@
 import { type FC, useMemo } from "react";
+import { Loader } from "./loader";
 
 interface InfoBadgeProps {
   title: string;
@@ -13,16 +14,18 @@ export const InfoBadge: FC<InfoBadgeProps> = ({
   error,
 }) => {
   const text = useMemo(() => {
-    if (isLoading) return "Loading";
     if (error) return error.message;
     if (data) return data;
     return "No Data";
-  }, [data, isLoading, error]);
-
+  }, [data, error]);
   return (
     <div className="flex flex-col bg-white w-5/12 justify-between rounded-lg shadow-md p-4 md:w-96">
       <p className="text-sm">{title}</p>
-      <h3 className="text-primary">{text}</h3>
+      {isLoading ? (
+        <Loader amout={1} />
+      ) : (
+        <h3 className="text-primary">{text}</h3>
+      )}
     </div>
   );
 };
