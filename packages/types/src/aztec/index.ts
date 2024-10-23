@@ -4,7 +4,7 @@ export { type NodeInfo };
 export * from "./l2Block.js";
 export * from "./l2Contract.js";
 export * from "./l2TxEffect.js";
-export * from "./deluxe.js";
+export * from "./special.js";
 export { frNumberSchema } from "./utils.js";
 
 export const transformNodeInfo = (nodeInfo: NodeInfo): StringifiedNodeInfo => {

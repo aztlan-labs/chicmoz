@@ -28,3 +28,12 @@ export const chicmozL2TxEffectDeluxeSchema = z.object({
 export type ChicmozL2TxEffectDeluxe = z.infer<
   typeof chicmozL2TxEffectDeluxeSchema
 >;
+
+export const chicmozL2BlockLightSchema = z.object({
+  ...chicmozL2BlockSchema.shape,
+  body: z.object({
+    txEffects: z.array(chicmozL2TxEffectSchema.pick({ hash: true })),
+  }),
+});
+
+export type ChicmozL2BlockLight = z.infer<typeof chicmozL2BlockLightSchema>;

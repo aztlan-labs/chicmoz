@@ -1,3 +1,19 @@
+CREATE TABLE IF NOT EXISTS "aztec-chain-connection" (
+	"hash" varchar PRIMARY KEY NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"chain_height" integer NOT NULL,
+	"latest_processed_height" integer NOT NULL,
+	"counter" integer DEFAULT 0 NOT NULL,
+	"rpc_url" varchar NOT NULL,
+	"node_version" varchar NOT NULL,
+	"l1_chain_id" integer NOT NULL,
+	"protocol_version" integer NOT NULL,
+	"enr" varchar,
+	"l1_contract_addresses" jsonb NOT NULL,
+	"protocol_contract_addresses" jsonb NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "archive" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"root" varchar(66),
@@ -18,7 +34,7 @@ CREATE TABLE IF NOT EXISTS "body" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "body_to_tx_effects" (
 	"body_id" uuid NOT NULL,
-	"tx_effect_id" uuid NOT NULL
+	"tx_effect_hash" varchar NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "function_logs" (
@@ -42,8 +58,7 @@ CREATE TABLE IF NOT EXISTS "public_data_write" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tx_effect" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"hash" varchar NOT NULL,
+	"hash" varchar PRIMARY KEY NOT NULL,
 	"index" integer NOT NULL,
 	"revert_code" smallint NOT NULL,
 	"transaction_fee" bigint NOT NULL,
@@ -56,13 +71,13 @@ CREATE TABLE IF NOT EXISTS "tx_effect" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tx_effect_to_logs" (
-	"tx_effect_id" uuid NOT NULL,
+	"tx_effect_hash" varchar NOT NULL,
 	"function_log_id" uuid NOT NULL,
 	"log_id" uuid NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tx_effect_to_public_data_write" (
-	"tx_effect_id" uuid NOT NULL,
+	"tx_effect_hash" varchar NOT NULL,
 	"index" integer NOT NULL,
 	"public_data_write_id" uuid NOT NULL
 );
@@ -193,13 +208,13 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "body_to_tx_effects" ADD CONSTRAINT "body_to_tx_effects_tx_effect_id_tx_effect_id_fk" FOREIGN KEY ("tx_effect_id") REFERENCES "public"."tx_effect"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "body_to_tx_effects" ADD CONSTRAINT "body_to_tx_effects_tx_effect_hash_tx_effect_hash_fk" FOREIGN KEY ("tx_effect_hash") REFERENCES "public"."tx_effect"("hash") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "tx_effect_to_logs" ADD CONSTRAINT "tx_effect_to_logs_tx_effect_id_tx_effect_id_fk" FOREIGN KEY ("tx_effect_id") REFERENCES "public"."tx_effect"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "tx_effect_to_logs" ADD CONSTRAINT "tx_effect_to_logs_tx_effect_hash_tx_effect_hash_fk" FOREIGN KEY ("tx_effect_hash") REFERENCES "public"."tx_effect"("hash") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -217,7 +232,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "tx_effect_to_public_data_write" ADD CONSTRAINT "tx_effect_to_public_data_write_tx_effect_id_tx_effect_id_fk" FOREIGN KEY ("tx_effect_id") REFERENCES "public"."tx_effect"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "tx_effect_to_public_data_write" ADD CONSTRAINT "tx_effect_to_public_data_write_tx_effect_hash_tx_effect_hash_fk" FOREIGN KEY ("tx_effect_hash") REFERENCES "public"."tx_effect"("hash") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

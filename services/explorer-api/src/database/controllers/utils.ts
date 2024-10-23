@@ -1,4 +1,4 @@
-import { and, gte, lt } from "drizzle-orm";
+import { Table, and, getTableColumns, gte, lt } from "drizzle-orm";
 import { ZodError } from "zod";
 import { logger } from "../../logger.js";
 import { DB_MAX_BLOCKS } from "../../environment.js";
@@ -6,9 +6,12 @@ import { l2Block } from "../schema/index.js";
 
 export const dbParseErrorCallback = (e: Error) => {
   if (e instanceof ZodError) {
+    const newError = new Error("Internal server error (DB)");
+    newError.name = "DbParseError";
+    newError.cause = e;
+    newError.stack = e.stack;
     logger.error(`FATAL - dbParseErrorCallback: ${JSON.stringify(e.issues)}`);
-    // NOTE: throwing normal error so we give 500 status code in http-server
-    throw new Error("Internal server error (DB)");
+    throw newError;
   } else {
     // NOTE: this should never happen
     logger.error(
@@ -16,6 +19,12 @@ export const dbParseErrorCallback = (e: Error) => {
     );
     throw e;
   }
+};
+
+export const getTableColumnsWithoutId = <T extends Table>(table: T) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id, ...tableCols } = getTableColumns(table);
+  return tableCols;
 };
 
 export const getBlocksWhereRange = ({
