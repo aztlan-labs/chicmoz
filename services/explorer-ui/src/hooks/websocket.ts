@@ -1,5 +1,4 @@
 import {
-  chicmozL2BlockLightSchema,
   chicmozL2TxEffectSchema,
   type ChicmozL2BlockLight,
   type ChicmozL2Block,
