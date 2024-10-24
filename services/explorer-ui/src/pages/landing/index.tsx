@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import { BlocksTable } from "~/components/blocks/blocks-table";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
-import { useLatestBlocks } from "~/hooks";
+import { useGetTxEffectsByBlockHeightRange, useLatestBlocks } from "~/hooks";
 import {
   useAvarageBlockTime,
   useAvarageFees,
@@ -10,7 +10,7 @@ import {
   useTotalTxEffects,
   useTotalTxEffectsLast24h,
 } from "~/hooks/stats";
-import { mapLatestBlocks, mapLatestTxEffects } from "./util";
+import { mapLatestBlocks, parseTxEffectsData } from "./util";
 import { InfoBadge } from "~/components/info-badge";
 import { formatDuration } from "~/lib/utils";
 
@@ -46,6 +46,19 @@ export const Landing: FC = () => {
     isLoading: loadingAvarageBlockTime,
     error: errorAvarageBlockTime,
   } = useAvarageBlockTime();
+
+  const latestTxEffectsData = useGetTxEffectsByBlockHeightRange(
+    latestBlocks?.at(-1)?.height,
+    latestBlocks?.at(0)?.height,
+  );
+
+  if (!latestBlocks) return <p>No data</p>;
+
+  const {
+    isLoadingTxEffects,
+    txEffectsErrorMsg: txEffectsError,
+    latestTxEffects,
+  } = parseTxEffectsData(latestTxEffectsData, latestBlocks);
 
   const averageBlockTimeFormatted = formatDuration(
     Number(avarageBlockTime) / 1000,
@@ -103,9 +116,9 @@ export const Landing: FC = () => {
         <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
           <h3>Latest TX-Effects</h3>
           <TxEffectsTable
-            txEffects={mapLatestTxEffects(latestBlocks)}
-            isLoading={isLoading}
-            error={error}
+            txEffects={latestTxEffects}
+            isLoading={isLoadingTxEffects}
+            error={txEffectsError}
           />
         </div>
       </div>

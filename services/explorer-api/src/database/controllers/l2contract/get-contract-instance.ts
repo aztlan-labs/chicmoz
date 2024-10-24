@@ -2,33 +2,22 @@ import {
   ChicmozL2ContractInstanceDeluxe,
   HexString,
 } from "@chicmoz-pkg/types";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, getTableColumns } from "drizzle-orm";
 import { getDb as db } from "../../../database/index.js";
 import { logger } from "../../../logger.js";
 import {
   l2ContractClassRegistered,
   l2ContractInstanceDeployed,
 } from "../../schema/l2contract/index.js";
+import { parseDeluxe } from "./utils.js";
 
 export const getL2DeployedContractInstanceByAddress = async (
   address: HexString
-): Promise<
-  | ChicmozL2ContractInstanceDeluxe
-  | null
-> => {
+): Promise<ChicmozL2ContractInstanceDeluxe | null> => {
   const result = await db()
     .select({
-      address: l2ContractInstanceDeployed.address,
-      blockHash: l2ContractInstanceDeployed.blockHash,
-      version: l2ContractInstanceDeployed.version,
-      salt: l2ContractInstanceDeployed.salt,
-      contractClassId: l2ContractInstanceDeployed.contractClassId,
-      initializationHash: l2ContractInstanceDeployed.initializationHash,
-      publicKeysHash: l2ContractInstanceDeployed.publicKeysHash,
-      deployer: l2ContractInstanceDeployed.deployer,
-      artifactHash: l2ContractClassRegistered.artifactHash,
-      privateFunctionsRoot: l2ContractClassRegistered.privateFunctionsRoot,
-      packedPublicBytecode: l2ContractClassRegistered.packedPublicBytecode,
+      instance: getTableColumns(l2ContractInstanceDeployed),
+      class: getTableColumns(l2ContractClassRegistered),
     })
     .from(l2ContractInstanceDeployed)
     .innerJoin(
@@ -53,10 +42,7 @@ export const getL2DeployedContractInstanceByAddress = async (
     return null;
   }
 
-  const contractInstance = result[0];
+  const { instance, class: contractClass } = result[0];
 
-  return {
-    ...contractInstance,
-    packedPublicBytecode: Buffer.from(contractInstance.packedPublicBytecode),
-  };
+  return parseDeluxe(contractClass, instance);
 };

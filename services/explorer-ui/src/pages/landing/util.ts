@@ -1,8 +1,12 @@
-import { type ChicmozL2Block } from "@chicmoz-pkg/types";
+import { type ChicmozL2BlockLight } from "@chicmoz-pkg/types";
 import { blockSchema } from "~/components/blocks/blocks-schema";
-import { getTxEffectTableObj } from "~/components/tx-effects/tx-effects-schema";
+import {
+  type TxEffectTableSchema,
+  getTxEffectTableObj,
+} from "~/components/tx-effects/tx-effects-schema";
+import { type useGetTxEffectsByBlockHeightRange } from "~/hooks";
 
-export const mapLatestBlocks = (latestBlocks?: ChicmozL2Block[]) => {
+export const mapLatestBlocks = (latestBlocks?: ChicmozL2BlockLight[]) => {
   if (!latestBlocks) return undefined;
   return latestBlocks.map((block) => {
     return blockSchema.parse({
@@ -15,11 +19,28 @@ export const mapLatestBlocks = (latestBlocks?: ChicmozL2Block[]) => {
   });
 };
 
-export const mapLatestTxEffects = (latestBlocks?: ChicmozL2Block[]) => {
-  if (!latestBlocks) return undefined;
-  return latestBlocks.flatMap((block) => {
-    return block.body.txEffects.map((txEffect) =>
-      getTxEffectTableObj(txEffect, block),
-    );
+export const parseTxEffectsData = (
+  txEffectsData: ReturnType<typeof useGetTxEffectsByBlockHeightRange>,
+  latestBlocks: ChicmozL2BlockLight[],
+) => {
+  let isLoadingTxEffects = false;
+  let txEffectsErrorMsg: string | undefined = undefined;
+
+  let latestTxEffects: TxEffectTableSchema[] = [];
+  txEffectsData.forEach((data, i) => {
+    if (data.isLoading) isLoadingTxEffects = true;
+    if (data.error) txEffectsErrorMsg = data.error.message;
+    if (data.data) {
+      latestTxEffects = latestTxEffects.concat(
+        data.data.map((txEffect) =>
+          getTxEffectTableObj(txEffect, latestBlocks[i]),
+        ),
+      );
+    }
   });
+  return {
+    isLoadingTxEffects,
+    txEffectsErrorMsg,
+    latestTxEffects,
+  };
 };

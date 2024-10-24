@@ -31,7 +31,6 @@ export const mapContractInstances = (
       blockHeight: contractInstance.blockHeight,
       version: contractInstance.version,
       contractClassId: contractInstance.contractClassId,
-      publicKeysHash: contractInstance.publicKeysHash,
       deployer: contractInstance.deployer,
     }),
   );

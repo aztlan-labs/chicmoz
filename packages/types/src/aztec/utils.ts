@@ -34,6 +34,13 @@ export const frSchema = z.preprocess(
     .regex(/^0x[0-9a-fA-F]+$/)
 );
 
+export const frPointSchema = z.object({
+  x: frSchema,
+  y: frSchema,
+  isInfinite: z.boolean(),
+  kind: z.enum(["point"]),
+});
+
 export const frNumberSchema = z.preprocess((val) => {
   if (typeof val === "number") return val;
   const v = frToHexString(val);

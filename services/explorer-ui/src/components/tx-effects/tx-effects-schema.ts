@@ -1,5 +1,5 @@
 import {
-  type ChicmozL2Block,
+  type ChicmozL2BlockLight,
   type ChicmozL2TxEffect,
 } from "@chicmoz-pkg/types";
 import { z } from "zod";
@@ -8,7 +8,7 @@ export type TxEffectTableSchema = z.infer<typeof txEffectSchema>;
 
 export const getTxEffectTableObj = (
   txEffect: ChicmozL2TxEffect,
-  block: ChicmozL2Block
+  block: ChicmozL2BlockLight
 ): TxEffectTableSchema => {
   return txEffectSchema.parse({
     hash: txEffect.hash,

@@ -58,7 +58,6 @@ export const Contracts: FC = () => {
             error={errorClasses}
           />
         </div>
-
         <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
           <h3>Latest Contract Instances</h3>
           <ContractInstancesTable

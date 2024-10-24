@@ -1,13 +1,11 @@
-import { ChicmozL2Block } from "@chicmoz-pkg/types";
+import { ChicmozL2BlockLight } from "@chicmoz-pkg/types";
 import { desc } from "drizzle-orm";
 import { getDb as db } from "../../../database/index.js";
 import { l2Block } from "../../../database/schema/l2block/index.js";
 import { getBlock } from "./get-block.js";
 
-export const getLatestBlock = async (): Promise<ChicmozL2Block | null> => {
-  const height = await getLatestHeight();
-  if (height === null) return null;
-  return getBlock(height);
+export const getLatestBlock = async (): Promise<ChicmozL2BlockLight | null> => {
+  return getBlock(-1);
 };
 
 export const getLatestHeight = async (): Promise<number | null> => {

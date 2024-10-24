@@ -13,7 +13,7 @@ export const TxEffectsAPI = {
     );
     return validateResponse(chicmozL2TxEffectDeluxeSchema, response.data);
   },
-  getTxEffectsByHeight: async (
+  getTxEffectsByBlockHeight: async (
     height: number,
   ): Promise<ChicmozL2TxEffectDeluxe[]> => {
     const response = await client.get(
@@ -21,7 +21,7 @@ export const TxEffectsAPI = {
     );
     return validateResponse(z.array(chicmozL2TxEffectDeluxeSchema), response.data);
   },
-  getTxEffectByHeightAndIndex: async (
+  getTxEffectByBlockHeightAndIndex: async (
     height: number,
     index: number,
   ): Promise<number> => {

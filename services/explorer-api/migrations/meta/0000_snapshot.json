@@ -1,9 +1,100 @@
 {
-  "id": "1546764d-c77b-4d7b-b16d-f2ffbe453dd1",
+  "id": "ad1e928c-ffdb-4195-aed7-8cd62a64f19d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.aztec-chain-connection": {
+      "name": "aztec-chain-connection",
+      "schema": "",
+      "columns": {
+        "hash": {
+          "name": "hash",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "chain_height": {
+          "name": "chain_height",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "latest_processed_height": {
+          "name": "latest_processed_height",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "counter": {
+          "name": "counter",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "rpc_url": {
+          "name": "rpc_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "node_version": {
+          "name": "node_version",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "l1_chain_id": {
+          "name": "l1_chain_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "protocol_version": {
+          "name": "protocol_version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "enr": {
+          "name": "enr",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "l1_contract_addresses": {
+          "name": "l1_contract_addresses",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "protocol_contract_addresses": {
+          "name": "protocol_contract_addresses",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.archive": {
       "name": "archive",
       "schema": "",
@@ -128,9 +219,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "tx_effect_id": {
-          "name": "tx_effect_id",
-          "type": "uuid",
+        "tx_effect_hash": {
+          "name": "tx_effect_hash",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         }
@@ -146,12 +237,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "body_to_tx_effects_tx_effect_id_tx_effect_id_fk": {
-          "name": "body_to_tx_effects_tx_effect_id_tx_effect_id_fk",
+        "body_to_tx_effects_tx_effect_hash_tx_effect_hash_fk": {
+          "name": "body_to_tx_effects_tx_effect_hash_tx_effect_hash_fk",
           "tableFrom": "body_to_tx_effects",
           "tableTo": "tx_effect",
-          "columnsFrom": ["tx_effect_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": ["tx_effect_hash"],
+          "columnsTo": ["hash"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -262,17 +353,10 @@
       "name": "tx_effect",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
         "hash": {
           "name": "hash",
           "type": "varchar",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
         },
         "index": {
@@ -339,9 +423,9 @@
       "name": "tx_effect_to_logs",
       "schema": "",
       "columns": {
-        "tx_effect_id": {
-          "name": "tx_effect_id",
-          "type": "uuid",
+        "tx_effect_hash": {
+          "name": "tx_effect_hash",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -360,12 +444,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "tx_effect_to_logs_tx_effect_id_tx_effect_id_fk": {
-          "name": "tx_effect_to_logs_tx_effect_id_tx_effect_id_fk",
+        "tx_effect_to_logs_tx_effect_hash_tx_effect_hash_fk": {
+          "name": "tx_effect_to_logs_tx_effect_hash_tx_effect_hash_fk",
           "tableFrom": "tx_effect_to_logs",
           "tableTo": "tx_effect",
-          "columnsFrom": ["tx_effect_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": ["tx_effect_hash"],
+          "columnsTo": ["hash"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -395,9 +479,9 @@
       "name": "tx_effect_to_public_data_write",
       "schema": "",
       "columns": {
-        "tx_effect_id": {
-          "name": "tx_effect_id",
-          "type": "uuid",
+        "tx_effect_hash": {
+          "name": "tx_effect_hash",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -416,12 +500,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "tx_effect_to_public_data_write_tx_effect_id_tx_effect_id_fk": {
-          "name": "tx_effect_to_public_data_write_tx_effect_id_tx_effect_id_fk",
+        "tx_effect_to_public_data_write_tx_effect_hash_tx_effect_hash_fk": {
+          "name": "tx_effect_to_public_data_write_tx_effect_hash_tx_effect_hash_fk",
           "tableFrom": "tx_effect_to_public_data_write",
           "tableTo": "tx_effect",
-          "columnsFrom": ["tx_effect_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": ["tx_effect_hash"],
+          "columnsTo": ["hash"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1031,15 +1115,105 @@
           "primaryKey": false,
           "notNull": true
         },
-        "public_keys_hash": {
-          "name": "public_keys_hash",
+        "deployer": {
+          "name": "deployer",
           "type": "varchar(66)",
           "primaryKey": false,
           "notNull": true
         },
-        "deployer": {
-          "name": "deployer",
+        "public_keys_master_nullifier_public_key_x": {
+          "name": "public_keys_master_nullifier_public_key_x",
           "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_nullifier_public_key_y": {
+          "name": "public_keys_master_nullifier_public_key_y",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_nullifier_public_key_is_infinite": {
+          "name": "public_keys_master_nullifier_public_key_is_infinite",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_nullifier_public_key_kind": {
+          "name": "public_keys_master_nullifier_public_key_kind",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_incoming_viewing_public_key_x": {
+          "name": "public_keys_master_incoming_viewing_public_key_x",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_incoming_viewing_public_key_y": {
+          "name": "public_keys_master_incoming_viewing_public_key_y",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_incoming_viewing_public_key_is_infinite": {
+          "name": "public_keys_master_incoming_viewing_public_key_is_infinite",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_incoming_viewing_public_key_kind": {
+          "name": "public_keys_master_incoming_viewing_public_key_kind",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_outgoing_viewing_public_key_x": {
+          "name": "public_keys_master_outgoing_viewing_public_key_x",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_outgoing_viewing_public_key_y": {
+          "name": "public_keys_master_outgoing_viewing_public_key_y",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_outgoing_viewing_public_key_is_infinite": {
+          "name": "public_keys_master_outgoing_viewing_public_key_is_infinite",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_outgoing_viewing_public_key_kind": {
+          "name": "public_keys_master_outgoing_viewing_public_key_kind",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_tagging_public_key_x": {
+          "name": "public_keys_master_tagging_public_key_x",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_tagging_public_key_y": {
+          "name": "public_keys_master_tagging_public_key_y",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_tagging_public_key_is_infinite": {
+          "name": "public_keys_master_tagging_public_key_is_infinite",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_tagging_public_key_kind": {
+          "name": "public_keys_master_tagging_public_key_kind",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         }

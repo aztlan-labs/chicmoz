@@ -1,9 +1,9 @@
-import { FC } from "react";
+import { type FC } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { useParams } from "@tanstack/react-router";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { Button } from "~/components/ui";
-import { useGetBlockByHeight } from "~/hooks";
+import { useGetBlockByHeight, useGetTxEffectsByBlockHeight } from "~/hooks";
 import { API_URL, aztecExplorer } from "~/service/constants";
 import { getBlockDetails, getTxEffects } from "./util";
 import { truncateHashString } from "~/lib/create-hash-string";
@@ -19,6 +19,12 @@ export const BlockDetails: FC = () => {
     isLoading,
     error,
   } = useGetBlockByHeight(blockNumber);
+
+  const {
+    data: blockTxEffects,
+    isLoading: txEffectsLoading,
+    error: txEffectsError,
+  } = useGetTxEffectsByBlockHeight(Number(blockNumber));
 
   const apiEndpointUrl = `${API_ENDPOINT_URL}${blockNumber}`;
 
@@ -49,9 +55,9 @@ export const BlockDetails: FC = () => {
             </Button>
           </div>
           <TxEffectsTable
-            txEffects={getTxEffects(latestBlock)}
-            isLoading={isLoading}
-            error={error}
+            txEffects={getTxEffects(blockTxEffects, latestBlock)}
+            isLoading={isLoading || txEffectsLoading}
+            error={error ?? txEffectsError}
           />
         </div>
       </div>

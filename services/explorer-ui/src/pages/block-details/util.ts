@@ -1,8 +1,11 @@
-import { type ChicmozL2Block } from "@chicmoz-pkg/types";
+import {
+  type ChicmozL2Block,
+  type ChicmozL2BlockLight,
+} from "@chicmoz-pkg/types";
 import { getTxEffectTableObj } from "~/components/tx-effects/tx-effects-schema";
 import { formatTimeSince } from "~/lib/utils";
 
-export const getBlockDetails = (latestBlock: ChicmozL2Block) => {
+export const getBlockDetails = (latestBlock: ChicmozL2BlockLight) => {
   const timestamp = latestBlock.header.globalVariables.timestamp;
   const timeSince = formatTimeSince(timestamp);
 
@@ -45,9 +48,9 @@ export const getBlockDetails = (latestBlock: ChicmozL2Block) => {
   ];
 };
 
-export const getTxEffects = (latestBlock?: ChicmozL2Block) => {
-  if (!latestBlock) return undefined;
-  return latestBlock.body.txEffects.map((tx) =>
-    getTxEffectTableObj(tx, latestBlock),
-  );
+export const getTxEffects = (
+  txEffects: ChicmozL2Block["body"]["txEffects"],
+  latestBlock: ChicmozL2BlockLight,
+) => {
+  return txEffects.map((tx) => getTxEffectTableObj(tx, latestBlock));
 };

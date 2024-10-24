@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { type FC } from "react";
 import { BlocksTable } from "~/components/blocks/blocks-table.tsx";
 import { useLatestBlocks } from "~/hooks";
 import { parseLatestBlocks } from "./util";

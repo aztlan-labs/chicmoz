@@ -13,7 +13,6 @@ const text = {
   blockHeight: "BLOCK HEIGHT",
   version: "VERSION",
   contractClassId: "CONTRACT CLASS ID",
-  publicKeysHash: "PUBLIC KEYS HASH",
   deployer: "DEPLOYER",
 };
 
@@ -71,24 +70,6 @@ export const contractsTableColumns: ColumnDef<ContractInstance>[] = [
       <CopyableText
         toCopy={row.getValue("contractClassId")}
         text={truncateHashString(row.getValue("contractClassId"))}
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "publicKeysHash",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        className="text-purple-dark text-sm "
-        column={column}
-        title={text.publicKeysHash}
-      />
-    ),
-    cell: ({ row }) => (
-      <CopyableText
-        toCopy={row.getValue("publicKeysHash")}
-        text={truncateHashString(row.getValue("publicKeysHash"))}
       />
     ),
     enableSorting: false,
