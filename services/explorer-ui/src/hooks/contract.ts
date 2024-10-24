@@ -4,46 +4,51 @@ import {
 } from "@chicmoz-pkg/types";
 import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ContractL2API } from "~/api";
+import { REFETCH_INTERVAL, queryKeyGenerator } from "./utils";
 
 export const useContractClasses = (
-  classId?: string,
+  classId?: string
 ): UseQueryResult<ChicmozL2ContractClassRegisteredEvent[], Error> => {
   return useQuery<ChicmozL2ContractClassRegisteredEvent[], Error>({
-    queryKey: ["contractClass", classId],
+    queryKey: queryKeyGenerator.contractClass(classId),
     queryFn: () => ContractL2API.getContractClasses(classId),
   });
 };
 
 export const useLatestContractClasses = (
-  address?: string,
+  classId?: string
 ): UseQueryResult<ChicmozL2ContractClassRegisteredEvent[], Error> => {
   return useQuery<ChicmozL2ContractClassRegisteredEvent[], Error>({
-    queryKey: ["latestContractClasses", address],
-    queryFn: () => ContractL2API.getContractClasses(address),
+    queryKey: queryKeyGenerator.latestContractClasses(classId),
+    queryFn: () => ContractL2API.getContractClasses(classId),
+    refetchInterval: REFETCH_INTERVAL,
   });
 };
 
 export const useContractInstance = (
-  address: string,
+  address: string
 ): UseQueryResult<ChicmozL2ContractInstanceDeluxe, Error> => {
   return useQuery<ChicmozL2ContractInstanceDeluxe, Error>({
-    queryKey: ["contractInstance", address],
+    queryKey: queryKeyGenerator.contractInstance(address),
     queryFn: () => ContractL2API.getContractInstance(address),
   });
 };
 
-export const useLatestContractInstances = (): UseQueryResult<ChicmozL2ContractInstanceDeluxe[], Error> => {
+export const useLatestContractInstances = (): UseQueryResult<
+  ChicmozL2ContractInstanceDeluxe[],
+  Error
+> => {
   return useQuery<ChicmozL2ContractInstanceDeluxe[], Error>({
-    queryKey: ["latestContractInstances"],
+    queryKey: queryKeyGenerator.latestContractInstances,
     queryFn: () => ContractL2API.getContractInstances(),
   });
-}
+};
 
 export const useDeployedContractInstances = (
-  classId: string,
+  classId: string
 ): UseQueryResult<ChicmozL2ContractInstanceDeluxe[], Error> => {
   return useQuery<ChicmozL2ContractInstanceDeluxe[], Error>({
-    queryKey: ["deployedContractInstances", classId],
+    queryKey: queryKeyGenerator.deployedContractInstances(classId),
     queryFn: () => ContractL2API.getContractInstancesByClassId(classId),
   });
-}
+};

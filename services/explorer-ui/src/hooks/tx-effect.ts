@@ -5,26 +5,22 @@ import {
   useQueries,
 } from "@tanstack/react-query";
 import { TxEffectsAPI } from "~/api";
+import { queryKeyGenerator } from "./utils";
 
 export const useGetTxEffectByHash = (
-  id: string
+  hash: string
 ): UseQueryResult<ChicmozL2TxEffectDeluxe, Error> => {
   return useQuery<ChicmozL2TxEffectDeluxe, Error>({
-    queryKey: ["txEffectByHash", id],
-    queryFn: () => TxEffectsAPI.getTxEffectByHash(id),
+    queryKey: queryKeyGenerator.txEffectByHash(hash),
+    queryFn: () => TxEffectsAPI.getTxEffectByHash(hash),
   });
 };
-
-const generateTxEffectByBlockHeightKey = (height: number) => [
-  "txEffectsByBlockHeight",
-  height,
-];
 
 export const useGetTxEffectsByBlockHeight = (
   height: number
 ): UseQueryResult<ChicmozL2TxEffectDeluxe[], Error> => {
   return useQuery<ChicmozL2TxEffectDeluxe[], Error>({
-    queryKey: generateTxEffectByBlockHeightKey(height),
+    queryKey: queryKeyGenerator.txEffectsByBlockHeight(height),
     queryFn: () => TxEffectsAPI.getTxEffectsByBlockHeight(height),
   });
 };
@@ -38,7 +34,7 @@ export const useGetTxEffectsByBlockHeightRange = (
       from === undefined || to === undefined
         ? []
         : new Array(to - from + 1).fill(0).map((_, i) => ({
-            queryKey: generateTxEffectByBlockHeightKey(from + i),
+            queryKey: queryKeyGenerator.txEffectsByBlockHeight(from + i),
             queryFn: () => TxEffectsAPI.getTxEffectsByBlockHeight(from + i),
           })),
   });

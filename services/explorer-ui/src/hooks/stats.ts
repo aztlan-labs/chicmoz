@@ -1,44 +1,45 @@
 import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import { statsL2Api } from "~/api/stats";
+import {queryKeyGenerator} from "./utils";
 
 export const useTotalTxEffects = (): UseQueryResult<string, Error> => {
   return useQuery<string, Error>({
-    queryKey: ["useTotalTxEffects"],
+    queryKey: queryKeyGenerator.totalTxEffects,
     queryFn: statsL2Api.getL2TotalTxEffects,
   });
 };
 
 export const useTotalTxEffectsLast24h = (): UseQueryResult<string, Error> => {
   return useQuery<string, Error>({
-    queryKey: ["useTotalTxEffectsLast24h"],
+    queryKey: queryKeyGenerator.totalTxEffectsLast24h,
     queryFn: statsL2Api.getL2TotalTxEffectsLast24h,
   });
 };
 
 export const useTotalContracts = (): UseQueryResult<string, Error> => {
   return useQuery<string, Error>({
-    queryKey: ["useTotalContracts"],
+    queryKey: queryKeyGenerator.totalContracts,
     queryFn: statsL2Api.getL2TotalContracts,
   });
 };
 
 export const useTotalContractsLast24h = (): UseQueryResult<string, Error> => {
   return useQuery<string, Error>({
-    queryKey: ["useTotalContractsLast24h"],
+    queryKey: queryKeyGenerator.totalContractsLast24h,
     queryFn: statsL2Api.getL2TotalContractsLast24h,
   });
 };
 
 export const useAvarageFees = (): UseQueryResult<string, Error> => {
   return useQuery<string, Error>({
-    queryKey: ["useAvarageFees"],
+    queryKey: queryKeyGenerator.averageFees,
     queryFn: statsL2Api.getL2AverageFees,
   });
 };
 
 export const useAvarageBlockTime = (): UseQueryResult<string, Error> => {
   return useQuery<string, Error>({
-    queryKey: ["useAvarageBlockTime"],
+    queryKey: queryKeyGenerator.averageBlockTime,
     queryFn: statsL2Api.getL2AverageBlockTime,
   });
 };

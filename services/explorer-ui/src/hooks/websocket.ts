@@ -1,7 +1,79 @@
-import { useEffect } from "react";
+import {
+  chicmozL2TxEffectSchema,
+  type ChicmozL2BlockLight,
+  type ChicmozL2Block,
+  chicmozL2BlockSchema,
+} from "@chicmoz-pkg/types";
 import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { WS_URL } from "~/service/constants";
-import { type ChicmozL2Block, chicmozL2BlockSchema } from "@chicmoz-pkg/types";
+import { queryKeyGenerator, statsKey } from "./utils";
+
+const updateBlock = (
+  queryClient: ReturnType<typeof useQueryClient>,
+  block: ChicmozL2BlockLight
+) => {
+  queryClient.setQueryData(queryKeyGenerator.latestBlock, block);
+  queryClient.setQueryData(
+    queryKeyGenerator.latestBlocks,
+    (oldData: ChicmozL2BlockLight[] | undefined) => {
+      if (!oldData) return [block];
+      if (oldData.find((b) => b.hash === block.hash)) return oldData;
+      return [block, ...oldData];
+    }
+  );
+};
+
+const updateTxEffects = (
+  queryClient: ReturnType<typeof useQueryClient>,
+  block: ChicmozL2Block
+) => {
+  const txEffects = block.body.txEffects.map((txEffect) => {
+    const effects = chicmozL2TxEffectSchema.parse({
+      ...txEffect,
+      blockHeight: block.height,
+      timestamp: block.header.globalVariables.timestamp,
+    });
+    queryClient.setQueryData(
+      queryKeyGenerator.txEffectByHash(effects.hash),
+      effects
+    );
+  });
+  queryClient.setQueryData(
+    queryKeyGenerator.txEffectsByBlockHeight(block.height),
+    txEffects
+  );
+};
+
+const invalidateStats = async (
+  queryClient: ReturnType<typeof useQueryClient>
+) => queryClient.invalidateQueries({ queryKey: [statsKey], exact: false });
+
+const invalidateContracts = async (
+  queryClient: ReturnType<typeof useQueryClient>
+) => {
+  await Promise.all([
+    queryClient.invalidateQueries({
+      queryKey: queryKeyGenerator.latestContractClasses(),
+    }),
+    queryClient.invalidateQueries({
+      queryKey: queryKeyGenerator.latestContractInstances,
+    }),
+  ]);
+};
+
+const handleWebSocketMessage = async (
+  queryClient: ReturnType<typeof useQueryClient>,
+  data: string
+) => {
+  const block = chicmozL2BlockSchema.parse(JSON.parse(data));
+  updateBlock(queryClient, block);
+  updateTxEffects(queryClient, block);
+  await Promise.all([
+    invalidateStats(queryClient),
+    invalidateContracts(queryClient),
+  ]);
+};
 
 export const useWebSocketConnection = () => {
   const queryClient = useQueryClient();
@@ -11,26 +83,18 @@ export const useWebSocketConnection = () => {
 
     websocket.onopen = () => console.log("WebSocket Connected");
 
-    websocket.onmessage = (event) => {
+    websocket.onmessage = async (event) => {
       if (typeof event.data !== "string")
         console.error("WebSocket message is not a string");
-      handleWebSocketMessage(event.data as string);
+      try {
+        await handleWebSocketMessage(queryClient, event.data as string);
+      } catch (error) {
+        console.error("Error handling WebSocket message", error);
+      }
     };
 
     websocket.onclose = () => console.log("WebSocket Disconnected");
 
     return () => websocket.close();
   }, []);
-
-  const handleWebSocketMessage = (data: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const d = JSON.parse(data);
-    const block = chicmozL2BlockSchema.parse(d);
-    queryClient.setQueryData(["latestBlock"], block);
-    queryClient.setQueryData(["latestBlocks"], (oldData: ChicmozL2Block[] | undefined) => {
-      if (!oldData) return [block];
-      if (oldData.find((b) => b.hash === block.hash)) return oldData;
-      return [block, ...oldData];
-    });
-  };
 };
