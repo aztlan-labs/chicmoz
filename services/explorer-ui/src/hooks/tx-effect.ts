@@ -34,8 +34,8 @@ export const useGetTxEffectsByBlockHeightRange = (
       from === undefined || to === undefined
         ? []
         : new Array(to - from + 1).fill(0).map((_, i) => ({
-            queryKey: queryKeyGenerator.txEffectsByBlockHeight(from + i),
-            queryFn: () => TxEffectsAPI.getTxEffectsByBlockHeight(from + i),
+            queryKey: queryKeyGenerator.txEffectsByBlockHeight(to - i),
+            queryFn: () => TxEffectsAPI.getTxEffectsByBlockHeight(to - i),
           })),
   });
 };
