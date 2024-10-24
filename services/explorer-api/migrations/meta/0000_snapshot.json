@@ -1,0 +1,1260 @@
+{
+  "id": "ad1e928c-ffdb-4195-aed7-8cd62a64f19d",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.aztec-chain-connection": {
+      "name": "aztec-chain-connection",
+      "schema": "",
+      "columns": {
+        "hash": {
+          "name": "hash",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "chain_height": {
+          "name": "chain_height",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "latest_processed_height": {
+          "name": "latest_processed_height",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "counter": {
+          "name": "counter",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "rpc_url": {
+          "name": "rpc_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "node_version": {
+          "name": "node_version",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "l1_chain_id": {
+          "name": "l1_chain_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "protocol_version": {
+          "name": "protocol_version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "enr": {
+          "name": "enr",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "l1_contract_addresses": {
+          "name": "l1_contract_addresses",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "protocol_contract_addresses": {
+          "name": "protocol_contract_addresses",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.archive": {
+      "name": "archive",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "root": {
+          "name": "root",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "next_available_leaf_index": {
+          "name": "next_available_leaf_index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.l2Block": {
+      "name": "l2Block",
+      "schema": "",
+      "columns": {
+        "hash": {
+          "name": "hash",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "height": {
+          "name": "height",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "archive_id": {
+          "name": "archive_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "header_id": {
+          "name": "header_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "body_id": {
+          "name": "body_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "l2Block_archive_id_archive_id_fk": {
+          "name": "l2Block_archive_id_archive_id_fk",
+          "tableFrom": "l2Block",
+          "tableTo": "archive",
+          "columnsFrom": ["archive_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "l2Block_header_id_header_id_fk": {
+          "name": "l2Block_header_id_header_id_fk",
+          "tableFrom": "l2Block",
+          "tableTo": "header",
+          "columnsFrom": ["header_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "l2Block_body_id_body_id_fk": {
+          "name": "l2Block_body_id_body_id_fk",
+          "tableFrom": "l2Block",
+          "tableTo": "body",
+          "columnsFrom": ["body_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.body": {
+      "name": "body",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.body_to_tx_effects": {
+      "name": "body_to_tx_effects",
+      "schema": "",
+      "columns": {
+        "body_id": {
+          "name": "body_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tx_effect_hash": {
+          "name": "tx_effect_hash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "body_to_tx_effects_body_id_body_id_fk": {
+          "name": "body_to_tx_effects_body_id_body_id_fk",
+          "tableFrom": "body_to_tx_effects",
+          "tableTo": "body",
+          "columnsFrom": ["body_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "body_to_tx_effects_tx_effect_hash_tx_effect_hash_fk": {
+          "name": "body_to_tx_effects_tx_effect_hash_tx_effect_hash_fk",
+          "tableFrom": "body_to_tx_effects",
+          "tableTo": "tx_effect",
+          "columnsFrom": ["tx_effect_hash"],
+          "columnsTo": ["hash"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.function_logs": {
+      "name": "function_logs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "index": {
+          "name": "index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.logs": {
+      "name": "logs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "index": {
+          "name": "index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data": {
+          "name": "data",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "masked_contract_address": {
+          "name": "masked_contract_address",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contract_address": {
+          "name": "contract_address",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.public_data_write": {
+      "name": "public_data_write",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "leaf_index": {
+          "name": "leaf_index",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "new_value": {
+          "name": "new_value",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.tx_effect": {
+      "name": "tx_effect",
+      "schema": "",
+      "columns": {
+        "hash": {
+          "name": "hash",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "index": {
+          "name": "index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "revert_code": {
+          "name": "revert_code",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "transaction_fee": {
+          "name": "transaction_fee",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "note_hashes": {
+          "name": "note_hashes",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nullifiers": {
+          "name": "nullifiers",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "l2_to_l1_msgs": {
+          "name": "l2_to_l1_msgs",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "note_encrypted_logs_length": {
+          "name": "note_encrypted_logs_length",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "encrypted_logs_length": {
+          "name": "encrypted_logs_length",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unencrypted_logs_length": {
+          "name": "unencrypted_logs_length",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.tx_effect_to_logs": {
+      "name": "tx_effect_to_logs",
+      "schema": "",
+      "columns": {
+        "tx_effect_hash": {
+          "name": "tx_effect_hash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "function_log_id": {
+          "name": "function_log_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "log_id": {
+          "name": "log_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "tx_effect_to_logs_tx_effect_hash_tx_effect_hash_fk": {
+          "name": "tx_effect_to_logs_tx_effect_hash_tx_effect_hash_fk",
+          "tableFrom": "tx_effect_to_logs",
+          "tableTo": "tx_effect",
+          "columnsFrom": ["tx_effect_hash"],
+          "columnsTo": ["hash"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "tx_effect_to_logs_function_log_id_function_logs_id_fk": {
+          "name": "tx_effect_to_logs_function_log_id_function_logs_id_fk",
+          "tableFrom": "tx_effect_to_logs",
+          "tableTo": "function_logs",
+          "columnsFrom": ["function_log_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "tx_effect_to_logs_log_id_logs_id_fk": {
+          "name": "tx_effect_to_logs_log_id_logs_id_fk",
+          "tableFrom": "tx_effect_to_logs",
+          "tableTo": "logs",
+          "columnsFrom": ["log_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.tx_effect_to_public_data_write": {
+      "name": "tx_effect_to_public_data_write",
+      "schema": "",
+      "columns": {
+        "tx_effect_hash": {
+          "name": "tx_effect_hash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "index": {
+          "name": "index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_data_write_id": {
+          "name": "public_data_write_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "tx_effect_to_public_data_write_tx_effect_hash_tx_effect_hash_fk": {
+          "name": "tx_effect_to_public_data_write_tx_effect_hash_tx_effect_hash_fk",
+          "tableFrom": "tx_effect_to_public_data_write",
+          "tableTo": "tx_effect",
+          "columnsFrom": ["tx_effect_hash"],
+          "columnsTo": ["hash"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "tx_effect_to_public_data_write_public_data_write_id_public_data_write_id_fk": {
+          "name": "tx_effect_to_public_data_write_public_data_write_id_public_data_write_id_fk",
+          "tableFrom": "tx_effect_to_public_data_write",
+          "tableTo": "public_data_write",
+          "columnsFrom": ["public_data_write_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.content_commitment": {
+      "name": "content_commitment",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "num_txs": {
+          "name": "num_txs",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "txs_effects_hash": {
+          "name": "txs_effects_hash",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "in_hash": {
+          "name": "in_hash",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "out_hash": {
+          "name": "out_hash",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.gas_fees": {
+      "name": "gas_fees",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "fee_per_da_gas": {
+          "name": "fee_per_da_gas",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fee_per_l2_gas": {
+          "name": "fee_per_l2_gas",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.global_variables": {
+      "name": "global_variables",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "chain_id": {
+          "name": "chain_id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "version": {
+          "name": "version",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "block_number": {
+          "name": "block_number",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slot_number": {
+          "name": "slot_number",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "coinbase": {
+          "name": "coinbase",
+          "type": "varchar(42)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fee_recipient": {
+          "name": "fee_recipient",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gas_fees_id": {
+          "name": "gas_fees_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "global_variables_gas_fees_id_gas_fees_id_fk": {
+          "name": "global_variables_gas_fees_id_gas_fees_id_fk",
+          "tableFrom": "global_variables",
+          "tableTo": "gas_fees",
+          "columnsFrom": ["gas_fees_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.header": {
+      "name": "header",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "last_archive_id": {
+          "name": "last_archive_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content_commitment_id": {
+          "name": "content_commitment_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "state_id": {
+          "name": "state_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "global_variables_id": {
+          "name": "global_variables_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_fees": {
+          "name": "total_fees",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "header_last_archive_id_last_archive_id_fk": {
+          "name": "header_last_archive_id_last_archive_id_fk",
+          "tableFrom": "header",
+          "tableTo": "last_archive",
+          "columnsFrom": ["last_archive_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "header_content_commitment_id_content_commitment_id_fk": {
+          "name": "header_content_commitment_id_content_commitment_id_fk",
+          "tableFrom": "header",
+          "tableTo": "content_commitment",
+          "columnsFrom": ["content_commitment_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "header_state_id_state_id_fk": {
+          "name": "header_state_id_state_id_fk",
+          "tableFrom": "header",
+          "tableTo": "state",
+          "columnsFrom": ["state_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "header_global_variables_id_global_variables_id_fk": {
+          "name": "header_global_variables_id_global_variables_id_fk",
+          "tableFrom": "header",
+          "tableTo": "global_variables",
+          "columnsFrom": ["global_variables_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.l1_to_l2_message_tree": {
+      "name": "l1_to_l2_message_tree",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "root": {
+          "name": "root",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "next_available_leaf_index": {
+          "name": "next_available_leaf_index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.last_archive": {
+      "name": "last_archive",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "root": {
+          "name": "root",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "next_available_leaf_index": {
+          "name": "next_available_leaf_index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.note_hash_tree": {
+      "name": "note_hash_tree",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "root": {
+          "name": "root",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "next_available_leaf_index": {
+          "name": "next_available_leaf_index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.nullifier_tree": {
+      "name": "nullifier_tree",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "root": {
+          "name": "root",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "next_available_leaf_index": {
+          "name": "next_available_leaf_index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.partial": {
+      "name": "partial",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "note_hash_tree_id": {
+          "name": "note_hash_tree_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nullifier_tree_id": {
+          "name": "nullifier_tree_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_data_tree_id": {
+          "name": "public_data_tree_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "partial_note_hash_tree_id_note_hash_tree_id_fk": {
+          "name": "partial_note_hash_tree_id_note_hash_tree_id_fk",
+          "tableFrom": "partial",
+          "tableTo": "note_hash_tree",
+          "columnsFrom": ["note_hash_tree_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "partial_nullifier_tree_id_nullifier_tree_id_fk": {
+          "name": "partial_nullifier_tree_id_nullifier_tree_id_fk",
+          "tableFrom": "partial",
+          "tableTo": "nullifier_tree",
+          "columnsFrom": ["nullifier_tree_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "partial_public_data_tree_id_public_data_tree_id_fk": {
+          "name": "partial_public_data_tree_id_public_data_tree_id_fk",
+          "tableFrom": "partial",
+          "tableTo": "public_data_tree",
+          "columnsFrom": ["public_data_tree_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.public_data_tree": {
+      "name": "public_data_tree",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "root": {
+          "name": "root",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "next_available_leaf_index": {
+          "name": "next_available_leaf_index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.state": {
+      "name": "state",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "l1_to_l2_message_tree_id": {
+          "name": "l1_to_l2_message_tree_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "partial_id": {
+          "name": "partial_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "state_l1_to_l2_message_tree_id_l1_to_l2_message_tree_id_fk": {
+          "name": "state_l1_to_l2_message_tree_id_l1_to_l2_message_tree_id_fk",
+          "tableFrom": "state",
+          "tableTo": "l1_to_l2_message_tree",
+          "columnsFrom": ["l1_to_l2_message_tree_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "state_partial_id_partial_id_fk": {
+          "name": "state_partial_id_partial_id_fk",
+          "tableFrom": "state",
+          "tableTo": "partial",
+          "columnsFrom": ["partial_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.l2_contract_class_registered": {
+      "name": "l2_contract_class_registered",
+      "schema": "",
+      "columns": {
+        "block_hash": {
+          "name": "block_hash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contract_class_id": {
+          "name": "contract_class_id",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "version": {
+          "name": "version",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "artifact_hash": {
+          "name": "artifact_hash",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "private_functions_root": {
+          "name": "private_functions_root",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "packed_public_bytecode": {
+          "name": "packed_public_bytecode",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "l2_contract_class_registered_block_hash_l2Block_hash_fk": {
+          "name": "l2_contract_class_registered_block_hash_l2Block_hash_fk",
+          "tableFrom": "l2_contract_class_registered",
+          "tableTo": "l2Block",
+          "columnsFrom": ["block_hash"],
+          "columnsTo": ["hash"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "contract_class_id_version": {
+          "name": "contract_class_id_version",
+          "columns": ["contract_class_id", "version"]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.l2_contract_instance_deployed": {
+      "name": "l2_contract_instance_deployed",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "block_hash": {
+          "name": "block_hash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "address": {
+          "name": "address",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "salt": {
+          "name": "salt",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contract_class_id": {
+          "name": "contract_class_id",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "initialization_hash": {
+          "name": "initialization_hash",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "deployer": {
+          "name": "deployer",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_nullifier_public_key_x": {
+          "name": "public_keys_master_nullifier_public_key_x",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_nullifier_public_key_y": {
+          "name": "public_keys_master_nullifier_public_key_y",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_nullifier_public_key_is_infinite": {
+          "name": "public_keys_master_nullifier_public_key_is_infinite",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_nullifier_public_key_kind": {
+          "name": "public_keys_master_nullifier_public_key_kind",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_incoming_viewing_public_key_x": {
+          "name": "public_keys_master_incoming_viewing_public_key_x",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_incoming_viewing_public_key_y": {
+          "name": "public_keys_master_incoming_viewing_public_key_y",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_incoming_viewing_public_key_is_infinite": {
+          "name": "public_keys_master_incoming_viewing_public_key_is_infinite",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_incoming_viewing_public_key_kind": {
+          "name": "public_keys_master_incoming_viewing_public_key_kind",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_outgoing_viewing_public_key_x": {
+          "name": "public_keys_master_outgoing_viewing_public_key_x",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_outgoing_viewing_public_key_y": {
+          "name": "public_keys_master_outgoing_viewing_public_key_y",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_outgoing_viewing_public_key_is_infinite": {
+          "name": "public_keys_master_outgoing_viewing_public_key_is_infinite",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_outgoing_viewing_public_key_kind": {
+          "name": "public_keys_master_outgoing_viewing_public_key_kind",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_tagging_public_key_x": {
+          "name": "public_keys_master_tagging_public_key_x",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_tagging_public_key_y": {
+          "name": "public_keys_master_tagging_public_key_y",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_tagging_public_key_is_infinite": {
+          "name": "public_keys_master_tagging_public_key_is_infinite",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_keys_master_tagging_public_key_kind": {
+          "name": "public_keys_master_tagging_public_key_kind",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "l2_contract_instance_deployed_block_hash_l2Block_hash_fk": {
+          "name": "l2_contract_instance_deployed_block_hash_l2Block_hash_fk",
+          "tableFrom": "l2_contract_instance_deployed",
+          "tableTo": "l2Block",
+          "columnsFrom": ["block_hash"],
+          "columnsTo": ["hash"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "contract_class": {
+          "name": "contract_class",
+          "tableFrom": "l2_contract_instance_deployed",
+          "tableTo": "l2_contract_class_registered",
+          "columnsFrom": ["contract_class_id", "version"],
+          "columnsTo": ["contract_class_id", "version"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "l2_contract_instance_deployed_contract_class_id_address_version_unique": {
+          "name": "l2_contract_instance_deployed_contract_class_id_address_version_unique",
+          "nullsNotDistinct": false,
+          "columns": ["contract_class_id", "address", "version"]
+        }
+      }
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
