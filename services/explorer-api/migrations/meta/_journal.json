@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1728300459549,
-      "tag": "0000_friendly_bushwacker",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1729069394990,
-      "tag": "0001_breezy_mastermind",
+      "when": 1729706498916,
+      "tag": "0000_glossy_fixer",
       "breakpoints": true
     }
   ]
