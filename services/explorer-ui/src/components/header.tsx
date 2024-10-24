@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Input } from "~/components/ui/input";
+import { SearchInput } from "~/components/ui/input";
 import { routes } from "~/routes/__root.tsx";
 import {
   Select,
@@ -9,14 +9,53 @@ import {
   SelectValue,
 } from "./ui";
 import { ChicmozHomeLink } from "./ui/chicmoz-home-link";
+import { useEffect, useState } from "react";
+import { useSearch } from "~/hooks/search";
 
 export const Header = () => {
   const navigate = useNavigate();
+  const [searchValue, setSearchValue] = useState("");
+  const [hasNoResults, setHasNoResults] = useState(false);
+  const { data, isLoading, error, refetch, isSuccess, fetchStatus } =
+    useSearch(searchValue);
 
+  useEffect(() => {
+    if (data) {
+      const [block] = data.results.blocks;
+      const [txEffect] = data.results.txEffects;
+      const [instance] = data.results.contractInstances;
+      const [contractClass] = data.results.registeredContractClasses;
+
+      if (block) {
+        void navigate({ to: `/blocks/${block.hash}` });
+      } else if (txEffect) {
+        void navigate({ to: `/tx-effects/${txEffect.hash}` });
+      } else if (instance) {
+        void navigate({ to: `/contracts/instances/${instance.address}` });
+      } else if (contractClass) {
+        void navigate({
+          to: `/contracts/classes/${contractClass.contractClassId}/versions/${contractClass.version}`,
+        });
+      } else if (Object.values(data.results).every((arr) => !arr.length)) {
+        setHasNoResults(true);
+      }
+    }
+    if (error) setHasNoResults(true);
+    if (!data && isSuccess) setHasNoResults(true);
+  }, [data, error, isSuccess, navigate, fetchStatus]);
+
+  const handleOnChange = (value: string) => {
+    setHasNoResults(false);
+    setSearchValue(value);
+  };
   const getSelectedItem = (value: string) => {
     void navigate({
       to: value,
     });
+  };
+
+  const handleSearch = () => {
+    void refetch();
   };
 
   return (
@@ -48,42 +87,41 @@ export const Header = () => {
           </Select>
         </div>
 
-        <div className="hidden md:block">
+        <div className="hidden md:flex flex-row justify-center items-center">
+          <SearchInput
+            placeholder="Search"
+            onIconClick={handleSearch}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            onChange={(e) => handleOnChange(e.target.value)}
+            isLoading={isLoading}
+            noResults={hasNoResults}
+          />
           <Link
             to={routes.home.route}
-            className="[&.active]:text-white mr-[30px] [&.active]:font-bold text-grey-light hover:text-white"
+            className="[&.active]:text-white mr-8 [&.active]:font-bold text-grey-light hover:text-white md:mr-4"
           >
             {routes.home.title}
           </Link>
           <Link
             to={routes.blocks.route}
-            className="[&.active]:text-white mr-[30px] [&.active]:font-bold text-grey-light hover:text-white"
+            className="[&.active]:text-white mr-8 [&.active]:font-bold text-grey-light hover:text-white md:mr-4"
           >
             {routes.blocks.title}
           </Link>
           <Link
             to={routes.txEffects.route}
-            className="[&.active]:text-white mr-[30px] [&.active]:font-bold text-grey-light hover:text-white"
+            className="[&.active]:text-white mr-8 [&.active]:font-bold text-grey-light hover:text-white md:mr-4"
           >
             {routes.txEffects.title}
           </Link>
           <Link
             to={routes.contracts.route}
-            className="[&.active]:text-white mr-[30px] [&.active]:font-bold text-grey-light hover:text-white"
+            className="[&.active]:text-white mr-8 [&.active]:font-bold text-grey-light hover:text-white md:mr-4"
           >
             {routes.contracts.title}
           </Link>
-          <SearchBar />
         </div>
       </div>
-    </div>
-  );
-};
-
-export const SearchBar = () => {
-  return (
-    <div className="ml-[30px]">
-      <Input className="bg-white hidden lg:w-[450px]" />
     </div>
   );
 };
