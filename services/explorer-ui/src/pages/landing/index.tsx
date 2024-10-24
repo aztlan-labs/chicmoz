@@ -52,8 +52,6 @@ export const Landing: FC = () => {
     latestBlocks?.at(0)?.height,
   );
 
-  if (!latestBlocks) return <p>No data</p>;
-
   const {
     isLoadingTxEffects,
     txEffectsErrorMsg: txEffectsError,

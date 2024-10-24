@@ -23,7 +23,6 @@ export const TxEffects: FC = () => {
     latestBlocks?.at(-1)?.height,
     latestBlocks?.at(0)?.height,
   );
-  if (!latestBlocks) return <>no data</>;
   const {
     isLoadingTxEffects,
     txEffectsErrorMsg: txEffectsError,
