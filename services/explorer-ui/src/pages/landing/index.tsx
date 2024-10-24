@@ -108,6 +108,7 @@ export const Landing: FC = () => {
           <BlocksTable
             blocks={mapLatestBlocks(latestBlocks)}
             isLoading={isLoading}
+            error={error}
           />
         </div>
 

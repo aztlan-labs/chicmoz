@@ -1,4 +1,4 @@
-import { type ChicmozL2BlockLight } from "@chicmoz-pkg/types";
+import { type ChicmozL2Block } from "@chicmoz-pkg/types";
 import { blockSchema } from "~/components/blocks/blocks-schema";
 
 export const parseLatestBlocks = (latestBlocks?: ChicmozL2Block[]) => {
