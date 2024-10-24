@@ -1,21 +1,68 @@
 import { Router } from "express";
 import * as controller from "./controllers/index.js";
 import { paths } from "./paths_and_validation.js";
+import assert from "assert";
+import { logger } from "../../logger.js";
 
 export const openApiPaths = {
   ...controller.openapi_GET_LATEST_HEIGHT,
   ...controller.openapi_GET_LATEST_BLOCK,
   ...controller.openapi_GET_BLOCK,
   ...controller.openapi_GET_BLOCKS,
+
   ...controller.openapi_GET_L2_TX_EFFECTS_BY_BLOCK_HEIGHT,
   ...controller.openapi_GET_L2_TX_EFFECT_BY_BLOCK_HEIGHT_AND_INDEX,
   ...controller.openapi_GET_L2_TX_EFFECT_BY_TX_HASH,
+
+  ...controller.openapi_GET_L2_REGISTERED_CONTRACT_CLASS,
+  ...controller.openapi_GET_L2_REGISTERED_CONTRACT_CLASSES_ALL_VERSIONS,
+  ...controller.openapi_GET_L2_REGISTERED_CONTRACT_CLASSES,
+
   ...controller.openapi_GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH,
+  ...controller.openapi_GET_L2_CONTRACT_INSTANCES_BY_CONTRACT_CLASS_ID,
   ...controller.openapi_GET_L2_CONTRACT_INSTANCE,
   ...controller.openapi_GET_L2_CONTRACT_INSTANCES,
+
+  ...controller.openapi_SEARCH,
 };
 
+const statsPaths = [
+  {
+    path: paths.statsTotalTxEffects,
+    controller: controller.GET_STATS_TOTAL_TX_EFFECTS,
+  },
+  {
+    path: paths.statsTotalTxEffectsLast24h,
+    controller: controller.GET_STATS_TOTAL_TX_EFFECTS_LAST_24H,
+  },
+  {
+    path: paths.statsTotalContracts,
+    controller: controller.GET_STATS_TOTAL_CONTRACTS,
+  },
+  {
+    path: paths.statsTotalContractsLast24h,
+    controller: controller.GET_STATS_TOTAL_CONTRACTS_LAST_24H,
+  },
+  {
+    path: paths.statsAverageFees,
+    controller: controller.GET_STATS_AVERAGE_FEES,
+  },
+  {
+    path: paths.statsAverageBlockTime,
+    controller: controller.GET_STATS_AVERAGE_BLOCK_TIME,
+  },
+];
+
 export const init = ({ router }: { router: Router }) => {
+  const totalPaths = Object.keys(paths).length;
+  const totalStatsPaths = statsPaths.length;
+  const totalOpenApiPaths = Object.keys(openApiPaths).length;
+  try {
+    assert(totalPaths - totalStatsPaths === totalOpenApiPaths);
+  } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    logger.error(`STARTING SERVER WITHOUT SUFFICIENT DOCS! ${totalPaths} - ${totalStatsPaths} !== ${totalOpenApiPaths}`);
+  }
   router.get("/l2/index", controller.GET_ROUTES);
   router.get("/aztec-chain-connection", controller.GET_AZTEC_CHAIN_CONNECTION);
 
@@ -32,19 +79,16 @@ export const init = ({ router }: { router: Router }) => {
   router.get(paths.contractClassesByClassId, controller.GET_L2_REGISTERED_CONTRACT_CLASSES_ALL_VERSIONS);
   router.get(paths.contractClasses, controller.GET_L2_REGISTERED_CONTRACT_CLASSES);
 
-  router.get(paths.contractInstancesByBlockHash, controller.GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH);
+  router.get( paths.contractInstancesByBlockHash, controller.GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH);
   router.get(paths.contractInstancesByContractClassId, controller.GET_L2_CONTRACT_INSTANCES_BY_CONTRACT_CLASS_ID);
   router.get(paths.contractInstance, controller.GET_L2_CONTRACT_INSTANCE);
   router.get(paths.contractInstances, controller.GET_L2_CONTRACT_INSTANCES);
 
   router.get(paths.search, controller.L2_SEARCH);
 
-  router.get(paths.statsTotalTxEffects, controller.GET_STATS_TOTAL_TX_EFFECTS);
-  router.get(paths.statsTotalTxEffectsLast24h, controller.GET_STATS_TOTAL_TX_EFFECTS_LAST_24H);
-  router.get(paths.statsTotalContracts, controller.GET_STATS_TOTAL_CONTRACTS);
-  router.get(paths.statsTotalContractsLast24h, controller.GET_STATS_TOTAL_CONTRACTS_LAST_24H);
-  router.get(paths.statsAverageFees, controller.GET_STATS_AVERAGE_FEES);
-  router.get(paths.statsAverageBlockTime, controller.GET_STATS_AVERAGE_BLOCK_TIME);
+  statsPaths.forEach(({ path, controller }) => {
+    router.get(path, controller);
+  });
 
   return router;
 };
