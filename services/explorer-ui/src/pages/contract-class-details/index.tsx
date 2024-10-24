@@ -6,7 +6,6 @@ import { API_URL, aztecExplorer } from "~/service/constants";
 import { getContractData } from "./util";
 import { ContractInstancesTable } from "~/components/contracts/instances/table";
 import { mapContractClasses, mapContractInstances } from "../contract/util";
-import { TableBadge } from "~/components/table-badge";
 import { ContractClassesTable } from "~/components/contracts/classes/table";
 
 export const ContractClassDetails: FC = () => {
@@ -26,7 +25,7 @@ export const ContractClassDetails: FC = () => {
 
   if (!id) return <div>No classId</div>;
   const selectedVersion = classesData?.find(
-    (contract) => contract.version === Number(version)
+    (contract) => contract.version === Number(version),
   );
   if (!selectedVersion) return <div>No data</div>;
 
@@ -49,29 +48,25 @@ export const ContractClassDetails: FC = () => {
           </div>
         </div>
         <div className="flex flex-col gap-4 md:flex-row ">
-          <TableBadge
-            title="Versions"
-            isLoading={isLoadingClasses}
-            error={errorClasses}
-          >
-            {classesData && (
+          <div className="flex flex-col gap-4 md:flex-row ">
+            <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
+              <h3>Latest Contract Classes</h3>
               <ContractClassesTable
                 contracts={mapContractClasses(classesData)}
+                isLoading={isLoadingClasses}
+                error={errorClasses}
               />
-            )}
-          </TableBadge>
+            </div>
 
-          <TableBadge
-            title="Total Contract Instances"
-            isLoading={isLoadingInstances}
-            error={errorInstances}
-          >
-            {instancesData && (
+            <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
+              <h3>Latest Contract Instances</h3>
               <ContractInstancesTable
                 contracts={mapContractInstances(instancesData)}
+                isLoading={isLoadingInstances}
+                error={errorInstances}
               />
-            )}
-          </TableBadge>
+            </div>
+          </div>
         </div>
       </div>
     </div>

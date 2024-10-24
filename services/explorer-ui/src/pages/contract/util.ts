@@ -6,8 +6,9 @@ import { contractClassSchema } from "~/components/contracts/classes/schema";
 import { contractInstanceSchema } from "~/components/contracts/instances/schema";
 
 export const mapContractClasses = (
-  classesData: ChicmozL2ContractClassRegisteredEvent[],
+  classesData?: ChicmozL2ContractClassRegisteredEvent[],
 ) => {
+  if (!classesData) return undefined;
   return classesData.map((contractClass) =>
     contractClassSchema.parse({
       blockHash: contractClass.blockHash,
@@ -20,8 +21,9 @@ export const mapContractClasses = (
 };
 
 export const mapContractInstances = (
-  instancesData: ChicmozL2ContractInstanceDeluxe[],
+  instancesData?: ChicmozL2ContractInstanceDeluxe[],
 ) => {
+  if (!instancesData) return undefined;
   return instancesData.map((contractInstance) =>
     contractInstanceSchema.parse({
       address: contractInstance.address,

@@ -17,7 +17,14 @@ import {
 } from "@tanstack/react-table";
 import { Fragment, useMemo, useState } from "react";
 import { DataTablePagination } from "~/components/data-table/data-table-pagination.tsx";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "~/components/ui/table";
 
 import { cn } from "~/lib/utils";
 
@@ -25,7 +32,10 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({
+  columns,
+  data,
+}: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -63,14 +73,11 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   });
 
   return (
-    <div className="space-y-4 bg-white rounded-xl p-10 mb-[100px]">
+    <div className="space-y-4 bg-white rounded-xl p-3 mb-7">
       <div className="min-w-full">
         <Table className="border-spacing-x-1">
           <DataTableHeader table={table} />
-          <DataTableBody
-            table={table}
-            columns={columns}
-          />
+          <DataTableBody table={table} columns={columns} />
         </Table>
       </div>
       <DataTablePagination table={table} />
@@ -83,27 +90,29 @@ interface DataTableChildProps<TData, TValue> {
   flatten?: boolean;
   columns?: ColumnDef<TData, TValue>[];
 }
-function DataTableHeader<TData, TValue>({ table }: DataTableChildProps<TData, TValue>) {
+function DataTableHeader<TData, TValue>({
+  table,
+}: DataTableChildProps<TData, TValue>) {
   return (
     <TableHeader className="">
       {table.getHeaderGroups().map((headerGroup) => (
-        <TableRow
-          key={headerGroup.id}
-          className=""
-        >
+        <TableRow key={headerGroup.id} className="">
           {headerGroup.headers.map((header) => {
             return (
-              <TableHead
-                key={header.id}
-                colSpan={header.colSpan}
-              >
-                {header.isPlaceholder || flexRender(header.column.columnDef.header, header.getContext())}
+              <TableHead key={header.id} colSpan={header.colSpan}>
+                {header.isPlaceholder ||
+                  flexRender(
+                    header.column.columnDef.header,
+                    header.getContext(),
+                  )}
                 <div
                   {...{
                     onDoubleClick: () => header.column.resetSize(),
                     onMouseDown: header.getResizeHandler(),
                     onTouchStart: header.getResizeHandler(),
-                    className: `resizer ${table.options.columnResizeDirection} ${header.column.getIsResizing() ? "isResizing" : ""}`,
+                    className: `resizer ${
+                      table.options.columnResizeDirection
+                    } ${header.column.getIsResizing() ? "isResizing" : ""}`,
                   }}
                 />
               </TableHead>
@@ -115,7 +124,11 @@ function DataTableHeader<TData, TValue>({ table }: DataTableChildProps<TData, TV
   );
 }
 
-function DataTableBody<TData, TValue>({ table, flatten, columns }: DataTableChildProps<TData, TValue>) {
+function DataTableBody<TData, TValue>({
+  table,
+  flatten,
+  columns,
+}: DataTableChildProps<TData, TValue>) {
   const groupedRows = ({ table }: DataTableChildProps<TData, TValue>) => {
     return table.getRowModel().rows?.map((row) => {
       return (
@@ -124,7 +137,11 @@ function DataTableBody<TData, TValue>({ table, flatten, columns }: DataTableChil
             key={row.id}
             data-state={row.getIsSelected() && "selected"}
             onClick={() => row.toggleExpanded()}
-            className={cn(row.getCanExpand() ? "cursor-pointer hover:bg-grey-dark/10 hover:text-pink " : "")}
+            className={cn(
+              row.getCanExpand()
+                ? "cursor-pointer hover:bg-grey-dark/10 hover:text-pink "
+                : "",
+            )}
           >
             {row.getVisibleCells().map((cell) => (
               <TableCell
@@ -145,10 +162,7 @@ function DataTableBody<TData, TValue>({ table, flatten, columns }: DataTableChil
     return table.getRowModel().flatRows?.map((row) => {
       return (
         <Fragment key={row.id}>
-          <TableRow
-            key={row.id}
-            data-state={row.getIsSelected() && "selected"}
-          >
+          <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
             {row.getVisibleCells().map((cell) => (
               <TableCell
                 key={cell.id}
@@ -175,10 +189,7 @@ function DataTableBody<TData, TValue>({ table, flatten, columns }: DataTableChil
         )
       ) : (
         <TableRow>
-          <TableCell
-            colSpan={columns?.length}
-            className="h-24 text-center"
-          >
+          <TableCell colSpan={columns?.length} className="h-24 text-center">
             No results.
           </TableCell>
         </TableRow>
