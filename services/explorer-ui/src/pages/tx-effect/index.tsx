@@ -3,10 +3,8 @@ import { InfoBadge } from "~/components/info-badge";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { useLatestBlocks } from "~/hooks";
 import { useTotalTxEffects, useTotalTxEffectsLast24h } from "~/hooks/stats";
-import {
-  useGetTxEffectsByBlockHeightRange,
-} from "~/hooks/tx-effect";
-import {parseTxEffectsData} from "../landing/util";
+import { useGetTxEffectsByBlockHeightRange } from "~/hooks/tx-effect";
+import { parseTxEffectsData } from "../landing/util";
 
 export const TxEffects: FC = () => {
   const { data: latestBlocks, isLoading, error } = useLatestBlocks();
@@ -23,13 +21,8 @@ export const TxEffects: FC = () => {
 
   const latestTxEffectsData = useGetTxEffectsByBlockHeightRange(
     latestBlocks?.at(-1)?.height,
-    latestBlocks?.at(0)?.height
+    latestBlocks?.at(0)?.height,
   );
-
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p className="text-red-500">{error.message}</p>;
-  if (!latestBlocks) return <p>No data</p>;
-
   const {
     isLoadingTxEffects,
     txEffectsErrorMsg: txEffectsError,
@@ -56,9 +49,11 @@ export const TxEffects: FC = () => {
           data={totalTxEffects24h}
         />
       </div>
-      { isLoadingTxEffects && <p>Loading...</p> }
-      { txEffectsError && <p className="text-red-500">{txEffectsError}</p> }
-      { !isLoadingTxEffects && <TxEffectsTable txEffects={latestTxEffects} /> }
+      <TxEffectsTable
+        txEffects={latestTxEffects}
+        isLoading={isLoading || isLoadingTxEffects}
+        error={error ?? txEffectsError}
+      />
     </div>
   );
 };

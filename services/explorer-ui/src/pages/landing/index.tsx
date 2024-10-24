@@ -49,11 +49,8 @@ export const Landing: FC = () => {
 
   const latestTxEffectsData = useGetTxEffectsByBlockHeightRange(
     latestBlocks?.at(-1)?.height,
-    latestBlocks?.at(0)?.height
+    latestBlocks?.at(0)?.height,
   );
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p className="text-red-500">{error.message}</p>;
-  if (!latestBlocks) return <p>No data</p>;
 
   const {
     isLoadingTxEffects,
@@ -61,7 +58,9 @@ export const Landing: FC = () => {
     latestTxEffects,
   } = parseTxEffectsData(latestTxEffectsData, latestBlocks);
 
-  const averageBlockTimeFormatted = formatDuration(Number(avarageBlockTime) / 1000);
+  const averageBlockTimeFormatted = formatDuration(
+    Number(avarageBlockTime) / 1000,
+  );
 
   return (
     <div className="mx-auto px-5 max-w-[1440px] md:px-[70px]">
@@ -105,15 +104,20 @@ export const Landing: FC = () => {
       </div>
       <div className="flex flex-col gap-4 md:flex-row">
         <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
-          <h2>Latest Blocks</h2>
-          <BlocksTable blocks={mapLatestBlocks(latestBlocks)} />
+          <h3>Latest Blocks</h3>
+          <BlocksTable
+            blocks={mapLatestBlocks(latestBlocks)}
+            isLoading={isLoading}
+          />
         </div>
 
         <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
-          <h2>Latest TX-Effects</h2>
-          {isLoadingTxEffects && <p>Loading...</p>}
-          {txEffectsError && <p className="text-red-500">{txEffectsError}</p>}
-          {latestTxEffects && <TxEffectsTable txEffects={latestTxEffects} />}
+          <h3>Latest TX-Effects</h3>
+          <TxEffectsTable
+            txEffects={latestTxEffects}
+            isLoading={isLoadingTxEffects}
+            error={txEffectsError}
+          />
         </div>
       </div>
     </div>
