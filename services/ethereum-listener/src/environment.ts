@@ -15,6 +15,4 @@ export const KAFKA_SASL_PASSWORD = process.env.KAFKA_SASL_PASSWORD ?? "test";
 
 export const SERVICE_NAME = process.env.SERVICE_NAME ?? "ethereum-listener";
 
-export const IGNORE_PROCESSED_HEIGHT = process.env.IGNORE_PROCESSED_HEIGHT === "true";
-
 export const NETWORK_ID = `${CHAIN_NAME}_${NETWORK_NAME}`;
