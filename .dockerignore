@@ -18,6 +18,7 @@
 !services/auth/package.json
 !services/dummy-node/package.json
 !services/aztec-listener/package.json
+!services/ethereum-listener/package.json
 !services/explorer-api/package.json
 !services/explorer-ui/package.json
 !services/websocket-event-publisher/package.json

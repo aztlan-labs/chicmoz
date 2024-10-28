@@ -58,8 +58,6 @@ export const frTimestampSchema = z.preprocess((val) => {
 // NOTE: it's technically not the same as Fr but practically it is
 export const aztecAddressSchema = frSchema;
 
-export const ethAddressSchema = z.string().length(42).regex(/^0x[0-9a-fA-F]+$/);
-
 export type StringifiedBuffer = {
   type: "Buffer";
   data: number[];
