@@ -1,16 +1,18 @@
 import { MBOptions, MessageBus } from "@chicmoz-pkg/message-bus";
+import { backOff } from "exponential-backoff";
 import {
   ETHEREUM_MESSAGES,
   generateEthereumTopicName,
 } from "@chicmoz-pkg/message-registry";
 import {
+  ETHEREUM_NETWORK_ID,
   KAFKA_CONNECTION,
   KAFKA_SASL_PASSWORD,
   KAFKA_SASL_USERNAME,
-  NETWORK_ID,
   SERVICE_NAME,
 } from "../environment.js";
 import { logger } from "../logger.js";
+import { EventHandler } from "../events/index.js";
 
 let mb: MessageBus;
 let isInitialized = false;
@@ -53,6 +55,38 @@ export const publishMessage = async <T>(
   if (!isInitialized) throw new Error("MessageBus is not initialized");
   if (isShutdown) throw new Error("MessageBus is already shutdown");
 
-  const topic = generateEthereumTopicName(NETWORK_ID, eventType);
+  const topic = generateEthereumTopicName(ETHEREUM_NETWORK_ID, eventType);
   await mb.publish<T>(topic, message);
+};
+
+const tryStartSubscribe = async ({
+  consumerGroup,
+  cb,
+  topic,
+}: EventHandler) => {
+  if (!isInitialized) throw new Error("MessageBus is not initialized");
+  if (isShutdown) throw new Error("MessageBus is already shutdown");
+
+  logger.info(`Subscribing to topic ${topic}...`);
+  await mb.subscribe(consumerGroup, topic, cb);
+  logger.info(`Started consuming from topic ${topic}`);
+  await mb.runConsumer(consumerGroup);
+  logger.info(`Started consuming from topic ${topic}`);
+};
+
+export const startSubscribe = async (eventHandler: EventHandler) => {
+  if (!isInitialized) throw new Error("MessageBus is not initialized");
+  if (isShutdown) throw new Error("MessageBus is already shutdown");
+
+  const tryIt = async () => await tryStartSubscribe(eventHandler);
+
+  await backOff(tryIt, {
+    maxDelay: 10000,
+    retry: (e, attemptNumber: number) => {
+      // TODO: probably not infinite retries?
+      logger.warn(e);
+      logger.info(`Retrying attempt ${attemptNumber}...`);
+      return true;
+    },
+  });
 };

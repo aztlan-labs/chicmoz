@@ -1,17 +1,13 @@
-import { NewL1Event } from "@chicmoz-pkg/message-registry";
+import {
+  ConnectedToAztecEvent,
+  NewL1Event,
+} from "@chicmoz-pkg/message-registry";
 import { logger } from "../logger.js";
 import { emit } from "../events/index.js";
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export const init = async () => {
-  const mockedL1Event: NewL1Event = {
-    contractAddress: "0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2",
-    l1BlockNumber: 123,
-    data: { something: "something" },
-  };
-  logger.info(`ETH: initialized: ${JSON.stringify(mockedL1Event)}`);
-
-  await emit.l1Update(mockedL1Event);
-  // TODO: start polling
+  // TODO: init connection to ethereum RPC
 
   return {
     id: "NC",
@@ -20,4 +16,16 @@ export const init = async () => {
       // TODO: stop polling
     },
   };
+};
+
+export const startPolling = async (
+  l1ContractAddresses: ConnectedToAztecEvent["nodeInfo"]["l1ContractAddresses"]
+) => {
+  logger.info(`ETH: start polling: ${JSON.stringify(l1ContractAddresses)}`);
+  const mockedL1Event: NewL1Event = {
+    contractAddress: l1ContractAddresses.rollupAddress,
+    l1BlockNumber: 123,
+    data: { something: "something" },
+  };
+  await emit.l1Update(mockedL1Event);
 };

@@ -5,9 +5,11 @@ export const LISTENER_DISABLED = process.env.LISTENER_DISABLED === "true";
 
 export const NODE_ENV = process.env.NODE_ENV ?? "development";
 
-export const AZTEC_RPC_URL = process.env.ETHEREUM_RPC_URL ?? "http://anvil-ethereum-node:8545";
-export const CHAIN_NAME = process.env.CHAIN_NAME ?? "ETHEREUM";
-export const NETWORK_NAME = process.env.NETWORK_NAME ?? "LOCAL_SANDBOX";
+export const ETHEREUM_RPC_URL = process.env.ETHEREUM_RPC_URL ?? "http://anvil-ethereum-node:8545";
+export const AZTEC_CHAIN_NAME = process.env.CHAIN_NAME ?? "AZTEC";
+export const AZTEC_NETWORK_NAME = process.env.NETWORK_NAME ?? "SANDBOX";
+export const ETHEREUM_CHAIN_NAME = process.env.CHAIN_NAME ?? "ETHEREUM";
+export const ETHEREUM_NETWORK_NAME = process.env.NETWORK_NAME ?? "SANDBOX";
 
 export const KAFKA_CONNECTION = process.env.KAFKA_CONNECTION ?? "kafka:9092";
 export const KAFKA_SASL_USERNAME = process.env.KAFKA_SASL_USERNAME ?? "controller_user";
@@ -15,4 +17,5 @@ export const KAFKA_SASL_PASSWORD = process.env.KAFKA_SASL_PASSWORD ?? "test";
 
 export const SERVICE_NAME = process.env.SERVICE_NAME ?? "ethereum-listener";
 
-export const NETWORK_ID = `${CHAIN_NAME}_${NETWORK_NAME}`;
+export const AZTEC_NETWORK_ID = `${AZTEC_CHAIN_NAME}_${AZTEC_NETWORK_NAME}`;
+export const ETHEREUM_NETWORK_ID = `${ETHEREUM_CHAIN_NAME}_${ETHEREUM_NETWORK_NAME}`;
