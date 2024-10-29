@@ -7,24 +7,20 @@ import { logger } from "../logger.js";
 import { AZTEC_NETWORK_ID, SERVICE_NAME } from "../environment.js";
 import { startPolling } from "../network-client/index.js";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-const emitL1Update = async (_a: any) => {
-  // TODO: Implement this
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/require-await
+const emitL1Update = async (a: any) => {
+  logger.info(`Trying to emit L1 update event ${JSON.stringify(a)}`);
 };
 
-export const onAztecConnectionEvent = async (event: ConnectedToAztecEvent) => {
+const onAztecConnectionEvent = async (event: ConnectedToAztecEvent) => {
   logger.info(`🔗 Aztec connection event ${JSON.stringify(event)}`);
   await startPolling(event.nodeInfo.l1ContractAddresses);
 };
 
-export const connectedToAztecHandler: EventHandler = {
+const connectedToAztecHandler: EventHandler = {
   consumerGroup: SERVICE_NAME,
   cb: onAztecConnectionEvent as (arg0: unknown) => Promise<void>,
   topic: generateAztecTopicName(AZTEC_NETWORK_ID, "CONNECTED_TO_AZTEC_EVENT") as AztecTopic,
-};
-
-export const emit = {
-  l1Update: emitL1Update,
 };
 
 type AztecTopic = `${typeof AZTEC_NETWORK_ID}_${keyof AZTEC_MESSAGES}`;
@@ -35,6 +31,9 @@ export type EventHandler = {
   topic: AztecTopic;
 };
 
-export const handlers: Record<string, EventHandler> = {
+export const emit = {
+  l1Update: emitL1Update,
+};
+export const handlers = {
   connectedToAztec: connectedToAztecHandler,
 };

@@ -1,13 +1,30 @@
 import {
   ConnectedToAztecEvent,
-  NewL1Event,
 } from "@chicmoz-pkg/message-registry";
 import { logger } from "../logger.js";
-import { emit } from "../events/index.js";
+import { IBackOffOptions, backOff } from "exponential-backoff";
+import { getLatestHeight, initClient, initContracts } from "./client.js";
+import { start } from "./poller.js";
+
+const backOffOptions: Partial<IBackOffOptions> = {
+  numOfAttempts: 10,
+  maxDelay: 10000,
+  retry: (e, attemptNumber: number) => {
+    logger.warn(e);
+    logger.info(
+      `🤡 We'll allow some errors during start-up, retrying attempt ${attemptNumber}...`
+    );
+    return true;
+  },
+};
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export const init = async () => {
-  // TODO: init connection to ethereum RPC
+  initClient();
+  const l1BlockNumber = await backOff(async () => {
+    return await getLatestHeight();
+  }, backOffOptions);
+  logger.info(`ETH: initialized, currently on height ${l1BlockNumber}`);
 
   return {
     id: "NC",
@@ -22,10 +39,6 @@ export const startPolling = async (
   l1ContractAddresses: ConnectedToAztecEvent["nodeInfo"]["l1ContractAddresses"]
 ) => {
   logger.info(`ETH: start polling: ${JSON.stringify(l1ContractAddresses)}`);
-  const mockedL1Event: NewL1Event = {
-    contractAddress: l1ContractAddresses.rollupAddress,
-    l1BlockNumber: 123,
-    data: { something: "something" },
-  };
-  await emit.l1Update(mockedL1Event);
+  initContracts(l1ContractAddresses);
+  await start();
 };

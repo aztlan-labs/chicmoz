@@ -18,7 +18,7 @@ const _gracefulShutdown = async () => {
     }
   } catch (e) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    logger.error(`during shutdown of ${SERVICE_NAME}: ${e}`);
+    logger.error(`during shutdown of ${SERVICE_NAME}: ${(e as Error).stack ?? e}`);
     process.exit(1);
   }
 };

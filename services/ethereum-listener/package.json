@@ -10,11 +10,13 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@aztec/aztec.js": "0.58.0",
+    "@aztec/l1-artifacts": "0.58.0",
     "@chicmoz-pkg/logger-server": "workspace:^",
     "@chicmoz-pkg/message-bus": "workspace:^",
     "@chicmoz-pkg/message-registry": "workspace:^",
     "@chicmoz-pkg/types": "workspace:^",
-    "exponential-backoff": "3.1.1"
+    "exponential-backoff": "3.1.1",
+    "viem": "2.21.36"
   },
   "devDependencies": {
     "@types/node": "20.5.0",

@@ -28,10 +28,6 @@ spec:
               value: "development"
             - name: BLOCK_POLL_INTERVAL_MS
               value: "5000"
-            - name: CHAIN_NAME
-              value: "ETHEREUM"
-            - name: NETWORK_NAME
-              value: "LOCAL_SANDBOX"
             - name: LISTENER_DISABLED
               value: "false"
             - name: GENESIS_CATCHUP

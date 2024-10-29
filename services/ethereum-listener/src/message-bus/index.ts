@@ -55,7 +55,7 @@ export const publishMessage = async <T>(
   if (!isInitialized) throw new Error("MessageBus is not initialized");
   if (isShutdown) throw new Error("MessageBus is already shutdown");
 
-  const topic = generateEthereumTopicName(ETHEREUM_NETWORK_ID, eventType);
+  const topic = generateEthereumTopicName(ETHEREUM_NETWORK_ID.toString(), eventType);
   await mb.publish<T>(topic, message);
 };
 
