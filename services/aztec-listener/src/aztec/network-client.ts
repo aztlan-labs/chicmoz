@@ -66,5 +66,14 @@ export const getBlocks = async (fromHeight: number, toHeight: number) => {
   return blocks;
 };
 
-export const getLatestHeight = () =>
-  node().getBlockNumber().catch(logFetchFailedCause);
+export const getLatestHeight = async () => {
+  const [bn, provenBn] = await Promise.all([
+    node().getBlockNumber().catch(logFetchFailedCause),
+    node().getProvenBlockNumber().catch(logFetchFailedCause),
+  ]);
+  // TODO: if provenBn is constantly behind, we should start storing and displaying it in the UI
+  if (bn - provenBn > 0)
+    logger.warn(`Difference between block and proven block: ${bn - provenBn}`);
+
+  return bn;
+};
