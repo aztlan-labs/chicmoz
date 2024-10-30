@@ -43,6 +43,13 @@ build:
       requires:
         - image: chicmoz-base
           alias: BASE
+    - image: ethereum-listener
+      context: services/ethereum-listener
+      docker:
+        dockerfile: Dockerfile
+      requires:
+        - image: chicmoz-base
+          alias: BASE
     - image: explorer-api
       context: services/explorer-api
       docker:
