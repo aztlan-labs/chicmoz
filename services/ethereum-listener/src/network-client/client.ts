@@ -51,8 +51,6 @@ let l1Contracts:
     }
   | undefined = undefined;
 
-// {"rollupAddress":"0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9","registryAddress":"0x5fbdb2315678afecb367f032d93f642f64180aa3","inboxAddress":"0xb1ede3f5ac8654124cb5124adf0fd3885cbdd1f7","outboxAddress":"0xa6d6d7c556ce6ada136ba32dbe530993f128ca44","feeJuiceAddress":"0xe7f1725e7734ce288f8367e1bb143e90bb3f0512","feeJuicePortalAddress":"0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"}
-
 const chain = defineChain({
   id: ETHEREUM_NETWORK_ID,
   name: ETHEREUM_CHAIN_NAME,

@@ -67,21 +67,21 @@ build:
 manifests:
   rawYaml:
     - k8s/local/common/namespace.yaml
-    # - k8s/local/explorer-ui/ingress.yaml
-    # - k8s/local/explorer-ui/deployment.yaml
-    # - k8s/local/explorer-ui/service.yaml
-    # - k8s/local/explorer-api/ingress.yaml
-    # - k8s/local/explorer-api/deployment.yaml
-    # - k8s/local/explorer-api/service.yaml
-    # - k8s/local/websocket-event-publisher/ingress.yaml
-    # - k8s/local/websocket-event-publisher/deployment.yaml
-    # - k8s/local/websocket-event-publisher/service.yaml
-    # - k8s/local/auth/deployment.yaml
-    # - k8s/local/auth/service.yaml
+    - k8s/local/explorer-ui/ingress.yaml
+    - k8s/local/explorer-ui/deployment.yaml
+    - k8s/local/explorer-ui/service.yaml
+    - k8s/local/explorer-api/ingress.yaml
+    - k8s/local/explorer-api/deployment.yaml
+    - k8s/local/explorer-api/service.yaml
+    - k8s/local/websocket-event-publisher/ingress.yaml
+    - k8s/local/websocket-event-publisher/deployment.yaml
+    - k8s/local/websocket-event-publisher/service.yaml
+    - k8s/local/auth/deployment.yaml
+    - k8s/local/auth/service.yaml
     # - k8s/local/dummy-node/ingress.yaml
     # - k8s/local/dummy-node/deployment.yaml
     # - k8s/local/dummy-node/service.yaml
-    # - k8s/local/aztec-listener/deployment.yaml
+    - k8s/local/aztec-listener/deployment.yaml
     # - k8s/local/ethereum-listener/deployment.yaml # NOTE: eth-listener is WIP!
     # - k8s/local/kafka-ui/configmap.yaml
     # - k8s/local/kafka-ui/configmap-env.yaml
@@ -108,61 +108,61 @@ manifests:
     #   3. You run a local Aztec sandbox node, then you also have a PXE which you can interact with and submit transactions to. But they are only on your local cluster.
     #   👀 NOTE: You also need to add `127.0.0.1	aztec-sandbox-node.localhost` to your /etc/hosts file to reach it from outside the cluster
     #
-    - k8s/local/aztec-sandbox-node/ingress.yaml
-    - k8s/local/aztec-sandbox-node/deployment.yaml
-    - k8s/local/aztec-sandbox-node/service.yaml
-    - k8s/local/anvil-ethereum-node/ingress.yaml
-    - k8s/local/anvil-ethereum-node/deployment.yaml
-    - k8s/local/anvil-ethereum-node/service.yaml
+    #- k8s/local/aztec-sandbox-node/ingress.yaml
+    #- k8s/local/aztec-sandbox-node/deployment.yaml
+    #- k8s/local/aztec-sandbox-node/service.yaml
+    #- k8s/local/anvil-ethereum-node/ingress.yaml
+    #- k8s/local/anvil-ethereum-node/deployment.yaml
+    #- k8s/local/anvil-ethereum-node/service.yaml
   helm:
     releases:
-      #- name: ingress-nginx
-      #  remoteChart: ingress-nginx
-      #  repo: https://kubernetes.github.io/ingress-nginx
-      #  namespace: chicmoz
-      #  createNamespace: false
-      #  recreatePods: false
-      #  skipBuildDependencies: false
-      #  useHelmSecrets: false
-      #  wait: false
-      #- name: postgresql
-      #  version: 12.10.0
-      #  remoteChart: postgresql
-      #  repo: https://charts.bitnami.com/bitnami
-      #  valuesFiles:
-      #    - k8s/local/postgres/values.yaml
-      #  setValues:
-      #    global.postgresql.auth.postgresPassword: "secret-local-password"
-      #    global.postgresql.auth.username: "admin"
-      #    global.postgresql.auth.password: "secret-local-password"
-      #    image.debug: true
-      #  namespace: chicmoz
-      #  createNamespace: false
-      #  recreatePods: false
-      #  skipBuildDependencies: false
-      #  useHelmSecrets: false
-      #  wait: false
-      #- name: redis
-      #  version: 18.17.1
-      #  remoteChart: redis
-      #  repo: https://charts.bitnami.com/bitnami
-      #  namespace: chicmoz
-      #  createNamespace: false
-      #  recreatePods: false
-      #  skipBuildDependencies: false
-      #  useHelmSecrets: false
-      #  wait: false
-      #  setValues:
-      #    auth.enabled: false
-      #    master.configuration: |
-      #      maxmemory 100mb
-      #      maxmemory-policy volatile-ttl
-      #      lazyfree-lazy-eviction yes
-      #    replica.configuration: |
-      #      maxmemory 100mb
-      #      maxmemory-policy volatile-ttl
-      #      lazyfree-lazy-eviction yes
-      #    persistence.enabled: false
+      - name: ingress-nginx
+        remoteChart: ingress-nginx
+        repo: https://kubernetes.github.io/ingress-nginx
+        namespace: chicmoz
+        createNamespace: false
+        recreatePods: false
+        skipBuildDependencies: false
+        useHelmSecrets: false
+        wait: false
+      - name: postgresql
+        version: 12.10.0
+        remoteChart: postgresql
+        repo: https://charts.bitnami.com/bitnami
+        valuesFiles:
+          - k8s/local/postgres/values.yaml
+        setValues:
+          global.postgresql.auth.postgresPassword: "secret-local-password"
+          global.postgresql.auth.username: "admin"
+          global.postgresql.auth.password: "secret-local-password"
+          image.debug: true
+        namespace: chicmoz
+        createNamespace: false
+        recreatePods: false
+        skipBuildDependencies: false
+        useHelmSecrets: false
+        wait: false
+      - name: redis
+        version: 18.17.1
+        remoteChart: redis
+        repo: https://charts.bitnami.com/bitnami
+        namespace: chicmoz
+        createNamespace: false
+        recreatePods: false
+        skipBuildDependencies: false
+        useHelmSecrets: false
+        wait: false
+        setValues:
+          auth.enabled: false
+          master.configuration: |
+            maxmemory 100mb
+            maxmemory-policy volatile-ttl
+            lazyfree-lazy-eviction yes
+          replica.configuration: |
+            maxmemory 100mb
+            maxmemory-policy volatile-ttl
+            lazyfree-lazy-eviction yes
+          persistence.enabled: false
       #- name: kafka
       #  version: 26.4.2
       #  remoteChart: kafka
