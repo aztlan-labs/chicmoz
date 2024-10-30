@@ -1,22 +1,18 @@
 {
-  "name": "@chicmoz/ethereum-listener",
+  "name": "@chicmoz/aztec-event-cannon",
   "version": "1.0.0",
-  "description": "Listen to Ethereum events and send them to the message bus",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
+  "description": "Produce events to Aztec (sandbox) chain",
+  "main": "build/src/index.js",
+  "types": "build/src/index.d.ts",
   "files": [
     "build"
   ],
   "license": "UNLICENSED",
   "dependencies": {
+    "@aztec/accounts": "0.58.0",
     "@aztec/aztec.js": "0.58.0",
-    "@aztec/l1-artifacts": "0.58.0",
-    "@chicmoz-pkg/logger-server": "workspace:^",
-    "@chicmoz-pkg/message-bus": "workspace:^",
-    "@chicmoz-pkg/message-registry": "workspace:^",
-    "@chicmoz-pkg/types": "workspace:^",
-    "exponential-backoff": "3.1.1",
-    "viem": "2.21.36"
+    "@aztec/noir-contracts.js": "0.58.0",
+    "@chicmoz-pkg/logger-server": "workspace:^"
   },
   "devDependencies": {
     "@types/node": "20.5.0",
@@ -34,8 +30,8 @@
     "prebuild": "rm -rf build; mkdir build",
     "build": "yarn tsc",
     "predev": "yarn build",
-    "dev": "yarn node build/index.js",
-    "start": "yarn node --unhandled-rejections=strict --enable-source-maps build/index.js",
+    "dev": "yarn node build/src/index.js",
+    "start": "yarn node --unhandled-rejections=strict --enable-source-maps build/src/index.js",
     "lint": "yarn run lint-base --ext .ts .",
     "lint-base": "yarn run g:lint"
   },
