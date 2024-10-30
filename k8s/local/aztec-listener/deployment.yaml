@@ -71,9 +71,9 @@ spec:
               value: "true"
             - name: AZTEC_RPC_URL
               #value: "http://aztec-devnet-node:8080"   # LOCAL DEVNET
-              value: "http://aztec-sandbox-node:8081" # SANDBOX
-              #valueFrom: # REMOTE DEVNET
-              #  secretKeyRef: # REMOTE DEVNET
-              #    name: global # REMOTE DEVNET
-              #    key: CHICMOZ_AZTEC_RPC # REMOTE DEVNET
+              #value: "http://aztec-sandbox-node:8081"  # SANDBOX
+              valueFrom: # REMOTE DEVNET
+                secretKeyRef: # REMOTE DEVNET
+                  name: global # REMOTE DEVNET
+                  key: CHICMOZ_AZTEC_RPC # REMOTE DEVNET
 status: {}
