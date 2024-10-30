@@ -43,6 +43,13 @@ build:
       requires:
         - image: chicmoz-base
           alias: BASE
+    - image: ethereum-listener
+      context: services/ethereum-listener
+      docker:
+        dockerfile: Dockerfile
+      requires:
+        - image: chicmoz-base
+          alias: BASE
     - image: explorer-api
       context: services/explorer-api
       docker:
@@ -75,6 +82,7 @@ manifests:
     # - k8s/local/dummy-node/deployment.yaml
     # - k8s/local/dummy-node/service.yaml
     - k8s/local/aztec-listener/deployment.yaml
+    # - k8s/local/ethereum-listener/deployment.yaml # NOTE: eth-listener is WIP!
     # - k8s/local/kafka-ui/configmap.yaml
     # - k8s/local/kafka-ui/configmap-env.yaml
     # - k8s/local/kafka-ui/ingress.yaml

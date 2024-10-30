@@ -1,11 +1,10 @@
 import { z } from "zod";
-import { hexStringSchema } from "../general.js";
+import { ethAddressSchema, hexStringSchema } from "../general.js";
 import { deepPartial } from "../utils.js";
 import { chicmozL2TxEffectSchema } from "./l2TxEffect.js";
 import {
   aztecAddressSchema,
   bufferSchema,
-  ethAddressSchema,
   frNumberSchema,
   frSchema,
   frTimestampSchema,

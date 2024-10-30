@@ -1,5 +1,4 @@
-import { SERVICE_NAME } from "./constants.js";
-import {setComponentShuttingDown} from "./health.js";
+import { SERVICE_NAME } from "./environment.js";
 import { logger } from "./logger.js";
 
 const registeredShutdownCallbacks: ({
@@ -14,7 +13,7 @@ export const registerShutdownCallback = ({id, shutdownCb}: {id: string, shutdown
 const _gracefulShutdown = async () => {
   try {
     for (const shutdown of registeredShutdownCallbacks) {
-      setComponentShuttingDown(shutdown.id);
+      logger.info(`💥 Shutting down ${shutdown.id}...`);
       await shutdown.shutdownCb();
     }
   } catch (e) {

@@ -1,4 +1,4 @@
-import { SERVICE_NAME } from "./constants.js";
+import { SERVICE_NAME } from "./environment.js";
 import { logger } from "./logger.js";
 import { start } from "./start.js";
 import { gracefulShutdown } from "./stop.js";

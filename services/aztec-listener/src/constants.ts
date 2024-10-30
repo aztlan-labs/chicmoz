@@ -20,7 +20,7 @@ export const POSTGRES_DB_NAME = process.env.POSTGRES_DB_NAME ?? "aztec_listener"
 export const POSTGRES_ADMIN = process.env.POSTGRES_ADMIN ?? "admin";
 export const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD ?? "secret-local-password";
 
-export const SERVICE_NAME = process.env.SERVICE_NAME ?? `aztec-listener`;
+export const SERVICE_NAME = process.env.SERVICE_NAME ?? "aztec-listener";
 
 export const IGNORE_PROCESSED_HEIGHT = process.env.IGNORE_PROCESSED_HEIGHT === "true";
 

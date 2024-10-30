@@ -47,8 +47,6 @@ export const getNodeInfo = async (): Promise<NodeInfo> => {
     protocolContractAddresses: protocolContractAddresses,
   };
 
-  // TODO: why unsafe?
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return nodeInfo;
 };
 
