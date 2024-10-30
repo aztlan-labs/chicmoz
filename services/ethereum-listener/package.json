@@ -33,7 +33,6 @@
   "scripts": {
     "prebuild": "rm -rf build; mkdir build",
     "build": "yarn tsc",
-    "postbuild": "ln -s ../public build/public",
     "predev": "yarn build",
     "dev": "yarn node build/index.js",
     "start": "yarn node --unhandled-rejections=strict --enable-source-maps build/index.js",
