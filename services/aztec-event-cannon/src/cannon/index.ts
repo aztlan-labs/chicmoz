@@ -23,7 +23,7 @@ import {
 import { getInitialTestAccountsWallets } from "@aztec/accounts/testing";
 import { AZTEC_RPC_URL } from "../environment.js";
 import { logger } from "../logger.js";
-import {broadcastPrivateFunction, registerContractClass} from "@aztec/aztec.js/deployment";
+import { broadcastPrivateFunction } from "@aztec/aztec.js/deployment";
 
 let pxe: PXE;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -84,17 +84,13 @@ export async function start() {
     );
   }
 
-  logger.info("Registering contract class...");
-  const tx2 = await registerContractClass(wallet, artifact).then(c => c.send().wait());
-  logger.info(`Blocknumber: ${tx2.blockNumber}`);
-
   const selector = FunctionSelector.fromNameAndParameters(
     constructorArtifact.name,
     constructorArtifact.parameters
   );
 
-  const tx3 = await (await broadcastPrivateFunction(wallet, artifact, selector))
+  const tx2 = await (await broadcastPrivateFunction(wallet, artifact, selector))
     .send()
     .wait();
-  logger.info(`Blocknumber: ${tx3.blockNumber}`);
+  logger.info(`Blocknumber: ${tx2.blockNumber}`);
 }
