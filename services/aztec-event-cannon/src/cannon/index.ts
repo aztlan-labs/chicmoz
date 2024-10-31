@@ -11,6 +11,7 @@ import {
   waitForPXE,
   //TxStatus,
   createPXEClient,
+  FunctionSelector,
   //getContractInstanceFromDeployParams,
 } from "@aztec/aztec.js";
 import { getSchnorrAccount } from "@aztec/accounts/schnorr";
@@ -21,7 +22,8 @@ import {
 // import { TokenContract } from "@aztec/noir-contracts.js";
 import { getInitialTestAccountsWallets } from "@aztec/accounts/testing";
 import { AZTEC_RPC_URL } from "../environment.js";
-import {logger} from "../logger.js";
+import { logger } from "../logger.js";
+import {broadcastPrivateFunction, registerContractClass} from "@aztec/aztec.js/deployment";
 
 let pxe: PXE;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -63,10 +65,36 @@ export async function start() {
     schnorrAccount.getCompleteAddress();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const tx = await schnorrAccount.deploy().wait();
+  logger.info(`Blocknumber: ${tx.blockNumber}`);
   const wallet = await schnorrAccount.getWallet();
   const votingContract = await EasyPrivateVotingContract.deploy(wallet, address)
     .send()
     .deployed();
   const addressString = votingContract.address.toString();
   logger.info(`Voting Contract deployed at: ${addressString}`);
+
+  const artifact = votingContract.artifact;
+
+  const constructorArtifact = artifact.functions.find(
+    (fn) => fn.name == "constructor"
+  );
+  if (!constructorArtifact) {
+    throw new Error(
+      "No constructor found in the StatefulTestContract artifact. Does it still exist?"
+    );
+  }
+
+  logger.info("Registering contract class...");
+  const tx2 = await registerContractClass(wallet, artifact).then(c => c.send().wait());
+  logger.info(`Blocknumber: ${tx2.blockNumber}`);
+
+  const selector = FunctionSelector.fromNameAndParameters(
+    constructorArtifact.name,
+    constructorArtifact.parameters
+  );
+
+  const tx3 = await (await broadcastPrivateFunction(wallet, artifact, selector))
+    .send()
+    .wait();
+  logger.info(`Blocknumber: ${tx3.blockNumber}`);
 }
