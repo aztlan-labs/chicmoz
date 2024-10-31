@@ -84,6 +84,7 @@ export async function start() {
     );
   }
 
+  // TODO: why do I throw?
   const selector = FunctionSelector.fromNameAndParameters(
     constructorArtifact.name,
     constructorArtifact.parameters
