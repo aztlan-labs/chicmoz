@@ -48,6 +48,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@aztec/accounts@npm:0.58.0":
+  version: 0.58.0
+  resolution: "@aztec/accounts@npm:0.58.0"
+  dependencies:
+    "@aztec/aztec.js": "npm:0.58.0"
+    "@aztec/circuit-types": "npm:0.58.0"
+    "@aztec/circuits.js": "npm:0.58.0"
+    "@aztec/entrypoints": "npm:0.58.0"
+    "@aztec/ethereum": "npm:0.58.0"
+    "@aztec/foundation": "npm:0.58.0"
+    "@aztec/types": "npm:0.58.0"
+    tslib: "npm:^2.4.0"
+  checksum: ec4110f698287cd4750f2bffe75dac3eb701171ee84724bf3ded8c868b37f5d0c11465d4a9cca8a12dec662a836dfbac916fa4c9b3fa520ce571aa7288741fab
+  languageName: node
+  linkType: hard
+
 "@aztec/aztec.js@npm:0.58.0":
   version: 0.58.0
   resolution: "@aztec/aztec.js@npm:0.58.0"
@@ -111,6 +127,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@aztec/entrypoints@npm:0.58.0":
+  version: 0.58.0
+  resolution: "@aztec/entrypoints@npm:0.58.0"
+  dependencies:
+    "@aztec/aztec.js": "npm:0.58.0"
+    "@aztec/circuit-types": "npm:0.58.0"
+    "@aztec/circuits.js": "npm:0.58.0"
+    "@aztec/foundation": "npm:0.58.0"
+    "@aztec/protocol-contracts": "npm:0.58.0"
+    tslib: "npm:^2.4.0"
+  checksum: 5d41ada5ed6f1a1bab6a4a028815316fe0ab6cdef4e77b335a73e3f4f2d0cd1608be4e6bcff8eed7255c78cbeff0f79e51c8ab2fb488420d2948718f85b2bee1
+  languageName: node
+  linkType: hard
+
 "@aztec/ethereum@npm:0.58.0":
   version: 0.58.0
   resolution: "@aztec/ethereum@npm:0.58.0"
@@ -157,6 +187,16 @@ __metadata:
   dependencies:
     tslib: "npm:^2.4.0"
   checksum: f1c419a50c5b49fca52c51661e74f74628df78b35b4813b2ca1a202f922575adebf4fff24becf7e735ce396764fc5473b6e0fdc95ae7651ac30894b5b3b25e05
+  languageName: node
+  linkType: hard
+
+"@aztec/noir-contracts.js@npm:0.58.0":
+  version: 0.58.0
+  resolution: "@aztec/noir-contracts.js@npm:0.58.0"
+  dependencies:
+    "@aztec/aztec.js": "npm:0.58.0"
+    tslib: "npm:^2.4.0"
+  checksum: 2a1514a47eca47b68c4faa1089dbaee38f6b92d2cf5aa305903eacd287420f0286efd1f9374b7bd4adc6567db4e475136952981eeac30de9e32b6bb4d119422f
   languageName: node
   linkType: hard
 
@@ -879,6 +919,27 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@chicmoz/aztec-event-cannon@workspace:services/aztec-event-cannon":
+  version: 0.0.0-use.local
+  resolution: "@chicmoz/aztec-event-cannon@workspace:services/aztec-event-cannon"
+  dependencies:
+    "@aztec/accounts": "npm:0.58.0"
+    "@aztec/aztec.js": "npm:0.58.0"
+    "@aztec/noir-contracts.js": "npm:0.58.0"
+    "@chicmoz-pkg/logger-server": "workspace:^"
+    "@types/node": "npm:20.5.0"
+    "@typescript-eslint/eslint-plugin": "npm:6.11.0"
+    "@typescript-eslint/parser": "npm:6.11.0"
+    eslint: "npm:8.53.0"
+    eslint-config-prettier: "npm:9.0.0"
+    eslint-config-standard-with-typescript: "npm:37.0.0"
+    eslint-plugin-import: "npm:2.29.0"
+    eslint-plugin-n: "npm:15.0.0 || 16.0.0 "
+    eslint-plugin-promise: "npm:6.0.0"
+    typescript: "npm:5.2.2"
+  languageName: unknown
+  linkType: soft
+
 "@chicmoz/aztec-listener@workspace:services/aztec-listener":
   version: 0.0.0-use.local
   resolution: "@chicmoz/aztec-listener@workspace:services/aztec-listener"
@@ -951,7 +1012,7 @@ __metadata:
     eslint-plugin-promise: "npm:6.0.0"
     exponential-backoff: "npm:3.1.1"
     typescript: "npm:5.2.2"
-    viem: "npm:^2.21.36"
+    viem: "npm:2.21.36"
   languageName: unknown
   linkType: soft
 
@@ -13166,7 +13227,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:^2.21.36":
+"viem@npm:2.21.36":
   version: 2.21.36
   resolution: "viem@npm:2.21.36"
   dependencies:

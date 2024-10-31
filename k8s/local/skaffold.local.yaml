@@ -64,6 +64,13 @@ build:
       requires:
         - image: chicmoz-base
           alias: BASE
+    - image: aztec-event-cannon
+      context: services/aztec-event-cannon
+      docker:
+        dockerfile: Dockerfile
+      requires:
+        - image: chicmoz-base
+          alias: BASE
 manifests:
   rawYaml:
     - k8s/local/common/namespace.yaml
@@ -78,6 +85,7 @@ manifests:
     - k8s/local/websocket-event-publisher/service.yaml
     - k8s/local/auth/deployment.yaml
     - k8s/local/auth/service.yaml
+    - k8s/local/aztec-event-cannon/deployment.yaml
     # - k8s/local/dummy-node/ingress.yaml
     # - k8s/local/dummy-node/deployment.yaml
     # - k8s/local/dummy-node/service.yaml
