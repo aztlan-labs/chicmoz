@@ -1,6 +1,6 @@
 import { AZTEC_MESSAGES, NewBlockEvent } from "@chicmoz-pkg/message-registry";
 import { logger } from "../logger.js";
-import { onBlock } from "./on-block.js";
+import { onBlock } from "./on-block/index.js";
 import { onAztecConnectionEvent } from "./on-aztec-connection-event.js";
 
 export type EventHandler = {
