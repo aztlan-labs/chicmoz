@@ -73,7 +73,7 @@ export async function start() {
   const addressString = votingContract.address.toString();
   logger.info(`Voting Contract deployed at: ${addressString}`);
 
-  const artifact = votingContract.artifact;
+  const artifact = EasyPrivateVotingContract.artifact;
 
   const constructorArtifact = artifact.functions.find(
     (fn) => fn.name == "constructor"
