@@ -1,14 +1,6 @@
 import { useParams } from "@tanstack/react-router";
 import { useState, type FC } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
-import {
-  Button,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui";
 import { useGetTxEffectByHash } from "~/hooks/";
 import { API_URL, aztecExplorer } from "~/service/constants";
 import { txEffectTabs, type TabId } from "./constants";
@@ -20,7 +12,7 @@ import { OptionButtons } from "./tabs";
 const API_ENDPOINT_URL = `${API_URL}/${aztecExplorer.getL2TxEffectByHash}`;
 
 export const TxEffectDetails: FC = () => {
-  const [selectedTab, setSelectedTab] = useState<TabId>("ecryptedLogs");
+  const [selectedTab, setSelectedTab] = useState<TabId>("encryptedLogs");
   const { hash } = useParams({
     from: "/tx-effects/$hash",
   });
@@ -58,20 +50,6 @@ export const TxEffectDetails: FC = () => {
             requiredOptions={txEffectTabs}
             onOptionSelect={getSelectedItem}
           />
-          <div className="mb-1 mt-4 lg:hidden">
-            <Select onValueChange={getSelectedItem}>
-              <SelectTrigger className="h-8 w-3/5 bg-primary text-white">
-                <SelectValue placeholder="encryptedLogs" />
-              </SelectTrigger>
-              <SelectContent>
-                {txEffectTabs.map((tab) => (
-                  <SelectItem key={tab.id} value={tab.id}>
-                    {tab.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
           <div className="bg-white rounded-lg shadow-md p-4">
             {selectedTab === "encryptedLogs" && (
               <div className="">
