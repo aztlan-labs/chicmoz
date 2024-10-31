@@ -10,9 +10,11 @@ import {
   chicmozL2ContractClassRegisteredEventSchema,
   chicmozL2ContractInstanceDeployedEventSchema,
   chicmozL2PrivateFunctionBroadcastedEventSchema,
+  chicmozL2UnconstrainedFunctionBroadcastedEventSchema,
   type ChicmozL2ContractClassRegisteredEvent,
   type ChicmozL2ContractInstanceDeployedEvent,
   type ChicmozL2PrivateFunctionBroadcastedEvent,
+  type ChicmozL2UnconstrainedFunctionBroadcastedEvent,
 } from "@chicmoz-pkg/types";
 import { controllers } from "../../database/index.js";
 import { logger } from "../../logger.js";
@@ -20,7 +22,7 @@ import { handleDuplicateError } from "./utils.js";
 
 const parseObjs = <T>(
   blockHash: string,
-  objs: (ContractClassRegisteredEvent | ContractInstanceDeployedEvent | PrivateFunctionBroadcastedEvent)[],
+  objs: (ContractClassRegisteredEvent | ContractInstanceDeployedEvent | PrivateFunctionBroadcastedEvent | UnconstrainedFunctionBroadcastedEvent)[],
   parseFn: (obj: unknown) => T
 ) => {
   const parsedObjs: T[] = [];
@@ -70,8 +72,6 @@ export const storeContracts = async (b: L2Block, blockHash: string) => {
     `Parsing and storing ${contractClasses.length} contract classes and ${contractInstances.length} contract instances`
   );
 
-  logger.info("======================================");
-
   const privateFnEvents = PrivateFunctionBroadcastedEvent.fromLogs(
     blockLogs,
     ProtocolContractAddress.ContractClassRegisterer
@@ -81,8 +81,6 @@ export const storeContracts = async (b: L2Block, blockHash: string) => {
     blockLogs,
     ProtocolContractAddress.ContractClassRegisterer
   );
-  logger.info(JSON.stringify(unconstrainedFnEvents));
-  logger.info("======================================");
 
   const parsedContractClasses: ChicmozL2ContractClassRegisteredEvent[] =
     parseObjs(blockHash, contractClasses, (contractClass) =>
@@ -97,6 +95,12 @@ export const storeContracts = async (b: L2Block, blockHash: string) => {
   const parsedPrivateFnEvents: ChicmozL2PrivateFunctionBroadcastedEvent[] =
     parseObjs(blockHash, privateFnEvents, (privateFnEvent) =>
       chicmozL2PrivateFunctionBroadcastedEventSchema.parse(privateFnEvent)
+    );
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const parsedUnconstrainedFnEvents: ChicmozL2UnconstrainedFunctionBroadcastedEvent[] =
+    parseObjs(blockHash, unconstrainedFnEvents, (unconstrainedFnEvent) =>
+      chicmozL2UnconstrainedFunctionBroadcastedEventSchema.parse(unconstrainedFnEvent)
     );
 
   await storeObj(
