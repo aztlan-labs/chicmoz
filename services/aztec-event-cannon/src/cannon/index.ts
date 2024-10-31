@@ -11,7 +11,7 @@ import {
   waitForPXE,
   //TxStatus,
   createPXEClient,
-  FunctionSelector,
+  getContractClassFromArtifact,
   //getContractInstanceFromDeployParams,
 } from "@aztec/aztec.js";
 import { getSchnorrAccount } from "@aztec/accounts/schnorr";
@@ -74,24 +74,15 @@ export async function start() {
   logger.info(`Voting Contract deployed at: ${addressString}`);
 
   const artifact = EasyPrivateVotingContract.artifact;
+  const contractClass = getContractClassFromArtifact(artifact);
 
-  const constructorArtifact = artifact.functions.find(
-    (fn) => fn.name == "constructor"
-  );
-  if (!constructorArtifact) {
-    throw new Error(
-      "No constructor found in the StatefulTestContract artifact. Does it still exist?"
-    );
+  for (const fn of contractClass.privateFunctions) {
+    logger.info(`Broadcasting private function: ${fn.selector.toString()}`);
+    const tx2 = await (
+      await broadcastPrivateFunction(wallet, artifact, fn.selector)
+    )
+      .send()
+      .wait();
+    logger.info(`Blocknumber: ${tx2.blockNumber}`);
   }
-
-  const selector = FunctionSelector.fromNameAndParameters(
-    constructorArtifact.name,
-    constructorArtifact.parameters
-  );
-
-  // TODO: why do I throw?
-  const tx2 = await (await broadcastPrivateFunction(wallet, artifact, selector))
-    .send()
-    .wait();
-  logger.info(`Blocknumber: ${tx2.blockNumber}`);
 }
