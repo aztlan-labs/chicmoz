@@ -12,8 +12,10 @@ import {
 import { useGetTxEffectByHash } from "~/hooks/";
 import { API_URL, aztecExplorer } from "~/service/constants";
 import { txEffectTabs, type TabId } from "./constants";
-import { getTxEffectData } from "./utils";
+import { getTxEffectData, mapTxEffectsData } from "./utils";
 import { truncateHashString } from "~/lib/create-hash-string";
+import { Textarea } from "~/components/ui/textarea";
+import { OptionButtons } from "./tabs";
 
 const API_ENDPOINT_URL = `${API_URL}/${aztecExplorer.getL2TxEffectByHash}`;
 
@@ -24,9 +26,12 @@ export const TxEffectDetails: FC = () => {
   });
   const { data: txEffects, isLoading, error } = useGetTxEffectByHash(hash);
 
+  const txEffectData = mapTxEffectsData(txEffects);
+
   const getSelectedItem = (value: string) => {
     setSelectedTab(value as TabId);
   };
+
   if (!hash) <div> No txEffect hash</div>;
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error</div>;
@@ -48,18 +53,11 @@ export const TxEffectDetails: FC = () => {
           <div className="bg-white rounded-lg shadow-md p-4">
             <KeyValueDisplay data={getTxEffectData(txEffects)} />
           </div>
-          <div className="hidden lg:flex flex-row gap-4 w-10 mb-4">
-            {txEffectTabs.map((tab) => (
-              <Button
-                key={tab.id}
-                variant="default"
-                onClick={() => setSelectedTab(tab.id)}
-                className="shadow-[0px_0px_1px_2px_rgba(0,0,0,1)]"
-              >
-                {tab.label}
-              </Button>
-            ))}
-          </div>
+          <OptionButtons
+            availableData={txEffectData}
+            requiredOptions={txEffectTabs}
+            onOptionSelect={getSelectedItem}
+          />
           <div className="mb-1 mt-4 lg:hidden">
             <Select onValueChange={getSelectedItem}>
               <SelectTrigger className="h-8 w-3/5 bg-primary text-white">
@@ -75,7 +73,7 @@ export const TxEffectDetails: FC = () => {
             </Select>
           </div>
           <div className="bg-white rounded-lg shadow-md p-4">
-            {selectedTab === "ecryptedLogs" && (
+            {selectedTab === "encryptedLogs" && (
               <div className="">
                 {txEffects.encryptedLogs.functionLogs.map(
                   (encryption, index) => {
@@ -118,7 +116,12 @@ export const TxEffectDetails: FC = () => {
                     return (
                       <div key={index}>
                         <h3>Log {index + 1}</h3>
-                        <KeyValueDisplay key={index} data={flattenedEntries} />
+                        {flattenedEntries.map((entry) => (
+                          <div key={entry.label}>
+                            <a>{entry.label}</a>
+                            <Textarea value={entry.value} disabled />
+                          </div>
+                        ))}
                       </div>
                     );
                   },
