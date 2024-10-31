@@ -39,3 +39,29 @@ export const chicmozL2ContractClassRegisteredEventSchema = z.object({
 export type ChicmozL2ContractClassRegisteredEvent = z.infer<
   typeof chicmozL2ContractClassRegisteredEventSchema
 >;
+
+const functionSelectorSchema = z.object({
+  type: z.enum(["FunctionSelector"]),
+  value: z.string(),
+});
+
+export const chicmozL2PrivateFunctionBroadcastedEventSchema = z.object({
+  contractClassId:
+    chicmozL2ContractClassRegisteredEventSchema.shape.contractClassId,
+  artifactMetadataHash: frSchema,
+  unconstrainedFunctionsArtifactTreeRoot: frSchema,
+  privateFunctionTreeSiblingPath: z.array(frSchema), // TODO: is it fixed size?
+  privateFunctionTreeLeafIndex: z.number(),
+  artifactFunctionTreeSiblingPath: z.array(frSchema), // TODO: is it fixed size?
+  artifactFunctionTreeLeafIndex: z.number(),
+  privateFunction: z.object({
+    selector: functionSelectorSchema,
+    metadataHash: frSchema,
+    vkHash: frSchema,
+    bytecode: bufferSchema,
+  }),
+});
+
+export type ChicmozL2PrivateFunctionBroadcastedEvent = z.infer<
+  typeof chicmozL2PrivateFunctionBroadcastedEventSchema
+>;

@@ -9,8 +9,10 @@ import { ProtocolContractAddress } from "@aztec/protocol-contracts";
 import {
   chicmozL2ContractClassRegisteredEventSchema,
   chicmozL2ContractInstanceDeployedEventSchema,
+  chicmozL2PrivateFunctionBroadcastedEventSchema,
   type ChicmozL2ContractClassRegisteredEvent,
   type ChicmozL2ContractInstanceDeployedEvent,
+  type ChicmozL2PrivateFunctionBroadcastedEvent,
 } from "@chicmoz-pkg/types";
 import { controllers } from "../../database/index.js";
 import { logger } from "../../logger.js";
@@ -18,7 +20,7 @@ import { handleDuplicateError } from "./utils.js";
 
 const parseObjs = <T>(
   blockHash: string,
-  objs: (ContractClassRegisteredEvent | ContractInstanceDeployedEvent)[],
+  objs: (ContractClassRegisteredEvent | ContractInstanceDeployedEvent | PrivateFunctionBroadcastedEvent)[],
   parseFn: (obj: unknown) => T
 ) => {
   const parsedObjs: T[] = [];
@@ -70,12 +72,10 @@ export const storeContracts = async (b: L2Block, blockHash: string) => {
 
   logger.info("======================================");
 
-  // TODO: console log broadcasted functions
   const privateFnEvents = PrivateFunctionBroadcastedEvent.fromLogs(
     blockLogs,
     ProtocolContractAddress.ContractClassRegisterer
   );
-  logger.info(JSON.stringify(privateFnEvents));
 
   const unconstrainedFnEvents = UnconstrainedFunctionBroadcastedEvent.fromLogs(
     blockLogs,
@@ -93,7 +93,11 @@ export const storeContracts = async (b: L2Block, blockHash: string) => {
       chicmozL2ContractInstanceDeployedEventSchema.parse(contractInstance)
     );
 
-  // TODO: parse broadcasted functions
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const parsedPrivateFnEvents: ChicmozL2PrivateFunctionBroadcastedEvent[] =
+    parseObjs(blockHash, privateFnEvents, (privateFnEvent) =>
+      chicmozL2PrivateFunctionBroadcastedEventSchema.parse(privateFnEvent)
+    );
 
   await storeObj(
     parsedContractClasses,
