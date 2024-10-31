@@ -32,11 +32,11 @@ export const parseTxEffectsData = (
     if (data.error) txEffectsErrorMsg = data.error.message;
     if (data.data) {
       if (!latestBlocks) return;
-      latestTxEffects = latestTxEffects.concat(
-        data.data.map((txEffect) =>
-          getTxEffectTableObj(txEffect, latestBlocks[i]),
-        ),
-      );
+      const newTxEffects = data.data.reduce((acc, txEffect) => {
+        if (txEffect === undefined) return acc;
+        return acc.concat(getTxEffectTableObj(txEffect, latestBlocks[i]));
+      }, latestTxEffects);
+      latestTxEffects = newTxEffects;
     }
   });
   return {

@@ -28,7 +28,7 @@ export const useGetTxEffectsByBlockHeight = (
 export const useGetTxEffectsByBlockHeightRange = (
   from: number | undefined,
   to: number | undefined
-): UseQueryResult<ChicmozL2TxEffectDeluxe[], Error>[] => {
+): UseQueryResult<(ChicmozL2TxEffectDeluxe | undefined)[], Error>[] => {
   return useQueries({
     queries:
       from === undefined || to === undefined
