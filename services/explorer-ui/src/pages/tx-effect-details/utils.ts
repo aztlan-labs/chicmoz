@@ -34,15 +34,24 @@ export const mapTxEffectsData = (
 ): Record<string, TxEffectDataType | undefined> => {
   if (!data) return {};
 
+  console.log(
+    data.encryptedLogs?.functionLogs?.filter((log) => log.logs.length > 0),
+  );
   const effectsMap: Record<tabId, TxEffectDataType | undefined> = {
-    encryptedLogs: data.encryptedLogs?.functionLogs?.length
-      ? data.encryptedLogs.functionLogs
+    encryptedLogs: !data.encryptedLogs?.functionLogs?.filter(
+      (log) => log.logs.length > 0,
+    )
+      ? data.encryptedLogs.functionLogs.filter((log) => log.logs.length > 0)
       : undefined,
-    unencryptedLogs: data.unencryptedLogs?.functionLogs?.length
+    unencryptedLogs: !data.unencryptedLogs?.functionLogs?.filter(
+      (log) => log.logs.length > 0,
+    )
       ? data.unencryptedLogs.functionLogs
       : undefined,
     nullifiers: data.nullifiers?.length ? data.nullifiers : undefined,
-    noteEncryptedLogs: data.noteEncryptedLogs?.functionLogs?.length
+    noteEncryptedLogs: !data.noteEncryptedLogs?.functionLogs?.filter(
+      (log) => log.logs.length > 0,
+    )
       ? data.noteEncryptedLogs.functionLogs
       : undefined,
     noteHashes: data.noteHashes?.length ? data.noteHashes : undefined,
