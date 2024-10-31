@@ -32,7 +32,7 @@ export interface SearchInputProps
 const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
   ({ className, type, onIconClick, isLoading, noResults, ...props }, ref) => {
     return (
-      <div className="flex items-center mr-3 pl-3 w-fit bg-white rounded-md focus-visible:ring-1 focus-visible:ring-ring">
+      <div className="flex items-center pl-3 w-full bg-white rounded-md focus-visible:ring-1 focus-visible:ring-ring">
         {noResults ? (
           <div>
             <CrossIcon />

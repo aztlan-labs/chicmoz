@@ -1,0 +1,28 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+metadata:
+  name: chicmoz
+build:
+  artifacts:
+    - image: chicmoz-base
+      context: .
+      docker:
+        dockerfile: Dockerfile
+    - image: aztec-event-cannon
+      context: services/aztec-event-cannon
+      docker:
+        dockerfile: Dockerfile
+      requires:
+        - image: chicmoz-base
+          alias: BASE
+manifests:
+  rawYaml:
+    - k8s/local/common/namespace.yaml
+    - k8s/local/aztec-event-cannon/deployment.yaml # runs continuously
+    - k8s/local/aztec-event-cannon/job.yaml # runs once
+    - k8s/local/aztec-sandbox-node/ingress.yaml
+    - k8s/local/aztec-sandbox-node/deployment.yaml
+    - k8s/local/aztec-sandbox-node/service.yaml
+    - k8s/local/anvil-ethereum-node/ingress.yaml
+    - k8s/local/anvil-ethereum-node/deployment.yaml
+    - k8s/local/anvil-ethereum-node/service.yaml

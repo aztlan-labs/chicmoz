@@ -54,5 +54,6 @@ export const publishMessage = async <T>(
   if (isShutdown) throw new Error("MessageBus is already shutdown");
 
   const topic = generateAztecTopicName(NETWORK_ID, eventType);
+  logger.info(`Publishing message to topic ${topic}`);
   await mb.publish<T>(topic, message);
 };

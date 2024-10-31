@@ -1,27 +1,71 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { createAztecNodeClient, AztecNode, NodeInfo } from "@aztec/aztec.js";
 import { AZTEC_RPC_URL, NODE_ENV } from "../constants.js";
 import { logger } from "../logger.js";
+import { IBackOffOptions, backOff } from "exponential-backoff";
 
 let aztecNode: AztecNode;
+
+const backOffOptions: Partial<IBackOffOptions> = {
+  numOfAttempts: 5,
+  maxDelay: 10000,
+  startingDelay: 2000,
+  retry: (e, attemptNumber: number) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const errorCode = e.cause?.code;
+    const isRetriableProductionError = errorCode === "ECONNRESET";
+    const isRetriableDevelopmentError =
+      errorCode === "ECONNREFUSED" || errorCode === "ENOTFOUND";
+    if (isRetriableProductionError) {
+      logger.warn(
+        `🤡 Aztec connection reset, retrying attempt ${attemptNumber}...`
+      );
+      return true;
+    } else if (NODE_ENV === "development" && isRetriableDevelopmentError) {
+      logger.warn(
+        `🤡🤡 Aztec connection refused or not found, retrying attempt ${attemptNumber}...`
+      );
+      return true;
+    }
+
+    return false;
+  },
+};
 
 const node = () => {
   if (!aztecNode) throw new Error("Node not initialized");
   return aztecNode;
 };
 
-export const logFetchFailedCause = (e: Error) => {
-  if (e.cause) logger.warn(`Aztec failed to fetch: ${JSON.stringify(e.cause)}`);
-  throw e;
+const callNodeFunction = async <K extends keyof AztecNode>(
+  fnName: K,
+  args?: Parameters<AztecNode[K]>
+): Promise<ReturnType<AztecNode[K]>> => {
+  try {
+    return await backOff(async () => {
+      // eslint-disable-next-line @typescript-eslint/ban-types
+      return (await (node()[fnName] as Function).apply(
+        node(),
+        args
+      )) as Promise<ReturnType<AztecNode[K]>>;
+    }, backOffOptions);
+  } catch (e) {
+    if ((e as Error).cause) {
+      logger.warn(
+        `Aztec failed to fetch: ${JSON.stringify((e as Error).cause)}`
+      );
+    }
+    throw e;
+  }
 };
 
 export const init = async () => {
   logger.info(`Initializing Aztec node client with ${AZTEC_RPC_URL}`);
   aztecNode = createAztecNodeClient(AZTEC_RPC_URL);
-  return getNodeInfo().catch(logFetchFailedCause);
+  return getNodeInfo();
 };
 
 export const getNodeInfo = async (): Promise<NodeInfo> => {
-  const n = node();
   const [
     nodeVersion,
     protocolVersion,
@@ -30,12 +74,12 @@ export const getNodeInfo = async (): Promise<NodeInfo> => {
     contractAddresses,
     protocolContractAddresses,
   ] = await Promise.all([
-    n.getNodeVersion().catch(logFetchFailedCause),
-    n.getVersion().catch(logFetchFailedCause),
-    n.getChainId().catch(logFetchFailedCause),
-    n.getEncodedEnr().catch(logFetchFailedCause),
-    n.getL1ContractAddresses().catch(logFetchFailedCause),
-    n.getProtocolContractAddresses().catch(logFetchFailedCause),
+    callNodeFunction("getNodeVersion"),
+    callNodeFunction("getVersion"),
+    callNodeFunction("getChainId"),
+    callNodeFunction("getEncodedEnr"),
+    callNodeFunction("getL1ContractAddresses"),
+    callNodeFunction("getProtocolContractAddresses"),
   ]);
 
   const nodeInfo: NodeInfo = {
@@ -47,20 +91,18 @@ export const getNodeInfo = async (): Promise<NodeInfo> => {
     protocolContractAddresses: protocolContractAddresses,
   };
 
-  // TODO: why unsafe?
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return nodeInfo;
 };
 
 export const getBlock = async (height: number) =>
-  node().getBlock(height).catch(logFetchFailedCause);
+  callNodeFunction("getBlock", [height]);
 
 export const getBlocks = async (fromHeight: number, toHeight: number) => {
   const blocks = [];
   for (let i = fromHeight; i < toHeight; i++) {
     if (NODE_ENV === "development")
       await new Promise((r) => setTimeout(r, 500));
-    const block = await node().getBlock(i).catch(logFetchFailedCause);
+    const block = await getBlock(i);
     blocks.push(block);
   }
   return blocks;
@@ -68,12 +110,12 @@ export const getBlocks = async (fromHeight: number, toHeight: number) => {
 
 export const getLatestHeight = async () => {
   const [bn, provenBn] = await Promise.all([
-    node().getBlockNumber().catch(logFetchFailedCause),
-    node().getProvenBlockNumber().catch(logFetchFailedCause),
+    callNodeFunction("getBlockNumber"),
+    callNodeFunction("getProvenBlockNumber"),
   ]);
   // TODO: if provenBn is constantly behind, we should start storing and displaying it in the UI
   if (bn - provenBn > 0)
-    logger.warn(`Difference between block and proven block: ${bn - provenBn}`);
+    logger.warn(`🃏 Difference between block and proven block: ${bn - provenBn}`);
 
   return bn;
 };

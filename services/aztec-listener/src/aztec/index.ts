@@ -1,4 +1,3 @@
-import { IBackOffOptions, backOff } from "exponential-backoff";
 import { NodeInfo } from "@chicmoz-pkg/types";
 import {
   AZTEC_GENESIS_CATCHUP,
@@ -17,24 +16,10 @@ import { startPolling, stopPolling } from "./poller.js";
 import { startCatchup } from "./genesis-catchup.js";
 import { onConnectedToAztec } from "../event-handler/index.js";
 
-const backOffOptions: Partial<IBackOffOptions> = {
-  numOfAttempts: 10,
-  maxDelay: 10000,
-  retry: (e, attemptNumber: number) => {
-    logger.warn(e);
-    logger.info(
-      `🤡 We'll allow some errors during start-up, retrying attempt ${attemptNumber}...`
-    );
-    return true;
-  },
-};
-
 let nodeInfo: NodeInfo;
 
 export const init = async () => {
-  nodeInfo = await backOff(async () => {
-    return await initNetworkClient();
-  }, backOffOptions);
+  nodeInfo = await initNetworkClient();
   logger.info(`AZTEC: initialized: ${JSON.stringify(nodeInfo)}`);
 
   const latestProcessedHeight = (await getLatestProcessedHeight()) ?? 0;

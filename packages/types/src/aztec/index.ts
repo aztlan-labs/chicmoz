@@ -1,4 +1,5 @@
 import { type NodeInfo } from "@aztec/aztec.js";
+import { EthAddress, ethAddressSchema } from "../general.js";
 export { type NodeInfo };
 
 export * from "./l2Block.js";
@@ -12,10 +13,10 @@ export const transformNodeInfo = (nodeInfo: NodeInfo): StringifiedNodeInfo => {
     nodeInfo.l1ContractAddresses
   ).reduce(
     (acc, [k, v]) => {
-      acc[k] = v.toString();
+      acc[k] = ethAddressSchema.parse(v.toString());
       return acc;
     },
-    {} as Record<string, string>
+    {} as Record<string, EthAddress>
   );
 
   const protocolContractAddresses = Object.entries(
@@ -35,7 +36,16 @@ export const transformNodeInfo = (nodeInfo: NodeInfo): StringifiedNodeInfo => {
   return nodeInfoWithStringifiedAddresses;
 };
 
-export type StringifiedNodeInfo = Omit<NodeInfo, "l1ContractAddresses" | "protocolContractAddresses"> & {
-  l1ContractAddresses: Record<keyof NodeInfo["l1ContractAddresses"], string>;
-  protocolContractAddresses: Record<keyof NodeInfo["protocolContractAddresses"], string>;
+export type StringifiedNodeInfo = Omit<
+  NodeInfo,
+  "l1ContractAddresses" | "protocolContractAddresses"
+> & {
+  l1ContractAddresses: Record<
+    keyof NodeInfo["l1ContractAddresses"],
+    EthAddress
+  >;
+  protocolContractAddresses: Record<
+    keyof NodeInfo["protocolContractAddresses"],
+    string
+  >;
 };
