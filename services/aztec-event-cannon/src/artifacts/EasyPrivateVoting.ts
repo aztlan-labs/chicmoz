@@ -71,7 +71,7 @@ export class EasyPrivateVotingContract extends ContractBase {
    * Creates a tx to deploy a new instance of this contract.
    */
   public static deploy(wallet: Wallet, admin: AztecAddressLike) {
-    return new DeployMethod<EasyPrivateVotingContract>(PublicKeys.empty(), wallet, EasyPrivateVotingContractArtifact, EasyPrivateVotingContract.at, Array.from(arguments).slice(1));
+    return new DeployMethod<EasyPrivateVotingContract>(PublicKeys.default(), wallet, EasyPrivateVotingContractArtifact, EasyPrivateVotingContract.at, Array.from(arguments).slice(1));
   }
 
   /**
@@ -89,7 +89,7 @@ export class EasyPrivateVotingContract extends ContractBase {
     ...args: Parameters<EasyPrivateVotingContract['methods'][M]>
   ) {
     return new DeployMethod<EasyPrivateVotingContract>(
-      opts.publicKeys ?? PublicKeys.empty(),
+      opts.publicKeys ?? PublicKeys.default(),
       opts.wallet,
       EasyPrivateVotingContractArtifact,
       EasyPrivateVotingContract.at,

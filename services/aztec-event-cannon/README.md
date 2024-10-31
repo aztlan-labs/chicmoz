@@ -1,4 +1,6 @@
-aztec-up 0.58.0
+# Compile contracts (if changed, or updated version)
+
+aztec-up 0.61.0
 
 aztec-nargo compile
 
