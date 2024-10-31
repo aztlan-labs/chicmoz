@@ -84,12 +84,12 @@ export async function start() {
     );
   }
 
-  // TODO: why do I throw?
   const selector = FunctionSelector.fromNameAndParameters(
     constructorArtifact.name,
     constructorArtifact.parameters
   );
 
+  // TODO: why do I throw?
   const tx2 = await (await broadcastPrivateFunction(wallet, artifact, selector))
     .send()
     .wait();
