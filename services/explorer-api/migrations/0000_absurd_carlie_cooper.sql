@@ -198,6 +198,35 @@ CREATE TABLE IF NOT EXISTS "l2_contract_instance_deployed" (
 	CONSTRAINT "l2_contract_instance_deployed_contract_class_id_address_version_unique" UNIQUE("contract_class_id","address","version")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "l2_private_function" (
+	"contract_class_id" varchar(66) NOT NULL,
+	"artifact_metadata_hash" varchar(66) NOT NULL,
+	"unconstrained_functions_artifact_tree_root" varchar(66) NOT NULL,
+	"private_function_tree_sibling_path" jsonb NOT NULL,
+	"private_function_tree_leaf_index" bigint NOT NULL,
+	"artifact_function_tree_sibling_path" jsonb NOT NULL,
+	"artifact_function_tree_leaf_index" bigint NOT NULL,
+	"private_function_selector_type" varchar NOT NULL,
+	"private_function_selector_value" varchar NOT NULL,
+	"private_function_metadata_hash" varchar(66) NOT NULL,
+	"private_function_vk_hash" varchar(66) NOT NULL,
+	"private_function_bytecode" "bytea" NOT NULL,
+	CONSTRAINT "private_function_contract_class" PRIMARY KEY("contract_class_id","private_function_selector_value")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "l2_unconstrained_function" (
+	"contract_class_id" varchar(66) NOT NULL,
+	"artifact_metadata_hash" varchar(66) NOT NULL,
+	"private_functions_artifact_tree_root" varchar(66) NOT NULL,
+	"artifact_function_tree_sibling_path" jsonb NOT NULL,
+	"artifact_function_tree_leaf_index" bigint NOT NULL,
+	"unconstrained_function_selector_type" varchar NOT NULL,
+	"unconstrained_function_selector_value" varchar NOT NULL,
+	"unconstrained_function_metadata_hash" varchar(66) NOT NULL,
+	"unconstrained_function_bytecode" "bytea" NOT NULL,
+	CONSTRAINT "unconstrained_function_contract_class" PRIMARY KEY("contract_class_id","unconstrained_function_selector_value")
+);
+--> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "l2Block" ADD CONSTRAINT "l2Block_archive_id_archive_id_fk" FOREIGN KEY ("archive_id") REFERENCES "public"."archive"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
