@@ -10,6 +10,7 @@ import {
   txEffectHash,
   classId,
   version,
+  functionSelector,
 } from "../paths_and_validation.js";
 import { NODE_ENV, PUBLIC_API_KEY } from "../../../environment.js";
 import { getCache } from "../../../cache/index.js";
@@ -26,6 +27,8 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
   const blockAndTxEffect = await db.signOfLife.getABlockWithTxEffects();
   const blockAndAContractInstance =
     await db.signOfLife.getABlockWithContractInstances();
+  const { privateFunction, unconstrainedFunction } =
+    await db.signOfLife.getL2ContractFunctions();
   const r = [paths.latestHeight, paths.latestBlock, `${paths.blocks}?from=0`];
   const searchRoutes = [];
 
@@ -73,8 +76,14 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
   if (blockAndAContractInstance) {
     r.push(
       paths.contractClass
-        .replace(`:${classId}`, blockAndAContractInstance.contractInstance.classId)
-        .replace(`:${version}`, blockAndAContractInstance.contractInstance.version.toString())
+        .replace(
+          `:${classId}`,
+          blockAndAContractInstance.contractInstance.classId
+        )
+        .replace(
+          `:${version}`,
+          blockAndAContractInstance.contractInstance.version.toString()
+        )
     );
     r.push(
       paths.contractClassesByClassId.replace(
@@ -109,6 +118,35 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
   } else {
     r.push(paths.contractInstancesByBlockHash + "NOT FOUND");
     r.push(paths.contractInstance + "NOT FOUND");
+  }
+  if (privateFunction) {
+    r.push(
+      paths.contractClassPrivateFunctions.replace(
+        `:${classId}`,
+        privateFunction.classId
+      )
+    );
+    r.push(
+      paths.contractClassPrivateFunction
+        .replace(`:${classId}`, privateFunction.classId)
+        .replace(`:${functionSelector}`, privateFunction.functionSelector)
+    );
+  }
+  if (unconstrainedFunction) {
+    r.push(
+      paths.contractClassUnconstrainedFunctions.replace(
+        `:${classId}`,
+        unconstrainedFunction.classId
+      )
+    );
+    r.push(
+      paths.contractClassUnconstrainedFunction
+        .replace(`:${classId}`, unconstrainedFunction.classId)
+        .replace(`:${functionSelector}`, unconstrainedFunction.functionSelector)
+    );
+  } else {
+    r.push(paths.contractClassPrivateFunctions + "NOT FOUND");
+    r.push(paths.contractClassUnconstrainedFunctions + "NOT FOUND");
   }
 
   const statsRoutes = [
@@ -156,7 +194,8 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
 });
 
 export const GET_AZTEC_CHAIN_CONNECTION = asyncHandler(async (_req, res) => {
-  const chainConnection = await db.aztecChainConnection.getLatestWithRedactedRpc();
+  const chainConnection =
+    await db.aztecChainConnection.getLatestWithRedactedRpc();
   if (!chainConnection) {
     res.status(404).send("No chain connection found");
     return;
