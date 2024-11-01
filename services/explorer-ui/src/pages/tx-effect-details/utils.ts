@@ -1,5 +1,5 @@
 import { type ChicmozL2TxEffectDeluxe } from "@chicmoz-pkg/types";
-import { Tab, tabId } from "./constants";
+import { tabId } from "./constants";
 export type TxEffectDataType =
   | string[]
   | Array<{ logs: Array<{ data: string; contractAddress: string }> }>

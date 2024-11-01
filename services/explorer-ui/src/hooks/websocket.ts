@@ -19,7 +19,7 @@ const updateBlock = (
     (oldData: ChicmozL2BlockLight[] | undefined) => {
       if (!oldData) return [block];
       if (oldData.find((b) => b.hash === block.hash)) return oldData;
-      return [block, ...oldData];
+      return [...oldData, block];
     }
   );
 };
