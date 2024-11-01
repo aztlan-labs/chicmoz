@@ -5,6 +5,8 @@ import {
   boolean,
   foreignKey,
   integer,
+  jsonb,
+  pgEnum,
   pgTable,
   primaryKey,
   unique,
@@ -100,9 +102,49 @@ export const l2ContractInstanceDeployedRelations = relations(
   })
 );
 
+const functionSelectorSchema = pgEnum("function_selector_type", [
+  "FunctionSelector",
+]);
+
+export const l2PrivateFunction = pgTable(
+  "l2_private_function",
+  {
+    contractClassId: generateFrColumn("contract_class_id").notNull().references(() => l2ContractClassRegistered.contractClassId),
+    artifactMetadataHash: generateFrColumn("artifact_metadata_hash").notNull(),
+    unconstrainedFunctionsArtifactTreeRoot: generateFrColumn("unconstrained_functions_artifact_tree_root").notNull(),
+    privateFunctionTreeSiblingPath: jsonb("private_function_tree_sibling_path").notNull(),
+    privateFunctionTreeLeafIndex: bigint("private_function_tree_leaf_index", { mode: "number" }).notNull(),
+    artifactFunctionTreeSiblingPath: jsonb("artifact_function_tree_sibling_path").notNull(),
+    artifactFunctionTreeLeafIndex: bigint("artifact_function_tree_leaf_index", { mode: "number" }).notNull(),
+    privateFunction_selector_type: functionSelectorSchema("private_function_selector_type").notNull(),
+    privateFunction_selector_value: varchar("private_function_selector_value").notNull(),
+    privateFunction_metadataHash: generateFrColumn("private_function_metadata_hash").notNull(),
+    privateFunction_vkHash: generateFrColumn("private_function_vk_hash").notNull(),
+    privateFunction_bytecode: bufferType("private_function_bytecode").notNull(),
+  }
+);
+
+export const l2UnconstrainedFunction = pgTable(
+  "l2_unconstrained_function",
+  {
+    contractClassId: generateFrColumn("contract_class_id").notNull().references(() => l2ContractClassRegistered.contractClassId),
+    artifactMetadataHash: generateFrColumn("artifact_metadata_hash").notNull(),
+    privateFunctionsArtifactTreeRoot: generateFrColumn("private_functions_artifact_tree_root").notNull(),
+    artifactFunctionTreeSiblingPath: jsonb("artifact_function_tree_sibling_path").notNull(),
+    artifactFunctionTreeLeafIndex: bigint("artifact_function_tree_leaf_index", { mode: "number" }).notNull(),
+    unconstrainedFunction_selector_type: functionSelectorSchema("unconstrained_function_selector_type").notNull(),
+    unconstrainedFunction_selector_value: varchar("unconstrained_function_selector_value").notNull(),
+    unconstrainedFunction_metadataHash: generateFrColumn("unconstrained_function_metadata_hash").notNull(),
+    unconstrainedFunction_bytecode: bufferType("unconstrained_function_bytecode").notNull(),
+  }
+);
+
 export const l2ContractClassRegisteredRelations = relations(
   l2ContractClassRegistered,
   ({ many }) => ({
     instances: many(l2ContractInstanceDeployed),
+    privateFunctions: many(l2PrivateFunction),
+    unconstrainedFunctions: many(l2UnconstrainedFunction),
   })
 );
+
