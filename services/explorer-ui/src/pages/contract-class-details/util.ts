@@ -1,7 +1,7 @@
 import { type ChicmozL2ContractClassRegisteredEvent } from "@chicmoz-pkg/types";
 import { routes } from "~/routes/__root";
 
-export const getContractData = (
+export const getContractClassKeyValueData = (
   data: ChicmozL2ContractClassRegisteredEvent
 ): { label: string; value: string; link?: string }[] => [
   {
