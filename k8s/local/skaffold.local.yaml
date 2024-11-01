@@ -8,27 +8,27 @@ build:
       context: .
       docker:
         dockerfile: Dockerfile
-    - image: dummy-node
-      context: services/dummy-node
-      docker:
-        dockerfile: Dockerfile
-      requires:
-        - image: chicmoz-base
-          alias: BASE
-    - image: explorer-ui
-      context: services/explorer-ui
-      docker:
-        dockerfile: Dockerfile
-        buildArgs:
-          NODE_ENV: "development"
-          VITE_API_URL: "http://explorer-api.localhost:80/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4"
-          VITE_WS_URL: "ws://ws.localhost:80" # TODO: use API_KEY
-          VITE_DISCORD_URL: "https://discord.gg/obscura-network"
-          VITE_X_URL: "https://x.com/Obscura_Network"
-          VITE_GITHUB_URL: "https://github.com/aztlan-labs/chicmoz"
-      requires:
-        - image: chicmoz-base
-          alias: BASE
+        #- image: dummy-node
+        #  context: services/dummy-node
+        #  docker:
+        #    dockerfile: Dockerfile
+        #  requires:
+        #    - image: chicmoz-base
+        #      alias: BASE
+        #- image: explorer-ui
+        #  context: services/explorer-ui
+        #  docker:
+        #    dockerfile: Dockerfile
+        #    buildArgs:
+        #      NODE_ENV: "development"
+        #      VITE_API_URL: "http://explorer-api.localhost:80/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4"
+        #      VITE_WS_URL: "ws://ws.localhost:80" # TODO: use API_KEY
+        #      VITE_DISCORD_URL: "https://discord.gg/obscura-network"
+        #      VITE_X_URL: "https://x.com/Obscura_Network"
+        #      VITE_GITHUB_URL: "https://github.com/aztlan-labs/chicmoz"
+        #  requires:
+        #    - image: chicmoz-base
+        #      alias: BASE
     - image: auth
       context: services/auth
       docker:
@@ -43,13 +43,13 @@ build:
       requires:
         - image: chicmoz-base
           alias: BASE
-    - image: ethereum-listener
-      context: services/ethereum-listener
-      docker:
-        dockerfile: Dockerfile
-      requires:
-        - image: chicmoz-base
-          alias: BASE
+          #- image: ethereum-listener
+          #  context: services/ethereum-listener
+          #  docker:
+          #    dockerfile: Dockerfile
+          #  requires:
+          #    - image: chicmoz-base
+          #      alias: BASE
     - image: explorer-api
       context: services/explorer-api
       docker:
@@ -74,9 +74,9 @@ build:
 manifests:
   rawYaml:
     - k8s/local/common/namespace.yaml
-    - k8s/local/explorer-ui/ingress.yaml
-    - k8s/local/explorer-ui/deployment.yaml
-    - k8s/local/explorer-ui/service.yaml
+    #- k8s/local/explorer-ui/ingress.yaml
+    #- k8s/local/explorer-ui/deployment.yaml
+    #- k8s/local/explorer-ui/service.yaml
     - k8s/local/explorer-api/ingress.yaml
     - k8s/local/explorer-api/deployment.yaml
     - k8s/local/explorer-api/service.yaml
@@ -116,12 +116,12 @@ manifests:
     #   3. You run a local Aztec sandbox node, then you also have a PXE which you can interact with and submit transactions to. But they are only on your local cluster.
     #   👀 NOTE: You also need to add `127.0.0.1	aztec-sandbox-node.localhost` to your /etc/hosts file to reach it from outside the cluster
     #
-    #- k8s/local/aztec-sandbox-node/ingress.yaml
-    #- k8s/local/aztec-sandbox-node/deployment.yaml
-    #- k8s/local/aztec-sandbox-node/service.yaml
-    #- k8s/local/anvil-ethereum-node/ingress.yaml
-    #- k8s/local/anvil-ethereum-node/deployment.yaml
-    #- k8s/local/anvil-ethereum-node/service.yaml
+    - k8s/local/aztec-sandbox-node/ingress.yaml
+    - k8s/local/aztec-sandbox-node/deployment.yaml
+    - k8s/local/aztec-sandbox-node/service.yaml
+    - k8s/local/anvil-ethereum-node/ingress.yaml
+    - k8s/local/anvil-ethereum-node/deployment.yaml
+    - k8s/local/anvil-ethereum-node/service.yaml
   helm:
     releases:
       - name: ingress-nginx
