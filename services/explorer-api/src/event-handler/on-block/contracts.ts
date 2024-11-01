@@ -68,9 +68,6 @@ export const storeContracts = async (b: L2Block, blockHash: string) => {
     ProtocolContractAddress.ContractClassRegisterer
   );
   const contractInstances = ContractInstanceDeployedEvent.fromLogs(blockLogs);
-  logger.info(
-    `Parsing and storing ${contractClasses.length} contract classes and ${contractInstances.length} contract instances`
-  );
 
   const privateFnEvents = PrivateFunctionBroadcastedEvent.fromLogs(
     blockLogs,
@@ -80,6 +77,9 @@ export const storeContracts = async (b: L2Block, blockHash: string) => {
   const unconstrainedFnEvents = UnconstrainedFunctionBroadcastedEvent.fromLogs(
     blockLogs,
     ProtocolContractAddress.ContractClassRegisterer
+  );
+  logger.info(
+    `📜 Parsing and storing ${contractClasses.length} contract classes and ${contractInstances.length} contract instances, ${privateFnEvents.length} private function events, and ${unconstrainedFnEvents.length} unconstrained function events`
   );
 
   const parsedContractClasses: ChicmozL2ContractClassRegisteredEvent[] =
@@ -91,13 +91,11 @@ export const storeContracts = async (b: L2Block, blockHash: string) => {
       chicmozL2ContractInstanceDeployedEventSchema.parse(contractInstance)
     );
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const parsedPrivateFnEvents: ChicmozL2PrivateFunctionBroadcastedEvent[] =
     parseObjs(blockHash, privateFnEvents, (privateFnEvent) =>
       chicmozL2PrivateFunctionBroadcastedEventSchema.parse(privateFnEvent)
     );
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const parsedUnconstrainedFnEvents: ChicmozL2UnconstrainedFunctionBroadcastedEvent[] =
     parseObjs(blockHash, unconstrainedFnEvents, (unconstrainedFnEvent) =>
       chicmozL2UnconstrainedFunctionBroadcastedEventSchema.parse(unconstrainedFnEvent)
@@ -116,5 +114,18 @@ export const storeContracts = async (b: L2Block, blockHash: string) => {
     "address"
   );
 
-  // TODO: store broadcasted functions
+  await storeObj(
+    parsedPrivateFnEvents,
+    controllers.l2Contract.storePrivateFunction,
+    "privateFunction",
+    "artifactMetadataHash"
+  );
+
+  await storeObj(
+    parsedUnconstrainedFnEvents,
+    controllers.l2Contract.storeUnconstrainedFunction,
+    "unconstrainedFunction",
+    "artifactMetadataHash"
+  );
+
 };

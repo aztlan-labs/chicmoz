@@ -1,5 +1,5 @@
 {
-  "id": "ad1e928c-ffdb-4195-aed7-8cd62a64f19d",
+  "id": "6ea46951-3aa8-4e0c-813c-5831c4d6e2f9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1247,6 +1247,165 @@
           "columns": ["contract_class_id", "address", "version"]
         }
       }
+    },
+    "public.l2_private_function": {
+      "name": "l2_private_function",
+      "schema": "",
+      "columns": {
+        "contract_class_id": {
+          "name": "contract_class_id",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "artifact_metadata_hash": {
+          "name": "artifact_metadata_hash",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unconstrained_functions_artifact_tree_root": {
+          "name": "unconstrained_functions_artifact_tree_root",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "private_function_tree_sibling_path": {
+          "name": "private_function_tree_sibling_path",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "private_function_tree_leaf_index": {
+          "name": "private_function_tree_leaf_index",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "artifact_function_tree_sibling_path": {
+          "name": "artifact_function_tree_sibling_path",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "artifact_function_tree_leaf_index": {
+          "name": "artifact_function_tree_leaf_index",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "private_function_selector_type": {
+          "name": "private_function_selector_type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "private_function_selector_value": {
+          "name": "private_function_selector_value",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "private_function_metadata_hash": {
+          "name": "private_function_metadata_hash",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "private_function_vk_hash": {
+          "name": "private_function_vk_hash",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "private_function_bytecode": {
+          "name": "private_function_bytecode",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "private_function_contract_class": {
+          "name": "private_function_contract_class",
+          "columns": ["contract_class_id", "private_function_selector_value"]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.l2_unconstrained_function": {
+      "name": "l2_unconstrained_function",
+      "schema": "",
+      "columns": {
+        "contract_class_id": {
+          "name": "contract_class_id",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "artifact_metadata_hash": {
+          "name": "artifact_metadata_hash",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "private_functions_artifact_tree_root": {
+          "name": "private_functions_artifact_tree_root",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "artifact_function_tree_sibling_path": {
+          "name": "artifact_function_tree_sibling_path",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "artifact_function_tree_leaf_index": {
+          "name": "artifact_function_tree_leaf_index",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unconstrained_function_selector_type": {
+          "name": "unconstrained_function_selector_type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unconstrained_function_selector_value": {
+          "name": "unconstrained_function_selector_value",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unconstrained_function_metadata_hash": {
+          "name": "unconstrained_function_metadata_hash",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unconstrained_function_bytecode": {
+          "name": "unconstrained_function_bytecode",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "unconstrained_function_contract_class": {
+          "name": "unconstrained_function_contract_class",
+          "columns": [
+            "contract_class_id",
+            "unconstrained_function_selector_value"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
     }
   },
   "enums": {},
