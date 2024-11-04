@@ -27,6 +27,9 @@ export const chicmozL2PendingTxSchema = z.object({
   publicTeardownFunctionCall: z.string(),
 });
 
+/**
+  * Represents effects of a transaction on the L2 state.
+  */
 export const chicmozL2TxEffectSchema = z.object({
   revertCode: z.preprocess(
     (val) => {
@@ -35,8 +38,10 @@ export const chicmozL2TxEffectSchema = z.object({
     },
     z.object({ code: z.number() }),
   ),
+  /** The hash of the transaction that caused these effects. */
   hash: hexStringSchema,
-  txHash: hexStringSchema.optional(), // TODO: remove optional
+  /** The hash of the transaction and its effects. */
+  txHash: hexStringSchema,
   transactionFee: frNumberSchema,
   noteHashes: z.array(frSchema),
   nullifiers: z.array(frSchema),

@@ -107,7 +107,7 @@ export const openapi_GET_L2_TX_EFFECT_BY_TX_HASH = {
 export const GET_L2_TX_EFFECT_BY_TX_HASH = asyncHandler(async (req, res) => {
   const { txEffectHash } = getTxEffectsByTxHashSchema.parse(req).params;
   const txEffectsData = await dbWrapper.get(["l2", "txEffects", txEffectHash], () =>
-    db.l2TxEffect.getTxeffectByHash(txEffectHash)
+    db.l2TxEffect.getTxEffectByTxHash(txEffectHash)
   );
   res.status(200).send(txEffectsData);
 });

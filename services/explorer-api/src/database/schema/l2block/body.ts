@@ -1,5 +1,7 @@
 import { HexString } from "@chicmoz-pkg/types";
 import {
+  date,
+  index,
   integer,
   jsonb,
   pgTable,
@@ -24,6 +26,9 @@ export const bodyToTxEffects = pgTable("body_to_tx_effects", {
 
 export const txEffect = pgTable("tx_effect", {
   hash: varchar("hash").notNull().$type<HexString>().primaryKey(),
+  txHash: varchar("hash").notNull().$type<HexString>(),
+  txBirthTime: date("tx_time_of_birth").notNull(),
+  addedToChainTime: date("added_to_chain_time").notNull().defaultNow(),
   // TODO: move index to junction table
   index: integer("index").notNull(),
   revertCode: smallint("revert_code").notNull(),
@@ -35,7 +40,10 @@ export const txEffect = pgTable("tx_effect", {
   noteEncryptedLogsLength: generateFrNumberColumn("note_encrypted_logs_length").notNull(),
   encryptedLogsLength: generateFrNumberColumn("encrypted_logs_length").notNull(),
   unencryptedLogsLength: generateFrNumberColumn("unencrypted_logs_length").notNull(),
-});
+}, (table) => ({
+    txHashIndex: index("tx_hash_index").on(table.txHash)
+  })
+);
 
 export const txEffectToPublicDataWrite = pgTable(
   "tx_effect_to_public_data_write",
