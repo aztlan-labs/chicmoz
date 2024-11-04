@@ -6,7 +6,7 @@ const getTxEffectWithHashes = (txEffects: L2Block["body"]["txEffects"]) => {
     return {
       ...txEffect,
       hash: "0x" + txEffect.hash().toString("hex"),
-      txHash: txEffect.txHash
+      txHash: txEffect.txHash.to0xString(),
     };
   });
 };

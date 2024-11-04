@@ -4,10 +4,10 @@ metadata:
   name: chicmoz
 requires:
   - path: ./chicmoz-base-image.yaml
-  #- path: ./explorer-api/image.yaml
-  #- path: ./websocket-event-publisher/image.yaml
-  #- path: ./auth/image.yaml
-  #- path: ./aztec-event-cannon/image.yaml
+  - path: ./explorer-api/image.yaml
+  - path: ./websocket-event-publisher/image.yaml
+  - path: ./auth/image.yaml
+  - path: ./aztec-event-cannon/image.yaml
   - path: ./aztec-listener/image.yaml
 deploy:
   kubectl:
@@ -15,13 +15,13 @@ deploy:
       apply: ["--force"]
 manifests:
   rawYaml:
-    #- k8s/local/explorer-api/ingress.yaml
-    #- k8s/local/explorer-api/deployment.yaml
-    #- k8s/local/explorer-api/service.yaml
-    #- k8s/local/websocket-event-publisher/ingress.yaml
-    #- k8s/local/websocket-event-publisher/deployment.yaml
-    #- k8s/local/websocket-event-publisher/service.yaml
-    #- k8s/local/auth/deployment.yaml
-    #- k8s/local/auth/service.yaml
-    #- k8s/local/aztec-event-cannon/deployment.yaml
+    - k8s/local/explorer-api/ingress.yaml
+    - k8s/local/explorer-api/deployment.yaml
+    - k8s/local/explorer-api/service.yaml
+    - k8s/local/websocket-event-publisher/ingress.yaml
+    - k8s/local/websocket-event-publisher/deployment.yaml
+    - k8s/local/websocket-event-publisher/service.yaml
+    - k8s/local/auth/deployment.yaml
+    - k8s/local/auth/service.yaml
+    - k8s/local/aztec-event-cannon/deployment.yaml
     - k8s/local/aztec-listener/deployment.yaml

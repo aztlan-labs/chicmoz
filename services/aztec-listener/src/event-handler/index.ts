@@ -1,13 +1,10 @@
-import {
-  NodeInfo,
-  chicmozL2PendingTxSchema,
-  transformNodeInfo,
-} from "@chicmoz-pkg/types";
+import { NodeInfo, transformNodeInfo } from "@chicmoz-pkg/types";
 import { L2Block, Tx } from "@aztec/aztec.js";
 import { getNodeInfo } from "../aztec/index.js";
 import { logger } from "../logger.js";
 import { publishMessage } from "../message-bus/index.js";
 import { AZTEC_RPC_URL } from "../constants.js";
+import { PendingTxsEvent } from "@chicmoz-pkg/message-registry";
 
 export const onBlock = async (block: L2Block) => {
   const height = Number(block.header.globalVariables.blockNumber);
@@ -30,27 +27,13 @@ export const onCatchupBlock = async (block: L2Block) => {
 };
 // TODO: onCatchupRequestFromExplorerApi
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export const onPendingTxs = async (txs: Tx[]) => {
-  if (!txs[0]) {
-    logger.error("🚫 Tx is empty");
-    return;
-  }
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-    const res = chicmozL2PendingTxSchema.parse({
-      ...txs[0].toJSON(),
-      hash: txs[0].getTxHash().to0xString()
-    });
-    logger.info(JSON.stringify(res));
-  } catch (e) {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    logger.error(`🚫 Invalid transaction: ${e}`);
-    return;
-  }
-  //await publishMessage("PENDING_TX_EVENT", {
-  //  tx,
-  //});
+  if (!txs || txs.length === 0) return;
+  await publishMessage("PENDING_TXS_EVENT", {
+    txs: txs.map((tx) => {
+      return { ...tx.toJSON(), hash: tx.getTxHash().to0xString() };
+    }),
+  } as PendingTxsEvent);
 };
 
 export const onConnectedToAztec = async (

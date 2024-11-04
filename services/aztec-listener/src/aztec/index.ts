@@ -33,6 +33,7 @@ export const init = async () => {
   const latestProcessedHeight = (await getLatestProcessedHeight()) ?? 0;
   const chainHeight = await getLatestHeight();
   await onConnectedToAztec(nodeInfo, chainHeight, latestProcessedHeight);
+  if (AZTEC_LISTEN_FOR_PENDING_TXS) startPollingPendingTxs();
   const isOffSync = chainHeight < latestProcessedHeight;
   if (isOffSync) {
     logger.warn(
@@ -48,7 +49,6 @@ export const init = async () => {
     await startCatchup({ from: 1, to: pollFromHeight });
   if (AZTEC_LISTEN_FOR_BLOCKS)
     startPollingBlocks({ fromHeight: pollFromHeight });
-  if (AZTEC_LISTEN_FOR_PENDING_TXS) startPollingPendingTxs();
 
   return {
     id: "AZTEC",
