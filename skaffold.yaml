@@ -1,1 +1,1 @@
-k8s/local/skaffold.local.yaml
+../../k8s/local/skaffold.default.yaml
