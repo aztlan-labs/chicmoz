@@ -2,38 +2,38 @@ apiVersion: skaffold/v4beta6
 kind: Config
 requires:
   - configs: ["chicmoz-dev-base-image"]
-    path: k8s/local/chicmoz-base-image.yaml
+    path: ./chicmoz-base-image.yaml
   - configs: ["chicmoz-dev-explorer-ui-image"]
-    path: k8s/local/chicmoz-explorer-ui-image.yaml
+    path: ./chicmoz-explorer-ui-image.yaml
   - configs: ["chicmoz-dev-explorer-api-image"]
-    path: k8s/local/chicmoz-explorer-api-image.yaml
+    path: ./chicmoz-explorer-api-image.yaml
   - configs: ["chicmoz-dev-websocket-event-publisher-image"]
-    path: k8s/local/chicmoz-websocket-event-publisher-image.yaml
+    path: ./chicmoz-websocket-event-publisher-image.yaml
   - configs: ["chicmoz-dev-auth-image"]
-    path: k8s/local/chicmoz-auth-image.yaml
+    path: ./chicmoz-auth-image.yaml
   - configs: ["chicmoz-dev-aztec-event-cannon-image"]
-    path: k8s/local/chicmoz-aztec-event-cannon-image.yaml
+    path: ./chicmoz-aztec-event-cannon-image.yaml
   - configs: ["chicmoz-dev-aztec-listener-image"]
-    path: k8s/local/chicmoz-aztec-listener-image.yaml
+    path: ./chicmoz-aztec-listener-image.yaml
 metadata:
   name: chicmoz
 build:
 manifests:
   rawYaml:
-    - k8s/local/common/namespace.yaml
-    - k8s/local/explorer-ui/ingress.yaml
-    - k8s/local/explorer-ui/deployment.yaml
-    - k8s/local/explorer-ui/service.yaml
-    - k8s/local/explorer-api/ingress.yaml
-    - k8s/local/explorer-api/deployment.yaml
-    - k8s/local/explorer-api/service.yaml
-    - k8s/local/websocket-event-publisher/ingress.yaml
-    - k8s/local/websocket-event-publisher/deployment.yaml
-    - k8s/local/websocket-event-publisher/service.yaml
-    - k8s/local/auth/deployment.yaml
-    - k8s/local/auth/service.yaml
-    - k8s/local/aztec-event-cannon/deployment.yaml
-    - k8s/local/aztec-listener/remote_devnet_deployment.yaml
+    - ./common/namespace.yaml
+    - ./explorer-ui/ingress.yaml
+    - ./explorer-ui/deployment.yaml
+    - ./explorer-ui/service.yaml
+    - ./explorer-api/ingress.yaml
+    - ./explorer-api/deployment.yaml
+    - ./explorer-api/service.yaml
+    - ./websocket-event-publisher/ingress.yaml
+    - ./websocket-event-publisher/deployment.yaml
+    - ./websocket-event-publisher/service.yaml
+    - ./auth/deployment.yaml
+    - ./auth/service.yaml
+    - ./aztec-event-cannon/deployment.yaml
+    - ./aztec-listener/remote_devnet_deployment.yaml
   helm:
     releases:
       - name: ingress-nginx
@@ -50,7 +50,7 @@ manifests:
         remoteChart: postgresql
         repo: https://charts.bitnami.com/bitnami
         valuesFiles:
-          - k8s/local/postgres/values.yaml
+          - ./postgres/values.yaml
         setValues:
           global.postgresql.auth.postgresPassword: "secret-local-password"
           global.postgresql.auth.username: "admin"
