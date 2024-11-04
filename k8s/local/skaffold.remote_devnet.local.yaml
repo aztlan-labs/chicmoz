@@ -1,23 +1,15 @@
 apiVersion: skaffold/v4beta6
 kind: Config
-requires:
-  - configs: ["chicmoz-dev-base-image"]
-    path: ./chicmoz-base-image.yaml
-  - configs: ["chicmoz-dev-explorer-ui-image"]
-    path: ./chicmoz-explorer-ui-image.yaml
-  - configs: ["chicmoz-dev-explorer-api-image"]
-    path: ./chicmoz-explorer-api-image.yaml
-  - configs: ["chicmoz-dev-websocket-event-publisher-image"]
-    path: ./chicmoz-websocket-event-publisher-image.yaml
-  - configs: ["chicmoz-dev-auth-image"]
-    path: ./chicmoz-auth-image.yaml
-  - configs: ["chicmoz-dev-aztec-event-cannon-image"]
-    path: ./chicmoz-aztec-event-cannon-image.yaml
-  - configs: ["chicmoz-dev-aztec-listener-image"]
-    path: ./chicmoz-aztec-listener-image.yaml
 metadata:
   name: chicmoz
-build:
+requires:
+  - path: ./chicmoz-base-image.yaml
+  - path: ./explorer-ui/image.yaml
+  - path: ./explorer-api/image.yaml
+  - path: ./websocket-event-publisher/image.yaml
+  - path: ./auth/image.yaml
+  - path: ./aztec-event-cannon/image.yaml
+  - path: ./aztec-listener/image.yaml
 manifests:
   rawYaml:
     - ./common/namespace.yaml

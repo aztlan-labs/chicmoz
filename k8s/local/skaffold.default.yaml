@@ -10,7 +10,6 @@ requires:
   - path: ./auth/image.yaml
   - path: ./aztec-event-cannon/image.yaml
   - path: ./aztec-listener/image.yaml
-build:
 deploy:
   kubectl:
     flags:
