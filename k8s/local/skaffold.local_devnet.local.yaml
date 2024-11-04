@@ -4,17 +4,17 @@ requires:
   - configs: ["chicmoz-dev-base-image"]
     path: k8s/local/chicmoz-base-image.yaml
   - configs: ["chicmoz-dev-explorer-ui-image"]
-    path: k8s/local/explorer-ui/image.yaml
+    path: k8s/local/chicmoz-explorer-ui-image.yaml
   - configs: ["chicmoz-dev-explorer-api-image"]
-    path: k8s/local/explorer-api/image.yaml
+    path: k8s/local/chicmoz-explorer-api-image.yaml
   - configs: ["chicmoz-dev-websocket-event-publisher-image"]
-    path: k8s/local/websocket-event-publisher/image.yaml
+    path: k8s/local/chicmoz-websocket-event-publisher-image.yaml
   - configs: ["chicmoz-dev-auth-image"]
-    path: k8s/local/auth/image.yaml
+    path: k8s/local/chicmoz-auth-image.yaml
   - configs: ["chicmoz-dev-aztec-event-cannon-image"]
-    path: k8s/local/aztec-event-cannon/image.yaml
+    path: k8s/local/chicmoz-aztec-event-cannon-image.yaml
   - configs: ["chicmoz-dev-aztec-listener-image"]
-    path: k8s/local/aztec-listener/image.yaml
+    path: k8s/local/chicmoz-aztec-listener-image.yaml
 metadata:
   name: chicmoz
 build:
@@ -33,14 +33,7 @@ manifests:
     - k8s/local/auth/deployment.yaml
     - k8s/local/auth/service.yaml
     - k8s/local/aztec-event-cannon/deployment.yaml
-    - k8s/local/aztec-listener/deployment.yaml
-    # - k8s/local/ethereum-listener/deployment.yaml # NOTE: eth-listener is WIP!
-    - k8s/local/aztec-sandbox-node/ingress.yaml
-    - k8s/local/aztec-sandbox-node/deployment.yaml
-    - k8s/local/aztec-sandbox-node/service.yaml
-    - k8s/local/anvil-ethereum-node/ingress.yaml
-    - k8s/local/anvil-ethereum-node/deployment.yaml
-    - k8s/local/anvil-ethereum-node/service.yaml
+    - k8s/local/aztec-listener/local_devnet_deployment.yaml
   helm:
     releases:
       - name: ingress-nginx
