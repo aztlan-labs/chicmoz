@@ -34,7 +34,7 @@ export const Contracts: FC = () => {
         <h2 className="mt-2 text-primary md:hidden">All contracts</h2>
         <h1 className="hidden md:block md:mt-16">All contracts</h1>
       </div>
-      <div className="flex flex-row justify-center gap-4 m-8">
+      <div className="grid grid-cols-2 gap-3 mt-5 mb-5 md:gap-5 ">
         <InfoBadge
           title="Total Contract Classes"
           isLoading={loadingAmountContracts}
@@ -49,8 +49,8 @@ export const Contracts: FC = () => {
         />
       </div>
 
-      <div className="flex flex-col gap-4 md:flex-row ">
-        <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
+      <div className="grid grid-cols-2 gap-3 ">
+        <div className="bg-white w-full rounded-lg shadow-md p-4">
           <h3>Latest Contract Classes</h3>
           <ContractClassesTable
             contracts={mapContractClasses(classesData)}
@@ -58,7 +58,7 @@ export const Contracts: FC = () => {
             error={errorClasses}
           />
         </div>
-        <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
+        <div className="bg-white w-full rounded-lg shadow-md p-4">
           <h3>Latest Contract Instances</h3>
           <ContractInstancesTable
             contracts={mapContractInstances(instancesData)}

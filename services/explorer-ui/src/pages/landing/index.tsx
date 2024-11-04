@@ -64,7 +64,7 @@ export const Landing: FC = () => {
 
   return (
     <div className="mx-auto px-5 max-w-[1440px] md:px-[70px]">
-      <div className="flex flex-row flex-wrap justify-center gap-3 m-5 ">
+      <div className="grid grid-cols-2 gap-3 mt-5 mb-5 md:grid-cols-3 md:gap-5 ">
         <InfoBadge
           title="Total transactions"
           isLoading={loadingTotalEffects}
@@ -111,7 +111,6 @@ export const Landing: FC = () => {
             error={error}
           />
         </div>
-
         <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
           <h3>Latest TX-Effects</h3>
           <TxEffectsTable

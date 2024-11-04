@@ -35,7 +35,7 @@ export const TxEffects: FC = () => {
         <h2 className="mt-2 text-primary md:hidden">All tx-effects</h2>
         <h1 className="hidden md:block md:mt-16">All tx-effects</h1>
       </div>
-      <div className="flex flex-row justify-center gap-4 m-8">
+      <div className="grid grid-cols-2 gap-3 mt-5 mb-5 md:gap-5 ">
         <InfoBadge
           title="Total transactions"
           isLoading={loadingTotalEffects}
