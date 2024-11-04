@@ -1,0 +1,16 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+requires:
+  - configs: ["chicmoz-dev-base-image"]
+    path: ../chicmoz-base-image.yaml
+metadata:
+  name: chicmoz-dev-aztec-listener-image
+build:
+  artifacts:
+    - image: aztec-listener
+      context: ../../../services/aztec-listener
+      docker:
+        dockerfile: Dockerfile
+      requires:
+        - image: chicmoz-base
+          alias: BASE

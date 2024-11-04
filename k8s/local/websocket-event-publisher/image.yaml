@@ -1,0 +1,16 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+requires:
+  - configs: ["chicmoz-dev-base-image"]
+    path: ../chicmoz-base-image.yaml
+metadata:
+  name: chicmoz-dev-websocket-event-publisher-image
+build:
+  artifacts:
+    - image: websocket-event-publisher
+      context: ../../../services/websocket-event-publisher
+      docker:
+        dockerfile: Dockerfile
+      requires:
+        - image: chicmoz-base
+          alias: BASE

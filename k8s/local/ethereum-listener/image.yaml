@@ -1,0 +1,16 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+requires:
+  - configs: ["chicmoz-dev-base-image"]
+    path: ../chicmoz-base-image.yaml
+metadata:
+  name: chicmoz-dev-ethereum-listener-image
+build:
+  artifacts:
+    - image: ethereum-listener
+      context: ../../../services/ethereum-listener
+      docker:
+        dockerfile: Dockerfile
+      requires:
+        - image: chicmoz-base
+          alias: BASE
