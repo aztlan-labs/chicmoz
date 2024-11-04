@@ -2,6 +2,7 @@ import { NodeInfo } from "@chicmoz-pkg/types";
 import {
   AZTEC_GENESIS_CATCHUP,
   AZTEC_LISTEN_FOR_BLOCKS,
+  AZTEC_LISTEN_FOR_PENDING_TXS,
 } from "../constants.js";
 import {
   getHeight as getLatestProcessedHeight,
@@ -12,7 +13,14 @@ import {
   getLatestHeight,
   init as initNetworkClient,
 } from "./network-client.js";
-import { startPolling, stopPolling } from "./poller.js";
+import {
+  startPolling as startPollingBlocks,
+  stopPolling as stopPollingBlocks,
+} from "./block_poller.js";
+import {
+  startPolling as startPollingPendingTxs,
+  stopPolling as stopPollingPendingTxs,
+} from "./txs_poller.js";
 import { startCatchup } from "./genesis-catchup.js";
 import { onConnectedToAztec } from "../event-handler/index.js";
 
@@ -38,13 +46,16 @@ export const init = async () => {
       : chainHeight;
   if (AZTEC_GENESIS_CATCHUP)
     await startCatchup({ from: 1, to: pollFromHeight });
-  if (AZTEC_LISTEN_FOR_BLOCKS) startPolling({ fromHeight: pollFromHeight });
+  if (AZTEC_LISTEN_FOR_BLOCKS)
+    startPollingBlocks({ fromHeight: pollFromHeight });
+  if (AZTEC_LISTEN_FOR_PENDING_TXS) startPollingPendingTxs();
 
   return {
     id: "AZTEC",
     // eslint-disable-next-line @typescript-eslint/require-await
     shutdownCb: async () => {
-      stopPolling();
+      stopPollingBlocks();
+      stopPollingPendingTxs();
     },
   };
 };

@@ -119,3 +119,5 @@ export const getLatestHeight = async () => {
 
   return bn;
 };
+
+export const getPendingTxs = async () => callNodeFunction("getPendingTxs");
