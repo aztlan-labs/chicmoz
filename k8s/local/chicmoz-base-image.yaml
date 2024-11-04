@@ -1,7 +1,5 @@
 apiVersion: skaffold/v4beta6
 kind: Config
-metadata:
-  name: chicmoz-dev-base-image
 build:
   artifacts:
     - image: chicmoz-base

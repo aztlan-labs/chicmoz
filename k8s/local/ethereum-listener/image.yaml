@@ -1,10 +1,7 @@
 apiVersion: skaffold/v4beta6
 kind: Config
 requires:
-  - configs: ["chicmoz-dev-base-image"]
-    path: ../chicmoz-base-image.yaml
-metadata:
-  name: chicmoz-dev-ethereum-listener-image
+  - path: ../chicmoz-base-image.yaml
 build:
   artifacts:
     - image: ethereum-listener

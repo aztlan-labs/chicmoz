@@ -1,5 +1,7 @@
 apiVersion: skaffold/v4beta6
 kind: Config
+metadata:
+  name: chicmoz
 requires:
   - configs: ["chicmoz-dev-base-image"]
     path: ./chicmoz-base-image.yaml
@@ -17,9 +19,6 @@ requires:
     path: ./chicmoz-ethereum-listener-image.yaml
   - configs: ["chicmoz-dev-aztec-listener-image"]
     path: ./chicmoz-aztec-listener-image.yaml
-metadata:
-  name: chicmoz
-build:
 manifests:
   rawYaml:
     - ./common/namespace.yaml
