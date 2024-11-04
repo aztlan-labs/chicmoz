@@ -11,7 +11,7 @@ export const tabIds = [
   "contractInstances",
   "privateFunctions",
   "unconstrainedFunctions",
-];
+]  as const;
 
 export const tabIdSchema = z.enum(tabIds);
 export type TabId = z.infer<typeof tabIdSchema>;
