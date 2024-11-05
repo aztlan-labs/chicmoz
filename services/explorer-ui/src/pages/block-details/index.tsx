@@ -3,11 +3,10 @@ import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { useParams } from "@tanstack/react-router";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { Button } from "~/components/ui";
-import { useGetBlockByIdentifier } from "~/hooks";
+import { useGetBlockByIdentifier, useGetTxEffectsByBlockHeight } from "~/hooks";
 import { API_URL, aztecExplorer } from "~/service/constants";
-import { getBlockDetails } from "./util";
+import { getBlockDetails, getTxEffects } from "./util";
 import { truncateHashString } from "~/lib/create-hash-string";
-import { Loader } from "~/components/loader";
 
 const API_ENDPOINT_URL = `${API_URL}/${aztecExplorer.getL2BlockByHash}`;
 
@@ -20,6 +19,13 @@ export const BlockDetails: FC = () => {
     isLoading,
     error,
   } = useGetBlockByIdentifier(blockNumber);
+
+  const height = latestBlock?.height;
+  const {
+    data: blockTxEffects,
+    isLoading: txEffectsLoading,
+    error: txEffectsError,
+  } = useGetTxEffectsByBlockHeight(height);
 
   const apiEndpointUrl = `${API_ENDPOINT_URL}${blockNumber}`;
 
@@ -39,11 +45,7 @@ export const BlockDetails: FC = () => {
         </div>
         <div className="flex flex-col gap-4 mt-8">
           <div className="bg-white rounded-lg shadow-md p-4">
-            {isLoading && <Loader amount={5} />}
-            {error && <p className="text-red-500">{error.message}</p>}
-            {latestBlock && (
-              <KeyValueDisplay data={getBlockDetails(latestBlock)} />
-            )}
+            <KeyValueDisplay data={getBlockDetails(latestBlock)} />
           </div>
           <div className="flex flex-row gap-4 w-10 mb-4">
             <Button
@@ -53,14 +55,11 @@ export const BlockDetails: FC = () => {
               <p>View TxEffects</p>
             </Button>
           </div>
-          {latestBlock.height &&
-            latestBlock.header.globalVariables.timestamp && (
-              <TxEffectsTable
-                blockHeight={latestBlock.height}
-                blockTimestamp={latestBlock.header.globalVariables.timestamp}
-              />
-            )}
-          {isLoading && <Loader amount={5} />}
+          <TxEffectsTable
+            txEffects={getTxEffects(blockTxEffects, latestBlock)}
+            isLoading={isLoading || txEffectsLoading}
+            error={error ?? txEffectsError}
+          />
         </div>
       </div>
     </div>

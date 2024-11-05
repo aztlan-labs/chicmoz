@@ -16,7 +16,6 @@ export const useLatestBlock = (): UseQueryResult<
 export const useGetBlockByIdentifier = (
   heightOrHash: string
 ): UseQueryResult<ChicmozL2BlockLight, Error> => {
-  console.log("useGetBlockByIdentifier", heightOrHash);
   return useQuery<ChicmozL2BlockLight, Error>({
     queryKey: queryKeyGenerator.blockByHeight(heightOrHash),
     queryFn: () => heightOrHash.startsWith("0x") ? BlockAPI.getBlockByHash(heightOrHash) : BlockAPI.getBlockByHeight(heightOrHash),

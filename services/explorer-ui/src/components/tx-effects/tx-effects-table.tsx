@@ -1,22 +1,17 @@
 import { type FC } from "react";
 import { DataTable } from "~/components/data-table";
 import { TxEffectsTableColumns } from "./tx-effects-columns";
+import { type TxEffectTableSchema } from "./tx-effects-schema";
 import { Loader } from "../loader";
-import { useGetTxEffectsByBlockHeight } from "~/hooks";
-import { getTxEffects } from "~/pages/block-details/util";
 
 interface Props {
-  blockHeight: number;
-  blockTimestamp: number;
+  txEffects?: TxEffectTableSchema[];
+  isLoading: boolean;
+  error?: Error | null;
 }
 
-export const TxEffectsTable: FC<Props> = ({ blockHeight, blockTimestamp }) => {
-  const { data, isLoading, error } = useGetTxEffectsByBlockHeight(blockHeight);
+export const TxEffectsTable: FC<Props> = ({ txEffects, isLoading, error }) => {
   if (isLoading) return <Loader amount={5} />;
-  const txEffects = getTxEffects(data, {
-    height: blockHeight,
-    timestamp: blockTimestamp,
-  });
   if (!txEffects) return <div>No data</div>;
   if (error) return <p className="text-red-500">{error.message}</p>;
   return (

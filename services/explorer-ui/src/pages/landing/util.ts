@@ -21,7 +21,7 @@ export const mapLatestBlocks = (latestBlocks?: ChicmozL2BlockLight[]) => {
 
 export const parseTxEffectsData = (
   txEffectsData: ReturnType<typeof useGetTxEffectsByBlockHeightRange>,
-  latestBlocks?: ChicmozL2BlockLight[],
+  latestBlocks?: ChicmozL2BlockLight[]
 ) => {
   let isLoadingTxEffects = false;
   let txEffectsErrorMsg: string | undefined = undefined;
