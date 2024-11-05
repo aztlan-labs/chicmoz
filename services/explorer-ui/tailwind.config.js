@@ -67,7 +67,7 @@ module.exports = {
       fontFamily: {
         heading: ["Space Grotesk"],
         code: ["Space Mono", ...fontFamily.mono],
-        default: ["Inter", ...fontFamily.sans],
+        default: ["Space Grotesk", ...fontFamily.sans],
       },
       borderRadius: {
         lg: "var(--radius)",
