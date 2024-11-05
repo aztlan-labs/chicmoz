@@ -25,7 +25,7 @@ manifests:
     - k8s/local/auth/deployment.yaml
     - k8s/local/auth/service.yaml
     - k8s/local/aztec-event-cannon/deployment.yaml
-    - k8s/local/aztec-listener/remote_devnet_deployment.yaml
+    - k8s/local/aztec-listener/remote_aztec_deployment.yaml
   helm:
     releases:
       - name: ingress-nginx
