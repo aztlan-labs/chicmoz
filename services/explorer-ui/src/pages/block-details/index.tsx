@@ -57,7 +57,7 @@ export const BlockDetails: FC = () => {
           </div>
           <TxEffectsTable
             txEffects={getTxEffects(blockTxEffects, latestBlock)}
-            isLoading={isLoading || txEffectsLoading}
+            isLoading={isLoading || txEffectsLoading || (blockTxEffects?.length !== latestBlock.body?.txEffects?.length)}
             error={error ?? txEffectsError}
           />
         </div>

@@ -19,6 +19,10 @@ export const getTxEffectData = (data: ChicmozL2TxEffectDeluxe) => [
     value: data.hash,
   },
   {
+    label: "TRANSACTION HASH",
+    value: data.txHash,
+  },
+  {
     label: "TRANSACTION FEE (FPA)",
     value: data.transactionFee.toString(),
   },
