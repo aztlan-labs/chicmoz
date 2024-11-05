@@ -13,6 +13,20 @@ export const aztecExplorer = {
     `l2/contract-classes/${classId}/versions/${version}`,
   getL2ContractClasses: (classId?: string) =>
     classId ? `l2/contract-classes/${classId}` : "l2/contract-classes",
+  getL2ContractClassPrivateFunctions: (
+    classId: string,
+    functionSelector?: string
+  ) =>
+    functionSelector
+      ? `l2/contract-classes/${classId}/private-functions/${functionSelector}`
+      : `l2/contract-classes/${classId}/private-functions`,
+  getL2ContractClassUnconstrainedFunctions: (
+    classId: string,
+    functionSelector?: string
+  ) =>
+    functionSelector
+      ? `l2/contract-classes/${classId}/unconstrained-functions/${functionSelector}`
+      : `l2/contract-classes/${classId}/unconstrained-functions`,
   getL2ContractInstance: (address: string) =>
     `l2/contract-instances/${address}`,
   getL2ContractInstances: "l2/contract-instances",

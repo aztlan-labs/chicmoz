@@ -1,17 +1,28 @@
 import { useParams } from "@tanstack/react-router";
-import { type FC } from "react";
+import { useState, type FC } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
-import { useContractClasses, useDeployedContractInstances } from "~/hooks";
+import {
+  useContractClassPrivateFunctions,
+  useContractClassUnconstrainedFunctions,
+  useContractClasses,
+  useDeployedContractInstances,
+} from "~/hooks";
 import { API_URL, aztecExplorer } from "~/service/constants";
-import { getContractData } from "./util";
+import { getContractClassKeyValueData } from "./util";
 import { ContractInstancesTable } from "~/components/contracts/instances/table";
 import { mapContractClasses, mapContractInstances } from "../contract/util";
 import { ContractClassesTable } from "~/components/contracts/classes/table";
+import { OptionButtons } from "./tabs";
+import { contractClassTabs, type TabId } from "./constants";
 
 export const ContractClassDetails: FC = () => {
+  const [selectedTab, setSelectedTab] = useState<TabId>("contractVersions");
   const { id, version } = useParams({
     from: "/contracts/classes/$id/versions/$version",
   });
+  const onOptionSelect = (value: string) => {
+    setSelectedTab(value as TabId);
+  };
   const {
     data: classesData,
     isLoading: isLoadingClasses,
@@ -22,10 +33,30 @@ export const ContractClassDetails: FC = () => {
     isLoading: isLoadingInstances,
     error: errorInstances,
   } = useDeployedContractInstances(id);
+  const contractClassPrivateFunctionsHookRes =
+    useContractClassPrivateFunctions(id);
+  const contractClassUnconstrainedFunctionsHookRes =
+    useContractClassUnconstrainedFunctions(id);
+
+  const contractClasses = mapContractClasses(classesData);
+  const contractInstances = mapContractInstances(instancesData);
+
+  const isOptionAvailable = {
+    contractVersions: !!contractClasses && !!contractClasses.length,
+    contractInstances: !!contractInstances && !!contractInstances.length,
+    privateFunctions:
+      !contractClassPrivateFunctionsHookRes.isLoading &&
+      !contractClassPrivateFunctionsHookRes.error &&
+      !!contractClassPrivateFunctionsHookRes.data,
+    unconstrainedFunctions:
+      !contractClassUnconstrainedFunctionsHookRes.isLoading &&
+      !contractClassUnconstrainedFunctionsHookRes.error &&
+      !!contractClassUnconstrainedFunctionsHookRes.data,
+  };
 
   if (!id) return <div>No classId</div>;
   const selectedVersion = classesData?.find(
-    (contract) => contract.version === Number(version),
+    (contract) => contract.version === Number(version)
   );
   if (!selectedVersion) return <div>No data</div>;
 
@@ -43,13 +74,20 @@ export const ContractClassDetails: FC = () => {
           </div>
           <div className="flex flex-col gap-4 mt-8">
             <div className="bg-white rounded-lg shadow-md p-4">
-              <KeyValueDisplay data={getContractData(selectedVersion)} />
+              <KeyValueDisplay
+                data={getContractClassKeyValueData(selectedVersion)}
+              />
             </div>
           </div>
         </div>
+        <OptionButtons
+          isOptionAvailable={isOptionAvailable}
+          requiredOptions={contractClassTabs}
+          onOptionSelect={onOptionSelect}
+        />
         <div className="flex flex-col gap-4 md:flex-row ">
-          <div className="flex flex-col gap-4 md:flex-row ">
-            <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
+          {selectedTab === "contractVersions" && (
+            <div className="bg-white w-full rounded-lg shadow-md p-4">
               <h3>Latest Contract Classes</h3>
               <ContractClassesTable
                 contracts={mapContractClasses(classesData)}
@@ -57,8 +95,9 @@ export const ContractClassDetails: FC = () => {
                 error={errorClasses}
               />
             </div>
-
-            <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
+          )}
+          {selectedTab === "contractInstances" && (
+            <div className="bg-white w-full rounded-lg shadow-md p-4">
               <h3>Latest Contract Instances</h3>
               <ContractInstancesTable
                 contracts={mapContractInstances(instancesData)}
@@ -66,7 +105,133 @@ export const ContractClassDetails: FC = () => {
                 error={errorInstances}
               />
             </div>
-          </div>
+          )}
+          {selectedTab === "privateFunctions" &&
+            contractClassPrivateFunctionsHookRes.data && (
+              <div className="bg-white w-full rounded-lg shadow-md p-4">
+                <h3>Private Functions</h3>
+                {contractClassPrivateFunctionsHookRes.data.map(
+                  (privateFunction) => (
+                    <div>
+                      <h4>{privateFunction.privateFunction.selector.value}</h4>
+                      <p>
+                        artifactMetadataHash:{" "}
+                        {privateFunction.artifactMetadataHash}
+                      </p>
+                      {privateFunction.privateFunctionTreeSiblingPath.map(
+                        (path, index) => (
+                          <p>
+                            privateFunctionTreeSiblingPath-{index}: {path}
+                          </p>
+                        )
+                      )}
+                      <p>
+                        privateFunctionTreeLeafIndex:{" "}
+                        {privateFunction.privateFunctionTreeLeafIndex}
+                      </p>
+                      {privateFunction.artifactFunctionTreeSiblingPath.map(
+                        (path, index) => (
+                          <p>
+                            artifactFunctionTreeSiblingPath-{index}: {path}
+                          </p>
+                        )
+                      )}
+                      <p>
+                        artifactFunctionTreeLeafIndex:{" "}
+                        {privateFunction.artifactFunctionTreeLeafIndex}
+                      </p>
+                      <div>
+                        <p>
+                          privateFunction.selector.type:{" "}
+                          {privateFunction.privateFunction.selector.type}
+                        </p>
+                        <p>
+                          privateFunction.selector.value:{" "}
+                          {privateFunction.privateFunction.selector.value}
+                        </p>
+
+                        <p>
+                          privateFunction.metadataHash:{" "}
+                          {privateFunction.privateFunction.metadataHash}
+                        </p>
+                        <p>
+                          privateFunction.vkHash:{" "}
+                          {privateFunction.privateFunction.vkHash}
+                        </p>
+                        {
+                          //<p>privateFunction.bytecode: {privateFunction.privateFunction.bytecode}</p>
+                        }
+                      </div>
+                      <hr />
+                    </div>
+                  )
+                )}
+              </div>
+            )}
+          {selectedTab === "unconstrainedFunctions" &&
+            contractClassUnconstrainedFunctionsHookRes.data && (
+              <div className="bg-white w-full rounded-lg shadow-md p-4">
+                <h3>Unconstrained Functions</h3>
+                {contractClassUnconstrainedFunctionsHookRes.data.map(
+                  (unconstrainedFunction) => (
+                    <div>
+                      <h4>
+                        {
+                          unconstrainedFunction.unconstrainedFunction.selector
+                            .value
+                        }
+                      </h4>
+                      <p>
+                        artifactMetadataHash:{" "}
+                        {unconstrainedFunction.artifactMetadataHash}
+                      </p>
+                      <p>
+                        privateFunctionsArtifactTreeRoot:{" "}
+                        {unconstrainedFunction.privateFunctionsArtifactTreeRoot}
+                      </p>
+                      {unconstrainedFunction.artifactFunctionTreeSiblingPath.map(
+                        (path, index) => (
+                          <p>
+                            artifactFunctionTreeSiblingPath-{index}: {path}
+                          </p>
+                        )
+                      )}
+                      <p>
+                        artifactFunctionTreeLeafIndex:{" "}
+                        {unconstrainedFunction.artifactFunctionTreeLeafIndex}
+                      </p>
+                      <div>
+                        <p>
+                          unconstrainedFunction.selector.type:{" "}
+                          {
+                            unconstrainedFunction.unconstrainedFunction.selector
+                              .type
+                          }
+                        </p>
+                        <p>
+                          unconstrainedFunction.selector.value:{" "}
+                          {
+                            unconstrainedFunction.unconstrainedFunction.selector
+                              .value
+                          }
+                        </p>
+                        <p>
+                          unconstrainedFunction.metadataHash:{" "}
+                          {
+                            unconstrainedFunction.unconstrainedFunction
+                              .metadataHash
+                          }
+                        </p>
+                        {
+                          //<p>unconstrainedFunction.bytecode: {unconstrainedFunction.unconstrainedFunction.bytecode}</p>
+                        }
+                      </div>
+                      <hr />
+                    </div>
+                  )
+                )}
+              </div>
+            )}
         </div>
       </div>
     </div>

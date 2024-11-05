@@ -1,6 +1,8 @@
 import {
+  type ChicmozL2PrivateFunctionBroadcastedEvent,
   type ChicmozL2ContractClassRegisteredEvent,
   type ChicmozL2ContractInstanceDeluxe,
+  type ChicmozL2UnconstrainedFunctionBroadcastedEvent,
 } from "@chicmoz-pkg/types";
 import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ContractL2API } from "~/api";
@@ -24,6 +26,24 @@ export const useLatestContractClasses = (
     refetchInterval: REFETCH_INTERVAL,
   });
 };
+
+export const useContractClassPrivateFunctions = (
+  classId: string,
+): UseQueryResult<ChicmozL2PrivateFunctionBroadcastedEvent[], Error> => {
+  return useQuery<ChicmozL2PrivateFunctionBroadcastedEvent[], Error>({
+    queryKey: queryKeyGenerator.contractClassPrivateFunctions(classId),
+    queryFn: () => ContractL2API.getContractClassPrivateFunctions(classId),
+  });
+}
+
+export const useContractClassUnconstrainedFunctions = (
+  classId: string,
+): UseQueryResult<ChicmozL2UnconstrainedFunctionBroadcastedEvent[], Error> => {
+  return useQuery<ChicmozL2UnconstrainedFunctionBroadcastedEvent[], Error>({
+    queryKey: queryKeyGenerator.contractClassUnconstrainedFunctions(classId),
+    queryFn: () => ContractL2API.getL2ContractClassUnconstrainedFunctions(classId),
+  });
+}
 
 export const useContractInstance = (
   address: string
