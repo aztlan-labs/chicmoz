@@ -4,8 +4,8 @@ import { routes } from "~/routes/__root";
 import { DataTableColumnHeader } from "~/components/data-table";
 import { type TxEffectTableSchema } from "./tx-effects-schema";
 import { formatTimeSince } from "~/lib/utils";
-import {CopyableText} from "../copy-text";
-import {truncateHashString} from "~/lib/create-hash-string";
+import { CopyableText } from "../copy-text";
+import { truncateHashString } from "~/lib/create-hash-string";
 
 const text = {
   hash: "TX EFFECT HASH",
