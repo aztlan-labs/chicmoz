@@ -22,7 +22,7 @@ export const InfoBadge: FC<InfoBadgeProps> = ({
     <div className="flex flex-col bg-white w-full justify-between rounded-lg shadow-md p-4 ">
       <p className="text-sm">{title}</p>
       {isLoading ? (
-        <Loader amout={1} />
+        <Loader amount={1} />
       ) : (
         <h3 className="text-primary">{text}</h3>
       )}

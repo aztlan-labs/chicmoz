@@ -15,7 +15,7 @@ export const ContractInstancesTable: FC<Props> = ({
   isLoading,
   error,
 }) => {
-  if (isLoading) return <Loader amout={5} />;
+  if (isLoading) return <Loader amount={5} />;
   if (!contracts) return <div>No data</div>;
   if (error) return <p className="text-red-500">{error.message}</p>;
   return (
