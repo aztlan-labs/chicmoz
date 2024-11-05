@@ -72,21 +72,6 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "totalLengthOfLogs",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        className="text-purple-dark text-sm "
-        column={column}
-        title={text.totalLengthOfLogs}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="text-purple-dark">{row.getValue("totalLengthOfLogs")}</div>
-    ),
-    enableSorting: true,
-    enableHiding: false,
-  },
-  {
     accessorKey: "blockNumber",
     header: ({ column }) => (
       <DataTableColumnHeader

@@ -9,12 +9,12 @@ export const replaceTxsWithTxEffects = async (
 ): Promise<void> => {
   return await db().transaction(async (dbTx) => {
     for (const txEffect of Object.values(txEffects)) {
-      logger.info(`🕐🔥 Replacing tx with txEffect: ${txEffect.txHash}`);
       const tx = await dbTx
         .delete(l2Tx)
         .where(eq(l2Tx.hash, txEffect.txHash))
         .returning();
       if (!tx) continue;
+      logger.info(`🕐🔥 Replacing tx with txEffect: ${txEffect.txHash}`);
       if (tx[0]?.birthTimestamp) {
         await dbTx
           .update(l2Tx)

@@ -1,5 +1,5 @@
 import { Tx } from "@aztec/aztec.js";
-import { BLOCK_POLL_INTERVAL_MS } from "../constants.js";
+import { TX_POLL_INTERVAL_MS } from "../constants.js";
 import { getPendingTxs } from "./network-client.js";
 import { onPendingTxs } from "../event-handler/index.js";
 
@@ -8,7 +8,7 @@ let pollInterval: NodeJS.Timeout;
 export const startPolling = () => {
   pollInterval = setInterval(() => {
     void fetchAndPublishPendingTxs();
-  }, BLOCK_POLL_INTERVAL_MS);
+  }, TX_POLL_INTERVAL_MS);
 };
 
 export const stopPolling = () => {

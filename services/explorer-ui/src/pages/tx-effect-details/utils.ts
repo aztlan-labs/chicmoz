@@ -32,7 +32,7 @@ export const getTxEffectData = (data: ChicmozL2TxEffectDeluxe) => [
     link: `/blocks/${data.blockHeight}`,
   },
   { label: "MINED ON CHAIN", value: formatTimeSince(data.timestamp) },
-  { label: "CREATED", value: formatTimeSince(data.txBirthTimestamp) },
+  { label: "CREATED AS TRANSACTION", value: formatTimeSince(data.txBirthTimestamp) },
 ];
 
 export const mapTxEffectsData = (
@@ -40,9 +40,6 @@ export const mapTxEffectsData = (
 ): Record<string, TxEffectDataType | undefined> => {
   if (!data) return {};
 
-  console.log(
-    data.encryptedLogs?.functionLogs?.filter((log) => log.logs.length > 0)
-  );
   const effectsMap: Record<tabId, TxEffectDataType | undefined> = {
     encryptedLogs: !data.encryptedLogs?.functionLogs?.filter(
       (log) => log.logs.length > 0
