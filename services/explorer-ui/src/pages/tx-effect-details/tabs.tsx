@@ -1,5 +1,5 @@
 import { TxEffectDataType } from "./utils";
-import { Tab } from "./constants";
+import { Tab, tabId } from "./constants";
 import {
   Tooltip,
   TooltipContent,
@@ -13,20 +13,21 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  Separator,
 } from "~/components/ui";
 
 export type OptionButtonProps = {
   availableData: Record<string, TxEffectDataType | undefined>;
   requiredOptions: Tab[];
   onOptionSelect: (option: string) => void;
-  buttonClassName?: string;
-  disabledButtonClassName?: string;
+  selectedItem: tabId;
 };
 
 export const OptionButtons: React.FC<OptionButtonProps> = ({
   availableData,
   requiredOptions,
   onOptionSelect,
+  selectedItem,
 }) => {
   // Check if an option is available in the record
   const isOptionAvailable = (option: string) =>
@@ -37,20 +38,18 @@ export const OptionButtons: React.FC<OptionButtonProps> = ({
   return (
     <>
       <div className="hidden lg:flex flex-row gap-4 w-10 mb-4">
-        {requiredOptions.map((option) => {
-          const isAvailable = isOptionAvailable(option.id);
+        <TooltipProvider>
+          {requiredOptions.map((option) => {
+            const isAvailable = isOptionAvailable(option.id);
 
-          if (!isAvailable) {
-            return (
-              <TooltipProvider>
+            if (!isAvailable) {
+              return (
                 <Tooltip key={option.id}>
                   <TooltipTrigger>
                     <Button
                       key={option.id}
                       disabled={true}
-                      className={
-                        "shadow-[0px_0px_1px_2px_rgba(0,0,0,0)] bg-gray-300 cursor-not-allowed opacity-50 text-primary"
-                      }
+                      className={`shadow-[0px_0px_1px_2px_rgba(0,0,0,0)] bg-gray-300 cursor-not-allowed opacity-50 text-primary `}
                     >
                       {option.label}
                     </Button>
@@ -59,21 +58,27 @@ export const OptionButtons: React.FC<OptionButtonProps> = ({
                     Data not present in this txEffect
                   </TooltipContent>
                 </Tooltip>
-              </TooltipProvider>
+              );
+            }
+            return (
+              <div className="flex flex-col justify-center items-center gap-1">
+                <Button
+                  key={option.id}
+                  onClick={() => onOptionSelect(option.id)}
+                  className={`shadow-[0px_0px_1px_2px_rgba(0,0,0,0)] bg-primary hover:bg-primary-500`}
+                >
+                  {option.label}
+                </Button>
+                {selectedItem === option.id && (
+                  <Separator
+                    orientation="horizontal"
+                    className="h-0.5 bg-primary w-1/2 rounded-md"
+                  />
+                )}
+              </div>
             );
-          }
-          return (
-            <Button
-              key={option.id}
-              onClick={() => onOptionSelect(option.id)}
-              className={
-                "shadow-[0px_0px_1px_2px_rgba(0,0,0,0)] bg-primary hover:bg-primary-500"
-              }
-            >
-              {option.label}
-            </Button>
-          );
-        })}
+          })}
+        </TooltipProvider>
       </div>
       <div className="mb-1 mt-4 lg:hidden">
         <Select onValueChange={onOptionSelect}>

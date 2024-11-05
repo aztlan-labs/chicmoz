@@ -66,13 +66,3 @@ export const mapTxEffectsData = (
     Object.entries(effectsMap).filter(([_, value]) => value !== undefined),
   );
 };
-export function areAllOptionsAvailable<
-  T extends Record<string, TxEffectDataType>,
->(record: T, options: string[]): boolean {
-  return options.every(
-    (option) =>
-      option in record &&
-      record[option] !== undefined &&
-      record[option] !== null,
-  );
-}

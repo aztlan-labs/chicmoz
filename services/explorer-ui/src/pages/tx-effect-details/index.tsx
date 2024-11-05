@@ -1,5 +1,5 @@
 import { useParams } from "@tanstack/react-router";
-import { useState, type FC } from "react";
+import { useState, type FC, useEffect } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { useGetTxEffectByHash } from "~/hooks/";
 import { API_URL, aztecExplorer } from "~/service/constants";
@@ -17,8 +17,19 @@ export const TxEffectDetails: FC = () => {
     from: "/tx-effects/$hash",
   });
   const { data: txEffects, isLoading, error } = useGetTxEffectByHash(hash);
-
   const txEffectData = mapTxEffectsData(txEffects);
+
+  useEffect(() => {
+    // check for the first avalible tab with data
+    if (txEffects) {
+      const firstAvailableTab = txEffectTabs.find(
+        (tab) => tab.id in txEffectData,
+      );
+
+      if (firstAvailableTab) setSelectedTab(firstAvailableTab.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const getSelectedItem = (value: string) => {
     setSelectedTab(value as TabId);
@@ -49,6 +60,7 @@ export const TxEffectDetails: FC = () => {
             availableData={txEffectData}
             requiredOptions={txEffectTabs}
             onOptionSelect={getSelectedItem}
+            selectedItem={selectedTab}
           />
           <div className="bg-white rounded-lg shadow-md p-4">
             {selectedTab === "encryptedLogs" && (
