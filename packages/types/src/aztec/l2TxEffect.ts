@@ -18,6 +18,7 @@ export const unencryptedLogEntrySchema = z.object({
 
 export const chicmozL2PendingTxSchema = z.object({
   hash: hexStringSchema,
+  birthTimestamp: z.number().optional(),
   data: z.string(),
   noteEncryptedLogs: z.string(),
   encryptedLogs: z.string(),
@@ -42,6 +43,7 @@ export const chicmozL2TxEffectSchema = z.object({
   hash: hexStringSchema,
   /** The hash of the transaction and its effects. */
   txHash: hexStringSchema,
+  txBirthTimestamp: z.number().optional(),
   transactionFee: frNumberSchema,
   noteHashes: z.array(frSchema),
   nullifiers: z.array(frSchema),

@@ -213,6 +213,7 @@ const _getTxEffects = async (
       const nestedData = await getTxEffectNestedByHash(txEffect.hash);
       return {
         ...txEffect,
+        txBirthTimestamp: txEffect.txBirthTimestamp.getMilliseconds(),
         ...nestedData,
       };
     })
@@ -263,6 +264,7 @@ export const getTxEffectDynamicWhere = async (
   return chicmozL2TxEffectDeluxeSchema
     .parse({
       ...dbRes[0],
+      txBirthTimestamp: dbRes[0].txBirthTimestamp.getMilliseconds(),
       ...nestedData,
     })
 };

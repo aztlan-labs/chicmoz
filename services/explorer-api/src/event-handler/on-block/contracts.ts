@@ -18,7 +18,7 @@ import {
 } from "@chicmoz-pkg/types";
 import { controllers } from "../../database/index.js";
 import { logger } from "../../logger.js";
-import { handleDuplicateError } from "./utils.js";
+import { handleDuplicateError } from "../utils.js";
 
 const parseObjs = <T>(
   blockHash: string,

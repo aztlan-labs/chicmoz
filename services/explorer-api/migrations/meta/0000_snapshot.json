@@ -1,5 +1,5 @@
 {
-  "id": "6ea46951-3aa8-4e0c-813c-5831c4d6e2f9",
+  "id": "e87a9a22-eced-4fbf-9805-a0ff5c30934d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -359,6 +359,19 @@
           "primaryKey": true,
           "notNull": true
         },
+        "txHash": {
+          "name": "txHash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tx_time_of_birth": {
+          "name": "tx_time_of_birth",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
         "index": {
           "name": "index",
           "type": "integer",
@@ -414,7 +427,23 @@
           "notNull": true
         }
       },
-      "indexes": {},
+      "indexes": {
+        "tx_hash_index": {
+          "name": "tx_hash_index",
+          "columns": [
+            {
+              "expression": "txHash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
@@ -1004,6 +1033,71 @@
           "onUpdate": "no action"
         }
       },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.tx": {
+      "name": "tx",
+      "schema": "",
+      "columns": {
+        "hash": {
+          "name": "hash",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "birth_timestamp": {
+          "name": "birth_timestamp",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "data": {
+          "name": "data",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "note_encrypted_logs": {
+          "name": "note_encrypted_logs",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "encrypted_logs": {
+          "name": "encrypted_logs",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unencrypted_logs": {
+          "name": "unencrypted_logs",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "client_ivc_proof": {
+          "name": "client_ivc_proof",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "enqueued_public_functions": {
+          "name": "enqueued_public_functions",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_teardown_function_call": {
+          "name": "public_teardown_function_call",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },

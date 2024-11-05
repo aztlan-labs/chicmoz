@@ -12,7 +12,9 @@ export const openApiPaths = {
 
   ...controller.openapi_GET_L2_TX_EFFECTS_BY_BLOCK_HEIGHT,
   ...controller.openapi_GET_L2_TX_EFFECT_BY_BLOCK_HEIGHT_AND_INDEX,
-  ...controller.openapi_GET_L2_TX_EFFECT_BY_TX_HASH,
+  ...controller.openapi_GET_L2_TX_EFFECT_BY_TX_EFFECT_HASH,
+
+  ...controller.openapi_GET_PENDING_TXS,
 
   ...controller.openapi_GET_L2_REGISTERED_CONTRACT_CLASS,
   ...controller.openapi_GET_L2_REGISTERED_CONTRACT_CLASSES_ALL_VERSIONS,
@@ -78,7 +80,9 @@ export const init = ({ router }: { router: Router }) => {
 
   router.get(paths.txEffectsByBlockHeight, controller.GET_L2_TX_EFFECTS_BY_BLOCK_HEIGHT);
   router.get(paths.txEffectByBlockHeightAndIndex, controller.GET_L2_TX_EFFECT_BY_BLOCK_HEIGHT_AND_INDEX);
-  router.get(paths.txEffectsByTxHash, controller.GET_L2_TX_EFFECT_BY_TX_HASH);
+  router.get(paths.txEffectsByTxHash, controller.GET_L2_TX_EFFECT_BY_TX_EFFECT_HASH);
+
+  router.get(paths.txs, controller.GET_PENDING_TXS);
 
   router.get(paths.contractClass, controller.GET_L2_REGISTERED_CONTRACT_CLASS);
   router.get(paths.contractClassesByClassId, controller.GET_L2_REGISTERED_CONTRACT_CLASSES_ALL_VERSIONS);

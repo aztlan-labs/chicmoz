@@ -19,6 +19,7 @@ export type ChicmozL2ContractInstanceDeluxe = z.infer<
 export const chicmozL2TxEffectDeluxeSchema = z.object({
   ...chicmozL2TxEffectSchema.shape,
   blockHeight: z.lazy(() => chicmozL2BlockSchema.shape.height),
+  txBirthTimestamp: z.number(),
   timestamp: z.lazy(
     () =>
       chicmozL2BlockSchema.shape.header.shape.globalVariables.shape.timestamp

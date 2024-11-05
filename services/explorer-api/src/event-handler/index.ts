@@ -29,7 +29,6 @@ export const catchupHandler: EventHandler = {
 export const pendingTxHandler: EventHandler = {
   consumerGroup: "pendingTx",
   cb: ((event: PendingTxsEvent) => {
-    logger.info(`Pending tx event`);
     return onPendingTxs(event);
   }) as (arg0: unknown) => Promise<void>,
   topicBase: "PENDING_TXS_EVENT",

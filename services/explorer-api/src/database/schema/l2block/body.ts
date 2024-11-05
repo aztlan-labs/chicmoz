@@ -1,11 +1,11 @@
 import { HexString } from "@chicmoz-pkg/types";
 import {
-  date,
   index,
   integer,
   jsonb,
   pgTable,
   smallint,
+  timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -26,9 +26,8 @@ export const bodyToTxEffects = pgTable("body_to_tx_effects", {
 
 export const txEffect = pgTable("tx_effect", {
   hash: varchar("hash").notNull().$type<HexString>().primaryKey(),
-  txHash: varchar("hash").notNull().$type<HexString>(),
-  txBirthTime: date("tx_time_of_birth").notNull().defaultNow(),
-  addedToChainTime: date("added_to_chain_time").notNull().defaultNow(),
+  txHash: varchar("txHash").notNull().$type<HexString>(),
+  txBirthTimestamp: timestamp("tx_time_of_birth").notNull().defaultNow(),
   // TODO: move index to junction table
   index: integer("index").notNull(),
   revertCode: smallint("revert_code").notNull(),

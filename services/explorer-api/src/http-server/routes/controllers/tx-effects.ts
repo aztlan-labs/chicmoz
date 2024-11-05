@@ -84,7 +84,7 @@ export const GET_L2_TX_EFFECT_BY_BLOCK_HEIGHT_AND_INDEX = asyncHandler(
   }
 );
 
-export const openapi_GET_L2_TX_EFFECT_BY_TX_HASH = {
+export const openapi_GET_L2_TX_EFFECT_BY_TX_EFFECT_HASH = {
   "/l2/txEffects/{hash}": {
     get: {
       summary: "Get transaction effects by tx effect hash",
@@ -104,10 +104,10 @@ export const openapi_GET_L2_TX_EFFECT_BY_TX_HASH = {
   },
 };
 
-export const GET_L2_TX_EFFECT_BY_TX_HASH = asyncHandler(async (req, res) => {
+export const GET_L2_TX_EFFECT_BY_TX_EFFECT_HASH = asyncHandler(async (req, res) => {
   const { txEffectHash } = getTxEffectsByTxHashSchema.parse(req).params;
   const txEffectsData = await dbWrapper.get(["l2", "txEffects", txEffectHash], () =>
-    db.l2TxEffect.getTxEffectByTxHash(txEffectHash)
+    db.l2TxEffect.getTxEffectByHash(txEffectHash)
   );
   res.status(200).send(txEffectsData);
 });

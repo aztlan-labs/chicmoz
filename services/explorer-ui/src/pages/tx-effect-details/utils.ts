@@ -1,5 +1,5 @@
 import { type ChicmozL2TxEffectDeluxe } from "@chicmoz-pkg/types";
-import { tabId } from "./constants";
+import { type tabId } from "./constants";
 export type TxEffectDataType =
   | string[]
   | Array<{ logs: Array<{ data: string; contractAddress: string }> }>
@@ -27,6 +27,7 @@ export const getTxEffectData = (data: ChicmozL2TxEffectDeluxe) => [
     link: `/blocks/${data.blockHeight}`,
   },
   { label: "TIMESTAMP", value: data.timestamp.toString() },
+  { label: "TX FIRST SEEN", value: data.txBirthTimestamp.toString() },
 ];
 
 export const mapTxEffectsData = (
