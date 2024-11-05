@@ -213,15 +213,13 @@ const _getTxEffects = async (
       const nestedData = await getTxEffectNestedByHash(txEffect.hash);
       return {
         ...txEffect,
-        txBirthTimestamp: txEffect.txBirthTimestamp.getMilliseconds(),
+        txBirthTimestamp: txEffect.txBirthTimestamp.valueOf(),
         ...nestedData,
       };
     })
   );
 
-  return z
-    .array(chicmozL2TxEffectDeluxeSchema)
-    .parse(txEffects)
+  return z.array(chicmozL2TxEffectDeluxeSchema).parse(txEffects);
 };
 
 export const getTxEffectByTxHash = async (
@@ -261,10 +259,9 @@ export const getTxEffectDynamicWhere = async (
 
   const nestedData = await getTxEffectNestedByHash(dbRes[0].hash);
 
-  return chicmozL2TxEffectDeluxeSchema
-    .parse({
-      ...dbRes[0],
-      txBirthTimestamp: dbRes[0].txBirthTimestamp.getMilliseconds(),
-      ...nestedData,
-    })
+  return chicmozL2TxEffectDeluxeSchema.parse({
+    ...dbRes[0],
+    txBirthTimestamp: dbRes[0].txBirthTimestamp.valueOf(),
+    ...nestedData,
+  });
 };

@@ -13,7 +13,12 @@ export const getTxs = async (): Promise<ChicmozL2PendingTx[]> => {
       ...getTableColumns(l2Tx),
     })
     .from(l2Tx)
-    .orderBy(asc(l2Tx.birthTimestamp))
+    .orderBy(asc(l2Tx.birthTimestamp));
   if (!res) return [];
-  return z.array(chicmozL2PendingTxSchema).parse(res);
+  return z.array(chicmozL2PendingTxSchema).parse(
+    res.map((tx) => ({
+      ...tx,
+      birthTimestamp: tx.birthTimestamp.getTime(),
+    }))
+  );
 };

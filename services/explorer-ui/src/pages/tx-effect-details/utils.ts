@@ -1,5 +1,6 @@
 import { type ChicmozL2TxEffectDeluxe } from "@chicmoz-pkg/types";
 import { type tabId } from "./constants";
+import { formatTimeSince } from "~/lib/utils";
 export type TxEffectDataType =
   | string[]
   | Array<{ logs: Array<{ data: string; contractAddress: string }> }>
@@ -26,32 +27,32 @@ export const getTxEffectData = (data: ChicmozL2TxEffectDeluxe) => [
     value: data.blockHeight.toString(),
     link: `/blocks/${data.blockHeight}`,
   },
-  { label: "TIMESTAMP", value: data.timestamp.toString() },
-  { label: "TX FIRST SEEN", value: data.txBirthTimestamp.toString() },
+  { label: "MINED ON CHAIN", value: formatTimeSince(data.timestamp) },
+  { label: "CREATED", value: formatTimeSince(data.txBirthTimestamp) },
 ];
 
 export const mapTxEffectsData = (
-  data?: ChicmozL2TxEffectDeluxe,
+  data?: ChicmozL2TxEffectDeluxe
 ): Record<string, TxEffectDataType | undefined> => {
   if (!data) return {};
 
   console.log(
-    data.encryptedLogs?.functionLogs?.filter((log) => log.logs.length > 0),
+    data.encryptedLogs?.functionLogs?.filter((log) => log.logs.length > 0)
   );
   const effectsMap: Record<tabId, TxEffectDataType | undefined> = {
     encryptedLogs: !data.encryptedLogs?.functionLogs?.filter(
-      (log) => log.logs.length > 0,
+      (log) => log.logs.length > 0
     )
       ? data.encryptedLogs.functionLogs.filter((log) => log.logs.length > 0)
       : undefined,
     unencryptedLogs: !data.unencryptedLogs?.functionLogs?.filter(
-      (log) => log.logs.length > 0,
+      (log) => log.logs.length > 0
     )
       ? data.unencryptedLogs.functionLogs
       : undefined,
     nullifiers: data.nullifiers?.length ? data.nullifiers : undefined,
     noteEncryptedLogs: !data.noteEncryptedLogs?.functionLogs?.filter(
-      (log) => log.logs.length > 0,
+      (log) => log.logs.length > 0
     )
       ? data.noteEncryptedLogs.functionLogs
       : undefined,
@@ -64,7 +65,7 @@ export const mapTxEffectsData = (
 
   // Filter out undefined values
   return Object.fromEntries(
-    Object.entries(effectsMap).filter(([_, value]) => value !== undefined),
+    Object.entries(effectsMap).filter(([_, value]) => value !== undefined)
   );
 };
 export function areAllOptionsAvailable<
@@ -74,6 +75,6 @@ export function areAllOptionsAvailable<
     (option) =>
       option in record &&
       record[option] !== undefined &&
-      record[option] !== null,
+      record[option] !== null
   );
 }
