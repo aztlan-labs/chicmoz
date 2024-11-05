@@ -53,9 +53,13 @@ export const BlockDetails: FC = () => {
               <p>View TxEffects</p>
             </Button>
           </div>
-          {latestBlock.height && latestBlock.header.globalVariables.timestamp && (
-            <TxEffectsTable blockHeight={latestBlock.height} blockTimestamp={latestBlock.header.globalVariables.timestamp} />
-          )}
+          {latestBlock.height &&
+            latestBlock.header.globalVariables.timestamp && (
+              <TxEffectsTable
+                blockHeight={latestBlock.height}
+                blockTimestamp={latestBlock.header.globalVariables.timestamp}
+              />
+            )}
           {isLoading && <Loader amount={5} />}
         </div>
       </div>
