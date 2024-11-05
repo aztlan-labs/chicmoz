@@ -18,6 +18,11 @@ export const openApiPaths = {
   ...controller.openapi_GET_L2_REGISTERED_CONTRACT_CLASSES_ALL_VERSIONS,
   ...controller.openapi_GET_L2_REGISTERED_CONTRACT_CLASSES,
 
+  ...controller.openapi_GET_L2_CONTRACT_CLASS_PRIVATE_FUNCTIONS,
+  ...controller.openapi_GET_L2_CONTRACT_CLASS_PRIVATE_FUNCTION,
+  ...controller.openapi_GET_L2_CONTRACT_CLASS_UNCONSTRAINED_FUNCTIONS,
+  ...controller.openapi_GET_L2_CONTRACT_CLASS_UNCONSTRAINED_FUNCTION,
+
   ...controller.openapi_GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH,
   ...controller.openapi_GET_L2_CONTRACT_INSTANCES_BY_CONTRACT_CLASS_ID,
   ...controller.openapi_GET_L2_CONTRACT_INSTANCE,
@@ -79,7 +84,12 @@ export const init = ({ router }: { router: Router }) => {
   router.get(paths.contractClassesByClassId, controller.GET_L2_REGISTERED_CONTRACT_CLASSES_ALL_VERSIONS);
   router.get(paths.contractClasses, controller.GET_L2_REGISTERED_CONTRACT_CLASSES);
 
-  router.get( paths.contractInstancesByBlockHash, controller.GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH);
+  router.get(paths.contractClassPrivateFunctions, controller.GET_L2_CONTRACT_CLASS_PRIVATE_FUNCTIONS);
+  router.get(paths.contractClassPrivateFunction, controller.GET_L2_CONTRACT_CLASS_PRIVATE_FUNCTION);
+  router.get(paths.contractClassUnconstrainedFunctions, controller.GET_L2_CONTRACT_CLASS_UNCONSTRAINED_FUNCTIONS);
+  router.get(paths.contractClassUnconstrainedFunction, controller.GET_L2_CONTRACT_CLASS_UNCONSTRAINED_FUNCTION);
+
+  router.get(paths.contractInstancesByBlockHash, controller.GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH);
   router.get(paths.contractInstancesByContractClassId, controller.GET_L2_CONTRACT_INSTANCES_BY_CONTRACT_CLASS_ID);
   router.get(paths.contractInstance, controller.GET_L2_CONTRACT_INSTANCE);
   router.get(paths.contractInstances, controller.GET_L2_CONTRACT_INSTANCES);
