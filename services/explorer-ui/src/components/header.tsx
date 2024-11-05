@@ -108,11 +108,10 @@ export const Header = () => {
                 >
                   <span className="flex items-center">
                     {isMenuOpen ? (
-                      <X className="h-6 w-6 mr-2" />
+                      <X className="h-6 w-6 mr-2 text-secondary" />
                     ) : (
-                      <Menu className="h-6 w-6 mr-2" />
+                      <Menu className="h-6 w-6 mr-2 text-secondary" />
                     )}
-                    Menu
                   </span>
                 </Button>
               </div>
