@@ -1,5 +1,4 @@
 import {
-  type ChicmozL2BlockLight,
   type ChicmozL2TxEffect,
 } from "@chicmoz-pkg/types";
 import { z } from "zod";
@@ -8,7 +7,7 @@ export type TxEffectTableSchema = z.infer<typeof txEffectSchema>;
 
 export const getTxEffectTableObj = (
   txEffect: ChicmozL2TxEffect,
-  block: ChicmozL2BlockLight
+  block: { height: number; timestamp: number }
 ): TxEffectTableSchema => {
   return txEffectSchema.parse({
     hash: txEffect.hash,
@@ -18,7 +17,7 @@ export const getTxEffectTableObj = (
       txEffect.unencryptedLogsLength +
       txEffect.noteEncryptedLogsLength,
     blockNumber: block.height,
-    timestamp: block.header.globalVariables.timestamp,
+    timestamp: block.timestamp,
   });
 };
 

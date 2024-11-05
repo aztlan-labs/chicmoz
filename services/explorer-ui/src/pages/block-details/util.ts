@@ -50,9 +50,9 @@ export const getBlockDetails = (latestBlock: ChicmozL2BlockLight) => {
 
 export const getTxEffects = (
   txEffects?: ChicmozL2Block["body"]["txEffects"],
-  latestBlock?: ChicmozL2BlockLight,
+  block?: { height: number; timestamp: number }
 ) => {
   if (!txEffects) return undefined;
-  if (!latestBlock) return undefined;
-  return txEffects.map((tx) => getTxEffectTableObj(tx, latestBlock));
+  if (!block) return undefined;
+  return txEffects.map((tx) => getTxEffectTableObj(tx, block));
 };
