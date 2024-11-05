@@ -2,7 +2,7 @@
   "name": "@chicmoz/dummy-node",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "dependencies": {
     "@chicmoz-pkg/logger-server": "workspace:^",
     "@types/node": "20.9.0",
