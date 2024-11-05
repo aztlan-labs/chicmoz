@@ -4,9 +4,12 @@ import { routes } from "~/routes/__root";
 import { DataTableColumnHeader } from "~/components/data-table";
 import { type TxEffectTableSchema } from "./tx-effects-schema";
 import { formatTimeSince } from "~/lib/utils";
+import {CopyableText} from "../copy-text";
+import {truncateHashString} from "~/lib/create-hash-string";
 
 const text = {
   hash: "TX EFFECT HASH",
+  txHash: "TX HASH",
   transactionFee: "TRANSACTION FEE (FPA)",
   totalLengthOfLogs: "TOTAL LOGS LENGTH",
   blockHeight: "BLOCK HEIGHT",
@@ -34,6 +37,24 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
         </div>
       );
     },
+  },
+  {
+    accessorKey: "txHash",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className="text-purple-dark text-sm "
+        column={column}
+        title={text.txHash}
+      />
+    ),
+    cell: ({ row }) => (
+      <CopyableText
+        toCopy={row.getValue("txHash")}
+        text={truncateHashString(row.getValue("txHash"))}
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
   },
   {
     accessorKey: "transactionFee",

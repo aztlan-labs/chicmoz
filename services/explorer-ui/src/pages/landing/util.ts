@@ -34,6 +34,7 @@ export const parseTxEffectsData = (
       if (!latestBlocks) return;
       const newTxEffects = data.data.reduce((acc, txEffect) => {
         if (txEffect === undefined) return acc;
+        if (latestBlocks[i] === undefined) return acc;
         return acc.concat(getTxEffectTableObj(txEffect, latestBlocks[i]));
       }, latestTxEffects);
       latestTxEffects = newTxEffects;

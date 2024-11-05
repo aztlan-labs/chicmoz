@@ -34,7 +34,6 @@ export const useGetTxEffectsByBlockHeightRange = (
   from: number | undefined,
   to: number | undefined
 ): UseQueryResult<(ChicmozL2TxEffectDeluxe | undefined)[], Error>[] => {
-  console.log(from, to);
   return useQueries({
     queries:
       from === undefined || to === undefined
