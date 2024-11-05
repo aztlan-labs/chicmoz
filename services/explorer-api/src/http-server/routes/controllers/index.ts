@@ -1,6 +1,7 @@
 export * from "./inofficial.js";
 export * from "./blocks.js";
 export * from "./tx-effects.js";
+export * from "./txs.js";
 export * from "./contract-classes.js";
 export * from "./contract-class-functions.js";
 export * from "./contract-instances.js";

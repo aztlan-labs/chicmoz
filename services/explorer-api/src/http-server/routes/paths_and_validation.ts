@@ -21,6 +21,8 @@ export const paths = {
   txEffectByBlockHeightAndIndex: `/l2/blocks/:${blockHeight}/tx-effects/:${txEffectIndex}`,
   txEffectsByTxHash: `/l2/tx-effects/:${txEffectHash}`,
 
+  txs: "/l2/txs",
+
   contractClass: `/l2/contract-classes/:${classId}/versions/:${version}`,
   contractClassesByClassId: `/l2/contract-classes/:${classId}`,
   contractClasses: `/l2/contract-classes`,
