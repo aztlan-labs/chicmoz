@@ -69,8 +69,9 @@ spec:
               value: "true"
             - name: AZTEC_LISTEN_FOR_BLOCKS
               value: "true"
-            - name: AZTEC_LISTEN_FOR_PENDING_TXS
-              value: "true"
             - name: AZTEC_RPC_URL
-              value: "http://aztec-sandbox-node:8081"
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: CHICMOZ_AZTEC_RPC
 status: {}

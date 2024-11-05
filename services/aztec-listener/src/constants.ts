@@ -1,6 +1,7 @@
 export const BLOCK_POLL_INTERVAL_MS = Number(process.env.BLOCK_INTERVAL_MS) || 2000;
 export const MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS = Number(process.env.MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS) || 50;
 export const AZTEC_LISTEN_FOR_BLOCKS = process.env.AZTEC_LISTEN_FOR_BLOCKS === "true";
+export const AZTEC_LISTEN_FOR_PENDING_TXS = process.env.AZTEC_LISTEN_FOR_PENDING_TXS === "true";
 export const AZTEC_GENESIS_CATCHUP = process.env.AZTEC_GENESIS_CATCHUP === "true";
 export const AZTEC_DISABLED = process.env.AZTEC_DISABLED === "true";
 

@@ -16,6 +16,17 @@ export const unencryptedLogEntrySchema = z.object({
   contractAddress: aztecAddressSchema,
 });
 
+export const chicmozL2PendingTxSchema = z.object({
+  hash: hexStringSchema,
+  data: z.string(),
+  noteEncryptedLogs: z.string(),
+  encryptedLogs: z.string(),
+  unencryptedLogs: z.string(),
+  clientIvcProof: z.string(),
+  enqueuedPublicFunctions: z.array(z.string()),
+  publicTeardownFunctionCall: z.string(),
+});
+
 export const chicmozL2TxEffectSchema = z.object({
   revertCode: z.preprocess(
     (val) => {
@@ -25,6 +36,7 @@ export const chicmozL2TxEffectSchema = z.object({
     z.object({ code: z.number() }),
   ),
   hash: hexStringSchema,
+  txHash: hexStringSchema.optional(), // TODO: remove optional
   transactionFee: frNumberSchema,
   noteHashes: z.array(frSchema),
   nullifiers: z.array(frSchema),
@@ -62,4 +74,5 @@ export type NoteEncryptedLogEntry = z.infer<typeof noteEncryptedLogEntrySchema>;
 export type EncryptedLogEntry = z.infer<typeof encryptedLogEntrySchema>;
 export type UnencryptedLogEntry = z.infer<typeof unencryptedLogEntrySchema>;
 
+export type ChicmozL2PendingTx = z.infer<typeof chicmozL2PendingTxSchema>;
 export type ChicmozL2TxEffect = z.infer<typeof chicmozL2TxEffectSchema>;

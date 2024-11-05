@@ -1,9 +1,10 @@
 import { NodeInfo, transformNodeInfo } from "@chicmoz-pkg/types";
-import { L2Block } from "@aztec/aztec.js";
+import { L2Block, Tx } from "@aztec/aztec.js";
 import { getNodeInfo } from "../aztec/index.js";
 import { logger } from "../logger.js";
 import { publishMessage } from "../message-bus/index.js";
 import { AZTEC_RPC_URL } from "../constants.js";
+import { PendingTxsEvent } from "@chicmoz-pkg/message-registry";
 
 export const onBlock = async (block: L2Block) => {
   const height = Number(block.header.globalVariables.blockNumber);
@@ -25,6 +26,15 @@ export const onCatchupBlock = async (block: L2Block) => {
   });
 };
 // TODO: onCatchupRequestFromExplorerApi
+
+export const onPendingTxs = async (txs: Tx[]) => {
+  if (!txs || txs.length === 0) return;
+  await publishMessage("PENDING_TXS_EVENT", {
+    txs: txs.map((tx) => {
+      return { ...tx.toJSON(), hash: tx.getTxHash().to0xString() };
+    }),
+  } as PendingTxsEvent);
+};
 
 export const onConnectedToAztec = async (
   nodeInfo: NodeInfo,
