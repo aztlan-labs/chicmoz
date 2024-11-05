@@ -12,7 +12,7 @@ import {
 } from "~/hooks/stats";
 import { mapLatestBlocks, parseTxEffectsData } from "./util";
 import { InfoBadge } from "~/components/info-badge";
-import { formatDuration } from "~/lib/utils";
+import { formatDuration, formatFees } from "~/lib/utils";
 import { useGetPendingTxs } from "~/hooks/tx";
 import { TxEffectTableSchema } from "~/components/tx-effects/tx-effects-schema";
 
@@ -80,8 +80,11 @@ export const Landing: FC = () => {
   }, [pendingTxs, latestTxEffects]);
 
   const averageBlockTimeFormatted = formatDuration(
-    Number(avarageBlockTime) / 1000
+    Number(avarageBlockTime) / 1000,
+    true
   );
+
+  const formattedFees = formatFees(avarageFees);
 
   return (
     <div className="mx-auto px-5 max-w-[1440px] md:px-[70px]">
@@ -99,10 +102,10 @@ export const Landing: FC = () => {
           data={totalAmountOfContracts}
         />
         <InfoBadge
-          title="Average fees (FPA)"
+          title={`Average fees (${formattedFees.denomination} FPA)`}
           isLoading={loadingAvarageFees}
           error={errorAvarageFees}
-          data={avarageFees}
+          data={formattedFees.value}
         />
         <InfoBadge
           title="Total transactions last 24h"
