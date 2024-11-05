@@ -57,7 +57,7 @@ manifests:
         remoteChart: postgresql
         repo: https://charts.bitnami.com/bitnami
         valuesFiles:
-          - ./postgres/values.yaml
+          - k8s/local/postgres/values.yaml
         setValues:
           global.postgresql.auth.postgresPassword: "secret-local-password"
           global.postgresql.auth.username: "admin"
