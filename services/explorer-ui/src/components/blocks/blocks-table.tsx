@@ -17,7 +17,7 @@ export const BlocksTable: FC<Props> = ({ blocks, isLoading, error }) => {
   if (error) return <p className="text-red-500">{error.message}</p>;
 
   return (
-    <section className="relative mx-auto w-full transition-all">
+    <section className="relative mx-0 w-full transition-all">
       <DataTable data={blocks} columns={BlockTableColumns} />
     </section>
   );
