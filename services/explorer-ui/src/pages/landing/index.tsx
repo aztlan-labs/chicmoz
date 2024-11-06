@@ -87,7 +87,10 @@ export const Landing: FC = () => {
 
   return (
     <div className="mx-auto px-5 max-w-[1440px] md:px-[70px]">
-      <div className="grid grid-cols-2 gap-3 mt-5 mb-5 md:grid-cols-3 md:gap-5 ">
+      <div className="hidden md:mt-16 md:flex flex-wrap justify-center my-20">
+        <h1 className="">Explore the power of privacy on Aztec</h1>
+      </div>
+      <div className="grid grid-cols-2 gap-3 my-20 md:grid-cols-3 md:gap-5">
         <InfoBadge
           title="Total transactions"
           isLoading={loadingTotalEffects}

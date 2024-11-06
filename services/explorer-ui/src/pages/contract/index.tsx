@@ -30,11 +30,11 @@ export const Contracts: FC = () => {
 
   return (
     <div className="mx-auto px-7 max-w-[1440px] md:px-[70px]">
-      <div className="flex flex-wrap justify-center gap-3 m-5 ">
-        <h2 className="mt-2 text-primary md:hidden">All contracts</h2>
-        <h1 className="hidden md:block md:mt-16">All contracts</h1>
+      <div className="flex flex-wrap justify-center m-5">
+        <h2 className="mt-2 text-primary md:hidden">All Contracts</h2>
+        <h1 className="hidden md:block md:mt-16">All Contracts</h1>
       </div>
-      <div className="grid grid-cols-2 gap-3 mt-5 mb-5 md:gap-5 ">
+      <div className="grid grid-cols-2 gap-3 my-10 md:gap-5 ">
         <InfoBadge
           title="Total Contract Classes"
           isLoading={loadingAmountContracts}
