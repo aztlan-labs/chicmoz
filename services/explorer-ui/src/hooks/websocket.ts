@@ -1,11 +1,15 @@
 import {
-  chicmozL2TxEffectSchema,
-  type ChicmozL2BlockLight,
-  type ChicmozL2Block,
   chicmozL2BlockSchema,
+  chicmozL2PendingTxSchema,
+  chicmozL2TxEffectSchema,
+  type ChicmozL2Block,
+  type ChicmozL2BlockLight,
+  type ChicmozL2PendingTx,
+  type WebsocketUpdateMessage,
 } from "@chicmoz-pkg/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { z } from "zod";
 import { WS_URL } from "~/service/constants";
 import { queryKeyGenerator, statsKey } from "./utils";
 
@@ -62,17 +66,49 @@ const invalidateContracts = async (
   ]);
 };
 
-const handleWebSocketMessage = async (
+const handleBlock = async (
   queryClient: ReturnType<typeof useQueryClient>,
-  data: string
+  blockData: ChicmozL2Block
 ) => {
-  const block = chicmozL2BlockSchema.parse(JSON.parse(data));
+  const block = chicmozL2BlockSchema.parse(blockData);
   updateBlock(queryClient, block);
   updateTxEffects(queryClient, block);
   await Promise.all([
     invalidateStats(queryClient),
     invalidateContracts(queryClient),
   ]);
+};
+
+const updatePendingTxs = (
+  queryClient: ReturnType<typeof useQueryClient>,
+  txs: ChicmozL2PendingTx[]
+) => {
+  queryClient.setQueryData(
+    queryKeyGenerator.pendingTxs,
+    (oldData: ChicmozL2PendingTx[] | undefined) => {
+      if (!oldData) return txs;
+      return [...oldData, ...txs].sort((a, b) => b.birthTimestamp - a.birthTimestamp);
+    }
+  );
+};
+
+const handlePendingTxs = (
+  queryClient: ReturnType<typeof useQueryClient>,
+  txsData: ChicmozL2PendingTx[]
+) => {
+  const txs = z.array(chicmozL2PendingTxSchema).parse(txsData);
+  updatePendingTxs(queryClient, txs);
+};
+
+const handleWebSocketMessage = async (
+  queryClient: ReturnType<typeof useQueryClient>,
+  data: string
+) => {
+  const update: WebsocketUpdateMessage = JSON.parse(
+    data
+  ) as WebsocketUpdateMessage;
+  if (update.block) await handleBlock(queryClient, update.block);
+  if (update.txs) handlePendingTxs(queryClient, update.txs);
 };
 
 export const useWebSocketConnection = () => {
@@ -96,5 +132,5 @@ export const useWebSocketConnection = () => {
     websocket.onclose = () => console.log("WebSocket Disconnected");
 
     return () => websocket.close();
-  }, []);
+  }, [queryClient]);
 };

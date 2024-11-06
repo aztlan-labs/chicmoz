@@ -18,7 +18,7 @@ export const unencryptedLogEntrySchema = z.object({
 
 export const chicmozL2PendingTxSchema = z.object({
   hash: hexStringSchema,
-  birthTimestamp: z.number().optional(),
+  birthTimestamp: z.number(),
   data: z.string(),
   noteEncryptedLogs: z.string(),
   encryptedLogs: z.string(),
