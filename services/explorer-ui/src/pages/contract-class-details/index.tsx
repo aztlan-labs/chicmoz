@@ -87,9 +87,9 @@ export const ContractClassDetails: FC = () => {
         />
         <div className="flex flex-col gap-4 md:flex-row ">
           {selectedTab === "contractVersions" && (
-            <div className="bg-white w-full rounded-lg shadow-md p-4">
-              <h3>Latest Contract Classes</h3>
+            <div className="bg-white w-full rounded-lg">
               <ContractClassesTable
+                title="Latest Contract Classes"
                 contracts={mapContractClasses(classesData)}
                 isLoading={isLoadingClasses}
                 error={errorClasses}
@@ -98,9 +98,9 @@ export const ContractClassDetails: FC = () => {
             </div>
           )}
           {selectedTab === "contractInstances" && (
-            <div className="bg-white w-full rounded-lg shadow-md p-4">
-              <h3>Latest Contract Instances</h3>
+            <div className="bg-white w-full rounded-lg">
               <ContractInstancesTable
+                title="Latest Contract Instances"
                 contracts={mapContractInstances(instancesData)}
                 isLoading={isLoadingInstances}
                 error={errorInstances}

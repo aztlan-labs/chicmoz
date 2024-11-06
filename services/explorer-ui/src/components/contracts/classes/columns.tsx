@@ -12,7 +12,7 @@ const text = {
   contractClassId: "CLASS ID",
   version: "VERSION",
   artifactHash: "ARTIFACT HASH",
-  privateFunctionsRoot: "PRIVATE FUNCTIONS ROOT",
+  privateFunctionsRoot: "PRIVATE FNCS ROOT",
 };
 
 export const contractsTableColumns: ColumnDef<ContractClass>[] = [
@@ -25,12 +25,20 @@ export const contractsTableColumns: ColumnDef<ContractClass>[] = [
         title={text.contractClassId}
       />
     ),
-    cell: ({ row }) => (
-      <CopyableText
-        toCopy={row.getValue("contractClassId")}
-        text={truncateHashString(row.getValue("contractClassId"))}
-      />
-    ),
+    cell: ({ row }) => {
+      if (!row.getVisibleCells().some((cell) => cell.column.id === "version")) {
+        return getClassVersionLink(
+          row.getValue("contractClassId"),
+          1,
+          truncateHashString(row.getValue("contractClassId"))
+        );
+      } else {
+        return <CopyableText
+          toCopy={row.getValue("contractClassId")}
+          text={truncateHashString(row.getValue("contractClassId"))}
+        />;
+      }
+    },
     enableSorting: false,
     enableHiding: false,
   },
