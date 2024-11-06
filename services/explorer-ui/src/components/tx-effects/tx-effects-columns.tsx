@@ -10,10 +10,9 @@ import { truncateHashString } from "~/lib/create-hash-string";
 const text = {
   hash: "TX EFFECT HASH",
   txHash: "TX HASH",
-  transactionFee: "TRANSACTION FEE (FPA)",
-  totalLengthOfLogs: "TOTAL LOGS LENGTH",
-  blockHeight: "BLOCK HEIGHT",
-  timeSince: "TIME SINCE",
+  transactionFee: "FEE (FPA)",
+  blockHeight: "HEIGHT",
+  timeSince: "AGE",
 };
 
 export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
@@ -32,7 +31,7 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
       const r = `${routes.txEffects.route}/${hash}`;
       const truncatedTxHash = `${hash.slice(0, 6)}...${hash.slice(-4)}`;
       return (
-        <div className="text-purple-light font-mono font-bold">
+        <div className="text-purple-light font-mono">
           <Link to={r}>{truncatedTxHash}</Link>
         </div>
       );
@@ -57,16 +56,35 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: "timestamp",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className="text-purple-dark text-sm"
+        column={column}
+        title={text.timeSince}
+      />
+    ),
+    cell: ({ row }) => {
+      const formattedTime = formatTimeSince(
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+        row.getValue("timestamp") as unknown as number
+      );
+      return <div className="text-purple-dark">{formattedTime}</div>;
+    },
+    enableSorting: true,
+    enableHiding: false,
+  },
+  {
     accessorKey: "transactionFee",
     header: ({ column }) => (
       <DataTableColumnHeader
-        className="text-purple-dark text-sm "
+        className="text-purple-dark text-sm"
         column={column}
         title={text.transactionFee}
       />
     ),
     cell: ({ row }) => (
-      <div className="text-purple-dark">{row.getValue("transactionFee")}</div>
+      <div className="font-mono">{row.getValue("transactionFee")}</div>
     ),
     enableSorting: true,
     enableHiding: false,
@@ -85,31 +103,12 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
       if (typeof blockNumber !== "number") return null;
       const r = `${routes.blocks.route}/${blockNumber}`;
       return (
-        <div className="text-purple-light font-mono font-bold">
+        <div className="text-purple-light font-mono">
           <Link to={r}>{blockNumber}</Link>
         </div>
       );
     },
     enableSorting: true,
     enableHiding: true,
-  },
-  {
-    accessorKey: "timestamp",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        className="text-purple-dark text-sm"
-        column={column}
-        title={text.timeSince}
-      />
-    ),
-    cell: ({ row }) => {
-      const formattedTime = formatTimeSince(
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-        row.getValue("timestamp") as unknown as number
-      );
-      return <div className="text-purple-dark">{formattedTime}</div>;
-    },
-    enableSorting: true,
-    enableHiding: false,
   },
 ];

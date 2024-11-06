@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { FC } from "react";
+import { type FC } from "react";
 import { truncateHashString } from "~/lib/create-hash-string";
 import { CopyableText } from "../copy-text";
 
@@ -37,7 +37,7 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
         <>
           <span className={`text-sm flex-grow md:text-end`}>
             {isHashSring ? (
-              <CopyableText text={truncatedValue} toCopy={value} />
+              <CopyableText text={truncatedValue} toCopy={value} additionalClasses="md:justify-end md:text-end"/>
             ) : (
               truncatedValue
             )}

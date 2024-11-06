@@ -69,7 +69,6 @@ export const Landing: FC = () => {
           hash: "0x00000000",
           txHash: tx.hash,
           transactionFee: -1,
-          totalLengthOfLogs: -1,
           blockNumber: -1,
           timestamp: tx.birthTimestamp ?? 0,
         });
