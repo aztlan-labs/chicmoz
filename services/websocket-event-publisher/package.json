@@ -7,7 +7,7 @@
   "files": [
     "build"
   ],
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "dependencies": {
     "@chicmoz-pkg/backend-utils": "workspace:^",
     "@chicmoz-pkg/logger-server": "workspace:^",

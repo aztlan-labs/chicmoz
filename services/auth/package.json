@@ -2,7 +2,7 @@
   "name": "@chicmoz/auth",
   "version": "4.0.1",
   "main": "index.js",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "dependencies": {
     "@chicmoz-pkg/error-middleware": "workspace:^",
     "@chicmoz-pkg/logger-server": "workspace:^",

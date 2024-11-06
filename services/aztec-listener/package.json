@@ -2,7 +2,7 @@
   "name": "@chicmoz/aztec-listener",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "dependencies": {
     "@aztec/aztec.js": "0.61.0",
     "@aztec/circuits.js": "0.61.0",
