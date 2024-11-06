@@ -17,11 +17,16 @@ export const useGetTxEffectByHash = (
 };
 
 export const useGetTxEffectsByBlockHeight = (
-  height: number
+  height: number | string | undefined
 ): UseQueryResult<ChicmozL2TxEffectDeluxe[], Error> => {
+  if (typeof height === "string" && height?.startsWith("0x"))
+    throw new Error("Invalid block height");
   return useQuery<ChicmozL2TxEffectDeluxe[], Error>({
-    queryKey: queryKeyGenerator.txEffectsByBlockHeight(height),
-    queryFn: () => TxEffectsAPI.getTxEffectsByBlockHeight(height),
+    queryKey: queryKeyGenerator.txEffectsByBlockHeight(Number(height)),
+    queryFn: () =>
+      !height
+        ? Promise.resolve([])
+        : TxEffectsAPI.getTxEffectsByBlockHeight(Number(height)),
   });
 };
 

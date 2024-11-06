@@ -1,10 +1,10 @@
 import { blockFromString, parseBlock } from "@chicmoz-pkg/backend-utils";
 import { NewBlockEvent } from "@chicmoz-pkg/message-registry";
-import { ChicmozL2Block } from "@chicmoz-pkg/types";
+import { ChicmozL2Block, ChicmozL2TxEffect } from "@chicmoz-pkg/types";
 import { controllers } from "../../database/index.js";
 import { logger } from "../../logger.js";
 import { storeContracts } from "./contracts.js";
-import { handleDuplicateError } from "./utils.js";
+import { handleDuplicateError } from "../utils.js";
 
 export const onBlock = async ({ block, blockNumber }: NewBlockEvent) => {
   // TODO: start storing NODE_INFO connected to the block
@@ -26,6 +26,7 @@ export const onBlock = async ({ block, blockNumber }: NewBlockEvent) => {
   }
   await storeBlock(parsedBlock);
   await storeContracts(b, parsedBlock.hash);
+  await pendingTxsHook(parsedBlock.body.txEffects);
 };
 
 const storeBlock = async (parsedBlock: ChicmozL2Block) => {
@@ -35,4 +36,8 @@ const storeBlock = async (parsedBlock: ChicmozL2Block) => {
   await controllers.l2Block.store(parsedBlock).catch((e) => {
     handleDuplicateError(e as Error, `block ${parsedBlock.height}`);
   });
+};
+
+const pendingTxsHook = async (txEffects: ChicmozL2TxEffect[]) => {
+  await controllers.l2Tx.replaceTxsWithTxEffects(txEffects);
 };

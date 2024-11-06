@@ -59,6 +59,8 @@ CREATE TABLE IF NOT EXISTS "public_data_write" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tx_effect" (
 	"hash" varchar PRIMARY KEY NOT NULL,
+	"txHash" varchar NOT NULL,
+	"tx_time_of_birth" timestamp DEFAULT now() NOT NULL,
 	"index" integer NOT NULL,
 	"revert_code" smallint NOT NULL,
 	"transaction_fee" bigint NOT NULL,
@@ -158,6 +160,18 @@ CREATE TABLE IF NOT EXISTS "state" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"l1_to_l2_message_tree_id" uuid NOT NULL,
 	"partial_id" uuid NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "tx" (
+	"hash" varchar PRIMARY KEY NOT NULL,
+	"birth_timestamp" timestamp DEFAULT now() NOT NULL,
+	"data" text NOT NULL,
+	"note_encrypted_logs" text NOT NULL,
+	"encrypted_logs" text NOT NULL,
+	"unencrypted_logs" text NOT NULL,
+	"client_ivc_proof" text NOT NULL,
+	"enqueued_public_functions" jsonb NOT NULL,
+	"public_teardown_function_call" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l2_contract_class_registered" (
@@ -364,3 +378,5 @@ DO $$ BEGIN
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
+--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "tx_hash_index" ON "tx_effect" USING btree ("txHash");

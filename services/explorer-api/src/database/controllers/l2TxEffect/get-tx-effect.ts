@@ -10,7 +10,7 @@ import {
   noteEncryptedLogEntrySchema,
   unencryptedLogEntrySchema,
 } from "@chicmoz-pkg/types";
-import { and, asc, eq, getTableColumns } from "drizzle-orm";
+import { SQL, and, asc, eq, getTableColumns } from "drizzle-orm";
 import { z } from "zod";
 import { DB_MAX_TX_EFFECTS } from "../../../environment.js";
 import { getDb as db } from "../../../database/index.js";
@@ -26,8 +26,6 @@ import {
   txEffectToLogs,
   txEffectToPublicDataWrite,
 } from "../../../database/schema/l2block/index.js";
-// TODO: this should be removed (and caught by dbWrapper)
-import { dbParseErrorCallback } from "../utils.js";
 
 enum GetTypes {
   BlockHeight,
@@ -127,21 +125,15 @@ export const getTxEffectNestedByHash = async (
 
   for (const log of mixedLogs) {
     if (log.type === "noteEncrypted") {
-      const l = await noteEncryptedLogEntrySchema
-        .parseAsync(log)
-        .catch(dbParseErrorCallback);
+      const l = noteEncryptedLogEntrySchema.parse(log);
       initialLogs.noteEncryptedLogs.functionLogs[
         log.functionLogIndex
       ].logs.push(l);
     } else if (log.type === "encrypted") {
-      const l = await encryptedLogEntrySchema
-        .parseAsync(log)
-        .catch(dbParseErrorCallback);
+      const l = encryptedLogEntrySchema.parse(log);
       initialLogs.encryptedLogs.functionLogs[log.functionLogIndex].logs.push(l);
     } else if (log.type === "unencrypted") {
-      const l = await unencryptedLogEntrySchema
-        .parseAsync(log)
-        .catch(dbParseErrorCallback);
+      const l = unencryptedLogEntrySchema.parse(log);
       initialLogs.unencryptedLogs.functionLogs[log.functionLogIndex].logs.push(
         l
       );
@@ -221,19 +213,29 @@ const _getTxEffects = async (
       const nestedData = await getTxEffectNestedByHash(txEffect.hash);
       return {
         ...txEffect,
+        txBirthTimestamp: txEffect.txBirthTimestamp.valueOf(),
         ...nestedData,
       };
     })
   );
 
-  return z
-    .array(chicmozL2TxEffectDeluxeSchema)
-    .parseAsync(txEffects)
-    .catch(dbParseErrorCallback);
+  return z.array(chicmozL2TxEffectDeluxeSchema).parse(txEffects);
 };
 
-export const getTxeffectByHash = async (
+export const getTxEffectByTxHash = async (
+  txHash: HexString
+): Promise<ChicmozL2TxEffectDeluxe | null> => {
+  return getTxEffectDynamicWhere(eq(txEffect.txHash, txHash));
+};
+
+export const getTxEffectByHash = async (
   hash: HexString
+): Promise<ChicmozL2TxEffectDeluxe | null> => {
+  return getTxEffectDynamicWhere(eq(txEffect.hash, hash));
+};
+
+export const getTxEffectDynamicWhere = async (
+  whereMatcher: SQL<unknown>
 ): Promise<ChicmozL2TxEffectDeluxe | null> => {
   const dbRes = await db()
     .select({
@@ -249,7 +251,7 @@ export const getTxeffectByHash = async (
       globalVariables,
       eq(header.globalVariablesId, globalVariables.id)
     )
-    .where(eq(txEffect.hash, hash))
+    .where(whereMatcher)
     .limit(1)
     .execute();
 
@@ -257,10 +259,9 @@ export const getTxeffectByHash = async (
 
   const nestedData = await getTxEffectNestedByHash(dbRes[0].hash);
 
-  return chicmozL2TxEffectDeluxeSchema
-    .parseAsync({
-      ...dbRes[0],
-      ...nestedData,
-    })
-    .catch(dbParseErrorCallback);
+  return chicmozL2TxEffectDeluxeSchema.parse({
+    ...dbRes[0],
+    txBirthTimestamp: dbRes[0].txBirthTimestamp.valueOf(),
+    ...nestedData,
+  });
 };

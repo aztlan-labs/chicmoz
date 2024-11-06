@@ -4,9 +4,12 @@ import { routes } from "~/routes/__root";
 import { DataTableColumnHeader } from "~/components/data-table";
 import { type TxEffectTableSchema } from "./tx-effects-schema";
 import { formatTimeSince } from "~/lib/utils";
+import { CopyableText } from "../copy-text";
+import { truncateHashString } from "~/lib/create-hash-string";
 
 const text = {
   hash: "TX EFFECT HASH",
+  txHash: "TX HASH",
   transactionFee: "TRANSACTION FEE (FPA)",
   totalLengthOfLogs: "TOTAL LOGS LENGTH",
   blockHeight: "BLOCK HEIGHT",
@@ -36,6 +39,24 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
     },
   },
   {
+    accessorKey: "txHash",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className="text-purple-dark text-sm "
+        column={column}
+        title={text.txHash}
+      />
+    ),
+    cell: ({ row }) => (
+      <CopyableText
+        toCopy={row.getValue("txHash")}
+        text={truncateHashString(row.getValue("txHash"))}
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
     accessorKey: "transactionFee",
     header: ({ column }) => (
       <DataTableColumnHeader
@@ -46,21 +67,6 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
     ),
     cell: ({ row }) => (
       <div className="text-purple-dark">{row.getValue("transactionFee")}</div>
-    ),
-    enableSorting: true,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "totalLengthOfLogs",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        className="text-purple-dark text-sm "
-        column={column}
-        title={text.totalLengthOfLogs}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="text-purple-dark">{row.getValue("totalLengthOfLogs")}</div>
     ),
     enableSorting: true,
     enableHiding: false,

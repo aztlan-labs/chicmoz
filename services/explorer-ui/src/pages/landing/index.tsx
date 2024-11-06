@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { useMemo, type FC } from "react";
 import { BlocksTable } from "~/components/blocks/blocks-table";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { useGetTxEffectsByBlockHeightRange, useLatestBlocks } from "~/hooks";
@@ -13,6 +13,8 @@ import {
 import { mapLatestBlocks, parseTxEffectsData } from "./util";
 import { InfoBadge } from "~/components/info-badge";
 import { formatDuration } from "~/lib/utils";
+import { useGetPendingTxs } from "~/hooks/tx";
+import { TxEffectTableSchema } from "~/components/tx-effects/tx-effects-schema";
 
 export const Landing: FC = () => {
   const { data: latestBlocks, isLoading, error } = useLatestBlocks();
@@ -49,8 +51,10 @@ export const Landing: FC = () => {
 
   const latestTxEffectsData = useGetTxEffectsByBlockHeightRange(
     latestBlocks?.at(-1)?.height,
-    latestBlocks?.at(0)?.height,
+    latestBlocks?.at(0)?.height
   );
+
+  const { data: pendingTxs } = useGetPendingTxs();
 
   const {
     isLoadingTxEffects,
@@ -58,8 +62,25 @@ export const Landing: FC = () => {
     latestTxEffects,
   } = parseTxEffectsData(latestTxEffectsData, latestBlocks);
 
+  const latestTxEffectsWithPending = useMemo(() => {
+    const disguisedPendingTxs = pendingTxs?.reduce((acc, tx) => {
+      if (!latestTxEffects.some((effect) => effect.txHash === tx.hash)) {
+        acc.push({
+          hash: "0x00000000",
+          txHash: tx.hash,
+          transactionFee: -1,
+          totalLengthOfLogs: -1,
+          blockNumber: -1,
+          timestamp: tx.birthTimestamp ?? 0,
+        });
+      }
+      return acc;
+    }, [] as TxEffectTableSchema[]) ?? [];
+    return [...disguisedPendingTxs, ...latestTxEffects];
+  }, [pendingTxs, latestTxEffects]);
+
   const averageBlockTimeFormatted = formatDuration(
-    Number(avarageBlockTime) / 1000,
+    Number(avarageBlockTime) / 1000
   );
 
   return (
@@ -114,7 +135,7 @@ export const Landing: FC = () => {
         <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
           <h3>Latest TX-Effects</h3>
           <TxEffectsTable
-            txEffects={latestTxEffects}
+            txEffects={latestTxEffectsWithPending}
             isLoading={isLoadingTxEffects}
             error={txEffectsError}
           />

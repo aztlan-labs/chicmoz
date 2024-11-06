@@ -38,6 +38,7 @@ export const start = async () => {
     ID: mb.ID,
     init: mb.init,
   });
+  // TODO: clear pending txs DB
   setComponentInitializing("SUBSCRIPTIONS");
   await mb.startSubscribe(blockHandler);
   await mb.startSubscribe(catchupHandler);

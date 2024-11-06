@@ -3,7 +3,7 @@ import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { useParams } from "@tanstack/react-router";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { Button } from "~/components/ui";
-import { useGetBlockByHeight, useGetTxEffectsByBlockHeight } from "~/hooks";
+import { useGetBlockByIdentifier, useGetTxEffectsByBlockHeight } from "~/hooks";
 import { API_URL, aztecExplorer } from "~/service/constants";
 import { getBlockDetails, getTxEffects } from "./util";
 import { truncateHashString } from "~/lib/create-hash-string";
@@ -18,13 +18,14 @@ export const BlockDetails: FC = () => {
     data: latestBlock,
     isLoading,
     error,
-  } = useGetBlockByHeight(blockNumber);
+  } = useGetBlockByIdentifier(blockNumber);
 
+  const height = latestBlock?.height;
   const {
     data: blockTxEffects,
     isLoading: txEffectsLoading,
     error: txEffectsError,
-  } = useGetTxEffectsByBlockHeight(Number(blockNumber));
+  } = useGetTxEffectsByBlockHeight(height);
 
   const apiEndpointUrl = `${API_ENDPOINT_URL}${blockNumber}`;
 
@@ -56,7 +57,7 @@ export const BlockDetails: FC = () => {
           </div>
           <TxEffectsTable
             txEffects={getTxEffects(blockTxEffects, latestBlock)}
-            isLoading={isLoading || txEffectsLoading}
+            isLoading={isLoading || txEffectsLoading || (blockTxEffects?.length !== latestBlock.body?.txEffects?.length)}
             error={error ?? txEffectsError}
           />
         </div>

@@ -3,6 +3,7 @@ import {
   chicmozL2BlockLightSchema,
   chicmozL2ContractClassRegisteredEventSchema,
   chicmozL2ContractInstanceDeluxeSchema,
+  chicmozL2PendingTxSchema,
   chicmozL2PrivateFunctionBroadcastedEventSchema,
   chicmozL2TxEffectDeluxeSchema,
   chicmozL2UnconstrainedFunctionBroadcastedEventSchema,
@@ -28,6 +29,9 @@ export const blockResponseArray = getResponse(z.array(chicmozL2BlockLightSchema)
 
 export const txEffectResponse = getResponse(chicmozL2TxEffectDeluxeSchema);
 export const txEffectResponseArray = getResponse(z.array(chicmozL2TxEffectDeluxeSchema));
+
+export const txResponse = getResponse(chicmozL2PendingTxSchema);
+export const txResponseArray = getResponse(z.array(chicmozL2PendingTxSchema));
 
 export const contractClassResponse = getResponse(chicmozL2ContractClassRegisteredEventSchema);
 export const contractClassResponseArray = getResponse(z.array(chicmozL2ContractClassRegisteredEventSchema));

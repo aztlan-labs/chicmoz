@@ -33,7 +33,7 @@ import {
 } from "../../../database/schema/l2block/index.js";
 
 export const store = async (block: ChicmozL2Block): Promise<void> => {
-  return await db().transaction(async (tx) => {
+  return await db().transaction(async (dbTx) => {
     const archiveId = uuidv4();
     const headerId = uuidv4();
     const bodyId = uuidv4();
@@ -49,21 +49,21 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
     const gasFeesId = uuidv4();
 
     // Insert archive
-    await tx.insert(archive).values({
+    await dbTx.insert(archive).values({
       id: archiveId,
       root: block.archive.root,
       nextAvailableLeafIndex: block.archive.nextAvailableLeafIndex,
     });
 
     // Insert last archive
-    await tx.insert(lastArchive).values({
+    await dbTx.insert(lastArchive).values({
       id: lastArchiveId,
       root: block.header.lastArchive.root,
       nextAvailableLeafIndex: block.header.lastArchive.nextAvailableLeafIndex,
     });
 
     // Insert content commitment
-    await tx.insert(contentCommitment).values({
+    await dbTx.insert(contentCommitment).values({
       id: contentCommitmentId,
       numTxs: block.header.contentCommitment.numTxs,
       txsEffectsHash: block.header.contentCommitment.txsEffectsHash,
@@ -72,7 +72,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
     });
 
     // Insert l1ToL2MessageTree
-    await tx.insert(l1ToL2MessageTree).values({
+    await dbTx.insert(l1ToL2MessageTree).values({
       id: l1ToL2MessageTreeId,
       root: block.header.state.l1ToL2MessageTree.root,
       nextAvailableLeafIndex:
@@ -80,21 +80,21 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
     });
 
     // Insert partial state trees
-    await tx.insert(noteHashTree).values({
+    await dbTx.insert(noteHashTree).values({
       id: noteHashTreeId,
       root: block.header.state.partial.noteHashTree.root,
       nextAvailableLeafIndex:
         block.header.state.partial.noteHashTree.nextAvailableLeafIndex,
     });
 
-    await tx.insert(nullifierTree).values({
+    await dbTx.insert(nullifierTree).values({
       id: nullifierTreeId,
       root: block.header.state.partial.nullifierTree.root,
       nextAvailableLeafIndex:
         block.header.state.partial.nullifierTree.nextAvailableLeafIndex,
     });
 
-    await tx.insert(publicDataTree).values({
+    await dbTx.insert(publicDataTree).values({
       id: publicDataTreeId,
       root: block.header.state.partial.publicDataTree.root,
       nextAvailableLeafIndex:
@@ -102,7 +102,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
     });
 
     // Insert partial
-    await tx.insert(partial).values({
+    await dbTx.insert(partial).values({
       id: partialId,
       noteHashTreeId,
       nullifierTreeId,
@@ -110,21 +110,21 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
     });
 
     // Insert state
-    await tx.insert(state).values({
+    await dbTx.insert(state).values({
       id: stateId,
       l1ToL2MessageTreeId,
       partialId,
     });
 
     // Insert gas fees
-    await tx.insert(gasFees).values({
+    await dbTx.insert(gasFees).values({
       id: gasFeesId,
       feePerDaGas: block.header.globalVariables.gasFees.feePerDaGas,
       feePerL2Gas: block.header.globalVariables.gasFees.feePerL2Gas,
     });
 
     // Insert global variables
-    await tx.insert(globalVariables).values({
+    await dbTx.insert(globalVariables).values({
       id: globalVariablesId,
       chainId: block.header.globalVariables.chainId,
       version: block.header.globalVariables.version,
@@ -137,7 +137,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
     });
 
     // Insert header
-    await tx.insert(header).values({
+    await dbTx.insert(header).values({
       id: headerId,
       lastArchiveId,
       contentCommitmentId,
@@ -147,15 +147,16 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
     });
 
     // Insert body
-    await tx.insert(body).values({
+    await dbTx.insert(body).values({
       id: bodyId,
     });
 
     // Insert txEffects and create junction entries
     for (const [i, txEff] of Object.entries(block.body.txEffects)) {
       if (isNaN(Number(i))) throw new Error("Invalid txEffect index");
-      await tx.insert(txEffect).values({
+      await dbTx.insert(txEffect).values({
         hash: txEff.hash,
+        txHash: txEff.txHash,
         index: Number(i),
         revertCode: txEff.revertCode.code,
         transactionFee: txEff.transactionFee,
@@ -168,7 +169,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
       });
 
       // Create junction entry for bodyToTxEffects
-      await tx.insert(bodyToTxEffects).values({
+      await dbTx.insert(bodyToTxEffects).values({
         bodyId: bodyId,
         txEffectHash: txEff.hash,
       });
@@ -176,14 +177,14 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
       // Insert public data writes
       for (const [pdwIndex, pdw] of Object.entries(txEff.publicDataWrites)) {
         const publicDataWriteId = uuidv4();
-        await tx.insert(publicDataWrite).values({
+        await dbTx.insert(publicDataWrite).values({
           id: publicDataWriteId,
           leafIndex: pdw.leafIndex,
           newValue: pdw.newValue,
         });
 
         // Create junction entry for txEffectToPublicDataWrite
-        await tx.insert(txEffectToPublicDataWrite).values({
+        await dbTx.insert(txEffectToPublicDataWrite).values({
           txEffectHash: txEff.hash,
           index: Number(pdwIndex),
           publicDataWriteId: publicDataWriteId,
@@ -198,7 +199,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
         for (const [functionLogIndex, functionLog] of Object.entries(fLogs)) {
           // Insert logs
           const functionLogId = uuidv4();
-          await tx.insert(functionLogs).values({
+          await dbTx.insert(functionLogs).values({
             id: functionLogId,
             index: Number(functionLogIndex),
           });
@@ -209,7 +210,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
           )) {
             const logId = uuidv4();
 
-            await tx.insert(logs).values({
+            await dbTx.insert(logs).values({
               id: logId,
               index: Number(index),
               type: logType,
@@ -220,7 +221,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
             });
 
             // Create junction entry for txEffectToLogs
-            await tx.insert(txEffectToLogs).values({
+            await dbTx.insert(txEffectToLogs).values({
               txEffectHash: txEff.hash,
               logId: logId,
               functionLogId: functionLogId,
@@ -231,7 +232,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
     }
 
     // Insert l2Block
-    await tx.insert(l2Block).values({
+    await dbTx.insert(l2Block).values({
       hash: block.hash,
       height: block.header.globalVariables.blockNumber,
       archiveId,
