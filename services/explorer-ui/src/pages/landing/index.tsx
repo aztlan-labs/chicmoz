@@ -128,7 +128,7 @@ export const Landing: FC = () => {
       </div>
       <div className="flex flex-col gap-4 md:flex-row">
         <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
-          <h3>Latest Blocks</h3>
+          <h3 className="ml-0.5">Latest Blocks</h3>
           <BlocksTable
             blocks={mapLatestBlocks(latestBlocks)}
             isLoading={isLoading}
@@ -136,7 +136,7 @@ export const Landing: FC = () => {
           />
         </div>
         <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
-          <h3>Latest TX-Effects</h3>
+          <h3 className="ml-0.5">Latest TX-Effects</h3>
           <TxEffectsTable
             txEffects={latestTxEffectsWithPending}
             isLoading={isLoadingTxEffects}
