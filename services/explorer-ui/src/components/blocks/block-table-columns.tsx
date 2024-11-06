@@ -60,6 +60,25 @@ export const BlockTableColumns: ColumnDef<BlockTableSchema>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: "timestamp",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className="text-purple-dark text-sm"
+        column={column}
+        title={text.timeSince}
+      />
+    ),
+    cell: ({ row }) => {
+      const formattedTime = formatTimeSince(
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+        row.getValue("timestamp") as unknown as number,
+      );
+      return <div className="text-purple-dark">{formattedTime}</div>;
+    },
+    enableSorting: true,
+    enableHiding: false,
+  },
+  {
     accessorKey: "txEffectsLength",
     header: ({ column }) => (
       <DataTableColumnHeader
@@ -86,25 +105,6 @@ export const BlockTableColumns: ColumnDef<BlockTableSchema>[] = [
     cell: ({ row }) => (
       <div className="font-mono">{row.getValue("totalFees")}</div>
     ),
-    enableSorting: true,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "timestamp",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        className="text-purple-dark text-sm"
-        column={column}
-        title={text.timeSince}
-      />
-    ),
-    cell: ({ row }) => {
-      const formattedTime = formatTimeSince(
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-        row.getValue("timestamp") as unknown as number,
-      );
-      return <div className="text-purple-dark">{formattedTime}</div>;
-    },
     enableSorting: true,
     enableHiding: false,
   },

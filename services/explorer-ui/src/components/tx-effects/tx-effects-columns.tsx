@@ -56,6 +56,25 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: "timestamp",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className="text-purple-dark text-sm"
+        column={column}
+        title={text.timeSince}
+      />
+    ),
+    cell: ({ row }) => {
+      const formattedTime = formatTimeSince(
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+        row.getValue("timestamp") as unknown as number
+      );
+      return <div className="text-purple-dark">{formattedTime}</div>;
+    },
+    enableSorting: true,
+    enableHiding: false,
+  },
+  {
     accessorKey: "transactionFee",
     header: ({ column }) => (
       <DataTableColumnHeader
@@ -91,24 +110,5 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
     },
     enableSorting: true,
     enableHiding: true,
-  },
-  {
-    accessorKey: "timestamp",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        className="text-purple-dark text-sm"
-        column={column}
-        title={text.timeSince}
-      />
-    ),
-    cell: ({ row }) => {
-      const formattedTime = formatTimeSince(
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-        row.getValue("timestamp") as unknown as number
-      );
-      return <div className="text-purple-dark">{formattedTime}</div>;
-    },
-    enableSorting: true,
-    enableHiding: false,
   },
 ];
