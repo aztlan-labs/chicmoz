@@ -38,7 +38,7 @@ const PaginationControls = <TData,>({
 const PageSizeSelector = <TData,>({
   table,
 }: DataTablePaginationProps<TData>) => (
-  <div className="flex items-center space-x-2 w-1/3">
+  <div className="items-center space-x-2 w-1/3 hidden lg:flex">
     <p className="mb-1 h-full text-sm text-muted-foreground">Rows per page</p>
     <Select
       value={`${table.getState().pagination.pageSize}`}
@@ -65,7 +65,7 @@ const PageNavigation = <TData,>({ table }: DataTablePaginationProps<TData>) => {
   const getNextPage = () => table.getState().pagination.pageIndex + 2;
 
   return (
-    <div className="flex items-center justify-center w-1/3">
+    <div className="flex items-center justify-center w-full lg:w-1/3">
       {/*<p className="flex w-[100px] items-center justify-center text-sm text-muted-foreground">*/}
       {/*  Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}*/}
       {/*</p>*/}

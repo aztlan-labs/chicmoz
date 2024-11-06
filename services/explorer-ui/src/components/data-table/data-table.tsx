@@ -75,7 +75,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="space-y-4 bg-white rounded-xl">
+    <div className="space-y-4 bg-white rounded-xl p-5">
       <div className="min-w-full">
         <Table className="border-spacing-x-1">
           <DataTableHeader table={table} />
