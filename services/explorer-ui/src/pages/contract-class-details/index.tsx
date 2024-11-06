@@ -93,6 +93,7 @@ export const ContractClassDetails: FC = () => {
                 contracts={mapContractClasses(classesData)}
                 isLoading={isLoadingClasses}
                 error={errorClasses}
+                showContractVersions={true}
               />
             </div>
           )}

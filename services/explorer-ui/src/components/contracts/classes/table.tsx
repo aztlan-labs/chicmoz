@@ -8,6 +8,7 @@ interface Props {
   contracts?: ContractClass[];
   isLoading: boolean;
   error?: Error | null;
+  showContractVersions?: boolean;
 }
 
 export const ContractClassesTable: FC<Props> = ({
@@ -15,16 +16,24 @@ export const ContractClassesTable: FC<Props> = ({
   contracts,
   isLoading,
   error,
+  showContractVersions,
 }) => {
   if (!contracts) return <div>No data</div>;
   if (error) return <p className="text-red-500">{error.message}</p>;
+  let cols = contractsTableColumns;
+  if (!showContractVersions) {
+    cols = contractsTableColumns.filter((column) => {
+      return (column as { accessorKey: string }).accessorKey !== "version";
+    });
+  }
+
   return (
     <section className="relative mx-auto w-full transition-all">
       <DataTable
         isLoading={isLoading}
         title={title}
         data={contracts}
-        columns={contractsTableColumns}
+        columns={cols}
       />
     </section>
   );
