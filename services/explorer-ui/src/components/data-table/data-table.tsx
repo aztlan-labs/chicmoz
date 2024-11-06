@@ -31,10 +31,12 @@ import { cn } from "~/lib/utils";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  disableSizeSelector?: boolean;
 }
 export function DataTable<TData, TValue>({
   columns,
   data,
+  disableSizeSelector,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -80,7 +82,7 @@ export function DataTable<TData, TValue>({
           <DataTableBody table={table} columns={columns} />
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination table={table} disableSizeSelector={disableSizeSelector} />
     </div>
   );
 }

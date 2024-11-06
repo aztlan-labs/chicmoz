@@ -133,6 +133,7 @@ export const Landing: FC = () => {
             blocks={mapLatestBlocks(latestBlocks)}
             isLoading={isLoading}
             error={error}
+            disableSizeSelector={true}
           />
         </div>
         <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
@@ -141,6 +142,7 @@ export const Landing: FC = () => {
             txEffects={latestTxEffectsWithPending}
             isLoading={isLoadingTxEffects}
             error={txEffectsError}
+            disableSizeSelector={true}
           />
         </div>
       </div>

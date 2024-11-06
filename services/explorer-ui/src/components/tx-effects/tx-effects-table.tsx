@@ -8,15 +8,16 @@ interface Props {
   txEffects?: TxEffectTableSchema[];
   isLoading: boolean;
   error?: Error | null;
+  disableSizeSelector?: boolean;
 }
 
-export const TxEffectsTable: FC<Props> = ({ txEffects, isLoading, error }) => {
+export const TxEffectsTable: FC<Props> = ({ txEffects, isLoading, error, disableSizeSelector }) => {
   if (isLoading) return <Loader amount={5} />;
   if (!txEffects) return <div>No data</div>;
   if (error) return <p className="text-red-500">{error.message}</p>;
   return (
     <section className="relative mx-0 w-full transition-all">
-      <DataTable data={txEffects} columns={TxEffectsTableColumns} />
+      <DataTable data={txEffects} columns={TxEffectsTableColumns} disableSizeSelector={disableSizeSelector} />
     </section>
   );
 };
