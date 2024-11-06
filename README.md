@@ -56,7 +56,7 @@ skaffold run -f k8s/local/skaffold.default_dev.yaml
 
 ### 2
 
-if you run the explorer with `skaffold run -f k8s/local/skaffold.no_ui.yaml` you can run the explorer-ui locally for even faster development:
+if you run the explorer with `skaffold run -f k8s/local/skaffold.no_ui.yaml` you can run the explorer-ui locally for even faster frontend development:
 
 ```
 cd services/exporer-ui/
