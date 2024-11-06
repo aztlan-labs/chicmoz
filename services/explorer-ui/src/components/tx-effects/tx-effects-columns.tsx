@@ -10,8 +10,8 @@ import { truncateHashString } from "~/lib/create-hash-string";
 const text = {
   hash: "TX EFFECT HASH",
   txHash: "TX HASH",
-  transactionFee: "TRANSACTION FEE (FPA)",
-  blockHeight: "BLOCK HEIGHT",
+  transactionFee: "FEE (FPA)",
+  blockHeight: "HEIGHT",
   timeSince: "AGE",
 };
 

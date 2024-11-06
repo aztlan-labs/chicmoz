@@ -7,10 +7,10 @@ import type { BlockTableSchema } from "./blocks-schema";
 import { truncateHashString } from "~/lib/create-hash-string";
 
 const text = {
-  height: "BLOCK HEIGHT",
+  height: "HEIGHT",
   blockHash: "BLOCK HASH",
-  txEffectsLength: "NUMBER OF TRANSACTIONS",
-  totalFees: "TOTAL FEES (FPA)",
+  txEffectsLength: "NBR OF TXS",
+  totalFees: "FEES (FPA)",
   timeSince: "AGE",
 };
 

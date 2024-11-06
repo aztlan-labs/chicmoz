@@ -10,7 +10,7 @@ import { getClassVersionLink } from "../utils";
 const text = {
   address: "ADDRESS",
   blockHash: "BLOCK HASH",
-  blockHeight: "BLOCK HEIGHT",
+  blockHeight: "HEIGHT",
   version: "VERSION",
   contractClassId: "CONTRACT CLASS ID",
   deployer: "DEPLOYER",
