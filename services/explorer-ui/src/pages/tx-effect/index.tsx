@@ -21,7 +21,7 @@ export const TxEffects: FC = () => {
 
   const latestTxEffectsData = useGetTxEffectsByBlockHeightRange(
     latestBlocks?.at(-1)?.height,
-    latestBlocks?.at(0)?.height,
+    latestBlocks?.at(0)?.height
   );
   const {
     isLoadingTxEffects,
@@ -49,11 +49,13 @@ export const TxEffects: FC = () => {
           data={totalTxEffects24h}
         />
       </div>
-      <TxEffectsTable
-        txEffects={latestTxEffects}
-        isLoading={isLoading || isLoadingTxEffects}
-        error={error ?? txEffectsError}
-      />
+      <div className="rounded-lg shadow-lg">
+        <TxEffectsTable
+          txEffects={latestTxEffects}
+          isLoading={isLoading || isLoadingTxEffects}
+          error={error ?? txEffectsError}
+        />
+      </div>
     </div>
   );
 };

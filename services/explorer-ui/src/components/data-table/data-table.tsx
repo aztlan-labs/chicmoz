@@ -29,12 +29,16 @@ import {
 import { cn } from "~/lib/utils";
 
 interface DataTableProps<TData, TValue> {
+  title?: string;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  disableSizeSelector?: boolean;
 }
 export function DataTable<TData, TValue>({
+  title,
   columns,
   data,
+  disableSizeSelector,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -73,14 +77,15 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="space-y-4 bg-white rounded-xl">
+    <div className="space-y-4 bg-white rounded-lg p-5">
+      { title && <h3 className="ml-0.5">{title}</h3> }
       <div className="min-w-full">
         <Table className="border-spacing-x-1">
           <DataTableHeader table={table} />
           <DataTableBody table={table} columns={columns} />
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination table={table} disableSizeSelector={disableSizeSelector} />
     </div>
   );
 }
