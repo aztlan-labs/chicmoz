@@ -127,18 +127,18 @@ export const Landing: FC = () => {
         />
       </div>
       <div className="flex flex-col gap-4 md:flex-row">
-        <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
-          <h3 className="ml-0.5">Latest Blocks</h3>
+        <div className="bg-white rounded-lg shadow-lg w-full md:w-1/2">
           <BlocksTable
+            title="Latest Blocks"
             blocks={mapLatestBlocks(latestBlocks)}
             isLoading={isLoading}
             error={error}
             disableSizeSelector={true}
           />
         </div>
-        <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
-          <h3 className="ml-0.5">Latest TX-Effects</h3>
+        <div className="bg-white rounded-lg shadow-lg w-full md:w-1/2">
           <TxEffectsTable
+            title="Latest TX-Effects"
             txEffects={latestTxEffectsWithPending}
             isLoading={isLoadingTxEffects}
             error={txEffectsError}

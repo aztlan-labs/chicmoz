@@ -20,7 +20,7 @@ export const Blocks: FC = () => {
   } = useAvarageBlockTime();
 
   const averageBlockTimeFormatted = formatDuration(
-    Number(avarageBlockTime) / 1000,
+    Number(avarageBlockTime) / 1000
   );
 
   return (
@@ -43,11 +43,13 @@ export const Blocks: FC = () => {
           data={averageBlockTimeFormatted}
         />
       </div>
-      <BlocksTable
-        blocks={parseLatestBlocks(latestBlocks)}
-        isLoading={isLoading}
-        error={error}
-      />
+      <div className="rounded-lg shadow-lg">
+        <BlocksTable
+          blocks={parseLatestBlocks(latestBlocks)}
+          isLoading={isLoading}
+          error={error}
+        />
+      </div>
     </div>
   );
 };

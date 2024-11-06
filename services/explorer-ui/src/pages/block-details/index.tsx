@@ -55,11 +55,17 @@ export const BlockDetails: FC = () => {
               <p>View TxEffects</p>
             </Button>
           </div>
-          <TxEffectsTable
-            txEffects={getTxEffects(blockTxEffects, latestBlock)}
-            isLoading={isLoading || txEffectsLoading || (blockTxEffects?.length !== latestBlock.body?.txEffects?.length)}
-            error={error ?? txEffectsError}
-          />
+          <div className="rounded-lg shadow-lg">
+            <TxEffectsTable
+              txEffects={getTxEffects(blockTxEffects, latestBlock)}
+              isLoading={
+                isLoading ||
+                txEffectsLoading ||
+                blockTxEffects?.length !== latestBlock.body?.txEffects?.length
+              }
+              error={error ?? txEffectsError}
+            />
+          </div>
         </div>
       </div>
     </div>

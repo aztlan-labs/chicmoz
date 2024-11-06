@@ -49,18 +49,18 @@ export const Contracts: FC = () => {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-3 ">
-        <div className="bg-white w-full rounded-lg shadow-md p-4">
-          <h3>Latest Contract Classes</h3>
+      <div className="flex flex-col gap-4 md:flex-row">
+        <div className="bg-white rounded-lg shadow-lg w-full md:w-1/2">
           <ContractClassesTable
+            title="Latest Contract Classes"
             contracts={mapContractClasses(classesData)}
             isLoading={isLoadingClasses}
             error={errorClasses}
           />
         </div>
-        <div className="bg-white w-full rounded-lg shadow-md p-4">
-          <h3>Latest Contract Instances</h3>
+        <div className="bg-white rounded-lg shadow-lg w-full md:w-1/2">
           <ContractInstancesTable
+            title="Latest Contract Instances"
             contracts={mapContractInstances(instancesData)}
             isLoading={isLoadingInstances}
             error={errorInstances}

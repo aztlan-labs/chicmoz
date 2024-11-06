@@ -5,12 +5,14 @@ import { contractsTableColumns } from "./columns";
 import { Loader } from "~/components/loader";
 
 interface Props {
+  title?: string;
   contracts?: ContractClass[];
   isLoading: boolean;
   error?: Error | null;
 }
 
 export const ContractClassesTable: FC<Props> = ({
+  title,
   contracts,
   isLoading,
   error,
@@ -20,7 +22,11 @@ export const ContractClassesTable: FC<Props> = ({
   if (error) return <p className="text-red-500">{error.message}</p>;
   return (
     <section className="relative mx-auto w-full transition-all">
-      <DataTable data={contracts} columns={contractsTableColumns} />
+      <DataTable
+        title={title}
+        data={contracts}
+        columns={contractsTableColumns}
+      />
     </section>
   );
 };
