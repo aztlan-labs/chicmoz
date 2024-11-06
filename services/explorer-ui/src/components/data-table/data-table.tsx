@@ -80,15 +80,8 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-<<<<<<< HEAD
-    <div className="space-y-4 bg-white rounded-lg p-5">
-      {title && <h3 className="ml-0.5">{title}</h3>}
-||||||| a7cb79d
-    <div className="space-y-4 bg-white rounded-xl">
-=======
     <div className="space-y-4 bg-white rounded-lg p-5">
       { title && <h3 className="ml-0.5">{title}</h3> }
->>>>>>> 7924f3ca62e84fb70e0b77618addcab83ecfd01b
       <div className="min-w-full">
         {isLoading && <Loader amount={10} />}
         {!isLoading && (
@@ -98,17 +91,11 @@ export function DataTable<TData, TValue>({
           </Table>
         )}
       </div>
-<<<<<<< HEAD
 
       <DataTablePagination
         table={table}
         disableSizeSelector={disableSizeSelector}
       />
-||||||| a7cb79d
-      <DataTablePagination table={table} />
-=======
-      <DataTablePagination table={table} disableSizeSelector={disableSizeSelector} />
->>>>>>> 7924f3ca62e84fb70e0b77618addcab83ecfd01b
     </div>
   );
 }
