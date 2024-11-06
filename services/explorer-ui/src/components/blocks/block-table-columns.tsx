@@ -51,7 +51,7 @@ export const BlockTableColumns: ColumnDef<BlockTableSchema>[] = [
       if (typeof blockHash !== "string") return null;
       const r = `${routes.blocks.route}/${blockHash}`;
       return (
-        <div className="text-purple-light font-mono font-bold">
+        <div className="text-purple-light font-mono">
           <Link to={r}>{truncateHashString(blockHash)}</Link>
         </div>
       );

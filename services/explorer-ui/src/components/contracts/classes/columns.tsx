@@ -102,7 +102,7 @@ export const contractsTableColumns: ColumnDef<ContractClass>[] = [
       const r = `${routes.blocks.route}/${hash}`;
       const truncatedTxHash = `${hash.slice(0, 6)}...${hash.slice(-4)}`;
       return (
-        <div className="text-purple-light font-mono font-bold">
+        <div className="text-purple-light font-mono">
           <Link to={r}>{truncatedTxHash}</Link>
         </div>
       );

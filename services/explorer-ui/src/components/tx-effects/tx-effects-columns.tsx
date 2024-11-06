@@ -31,7 +31,7 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
       const r = `${routes.txEffects.route}/${hash}`;
       const truncatedTxHash = `${hash.slice(0, 6)}...${hash.slice(-4)}`;
       return (
-        <div className="text-purple-light font-mono font-bold">
+        <div className="text-purple-light font-mono">
           <Link to={r}>{truncatedTxHash}</Link>
         </div>
       );
@@ -84,7 +84,7 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
       if (typeof blockNumber !== "number") return null;
       const r = `${routes.blocks.route}/${blockNumber}`;
       return (
-        <div className="text-purple-light font-mono font-bold">
+        <div className="text-purple-light font-mono">
           <Link to={r}>{blockNumber}</Link>
         </div>
       );

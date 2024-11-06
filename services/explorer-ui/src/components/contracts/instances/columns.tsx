@@ -32,7 +32,7 @@ export const contractsTableColumns: ColumnDef<ContractInstance>[] = [
       const r = `${routes.contracts.route}/${routes.contracts.children.instances.route}/${address}`;
       const truncatedAddress = `${address.slice(0, 6)}...${address.slice(-4)}`;
       return (
-        <div className="text-purple-light font-mono font-bold">
+        <div className="text-purple-light font-mono">
           <Link to={r}>{truncatedAddress}</Link>
         </div>
       );
@@ -110,7 +110,7 @@ export const contractsTableColumns: ColumnDef<ContractInstance>[] = [
         -4
       )}`;
       return (
-        <div className="text-purple-light font-mono font-bold">
+        <div className="text-purple-light font-mono">
           <Link to={r}>{truncatedBlockHash}</Link>
         </div>
       );
