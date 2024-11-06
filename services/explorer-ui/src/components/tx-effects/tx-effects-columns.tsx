@@ -11,9 +11,8 @@ const text = {
   hash: "TX EFFECT HASH",
   txHash: "TX HASH",
   transactionFee: "TRANSACTION FEE (FPA)",
-  totalLengthOfLogs: "TOTAL LOGS LENGTH",
   blockHeight: "BLOCK HEIGHT",
-  timeSince: "TIME SINCE",
+  timeSince: "AGE",
 };
 
 export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
@@ -60,13 +59,13 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
     accessorKey: "transactionFee",
     header: ({ column }) => (
       <DataTableColumnHeader
-        className="text-purple-dark text-sm "
+        className="text-purple-dark text-sm"
         column={column}
         title={text.transactionFee}
       />
     ),
     cell: ({ row }) => (
-      <div className="text-purple-dark">{row.getValue("transactionFee")}</div>
+      <div className="font-mono">{row.getValue("transactionFee")}</div>
     ),
     enableSorting: true,
     enableHiding: false,

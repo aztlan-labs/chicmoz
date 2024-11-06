@@ -81,13 +81,13 @@ export const formatDuration = (durationSeconds: number, short?: boolean) => {
   return "just now";
 };
 
-export const formatTimeSince = (unixTimestamp: number | null, short?: boolean) => {
+export const formatTimeSince = (unixTimestamp: number | null, short = true) => {
   if (unixTimestamp === null) return "no timestamp";
   const now = new Date().getTime();
   const secondsSince = Math.round((now - unixTimestamp) / 1000);
   const duration = formatDuration(secondsSince, short);
   if (duration === "just now") return duration;
-  return `${duration} ago`;
+  return `${duration}`;
 };
 
 

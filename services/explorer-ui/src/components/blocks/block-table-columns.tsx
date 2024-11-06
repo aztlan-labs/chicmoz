@@ -11,7 +11,7 @@ const text = {
   blockHash: "BLOCK HASH",
   txEffectsLength: "NUMBER OF TRANSACTIONS",
   totalFees: "TOTAL FEES (FPA)",
-  timeSince: "TIME SINCE",
+  timeSince: "AGE",
 };
 
 export const BlockTableColumns: ColumnDef<BlockTableSchema>[] = [
@@ -84,7 +84,7 @@ export const BlockTableColumns: ColumnDef<BlockTableSchema>[] = [
       />
     ),
     cell: ({ row }) => (
-      <div className="text-purple-dark">{row.getValue("totalFees")}</div>
+      <div className="font-mono">{row.getValue("totalFees")}</div>
     ),
     enableSorting: true,
     enableHiding: false,
