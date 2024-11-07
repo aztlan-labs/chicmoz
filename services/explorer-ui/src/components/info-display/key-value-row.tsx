@@ -20,6 +20,7 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
   const truncatedValue = isHashSring ? truncateHashString(value) : value;
   return (
     <div
+      key={label}
       className={`flex flex-col justify-between gap-2 py-3 ${
         !isLast ? "border-b border-gray-200" : ""
       } md:flex-row md:items-center`}
@@ -37,7 +38,11 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
         <>
           <span className={`text-sm flex-grow md:text-end`}>
             {isHashSring ? (
-              <CopyableText text={truncatedValue} toCopy={value} additionalClasses="md:justify-end md:text-end"/>
+              <CopyableText
+                text={truncatedValue}
+                toCopy={value}
+                additionalClasses="md:justify-end md:text-end"
+              />
             ) : (
               truncatedValue
             )}
