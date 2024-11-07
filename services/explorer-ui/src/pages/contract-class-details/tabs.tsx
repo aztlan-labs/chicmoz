@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui";
+import { CustomTooltip } from "~/components/custom-tooltip";
 
 export type OptionButtonProps = {
   isOptionAvailable: Record<string, boolean>;
@@ -27,7 +28,6 @@ export const OptionButtons: React.FC<OptionButtonProps> = ({
   requiredOptions,
   onOptionSelect,
 }) => {
-
   return (
     <>
       <div className="hidden lg:flex flex-row gap-4 w-10 mb-4">
@@ -36,24 +36,17 @@ export const OptionButtons: React.FC<OptionButtonProps> = ({
 
           if (!isAvailable) {
             return (
-              <TooltipProvider>
-                <Tooltip key={option.id}>
-                  <TooltipTrigger>
-                    <Button
-                      key={option.id}
-                      disabled={true}
-                      className={
-                        "shadow-[0px_0px_1px_2px_rgba(0,0,0,0)] bg-gray-300 cursor-not-allowed opacity-50 text-primary"
-                      }
-                    >
-                      {option.label}
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    Data not present!
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <CustomTooltip content="Data not present!">
+                <Button
+                  key={option.id}
+                  disabled={true}
+                  className={
+                    "shadow-[0px_0px_1px_2px_rgba(0,0,0,0)] bg-gray-300 cursor-not-allowed opacity-50 text-primary"
+                  }
+                >
+                  {option.label}
+                </Button>
+              </CustomTooltip>
             );
           }
           return (
