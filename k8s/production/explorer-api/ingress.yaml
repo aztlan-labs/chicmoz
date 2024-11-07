@@ -8,15 +8,15 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/auth-url: http://auth.chicmoz-prod.svc.cluster.local
     nginx.ingress.kubernetes.io/auth-response-headers: x-api-key
-    cert-manager.io/cluster-issuer: "chicmoz-issuer-production"
+    cert-manager.io/cluster-issuer: "aztecscout-issuer-production"
 spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - api.chicmoz.info
-      secretName: chicmoz-api-tls
+        - api.aztecscout.xyz
+      secretName: aztecscout-api-tls
   rules:
-    - host: api.chicmoz.info # TODO: change to env-var "DOMAIN"
+    - host: api.aztecscout.xyz # TODO: change to env-var "DOMAIN"
       http:
         paths:
           - path: /v1/([^/]+)/(.*)
