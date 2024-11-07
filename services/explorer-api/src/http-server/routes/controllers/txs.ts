@@ -5,7 +5,7 @@ import {
 } from "./utils/index.js";
 
 export const openapi_GET_PENDING_TXS = {
-  "/l2/blocks": {
+  "/l2/txs": {
     get: {
       summary: "Get pending transactions",
       parameters: [
