@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import { getDb as db } from "../../../database/index.js";
 import {
   chicmozSearchResultsSchema,
@@ -49,7 +49,7 @@ const matchTxEffect = async (
       hash: txEffect.hash,
     })
     .from(txEffect)
-    .where(eq(txEffect.hash, hash))
+    .where(or(eq(txEffect.hash, hash), eq(txEffect.txHash, hash)))
     .execute();
   if (res.length === 0) return [];
   return [{ hash: res[0].hash }];
@@ -84,7 +84,9 @@ const matchContractInstance = async (
   return [{ address: res[0].address }];
 };
 
-export const search = async (query: ChicmozSearchQuery["q"]): Promise<ChicmozSearchResults> => {
+export const search = async (
+  query: ChicmozSearchQuery["q"]
+): Promise<ChicmozSearchResults> => {
   if (typeof query === "number") {
     return {
       searchPhrase: query.toString(),
