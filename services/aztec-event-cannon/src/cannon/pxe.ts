@@ -17,8 +17,10 @@ let namedWallets: {
 
 export const setup = async () => {
   const { PXE_URL = AZTEC_RPC_URL } = process.env;
-  const pxe = createPXEClient(PXE_URL);
+  pxe = createPXEClient(PXE_URL);
   await waitForPXE(pxe);
+  const info = await pxe.getPXEInfo();
+  logger.info(JSON.stringify(info));
   const [
     defaultDeployer,
     alice,
@@ -29,8 +31,7 @@ export const setup = async () => {
     alice,
     bob
   };
-  logger.info(`Wallets: ${JSON.stringify(namedWallets)}`);
-  return pxe;
+  // logger.info(`Wallets: ${JSON.stringify(namedWallets)}`); WARNING: calling this will throw an error (after a while!)
 };
 
 export const getPxe = () => {

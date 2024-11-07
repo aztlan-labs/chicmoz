@@ -16,11 +16,6 @@ export async function init() {
 
 export const start = async () => {
   logger.info("Starting Cannon...");
-  const scenarios = [
-    deployBroadcastFunctionsVote,
-  ] as (() => Promise<void>)[];
-  for (const fn of scenarios) {
-    logger.info(`Running scenario...`);
-    await fn();
-  }
+  const scenarios = [deployBroadcastFunctionsVote] as (() => Promise<void>)[];
+  for (const fn of scenarios) await fn();
 };
