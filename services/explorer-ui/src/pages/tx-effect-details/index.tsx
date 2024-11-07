@@ -29,7 +29,7 @@ export const TxEffectDetails: FC = () => {
       if (firstAvailableTab) setSelectedTab(firstAvailableTab.id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [txEffects]);
 
   const getSelectedItem = (value: string) => {
     setSelectedTab(value as TabId);
@@ -57,6 +57,7 @@ export const TxEffectDetails: FC = () => {
             <KeyValueDisplay data={getTxEffectData(txEffects)} />
           </div>
           <OptionButtons
+            key={selectedTab}
             availableData={txEffectData}
             requiredOptions={txEffectTabs}
             onOptionSelect={getSelectedItem}
@@ -120,8 +121,9 @@ export const TxEffectDetails: FC = () => {
             )}
             {selectedTab === "nullifiers" && (
               <div className="">
-                {txEffects.nullifiers.map((nullifier) => (
+                {txEffects.nullifiers.map((nullifier, key) => (
                   <KeyValueDisplay
+                    key={key}
                     data={[{ label: "Nullifier", value: nullifier }]}
                   />
                 ))}

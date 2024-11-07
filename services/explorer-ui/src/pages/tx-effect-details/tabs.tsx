@@ -15,6 +15,7 @@ import {
   SelectValue,
   Separator,
 } from "~/components/ui";
+import { CustomTooltip } from "~/components/custom-tooltip";
 
 export type OptionButtonProps = {
   availableData: Record<string, TxEffectDataType | undefined>;
@@ -38,47 +39,43 @@ export const OptionButtons: React.FC<OptionButtonProps> = ({
   return (
     <>
       <div className="hidden lg:flex flex-row gap-4 w-10 mb-4">
-        <TooltipProvider>
-          {requiredOptions.map((option) => {
-            const isAvailable = isOptionAvailable(option.id);
+        {requiredOptions.map((option, key) => {
+          const isAvailable = isOptionAvailable(option.id);
 
-            if (!isAvailable) {
-              return (
-                <Tooltip key={option.id}>
-                  <TooltipTrigger>
-                    <Button
-                      key={option.id}
-                      disabled={true}
-                      className={`shadow-[0px_0px_1px_2px_rgba(0,0,0,0)] bg-gray-300 cursor-not-allowed opacity-50 text-primary `}
-                    >
-                      {option.label}
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    Data not present in this txEffect
-                  </TooltipContent>
-                </Tooltip>
-              );
-            }
+          if (!isAvailable) {
             return (
-              <div className="flex flex-col justify-center items-center gap-1">
+              <CustomTooltip key={key} content="Not available in this txEffect">
                 <Button
                   key={option.id}
-                  onClick={() => onOptionSelect(option.id)}
-                  className={`shadow-[0px_0px_1px_2px_rgba(0,0,0,0)] bg-primary hover:bg-primary-500`}
+                  disabled={true}
+                  className={`shadow-[0px_0px_1px_2px_rgba(0,0,0,0)] bg-gray-300 cursor-not-allowed opacity-50 text-primary `}
                 >
                   {option.label}
                 </Button>
-                {selectedItem === option.id && (
-                  <Separator
-                    orientation="horizontal"
-                    className="h-0.5 bg-primary w-1/2 rounded-md"
-                  />
-                )}
-              </div>
+              </CustomTooltip>
             );
-          })}
-        </TooltipProvider>
+          }
+          return (
+            <div
+              key={key}
+              className="flex flex-col justify-center items-center gap-1"
+            >
+              <Button
+                key={option.id}
+                onClick={() => onOptionSelect(option.id)}
+                className={`shadow-[0px_0px_1px_2px_rgba(0,0,0,0)] bg-primary hover:bg-primary-500`}
+              >
+                {option.label}
+              </Button>
+              {selectedItem === option.id && (
+                <Separator
+                  orientation="horizontal"
+                  className="h-0.5 bg-primary w-1/2 rounded-md"
+                />
+              )}
+            </div>
+          );
+        })}
       </div>
       <div className="mb-1 mt-4 lg:hidden">
         <Select onValueChange={onOptionSelect}>
@@ -86,9 +83,9 @@ export const OptionButtons: React.FC<OptionButtonProps> = ({
             <SelectValue placeholder="encryptedLogs" />
           </SelectTrigger>
           <SelectContent>
-            {requiredOptions.map((tab) => (
+            {requiredOptions.map((tab, key) => (
               <SelectItem
-                key={tab.id}
+                key={key}
                 disabled={!isOptionAvailable(tab.id)}
                 value={tab.id}
               >
