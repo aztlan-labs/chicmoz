@@ -60,7 +60,7 @@ const statsPaths = [
   },
 ];
 
-export const init = ({ router }: { router: Router }) => {
+const checkDocsStatus = () => {
   const totalPaths = Object.keys(paths).length;
   const totalStatsPaths = statsPaths.length;
   const totalOpenApiPaths = Object.keys(openApiPaths).length;
@@ -70,6 +70,10 @@ export const init = ({ router }: { router: Router }) => {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     logger.error(`STARTING SERVER WITHOUT SUFFICIENT DOCS! ${totalPaths} - ${totalStatsPaths} !== ${totalOpenApiPaths}`);
   }
+}
+
+export const init = ({ router }: { router: Router }) => {
+  checkDocsStatus();
   router.get("/l2/index", controller.GET_ROUTES);
   router.get("/aztec-chain-connection", controller.GET_AZTEC_CHAIN_CONNECTION);
 
