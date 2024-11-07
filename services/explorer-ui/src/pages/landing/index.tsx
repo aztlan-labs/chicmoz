@@ -13,7 +13,7 @@ import {
 import { mapLatestBlocks, parseTxEffectsData } from "./util";
 import { InfoBadge } from "~/components/info-badge";
 import { formatDuration, formatFees } from "~/lib/utils";
-import { useGetPendingTxs } from "~/hooks/tx";
+import { usePendingTxs } from "~/hooks/tx";
 import { TxEffectTableSchema } from "~/components/tx-effects/tx-effects-schema";
 
 export const Landing: FC = () => {
@@ -50,11 +50,11 @@ export const Landing: FC = () => {
   } = useAvarageBlockTime();
 
   const latestTxEffectsData = useGetTxEffectsByBlockHeightRange(
-    latestBlocks?.at(-1)?.height,
+    latestBlocks?.at(40)?.height ?? latestBlocks?.at(-1)?.height,
     latestBlocks?.at(0)?.height
   );
 
-  const { data: pendingTxs } = useGetPendingTxs();
+  const { data: pendingTxs } = usePendingTxs();
 
   const {
     isLoadingTxEffects,

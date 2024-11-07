@@ -5,6 +5,8 @@ import { onPendingTxs } from "../event-handler/index.js";
 
 let pollInterval: NodeJS.Timeout;
 
+let handledTxs: string[] = [];
+
 export const startPolling = () => {
   pollInterval = setInterval(() => {
     void fetchAndPublishPendingTxs();
@@ -16,7 +18,10 @@ export const stopPolling = () => {
 };
 
 const internalOnPendingTxs = async (pendingTxs: Tx[]) => {
+  const newPendingTxs = pendingTxs.filter((tx) => !handledTxs.includes(tx.getTxHash().to0xString()));
+  if (newPendingTxs.length === 0) return;
   await onPendingTxs(pendingTxs);
+  handledTxs = pendingTxs.map((tx) => tx.getTxHash().to0xString());
 };
 
 const fetchAndPublishPendingTxs = async () => {

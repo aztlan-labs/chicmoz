@@ -19,7 +19,6 @@ export const BlocksTable: FC<Props> = ({
   error,
   disableSizeSelector,
 }) => {
-  if (!blocks) return <div>No data</div>;
   if (error) return <p className="text-red-500">{error.message}</p>;
 
   return (
@@ -27,7 +26,7 @@ export const BlocksTable: FC<Props> = ({
       <DataTable
         isLoading={isLoading}
         title={title}
-        data={blocks}
+        data={blocks ?? []}
         columns={BlockTableColumns}
         disableSizeSelector={disableSizeSelector}
       />

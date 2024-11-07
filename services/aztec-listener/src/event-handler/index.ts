@@ -31,7 +31,11 @@ export const onPendingTxs = async (txs: Tx[]) => {
   if (!txs || txs.length === 0) return;
   await publishMessage("PENDING_TXS_EVENT", {
     txs: txs.map((tx) => {
-      return { ...tx.toJSON(), hash: tx.getTxHash().to0xString() };
+      return {
+        ...tx.toJSON(),
+        hash: tx.getTxHash().to0xString(),
+        birthTimestamp: new Date().getTime(),
+      };
     }),
   } as PendingTxsEvent);
 };

@@ -6,7 +6,7 @@ import {
 import { TxAPI } from "~/api";
 import { queryKeyGenerator } from "./utils";
 
-export const useGetPendingTxs = (): UseQueryResult<ChicmozL2PendingTx[], Error> => {
+export const usePendingTxs = (): UseQueryResult<ChicmozL2PendingTx[], Error> => {
   return useQuery<ChicmozL2PendingTx[], Error>({
     queryKey: queryKeyGenerator.pendingTxs,
     queryFn: () => TxAPI.getPendingTxs(),
