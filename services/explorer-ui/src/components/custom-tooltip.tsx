@@ -1,12 +1,11 @@
-// your-tooltip.jsx
 import React, { FC } from "react";
-import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import { TooltipArrow } from "@radix-ui/react-tooltip";
 
 interface CustomTooltipProps {
   children: React.ReactNode;
@@ -34,7 +33,7 @@ export const CustomTooltip: FC<CustomTooltipProps> = ({
         <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipContent side="top" align="center" {...props}>
           {content}
-          <TooltipPrimitive.Arrow width={11} height={5} />
+          <TooltipArrow className="fill-primary" width={11} height={5} />
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

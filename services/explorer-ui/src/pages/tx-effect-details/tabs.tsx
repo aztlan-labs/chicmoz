@@ -46,8 +46,9 @@ export const OptionButtons: React.FC<OptionButtonProps> = ({
             return (
               <CustomTooltip key={key} content="Not available in this txEffect">
                 <Button
+                  type="button"
                   key={option.id}
-                  disabled={true}
+                  disabled={false}
                   className={`shadow-[0px_0px_1px_2px_rgba(0,0,0,0)] bg-gray-300 cursor-not-allowed opacity-50 text-primary `}
                 >
                   {option.label}
