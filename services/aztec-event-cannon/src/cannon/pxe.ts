@@ -31,11 +31,6 @@ export const setup = async () => {
     alice,
     bob
   };
-  // WARNING: calling this will throw an error (after a while!). I.e. they will get logged to console, but will throw before the sleep is done.
-  // logger.info(`Wallets: ${JSON.stringify(namedWallets)}`);
-  // logger.info("sleeping for 20s");
-  //await new Promise((resolve) => setTimeout(resolve, 20000));
-  //logger.info("done sleeping");
 };
 
 export const getPxe = () => {
