@@ -1,11 +1,5 @@
 import { type Tab } from "./constants";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "~/components/ui/tooltip";
-import {
   Button,
   Select,
   SelectContent,

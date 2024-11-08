@@ -1,12 +1,6 @@
 import { TxEffectDataType } from "./utils";
 import { Tab, tabId } from "./constants";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "~/components/ui/tooltip";
-import {
   Button,
   Select,
   SelectContent,
