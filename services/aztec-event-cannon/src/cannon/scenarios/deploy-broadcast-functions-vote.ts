@@ -45,15 +45,15 @@ export async function run() {
   await Promise.all([
     logAndWaitForTx(
       votingContractAlice.methods.cast_vote(candidateA).send(),
-      "  Cast vote 1 - candidate A"
+      "Cast vote 1 - candidate A"
     ),
     logAndWaitForTx(
       votingContractBob.methods.cast_vote(candidateA).send(),
-      "  Cast vote 2 - candidate A"
+      "Cast vote 2 - candidate A"
     ),
     await logAndWaitForTx(
       votingContractCharlie.methods.cast_vote(candidateB).send(),
-      "  Cast vote 3 - candidate B"
+      "Cast vote 3 - candidate B"
     ),
   ]);
 
