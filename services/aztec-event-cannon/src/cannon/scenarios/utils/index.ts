@@ -51,8 +51,18 @@ export const getNewSchnorrAccount = async ({
   await logAndWaitForTx(schnorrAccount.deploy(), "Deploying account");
   logger.info("  Getting Schnorr account wallet...");
   const wallet = await schnorrAccount.getWallet();
-  logger.info(`🔐 Schnorr account created at: ${address.toString()}`);
+  logger.info(`  🔐 Schnorr account created at: ${address.toString()}`);
   return { schnorrAccount, wallet, address };
+};
+
+export const getNewAccount = async (pxe: PXE) => {
+  const secretKey = Fr.random();
+  const salt = Fr.random();
+  return getNewSchnorrAccount({
+    pxe,
+    secretKey,
+    salt,
+  });
 };
 
 export const deployContract = async <
@@ -62,11 +72,14 @@ export const deployContract = async <
   contractLoggingName,
   contract,
   contractDeployArgs,
+  broadcast,
 }: {
   contractLoggingName: string;
   contract: Contract;
   contractDeployArgs: DeployArgs;
+  broadcast?: boolean;
 }): Promise<EasyPrivateVotingContract> => {
+  logger.info(`DEPLOYING ${contractLoggingName}`);
   const contractTx = contract.deploy.apply(null, contractDeployArgs).send();
   logger.info(
     `📫 ${contractLoggingName} ${(
@@ -76,6 +89,12 @@ export const deployContract = async <
   const deployedContract = await contractTx.deployed();
   const addressString = deployedContract.address.toString();
   logger.info(`⛏  ${contractLoggingName} deployed at: ${addressString}`);
+  if (broadcast) {
+    await broadcastFunctions({
+      wallet: contractDeployArgs[0],
+      contract: deployedContract,
+    });
+  }
   return deployedContract;
 };
 
@@ -88,6 +107,7 @@ export const broadcastFunctions = async <
   wallet: Wallet;
   contract: Contract;
 }) => {
+  logger.info("BROADCASTING FUNCTIONS");
   for (const fn of contract.artifact.functions) {
     logger.info(`${getFunctionSpacer(fn.functionType)}${fn.name}`);
     if (fn.functionType === FunctionType.PRIVATE) {
