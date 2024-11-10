@@ -56,7 +56,7 @@ export const ContractClassDetails: FC = () => {
 
   if (!id) return <div>No classId</div>;
   const selectedVersion = classesData?.find(
-    (contract) => contract.version === Number(version)
+    (contract) => contract.version === Number(version),
   );
   if (!selectedVersion) return <div>No data</div>;
 
@@ -81,9 +81,10 @@ export const ContractClassDetails: FC = () => {
           </div>
         </div>
         <OptionButtons
-          isOptionAvailable={isOptionAvailable}
+          availableData={isOptionAvailable}
           requiredOptions={contractClassTabs}
           onOptionSelect={onOptionSelect}
+          selectedItem={selectedTab}
         />
         <div className="flex flex-col gap-4 md:flex-row ">
           {selectedTab === "contractVersions" && (
@@ -124,7 +125,7 @@ export const ContractClassDetails: FC = () => {
                           <p>
                             privateFunctionTreeSiblingPath-{index}: {path}
                           </p>
-                        )
+                        ),
                       )}
                       <p>
                         privateFunctionTreeLeafIndex:{" "}
@@ -135,7 +136,7 @@ export const ContractClassDetails: FC = () => {
                           <p>
                             artifactFunctionTreeSiblingPath-{index}: {path}
                           </p>
-                        )
+                        ),
                       )}
                       <p>
                         artifactFunctionTreeLeafIndex:{" "}
@@ -165,7 +166,7 @@ export const ContractClassDetails: FC = () => {
                       </div>
                       <hr />
                     </div>
-                  )
+                  ),
                 )}
               </div>
             )}
@@ -195,7 +196,7 @@ export const ContractClassDetails: FC = () => {
                           <p>
                             artifactFunctionTreeSiblingPath-{index}: {path}
                           </p>
-                        )
+                        ),
                       )}
                       <p>
                         artifactFunctionTreeLeafIndex:{" "}
@@ -229,7 +230,7 @@ export const ContractClassDetails: FC = () => {
                       </div>
                       <hr />
                     </div>
-                  )
+                  ),
                 )}
               </div>
             )}
