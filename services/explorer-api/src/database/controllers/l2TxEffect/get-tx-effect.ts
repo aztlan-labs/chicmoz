@@ -59,7 +59,7 @@ export const getTxEffectNestedByHash = async (
     })
     .from(publicDataWrite)
     .innerJoin(
-      publicDataWrite,
+      txEffect,
       eq(txEffect.hash, publicDataWrite.txEffectHash)
     )
     .where(eq(publicDataWrite.txEffectHash, txEffectHash))
