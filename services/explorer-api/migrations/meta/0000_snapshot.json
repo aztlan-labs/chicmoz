@@ -1,5 +1,5 @@
 {
-  "id": "cfc8941b-919b-4bbe-9e32-fa2c7eb733bb",
+  "id": "d7336b86-fa3b-435a-9dd3-5a14efb9d7ae",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -117,10 +117,26 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "block_hash": {
+          "name": "block_hash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "archive_block_hash_l2Block_hash_fk": {
+          "name": "archive_block_hash_l2Block_hash_fk",
+          "tableFrom": "archive",
+          "tableTo": "l2Block",
+          "columnsFrom": ["block_hash"],
+          "columnsTo": ["hash"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -139,58 +155,18 @@
           "type": "bigint",
           "primaryKey": false,
           "notNull": true
-        },
-        "archive_id": {
-          "name": "archive_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "header_id": {
-          "name": "header_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "body_id": {
-          "name": "body_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "l2Block_archive_id_archive_id_fk": {
-          "name": "l2Block_archive_id_archive_id_fk",
-          "tableFrom": "l2Block",
-          "tableTo": "archive",
-          "columnsFrom": ["archive_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "l2Block_header_id_header_id_fk": {
-          "name": "l2Block_header_id_header_id_fk",
-          "tableFrom": "l2Block",
-          "tableTo": "header",
-          "columnsFrom": ["header_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "l2Block_body_id_body_id_fk": {
-          "name": "l2Block_body_id_body_id_fk",
-          "tableFrom": "l2Block",
-          "tableTo": "body",
-          "columnsFrom": ["body_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "l2Block_height_unique": {
+          "name": "l2Block_height_unique",
+          "nullsNotDistinct": false,
+          "columns": ["height"]
+        }
+      }
     },
     "public.body": {
       "name": "body",
@@ -202,25 +178,9 @@
           "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.body_to_tx_effects": {
-      "name": "body_to_tx_effects",
-      "schema": "",
-      "columns": {
-        "body_id": {
-          "name": "body_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
         },
-        "tx_effect_hash": {
-          "name": "tx_effect_hash",
+        "block_hash": {
+          "name": "block_hash",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
@@ -228,22 +188,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "body_to_tx_effects_body_id_body_id_fk": {
-          "name": "body_to_tx_effects_body_id_body_id_fk",
-          "tableFrom": "body_to_tx_effects",
-          "tableTo": "body",
-          "columnsFrom": ["body_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "body_to_tx_effects_tx_effect_hash_tx_effect_hash_fk": {
-          "name": "body_to_tx_effects_tx_effect_hash_tx_effect_hash_fk",
-          "tableFrom": "body_to_tx_effects",
-          "tableTo": "tx_effect",
-          "columnsFrom": ["tx_effect_hash"],
+        "body_block_hash_l2Block_hash_fk": {
+          "name": "body_block_hash_l2Block_hash_fk",
+          "tableFrom": "body",
+          "tableTo": "l2Block",
+          "columnsFrom": ["block_hash"],
           "columnsTo": ["hash"],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -266,10 +217,26 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "tx_effect_to_logs_id": {
+          "name": "tx_effect_to_logs_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "function_logs_tx_effect_to_logs_id_tx_effect_to_logs_id_fk": {
+          "name": "function_logs_tx_effect_to_logs_id_tx_effect_to_logs_id_fk",
+          "tableFrom": "function_logs",
+          "tableTo": "tx_effect_to_logs",
+          "columnsFrom": ["tx_effect_to_logs_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -287,6 +254,12 @@
         "index": {
           "name": "index",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tx_effect_to_logs_id": {
+          "name": "tx_effect_to_logs_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -316,7 +289,17 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "logs_tx_effect_to_logs_id_tx_effect_to_logs_id_fk": {
+          "name": "logs_tx_effect_to_logs_id_tx_effect_to_logs_id_fk",
+          "tableFrom": "logs",
+          "tableTo": "tx_effect_to_logs",
+          "columnsFrom": ["tx_effect_to_logs_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -330,6 +313,18 @@
           "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
+        },
+        "tx_effect_hash": {
+          "name": "tx_effect_hash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "index": {
+          "name": "index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
         },
         "leaf_index": {
           "name": "leaf_index",
@@ -345,7 +340,17 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "public_data_write_tx_effect_hash_tx_effect_hash_fk": {
+          "name": "public_data_write_tx_effect_hash_tx_effect_hash_fk",
+          "tableFrom": "public_data_write",
+          "tableTo": "tx_effect",
+          "columnsFrom": ["tx_effect_hash"],
+          "columnsTo": ["hash"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -362,6 +367,12 @@
         "txHash": {
           "name": "txHash",
           "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "body_id": {
+          "name": "body_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -444,7 +455,17 @@
           "with": {}
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "tx_effect_body_id_body_id_fk": {
+          "name": "tx_effect_body_id_body_id_fk",
+          "tableFrom": "tx_effect",
+          "tableTo": "body",
+          "columnsFrom": ["body_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -452,21 +473,16 @@
       "name": "tx_effect_to_logs",
       "schema": "",
       "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
         "tx_effect_hash": {
           "name": "tx_effect_hash",
           "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "function_log_id": {
-          "name": "function_log_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "log_id": {
-          "name": "log_id",
-          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         }
@@ -479,72 +495,7 @@
           "tableTo": "tx_effect",
           "columnsFrom": ["tx_effect_hash"],
           "columnsTo": ["hash"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "tx_effect_to_logs_function_log_id_function_logs_id_fk": {
-          "name": "tx_effect_to_logs_function_log_id_function_logs_id_fk",
-          "tableFrom": "tx_effect_to_logs",
-          "tableTo": "function_logs",
-          "columnsFrom": ["function_log_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "tx_effect_to_logs_log_id_logs_id_fk": {
-          "name": "tx_effect_to_logs_log_id_logs_id_fk",
-          "tableFrom": "tx_effect_to_logs",
-          "tableTo": "logs",
-          "columnsFrom": ["log_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.tx_effect_to_public_data_write": {
-      "name": "tx_effect_to_public_data_write",
-      "schema": "",
-      "columns": {
-        "tx_effect_hash": {
-          "name": "tx_effect_hash",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "index": {
-          "name": "index",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "public_data_write_id": {
-          "name": "public_data_write_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "tx_effect_to_public_data_write_tx_effect_hash_tx_effect_hash_fk": {
-          "name": "tx_effect_to_public_data_write_tx_effect_hash_tx_effect_hash_fk",
-          "tableFrom": "tx_effect_to_public_data_write",
-          "tableTo": "tx_effect",
-          "columnsFrom": ["tx_effect_hash"],
-          "columnsTo": ["hash"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "tx_effect_to_public_data_write_public_data_write_id_public_data_write_id_fk": {
-          "name": "tx_effect_to_public_data_write_public_data_write_id_public_data_write_id_fk",
-          "tableFrom": "tx_effect_to_public_data_write",
-          "tableTo": "public_data_write",
-          "columnsFrom": ["public_data_write_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -561,6 +512,12 @@
           "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
+        },
+        "header_id": {
+          "name": "header_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         },
         "num_txs": {
           "name": "num_txs",
@@ -588,7 +545,17 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "content_commitment_header_id_header_id_fk": {
+          "name": "content_commitment_header_id_header_id_fk",
+          "tableFrom": "content_commitment",
+          "tableTo": "header",
+          "columnsFrom": ["header_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -602,6 +569,12 @@
           "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
+        },
+        "global_variables_id": {
+          "name": "global_variables_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         },
         "fee_per_da_gas": {
           "name": "fee_per_da_gas",
@@ -617,7 +590,17 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "gas_fees_global_variables_id_global_variables_id_fk": {
+          "name": "gas_fees_global_variables_id_global_variables_id_fk",
+          "tableFrom": "gas_fees",
+          "tableTo": "global_variables",
+          "columnsFrom": ["global_variables_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -631,6 +614,12 @@
           "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
+        },
+        "header_id": {
+          "name": "header_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         },
         "chain_id": {
           "name": "chain_id",
@@ -673,23 +662,17 @@
           "type": "varchar(66)",
           "primaryKey": false,
           "notNull": true
-        },
-        "gas_fees_id": {
-          "name": "gas_fees_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "global_variables_gas_fees_id_gas_fees_id_fk": {
-          "name": "global_variables_gas_fees_id_gas_fees_id_fk",
+        "global_variables_header_id_header_id_fk": {
+          "name": "global_variables_header_id_header_id_fk",
           "tableFrom": "global_variables",
-          "tableTo": "gas_fees",
-          "columnsFrom": ["gas_fees_id"],
+          "tableTo": "header",
+          "columnsFrom": ["header_id"],
           "columnsTo": ["id"],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -707,27 +690,9 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "last_archive_id": {
-          "name": "last_archive_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "content_commitment_id": {
-          "name": "content_commitment_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "state_id": {
-          "name": "state_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "global_variables_id": {
-          "name": "global_variables_id",
-          "type": "uuid",
+        "block_hash": {
+          "name": "block_hash",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -740,40 +705,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "header_last_archive_id_last_archive_id_fk": {
-          "name": "header_last_archive_id_last_archive_id_fk",
+        "header_block_hash_l2Block_hash_fk": {
+          "name": "header_block_hash_l2Block_hash_fk",
           "tableFrom": "header",
-          "tableTo": "last_archive",
-          "columnsFrom": ["last_archive_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "header_content_commitment_id_content_commitment_id_fk": {
-          "name": "header_content_commitment_id_content_commitment_id_fk",
-          "tableFrom": "header",
-          "tableTo": "content_commitment",
-          "columnsFrom": ["content_commitment_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "header_state_id_state_id_fk": {
-          "name": "header_state_id_state_id_fk",
-          "tableFrom": "header",
-          "tableTo": "state",
-          "columnsFrom": ["state_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "header_global_variables_id_global_variables_id_fk": {
-          "name": "header_global_variables_id_global_variables_id_fk",
-          "tableFrom": "header",
-          "tableTo": "global_variables",
-          "columnsFrom": ["global_variables_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
+          "tableTo": "l2Block",
+          "columnsFrom": ["block_hash"],
+          "columnsTo": ["hash"],
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -802,10 +740,26 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "state_id": {
+          "name": "state_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "l1_to_l2_message_tree_state_id_state_id_fk": {
+          "name": "l1_to_l2_message_tree_state_id_state_id_fk",
+          "tableFrom": "l1_to_l2_message_tree",
+          "tableTo": "state",
+          "columnsFrom": ["state_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -831,10 +785,26 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "header_id": {
+          "name": "header_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "last_archive_header_id_header_id_fk": {
+          "name": "last_archive_header_id_header_id_fk",
+          "tableFrom": "last_archive",
+          "tableTo": "header",
+          "columnsFrom": ["header_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -860,10 +830,26 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "state_partial_id": {
+          "name": "state_partial_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "note_hash_tree_state_partial_id_partial_id_fk": {
+          "name": "note_hash_tree_state_partial_id_partial_id_fk",
+          "tableFrom": "note_hash_tree",
+          "tableTo": "partial",
+          "columnsFrom": ["state_partial_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -889,10 +875,26 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "state_partial_id": {
+          "name": "state_partial_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "nullifier_tree_state_partial_id_partial_id_fk": {
+          "name": "nullifier_tree_state_partial_id_partial_id_fk",
+          "tableFrom": "nullifier_tree",
+          "tableTo": "partial",
+          "columnsFrom": ["state_partial_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -907,20 +909,8 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "note_hash_tree_id": {
-          "name": "note_hash_tree_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "nullifier_tree_id": {
-          "name": "nullifier_tree_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "public_data_tree_id": {
-          "name": "public_data_tree_id",
+        "state_id": {
+          "name": "state_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -928,31 +918,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "partial_note_hash_tree_id_note_hash_tree_id_fk": {
-          "name": "partial_note_hash_tree_id_note_hash_tree_id_fk",
+        "partial_state_id_state_id_fk": {
+          "name": "partial_state_id_state_id_fk",
           "tableFrom": "partial",
-          "tableTo": "note_hash_tree",
-          "columnsFrom": ["note_hash_tree_id"],
+          "tableTo": "state",
+          "columnsFrom": ["state_id"],
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "partial_nullifier_tree_id_nullifier_tree_id_fk": {
-          "name": "partial_nullifier_tree_id_nullifier_tree_id_fk",
-          "tableFrom": "partial",
-          "tableTo": "nullifier_tree",
-          "columnsFrom": ["nullifier_tree_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "partial_public_data_tree_id_public_data_tree_id_fk": {
-          "name": "partial_public_data_tree_id_public_data_tree_id_fk",
-          "tableFrom": "partial",
-          "tableTo": "public_data_tree",
-          "columnsFrom": ["public_data_tree_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -981,10 +953,26 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "state_partial_id": {
+          "name": "state_partial_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "public_data_tree_state_partial_id_partial_id_fk": {
+          "name": "public_data_tree_state_partial_id_partial_id_fk",
+          "tableFrom": "public_data_tree",
+          "tableTo": "partial",
+          "columnsFrom": ["state_partial_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -999,14 +987,8 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "l1_to_l2_message_tree_id": {
-          "name": "l1_to_l2_message_tree_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "partial_id": {
-          "name": "partial_id",
+        "header_id": {
+          "name": "header_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -1014,22 +996,13 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "state_l1_to_l2_message_tree_id_l1_to_l2_message_tree_id_fk": {
-          "name": "state_l1_to_l2_message_tree_id_l1_to_l2_message_tree_id_fk",
+        "state_header_id_header_id_fk": {
+          "name": "state_header_id_header_id_fk",
           "tableFrom": "state",
-          "tableTo": "l1_to_l2_message_tree",
-          "columnsFrom": ["l1_to_l2_message_tree_id"],
+          "tableTo": "header",
+          "columnsFrom": ["header_id"],
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "state_partial_id_partial_id_fk": {
-          "name": "state_partial_id_partial_id_fk",
-          "tableFrom": "state",
-          "tableTo": "partial",
-          "columnsFrom": ["partial_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1150,7 +1123,7 @@
           "tableTo": "l2Block",
           "columnsFrom": ["block_hash"],
           "columnsTo": ["hash"],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1320,7 +1293,7 @@
           "tableTo": "l2Block",
           "columnsFrom": ["block_hash"],
           "columnsTo": ["hash"],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "contract_class": {
@@ -1329,7 +1302,7 @@
           "tableTo": "l2_contract_class_registered",
           "columnsFrom": ["contract_class_id", "version"],
           "columnsTo": ["contract_class_id", "version"],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },

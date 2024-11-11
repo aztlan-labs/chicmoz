@@ -27,7 +27,7 @@ export const l2ContractInstanceDeployed = pgTable(
     blockHash: varchar("block_hash")
       .$type<HexString>()
       .notNull()
-      .references(() => l2Block.hash),
+      .references(() => l2Block.hash, { onDelete: "cascade" }),
     address: generateAztecAddressColumn("address").notNull(),
     version: integer("version").notNull(),
     salt: generateFrColumn("salt").notNull(),
@@ -92,7 +92,7 @@ export const l2ContractInstanceDeployed = pgTable(
         l2ContractClassRegistered.contractClassId,
         l2ContractClassRegistered.version,
       ],
-    }),
+    }).onDelete("cascade"),
   })
 );
 
@@ -101,7 +101,7 @@ export const l2ContractClassRegistered = pgTable(
   {
     blockHash: varchar("block_hash")
       .notNull()
-      .references(() => l2Block.hash),
+      .references(() => l2Block.hash, { onDelete: "cascade" }),
     contractClassId: generateFrColumn("contract_class_id").notNull(),
     version: bigint("version", { mode: "number" }).notNull(),
     artifactHash: generateFrColumn("artifact_hash").notNull(),
@@ -135,8 +135,7 @@ export const l2ContractInstanceDeployedRelations = relations(
 export const l2PrivateFunction = pgTable(
   "l2_private_function",
   {
-    contractClassId: generateFrColumn("contract_class_id")
-      .notNull(),
+    contractClassId: generateFrColumn("contract_class_id").notNull(),
     artifactMetadataHash: generateFrColumn("artifact_metadata_hash").notNull(),
     unconstrainedFunctionsArtifactTreeRoot: generateFrColumn(
       "unconstrained_functions_artifact_tree_root"
@@ -178,8 +177,7 @@ export const l2PrivateFunction = pgTable(
 export const l2UnconstrainedFunction = pgTable(
   "l2_unconstrained_function",
   {
-    contractClassId: generateFrColumn("contract_class_id")
-      .notNull(),
+    contractClassId: generateFrColumn("contract_class_id").notNull(),
     artifactMetadataHash: generateFrColumn("artifact_metadata_hash").notNull(),
     privateFunctionsArtifactTreeRoot: generateFrColumn(
       "private_functions_artifact_tree_root"
