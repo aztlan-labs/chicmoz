@@ -1,30 +1,69 @@
-import { Fr, waitForPXE } from "@aztec/aztec.js";
-import { EasyPrivateVotingContract } from "../../artifacts/EasyPrivateVoting.js";
+import { Contract, Fr, waitForPXE } from "@aztec/aztec.js";
+import {
+  EasyPrivateVotingContract,
+  EasyPrivateVotingContractArtifact,
+} from "../../artifacts/EasyPrivateVoting.js";
 import { logger } from "../../logger.js";
-import { getPxe } from "../pxe.js";
-import { broadcastFunctions, deployContract, getNewSchnorrAccount } from "./utils/index.js";
+import { getPxe, getWallets } from "../pxe.js";
+import { deployContract, logAndWaitForTx } from "./utils/index.js";
 
 export async function run() {
   logger.info("VOTING CONTRACT - deploy & broadcast functions");
   const pxe = getPxe();
   await waitForPXE(pxe);
-  const secretKey = Fr.random();
-  const salt = Fr.random();
-  const { wallet, address } = await getNewSchnorrAccount({
-    pxe,
-    secretKey,
-    salt,
-  });
+  const namedWallets = getWallets();
 
-  const deployerWallet = wallet;
-  const votingAdmin = address;
+  const deployerWallet = namedWallets.alice;
+  const votingAdmin = namedWallets.alice.getAddress();
 
-  const votingContract = await deployContract({
+  const votingContractDeployer = await deployContract({
     contractLoggingName: "Voting Contract",
     contract: EasyPrivateVotingContract,
     contractDeployArgs: [deployerWallet, votingAdmin],
+    broadcast: true,
   });
 
-  await broadcastFunctions({ wallet, contract: votingContract });
-  // TODO: add actual voting function calls
+  const votingContractAlice = await Contract.at(
+    votingContractDeployer.address,
+    EasyPrivateVotingContractArtifact,
+    namedWallets.alice
+  );
+  const votingContractBob = await Contract.at(
+    votingContractDeployer.address,
+    EasyPrivateVotingContractArtifact,
+    namedWallets.bob
+  );
+  const votingContractCharlie = await Contract.at(
+    votingContractDeployer.address,
+    EasyPrivateVotingContractArtifact,
+    namedWallets.charlie
+  );
+
+  const candidateA = new Fr(1);
+  const candidateB = new Fr(2);
+
+  await Promise.all([
+    logAndWaitForTx(
+      votingContractAlice.methods.cast_vote(candidateA).send(),
+      "Cast vote 1 - candidate A"
+    ),
+    logAndWaitForTx(
+      votingContractBob.methods.cast_vote(candidateA).send(),
+      "Cast vote 2 - candidate A"
+    ),
+    await logAndWaitForTx(
+      votingContractCharlie.methods.cast_vote(candidateB).send(),
+      "Cast vote 3 - candidate B"
+    ),
+  ]);
+
+  const votesA = (await votingContractDeployer.methods
+    .get_vote(candidateA)
+    .simulate()) as bigint;
+  const votesB = (await votingContractDeployer.methods
+    .get_vote(candidateB)
+    .simulate()) as bigint;
+
+  logger.info(`  Votes for candidate 1: ${votesA}`);
+  logger.info(`  Votes for candidate 2: ${votesB}`);
 }

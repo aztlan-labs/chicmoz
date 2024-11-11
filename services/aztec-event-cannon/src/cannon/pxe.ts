@@ -10,9 +10,9 @@ import { logger } from "../logger.js";
 
 let pxe: PXE;
 let namedWallets: {
-  defaultDeployer: AccountWallet,
-  alice: AccountWallet,
-  bob: AccountWallet,
+  alice: AccountWallet;
+  bob: AccountWallet;
+  charlie: AccountWallet;
 } | null = null;
 
 export const setup = async () => {
@@ -21,15 +21,11 @@ export const setup = async () => {
   await waitForPXE(pxe);
   const info = await pxe.getPXEInfo();
   logger.info(JSON.stringify(info));
-  const [
-    defaultDeployer,
+  const [alice, bob, charlie] = await getInitialTestAccountsWallets(pxe);
+  namedWallets = {
     alice,
     bob,
-  ] = await getInitialTestAccountsWallets(pxe);
-  namedWallets = {
-    defaultDeployer,
-    alice,
-    bob
+    charlie,
   };
 };
 
@@ -41,4 +37,4 @@ export const getPxe = () => {
 export const getWallets = () => {
   if (!namedWallets) throw new Error("Wallets not initialized");
   return namedWallets;
-}
+};

@@ -31,8 +31,8 @@ spec:
               containerPort: 8081
               protocol: TCP
           env:
-            - name: DEBUG
-              value: "aztec:*"
+            #- name: DEBUG
+            #  value: "aztec:*"
             - name: ETHEREUM_HOST
               value: "http://anvil-ethereum-node:8545"
             - name: L1_CHAIN_ID
