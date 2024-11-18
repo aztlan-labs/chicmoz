@@ -1,5 +1,5 @@
 [package]
-name = "aztec_event_shooter" # can't use dashes in package name, so change cannon => shooter to emphasize that this is a different name
+name = "easy_private_voting"
 type = "contract"
 authors = [ "" ]
 compiler_version = ">=0.18.0"

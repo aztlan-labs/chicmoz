@@ -34,7 +34,7 @@ import {
   type Wallet,
   type WrappedFieldLike,
 } from '@aztec/aztec.js';
-import EasyPrivateVotingContractArtifactJson from '../../target/aztec_event_shooter-EasyPrivateVoting.json' assert { type: 'json' };
+import EasyPrivateVotingContractArtifactJson from '../contract-projects/EasyPrivateVoting/target/easy_private_voting-EasyPrivateVoting.json' assert { type: 'json' };
 export const EasyPrivateVotingContractArtifact = loadContractArtifact(EasyPrivateVotingContractArtifactJson as NoirCompiledContract);
 
 
