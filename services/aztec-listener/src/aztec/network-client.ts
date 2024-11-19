@@ -50,6 +50,7 @@ const callNodeFunction = async <K extends keyof AztecNode>(
       )) as Promise<ReturnType<AztecNode[K]>>;
     }, backOffOptions);
   } catch (e) {
+    logger.warn(`Aztec failed to call ${fnName}`);
     if ((e as Error).cause) {
       logger.warn(
         `Aztec failed to fetch: ${JSON.stringify((e as Error).cause)}`
@@ -66,21 +67,35 @@ export const init = async () => {
 };
 
 export const getNodeInfo = async (): Promise<NodeInfo> => {
-  const [
-    nodeVersion,
-    protocolVersion,
-    chainId,
-    enr,
-    contractAddresses,
-    protocolContractAddresses,
-  ] = await Promise.all([
-    callNodeFunction("getNodeVersion"),
-    callNodeFunction("getVersion"),
-    callNodeFunction("getChainId"),
-    callNodeFunction("getEncodedEnr"),
-    callNodeFunction("getL1ContractAddresses"),
-    callNodeFunction("getProtocolContractAddresses"),
-  ]);
+  const nodeVersion = await callNodeFunction("getNodeVersion");
+  logger.info(`Aztec node version: ${nodeVersion}`);
+  const protocolVersion = await callNodeFunction("getVersion");
+  logger.info(`Aztec protocol version: ${protocolVersion}`);
+  const chainId = await callNodeFunction("getChainId");
+  logger.info(`Aztec chain ID: ${chainId}`);
+  const enr = await callNodeFunction("getEncodedEnr");
+  logger.info(`Aztec ENR: ${enr}`);
+  // NOTE: this throws
+  const protocolContractAddresses = await callNodeFunction("getProtocolContractAddresses");
+  logger.info(`Aztec protocol contract addresses: ${JSON.stringify(protocolContractAddresses)}`);
+  // NOTE: this throws
+  const contractAddresses = await callNodeFunction("getL1ContractAddresses");
+  logger.info(`Aztec L1 contract addresses: ${JSON.stringify(contractAddresses)}`);
+  //const [
+  //  nodeVersion,
+  //  protocolVersion,
+  //  chainId,
+  //  enr,
+  //  contractAddresses,
+  //  protocolContractAddresses,
+  //] = await Promise.all([
+  //  callNodeFunction("getNodeVersion"),
+  //  callNodeFunction("getVersion"),
+  //  callNodeFunction("getChainId"),
+  //  callNodeFunction("getEncodedEnr"),
+  //  callNodeFunction("getL1ContractAddresses"),
+  //  callNodeFunction("getProtocolContractAddresses"),
+  //]);
 
   const nodeInfo: NodeInfo = {
     nodeVersion,
