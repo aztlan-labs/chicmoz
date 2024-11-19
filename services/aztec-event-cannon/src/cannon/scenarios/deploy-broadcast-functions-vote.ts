@@ -1,4 +1,4 @@
-import { Contract, Fr, waitForPXE } from "@aztec/aztec.js";
+import { Contract, DeploySentTx, Fr, waitForPXE } from "@aztec/aztec.js";
 import {
   EasyPrivateVotingContract,
   EasyPrivateVotingContractArtifact,
@@ -18,9 +18,9 @@ export async function run() {
 
   const votingContractDeployer = await deployContract({
     contractLoggingName: "Voting Contract",
-    contract: EasyPrivateVotingContract,
-    contractDeployArgs: [deployerWallet, votingAdmin],
-    broadcast: true,
+    deployFn: (): DeploySentTx<EasyPrivateVotingContract> =>
+      EasyPrivateVotingContract.deploy(deployerWallet, votingAdmin).send(),
+    broadcastWithWallet: deployerWallet,
   });
 
   const votingContractAlice = await Contract.at(

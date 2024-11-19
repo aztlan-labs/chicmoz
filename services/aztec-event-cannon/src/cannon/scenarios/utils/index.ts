@@ -1,8 +1,7 @@
-import { Fr, FunctionSelector, PXE, SentTx, Wallet } from "@aztec/aztec.js";
+import { Contract, DeploySentTx, Fr, FunctionSelector, PXE, SentTx, Wallet } from "@aztec/aztec.js";
 import { FunctionType } from "@aztec/foundation/abi";
 import { deriveSigningKey } from "@aztec/circuits.js";
 import { logger } from "../../../logger.js";
-import { EasyPrivateVotingContract } from "../../../artifacts/EasyPrivateVoting.js";
 import {
   broadcastPrivateFunction,
   broadcastUnconstrainedFunction,
@@ -67,42 +66,34 @@ export const getNewAccount = async (pxe: PXE) => {
   });
 };
 
-export const deployContract = async <
-  Contract extends typeof EasyPrivateVotingContract,
-  DeployArgs extends Parameters<Contract["deploy"]>,
->({
+export const deployContract = async <T extends Contract>({
   contractLoggingName,
-  contract,
-  contractDeployArgs,
-  broadcast,
+  deployFn,
+  broadcastWithWallet,
 }: {
   contractLoggingName: string;
-  contract: Contract;
-  contractDeployArgs: DeployArgs;
-  broadcast?: boolean;
-}): Promise<EasyPrivateVotingContract> => {
+  deployFn: () => DeploySentTx<T>;
+  broadcastWithWallet?: Wallet;
+}): Promise<T> => {
   logger.info(`DEPLOYING ${contractLoggingName}`);
-  const contractTx = contract.deploy.apply(null, contractDeployArgs).send();
+  const contractTx = deployFn();
+  const hash = (await contractTx.getTxHash()).to0xString();
   logger.info(
-    `📫 ${contractLoggingName} ${(
-      await contractTx.getTxHash()
-    ).to0xString()} (Deploying contract)`
+    `📫 ${contractLoggingName} ${truncateHashString(hash)} (Deploying contract)`
   );
   const deployedContract = await contractTx.deployed();
   const addressString = deployedContract.address.toString();
   logger.info(`⛏  ${contractLoggingName} deployed at: ${addressString}`);
-  if (broadcast) {
+  if (broadcastWithWallet) {
     await broadcastFunctions({
-      wallet: contractDeployArgs[0],
+      wallet: broadcastWithWallet,
       contract: deployedContract,
     });
   }
   return deployedContract;
 };
 
-export const broadcastFunctions = async <
-  Contract extends EasyPrivateVotingContract,
->({
+export const broadcastFunctions = async ({
   wallet,
   contract,
 }: {
