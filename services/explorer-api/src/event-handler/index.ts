@@ -1,8 +1,12 @@
-import { AZTEC_MESSAGES, NewBlockEvent, PendingTxsEvent } from "@chicmoz-pkg/message-registry";
+import {
+  AZTEC_MESSAGES,
+  NewBlockEvent,
+  PendingTxsEvent,
+} from "@chicmoz-pkg/message-registry";
 import { logger } from "../logger.js";
 import { onBlock } from "./on-block/index.js";
 import { onAztecConnectionEvent } from "./on-aztec-connection-event.js";
-import {onPendingTxs} from "./on-pending-txs.js";
+import { onPendingTxs } from "./on-pending-txs.js";
 
 export type EventHandler = {
   consumerGroup: string;

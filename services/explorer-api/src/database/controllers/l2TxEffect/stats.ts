@@ -2,7 +2,6 @@ import { and, count, eq, gt, lt } from "drizzle-orm";
 import { getDb as db } from "../../../database/index.js";
 import {
   body,
-  bodyToTxEffects,
   globalVariables,
   header,
   l2Block,
@@ -19,13 +18,12 @@ export const getTotalTxEffectsLast24h = async (): Promise<number> => {
   const dbRes = await db()
     .select({ count: count() })
     .from(txEffect)
-    .innerJoin(bodyToTxEffects, eq(txEffect.hash, bodyToTxEffects.txEffectHash))
-    .innerJoin(body, eq(body.id, bodyToTxEffects.bodyId))
-    .innerJoin(l2Block, eq(l2Block.bodyId, body.id))
-    .innerJoin(header, eq(header.id, l2Block.headerId))
+    .innerJoin(body, eq(body.id, txEffect.bodyId))
+    .innerJoin(l2Block, eq(l2Block.hash, body.blockHash))
+    .innerJoin(header, eq(l2Block.hash, header.blockHash))
     .innerJoin(
       globalVariables,
-      eq(globalVariables.id, header.globalVariablesId)
+      eq(globalVariables.headerId, header.id)
     )
     .where(
       and(

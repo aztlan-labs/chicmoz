@@ -4,7 +4,7 @@ import { ChicmozL2Block, ChicmozL2TxEffect } from "@chicmoz-pkg/types";
 import { controllers } from "../../database/index.js";
 import { logger } from "../../logger.js";
 import { storeContracts } from "./contracts.js";
-import { handleDuplicateError } from "../utils.js";
+import { handleDuplicateBlockError } from "../utils.js";
 
 export const onBlock = async ({ block, blockNumber }: NewBlockEvent) => {
   // TODO: start storing NODE_INFO connected to the block
@@ -33,8 +33,12 @@ const storeBlock = async (parsedBlock: ChicmozL2Block) => {
   logger.info(
     `🧢 Storing block ${parsedBlock.height} (hash: ${parsedBlock.hash})`
   );
-  await controllers.l2Block.store(parsedBlock).catch((e) => {
-    handleDuplicateError(e as Error, `block ${parsedBlock.height}`);
+  await controllers.l2Block.store(parsedBlock).catch(async (e) => {
+    const isNewChain = await handleDuplicateBlockError(
+      e as Error,
+      `block ${parsedBlock.height}`
+    );
+    if (isNewChain) return storeBlock(parsedBlock);
   });
 };
 

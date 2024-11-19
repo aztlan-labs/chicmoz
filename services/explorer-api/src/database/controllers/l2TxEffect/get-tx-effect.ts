@@ -15,7 +15,7 @@ import { z } from "zod";
 import { DB_MAX_TX_EFFECTS } from "../../../environment.js";
 import { getDb as db } from "../../../database/index.js";
 import {
-  bodyToTxEffects,
+  body,
   functionLogs,
   globalVariables,
   header,
@@ -24,7 +24,6 @@ import {
   publicDataWrite,
   txEffect,
   txEffectToLogs,
-  txEffectToPublicDataWrite,
 } from "../../../database/schema/l2block/index.js";
 
 enum GetTypes {
@@ -58,13 +57,13 @@ export const getTxEffectNestedByHash = async (
     .select({
       publicDataWrite: getTableColumns(publicDataWrite),
     })
-    .from(txEffectToPublicDataWrite)
+    .from(publicDataWrite)
     .innerJoin(
-      publicDataWrite,
-      eq(txEffectToPublicDataWrite.publicDataWriteId, publicDataWrite.id)
+      txEffect,
+      eq(txEffect.hash, publicDataWrite.txEffectHash)
     )
-    .where(eq(txEffectToPublicDataWrite.txEffectHash, txEffectHash))
-    .orderBy(asc(txEffectToPublicDataWrite.index))
+    .where(eq(publicDataWrite.txEffectHash, txEffectHash))
+    .orderBy(asc(publicDataWrite.index))
     .execute();
 
   const mixedLogs = await db()
@@ -73,8 +72,8 @@ export const getTxEffectNestedByHash = async (
       ...getTableColumns(logs),
     })
     .from(txEffectToLogs)
-    .innerJoin(logs, eq(txEffectToLogs.logId, logs.id))
-    .innerJoin(functionLogs, eq(txEffectToLogs.functionLogId, functionLogs.id))
+    .innerJoin(logs, eq(txEffectToLogs.id, logs.id))
+    .innerJoin(functionLogs, eq(txEffectToLogs.id, functionLogs.id))
     .where(eq(txEffectToLogs.txEffectHash, txEffectHash))
     .orderBy(asc(functionLogs.index), asc(logs.index))
     .execute();
@@ -177,12 +176,12 @@ const _getTxEffects = async (
       timestamp: globalVariables.timestamp,
     })
     .from(l2Block)
-    .innerJoin(bodyToTxEffects, eq(l2Block.bodyId, bodyToTxEffects.bodyId))
-    .innerJoin(txEffect, eq(bodyToTxEffects.txEffectHash, txEffect.hash))
-    .innerJoin(header, eq(l2Block.headerId, header.id))
+    .innerJoin(body, eq(l2Block.hash, body.blockHash))
+    .innerJoin(txEffect, eq(body.id, txEffect.bodyId))
+    .innerJoin(header, eq(l2Block.hash, header.blockHash))
     .innerJoin(
       globalVariables,
-      eq(header.globalVariablesId, globalVariables.id)
+      eq(header.id, globalVariables.headerId)
     );
 
   let whereQuery;
@@ -244,12 +243,12 @@ export const getTxEffectDynamicWhere = async (
       timestamp: globalVariables.timestamp,
     })
     .from(txEffect)
-    .innerJoin(bodyToTxEffects, eq(txEffect.hash, bodyToTxEffects.txEffectHash))
-    .innerJoin(l2Block, eq(bodyToTxEffects.bodyId, l2Block.bodyId))
-    .innerJoin(header, eq(l2Block.headerId, header.id))
+    .innerJoin(body, eq(txEffect.bodyId, body.id))
+    .innerJoin(l2Block, eq(body.blockHash, l2Block.hash))
+    .innerJoin(header, eq(l2Block.hash, header.blockHash))
     .innerJoin(
       globalVariables,
-      eq(header.globalVariablesId, globalVariables.id)
+      eq(header.id, globalVariables.headerId)
     )
     .where(whereMatcher)
     .limit(1)

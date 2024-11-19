@@ -2,13 +2,11 @@ import { relations } from "drizzle-orm";
 
 import {
   body,
-  bodyToTxEffects,
   functionLogs,
   logs,
   publicDataWrite,
   txEffect,
   txEffectToLogs,
-  txEffectToPublicDataWrite,
 } from "./body.js";
 import {
   contentCommitment,
@@ -27,16 +25,16 @@ import { archive, l2Block } from "./root.js";
 
 export const l2BlockRelations = relations(l2Block, ({ one }) => ({
   archive: one(archive, {
-    fields: [l2Block.archiveId],
-    references: [archive.id],
+    fields: [l2Block.hash],
+    references: [archive.fk],
   }),
   header: one(header, {
-    fields: [l2Block.headerId],
-    references: [header.id],
+    fields: [l2Block.hash],
+    references: [header.blockHash],
   }),
   body: one(body, {
-    fields: [l2Block.bodyId],
-    references: [body.id],
+    fields: [l2Block.hash],
+    references: [body.blockHash],
   }),
 }));
 
@@ -47,20 +45,20 @@ export const archiveRelations = relations(archive, ({ one }) => ({
 export const headerRelations = relations(header, ({ one }) => ({
   l2Block: one(l2Block),
   lastArchive: one(lastArchive, {
-    fields: [header.lastArchiveId],
-    references: [lastArchive.id],
+    fields: [header.id],
+    references: [lastArchive.fk],
   }),
   contentCommitment: one(contentCommitment, {
-    fields: [header.contentCommitmentId],
-    references: [contentCommitment.id],
+    fields: [header.id],
+    references: [contentCommitment.headerId],
   }),
   state: one(state, {
-    fields: [header.stateId],
-    references: [state.id],
+    fields: [header.id],
+    references: [state.headerId],
   }),
   globalVariables: one(globalVariables, {
-    fields: [header.globalVariablesId],
-    references: [globalVariables.id],
+    fields: [header.id],
+    references: [globalVariables.headerId],
   }),
 }));
 
@@ -78,12 +76,12 @@ export const contentCommitmentRelations = relations(
 export const stateRelations = relations(state, ({ one }) => ({
   header: one(header),
   l1ToL2MessageTree: one(l1ToL2MessageTree, {
-    fields: [state.l1ToL2MessageTreeId],
-    references: [l1ToL2MessageTree.id],
+    fields: [state.id],
+    references: [l1ToL2MessageTree.fk],
   }),
   partial: one(partial, {
-    fields: [state.partialId],
-    references: [partial.id],
+    fields: [state.id],
+    references: [partial.stateId],
   }),
 }));
 
@@ -97,16 +95,16 @@ export const l1ToL2MessageTreeRelations = relations(
 export const partialRelations = relations(partial, ({ one }) => ({
   state: one(state),
   noteHashTree: one(noteHashTree, {
-    fields: [partial.noteHashTreeId],
-    references: [noteHashTree.id],
+    fields: [partial.id],
+    references: [noteHashTree.fk],
   }),
   nullifierTree: one(nullifierTree, {
-    fields: [partial.nullifierTreeId],
-    references: [nullifierTree.id],
+    fields: [partial.id],
+    references: [nullifierTree.fk],
   }),
   publicDataTree: one(publicDataTree, {
-    fields: [partial.publicDataTreeId],
-    references: [publicDataTree.id],
+    fields: [partial.id],
+    references: [publicDataTree.fk],
   }),
 }));
 
@@ -127,8 +125,8 @@ export const globalVariablesRelations = relations(
   ({ one }) => ({
     header: one(header),
     gasFees: one(gasFees, {
-      fields: [globalVariables.gasFeesId],
-      references: [gasFees.id],
+      fields: [globalVariables.id],
+      references: [gasFees.globalVariablesId],
     }),
   })
 );
@@ -139,31 +137,15 @@ export const gasFeesRelations = relations(gasFees, ({ one }) => ({
 
 export const bodyRelations = relations(body, ({ one, many }) => ({
   l2Block: one(l2Block),
-  bodyToTxEffects: many(bodyToTxEffects),
+  bodyToTxEffects: many(txEffect),
 }));
 
-export const bodyToTxEffectsRelations = relations(
-  bodyToTxEffects,
-  ({ one }) => ({
-    body: one(body),
-    txEffect: one(txEffect),
-  })
-);
-
 export const txEffectRelations = relations(txEffect, ({ one, many }) => ({
-  bodyToTxEffects: one(bodyToTxEffects),
-  publicDataWrite: many(txEffectToPublicDataWrite),
+  bodyToTxEffects: one(body),
+  publicDataWrite: many(publicDataWrite),
   functionLogs: many(functionLogs),
   txEffectToLogs: many(txEffectToLogs),
 }));
-
-export const txEffectToPublicDataWriteRelations = relations(
-  txEffectToPublicDataWrite,
-  ({ one, many }) => ({
-    txEffect: one(txEffect),
-    publicDataWrite: many(publicDataWrite),
-  })
-);
 
 export const publicDataWriteRelations = relations(
   publicDataWrite,
@@ -186,11 +168,11 @@ export const txEffectToLogsRelations = relations(txEffectToLogs, ({ one }) => ({
     references: [txEffect.hash],
   }),
   log: one(logs, {
-    fields: [txEffectToLogs.logId],
-    references: [logs.id],
+    fields: [txEffectToLogs.id],
+    references: [logs.txEffectToLogsId],
   }),
   functionLog: one(functionLogs, {
-    fields: [txEffectToLogs.functionLogId],
-    references: [functionLogs.id],
+    fields: [txEffectToLogs.id],
+    references: [functionLogs.txEffectToLogsId],
   }),
 }));

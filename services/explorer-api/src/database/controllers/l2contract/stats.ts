@@ -22,10 +22,10 @@ export const getTotalContractsLast24h = async (): Promise<number> => {
     .select({ count: count() })
     .from(l2ContractClassRegistered)
     .innerJoin(l2Block, eq(l2Block.hash, l2ContractClassRegistered.blockHash))
-    .innerJoin(header, eq(header.id, l2Block.headerId))
+    .innerJoin(header, eq(header.blockHash, l2Block.hash))
     .innerJoin(
       globalVariables,
-      eq(globalVariables.id, header.globalVariablesId)
+      eq(globalVariables.headerId, header.id)
     )
     .where(
       and(

@@ -1,22 +1,18 @@
-import { bigint, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
+import { bigint, pgTable, unique, varchar } from "drizzle-orm/pg-core";
 import { HexString } from "@chicmoz-pkg/types";
 
-import { body } from "./body.js";
-import { header } from "./header.js";
 import { generateTreeTable } from "../utils.js";
 
-export const l2Block = pgTable("l2Block", {
-  hash: varchar("hash").primaryKey().notNull().$type<HexString>(),
-  height: bigint("height", { mode: "number" }).notNull(),
-  archiveId: uuid("archive_id")
-    .notNull()
-    .references(() => archive.id),
-  headerId: uuid("header_id")
-    .notNull()
-    .references(() => header.id),
-  bodyId: uuid("body_id")
-    .notNull()
-    .references(() => body.id),
-});
+export const l2Block = pgTable(
+  "l2Block",
+  {
+    hash: varchar("hash").primaryKey().notNull().$type<HexString>(),
+    height: bigint("height", { mode: "number" }).notNull(),
+  },
+  (t) =>
+    ({
+      unq: unique().on(t.height),
+    })
+);
 
-export const archive = generateTreeTable("archive");
+export const archive = generateTreeTable("archive", varchar("block_hash").notNull().references(() => l2Block.hash, { onDelete: "cascade" }));
