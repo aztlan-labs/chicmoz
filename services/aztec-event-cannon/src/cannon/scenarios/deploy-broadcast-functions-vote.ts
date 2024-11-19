@@ -16,11 +16,13 @@ export async function run() {
   const deployerWallet = namedWallets.alice;
   const votingAdmin = namedWallets.alice.getAddress();
 
+  const deployFn = () => {
+    return EasyPrivateVotingContract.deploy(deployerWallet, votingAdmin).send();
+  };
   const votingContractDeployer = await deployContract({
     contractLoggingName: "Voting Contract",
-    contract: EasyPrivateVotingContract,
-    contractDeployArgs: [deployerWallet, votingAdmin],
-    broadcast: true,
+    deployFn,
+    broadcastWithWallet: deployerWallet,
   });
 
   const votingContractAlice = await Contract.at(
