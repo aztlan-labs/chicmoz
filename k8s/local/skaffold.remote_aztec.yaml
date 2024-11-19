@@ -9,6 +9,10 @@ requires:
   - path: ./websocket-event-publisher/image.yaml
   - path: ./auth/image.yaml
   - path: ./aztec-listener/image.yaml
+deploy:
+  kubectl:
+    flags:
+      apply: ["--force"]
 manifests:
   rawYaml:
     - k8s/local/common/namespace.yaml

@@ -20,7 +20,7 @@ export const onBlock = async ({ block, blockNumber }: NewBlockEvent) => {
   } catch (e) {
     logger.error(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      `Failed to parse block ${blockNumber}: ${(e as Error)?.stack ?? e}`
+      `Failed to parse block ${blockNumber}: ${(e as Error)?.stack ?? e}`,
     );
     return;
   }
@@ -31,7 +31,7 @@ export const onBlock = async ({ block, blockNumber }: NewBlockEvent) => {
 
 const storeBlock = async (parsedBlock: ChicmozL2Block) => {
   logger.info(
-    `🧢 Storing block ${parsedBlock.height} (hash: ${parsedBlock.hash})`
+    `🧢 Storing block ${parsedBlock.height} (hash: ${parsedBlock.hash})`,
   );
   await controllers.l2Block.store(parsedBlock).catch((e) => {
     handleDuplicateError(e as Error, `block ${parsedBlock.height}`);
