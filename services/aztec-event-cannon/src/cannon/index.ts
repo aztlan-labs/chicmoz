@@ -2,6 +2,7 @@ import { logger } from "../logger.js";
 import { setup } from "./pxe.js";
 import { run as deployBroadcastFunctionsVote } from "./scenarios/deploy-broadcast-functions-vote.js";
 import { run as deploySimpleDefaultAccount } from "./scenarios/deploy-simple-default-account.js";
+import { run as deployAndInteractTokenContract } from "./scenarios/deploy-and-interact-token-contract.js";
 
 export async function init() {
   logger.info("Initializing Cannon...");
@@ -18,6 +19,7 @@ export async function init() {
 export const start = async () => {
   logger.info("Starting Cannon...");
   const scenarios = [
+    deployAndInteractTokenContract,
     deployBroadcastFunctionsVote,
     deploySimpleDefaultAccount,
   ] as (() => Promise<void>)[];

@@ -33,14 +33,15 @@ const updateTxEffects = (
   block: ChicmozL2Block
 ) => {
   const txEffects = block.body.txEffects.map((txEffect) => {
-    const effects = chicmozL2TxEffectSchema.parse({
-      ...txEffect,
-      blockHeight: block.height,
-      timestamp: block.header.globalVariables.timestamp,
-    });
+    const effect = chicmozL2TxEffectSchema.parse(txEffect);
     queryClient.setQueryData(
-      queryKeyGenerator.txEffectByHash(effects.hash),
-      effects
+      queryKeyGenerator.txEffectByHash(effect.hash),
+      {
+        ...effect,
+        blockHeight: block.height,
+        timestamp: block.header.globalVariables.timestamp,
+      }
+
     );
   });
   queryClient.setQueryData(
