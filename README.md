@@ -32,11 +32,11 @@ Now you can access the explorer at http://explorer-ui.localhost and also...
 
 ### Different Aztec-setups
 
-#### Option 1 - default
+#### Option 0 - default
 
 Default settings is to set up a sandbox in the local cluster.
 
-#### Option 0 - connect to your already running sandbox or to public devnet
+#### Option 1 - connect to your already running sandbox or to public devnet
 
 Update the `CHICMOZ_AZTEC_RPC` in the `.chicmoz-local.env` to desired endpoint and then run
 
