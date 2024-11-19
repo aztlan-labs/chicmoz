@@ -2,16 +2,16 @@
   "name": "@chicmoz/aztec-event-cannon",
   "version": "1.0.0",
   "description": "Produce events to Aztec (sandbox) chain",
-  "main": "build/src/index.js",
-  "types": "build/src/index.d.ts",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "files": [
     "build"
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "@aztec/accounts": "0.61.0",
-    "@aztec/aztec.js": "0.61.0",
-    "@aztec/noir-contracts.js": "0.61.0",
+    "@aztec/accounts": "0.62.0",
+    "@aztec/aztec.js": "0.62.0",
+    "@aztec/noir-contracts.js": "0.62.0",
     "@chicmoz-pkg/logger-server": "workspace:^"
   },
   "devDependencies": {
@@ -30,8 +30,8 @@
     "prebuild": "rm -rf build; mkdir build",
     "build": "yarn tsc",
     "predev": "yarn build",
-    "dev": "yarn node build/src/index.js",
-    "start": "yarn node --unhandled-rejections=strict --enable-source-maps build/src/index.js",
+    "dev": "yarn node build/index.js",
+    "start": "yarn node --unhandled-rejections=strict --enable-source-maps build/index.js",
     "lint": "yarn run lint-base --ext .ts .",
     "lint-base": "yarn run g:lint"
   },
