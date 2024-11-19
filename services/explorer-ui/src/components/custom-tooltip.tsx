@@ -5,7 +5,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import { TooltipArrow } from "@radix-ui/react-tooltip";
 
 interface CustomTooltipProps {
   children: React.ReactNode;
@@ -28,12 +27,12 @@ export const CustomTooltip: FC<CustomTooltipProps> = ({
       <Tooltip
         open={open}
         defaultOpen={defaultOpen}
+        delayDuration={200}
         onOpenChange={onOpenChange}
       >
         <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipContent side="top" align="center" {...props}>
           {content}
-          <TooltipArrow className="fill-primary" width={11} height={5} />
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
