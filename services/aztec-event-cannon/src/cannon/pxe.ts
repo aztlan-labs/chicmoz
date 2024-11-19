@@ -16,8 +16,7 @@ let namedWallets: {
 } | null = null;
 
 export const setup = async () => {
-  const { PXE_URL = AZTEC_RPC_URL } = process.env;
-  pxe = createPXEClient(PXE_URL);
+  pxe = createPXEClient(AZTEC_RPC_URL);
   await waitForPXE(pxe);
   const info = await pxe.getPXEInfo();
   logger.info(JSON.stringify(info));

@@ -1,4 +1,4 @@
-import { pgTable, uuid } from "drizzle-orm/pg-core";
+import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 import {
   bufferType,
   generateAztecAddressColumn,
@@ -6,29 +6,30 @@ import {
   generateFrNumberColumn,
   generateTreeTable,
 } from "../utils.js";
+import { HexString } from "@chicmoz-pkg/types";
+import { l2Block } from "./root.js";
 
 export const header = pgTable("header", {
   id: uuid("id").primaryKey().defaultRandom(),
-  // TODO: this is referring to last archive. Can we asume it's always stored, and if so can we reference it?
-  lastArchiveId: uuid("last_archive_id")
+  blockHash: varchar("block_hash")
     .notNull()
-    .references(() => lastArchive.id),
-  contentCommitmentId: uuid("content_commitment_id")
-    .notNull()
-    .references(() => contentCommitment.id),
-  stateId: uuid("state_id")
-    .notNull()
-    .references(() => state.id),
-  globalVariablesId: uuid("global_variables_id")
-    .notNull()
-    .references(() => globalVariables.id),
+    .$type<HexString>()
+    .references(() => l2Block.hash, { onDelete: "cascade" }),
   totalFees: generateFrNumberColumn("total_fees").notNull(),
 });
 
-export const lastArchive = generateTreeTable("last_archive");
+export const lastArchive = generateTreeTable(
+  "last_archive",
+  uuid("header_id")
+    .notNull()
+    .references(() => header.id, { onDelete: "cascade" })
+);
 
 export const contentCommitment = pgTable("content_commitment", {
   id: uuid("id").primaryKey().defaultRandom(),
+  headerId: uuid("header_id")
+    .notNull()
+    .references(() => header.id, { onDelete: "cascade" }),
   numTxs: generateFrNumberColumn("num_txs").notNull(),
   txsEffectsHash: bufferType("txs_effects_hash").notNull(),
   inHash: bufferType("in_hash").notNull(),
@@ -37,37 +38,48 @@ export const contentCommitment = pgTable("content_commitment", {
 
 export const state = pgTable("state", {
   id: uuid("id").primaryKey().defaultRandom(),
-  l1ToL2MessageTreeId: uuid("l1_to_l2_message_tree_id")
+  headerId: uuid("header_id")
     .notNull()
-    .references(() => l1ToL2MessageTree.id),
-  partialId: uuid("partial_id")
-    .notNull()
-    .references(() => partial.id),
+    .references(() => header.id, { onDelete: "cascade" }),
 });
 
-export const l1ToL2MessageTree = generateTreeTable("l1_to_l2_message_tree");
+export const l1ToL2MessageTree = generateTreeTable(
+  "l1_to_l2_message_tree",
+  uuid("state_id")
+    .notNull()
+    .references(() => state.id, { onDelete: "cascade" })
+);
 
 export const partial = pgTable("partial", {
   id: uuid("id").primaryKey().defaultRandom(),
-  noteHashTreeId: uuid("note_hash_tree_id")
+  stateId: uuid("state_id")
     .notNull()
-    .references(() => noteHashTree.id),
-  nullifierTreeId: uuid("nullifier_tree_id")
-    .notNull()
-    .references(() => nullifierTree.id),
-  publicDataTreeId: uuid("public_data_tree_id")
-    .notNull()
-    .references(() => publicDataTree.id),
+    .references(() => state.id, { onDelete: "cascade" }),
 });
 
-export const noteHashTree = generateTreeTable("note_hash_tree");
+export const noteHashTree = generateTreeTable("note_hash_tree",
+  uuid("state_partial_id")
+    .notNull()
+    .references(() => partial.id, { onDelete: "cascade" })
+);
 
-export const nullifierTree = generateTreeTable("nullifier_tree");
+export const nullifierTree = generateTreeTable("nullifier_tree",
+  uuid("state_partial_id")
+    .notNull()
+    .references(() => partial.id, { onDelete: "cascade" })
+);
 
-export const publicDataTree = generateTreeTable("public_data_tree");
+export const publicDataTree = generateTreeTable("public_data_tree",
+  uuid("state_partial_id")
+    .notNull()
+    .references(() => partial.id, { onDelete: "cascade" })
+);
 
 export const globalVariables = pgTable("global_variables", {
   id: uuid("id").primaryKey().defaultRandom(),
+  headerId: uuid("header_id")
+    .notNull()
+    .references(() => header.id, { onDelete: "cascade" }),
   chainId: generateFrNumberColumn("chain_id").notNull(),
   version: generateFrNumberColumn("version").notNull(),
   blockNumber: generateFrNumberColumn("block_number").notNull(),
@@ -75,13 +87,13 @@ export const globalVariables = pgTable("global_variables", {
   timestamp: generateFrNumberColumn("timestamp").notNull(),
   coinbase: generateEthAddressColumn("coinbase").notNull(),
   feeRecipient: generateAztecAddressColumn("fee_recipient").notNull(),
-  gasFeesId: uuid("gas_fees_id")
-    .notNull()
-    .references(() => gasFees.id),
 });
 
 export const gasFees = pgTable("gas_fees", {
   id: uuid("id").primaryKey().defaultRandom(),
+  globalVariablesId: uuid("global_variables_id")
+    .notNull()
+    .references(() => globalVariables.id, { onDelete: "cascade" }),
   feePerDaGas: generateFrNumberColumn("fee_per_da_gas"),
   feePerL2Gas: generateFrNumberColumn("fee_per_l2_gas"),
 });

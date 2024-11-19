@@ -2,7 +2,7 @@ import { desc, eq, sql } from "drizzle-orm";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { getDb as db } from "../../database/index.js";
 import {
-  bodyToTxEffects,
+  body,
   l2Block,
   txEffect,
 } from "../../database/schema/l2block/index.js";
@@ -39,9 +39,9 @@ export const getABlockWithTxEffects = async () => {
         ),
       txEffectCount: sql<number>`count(${txEffect.hash})`.as("txEffectCount"),
     })
-    .from(bodyToTxEffects)
-    .innerJoin(txEffect, eq(bodyToTxEffects.txEffectHash, txEffect.hash))
-    .innerJoin(l2Block, eq(bodyToTxEffects.bodyId, l2Block.bodyId))
+    .from(txEffect)
+    .innerJoin(body, eq(txEffect.bodyId, body.id))
+    .innerJoin(l2Block, eq(body.blockHash, l2Block.hash))
     .groupBy(l2Block.height, l2Block.hash)
     .orderBy(sql`count(${txEffect.hash}) DESC, ${l2Block.height} DESC`)
     .limit(1)

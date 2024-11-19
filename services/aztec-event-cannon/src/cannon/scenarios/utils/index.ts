@@ -45,13 +45,15 @@ export const getNewSchnorrAccount = async ({
     deriveSigningKey(secretKey),
     salt
   );
-  logger.info("  Getting Schnorr account address...");
+  logger.info(
+    `    Schnorr account created ${schnorrAccount.getAddress().toString()}`
+  );
   const { address } = schnorrAccount.getCompleteAddress();
-  logger.info("  Deploying Schnorr account to network...");
+  logger.info("    Deploying Schnorr account to network...");
   await logAndWaitForTx(schnorrAccount.deploy(), "Deploying account");
-  logger.info("  Getting Schnorr account wallet...");
+  logger.info("    Getting Schnorr account wallet...");
   const wallet = await schnorrAccount.getWallet();
-  logger.info(`  🔐 Schnorr account created at: ${address.toString()}`);
+  logger.info(`    🔐 Schnorr account created at: ${address.toString()}`);
   return { schnorrAccount, wallet, address };
 };
 
