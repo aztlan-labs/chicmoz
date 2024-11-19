@@ -2,6 +2,7 @@
 
 aztec-up 0.61.0
 
+cd contract-projects/YOUR_PROJECT
 aztec-nargo compile
 
-aztec codegen target --outdir src/artifacts
+aztec codegen target --outdir ../../artifacts
