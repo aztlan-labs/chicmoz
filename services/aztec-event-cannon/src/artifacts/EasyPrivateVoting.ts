@@ -148,6 +148,9 @@ active_at_block: {
 
     /** public_dispatch(selector: field) */
     public_dispatch: ((selector: FieldLike) => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
+
+    /** sync_notes() */
+    sync_notes: (() => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
   };
 
   

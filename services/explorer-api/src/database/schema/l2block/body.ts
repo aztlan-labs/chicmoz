@@ -62,8 +62,8 @@ export const publicDataWrite = pgTable("public_data_write", {
   id: uuid("id").primaryKey().defaultRandom(),
   txEffectHash: varchar("tx_effect_hash").notNull().references(() => txEffect.hash, { onDelete: "cascade" }),
   index: integer("index").notNull(),
-  leafIndex: generateFrColumn("leaf_index").notNull(),
-  newValue: generateFrColumn("new_value").notNull(),
+  leafSlot: generateFrColumn("leaf_slot").notNull(),
+  value: generateFrColumn("value").notNull(),
 });
 
 export const logs = pgTable("logs", {

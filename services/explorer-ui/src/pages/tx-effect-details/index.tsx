@@ -180,12 +180,12 @@ export const TxEffectDetails: FC = () => {
                     <KeyValueDisplay
                       data={[
                         {
-                          label: "leafIndex",
-                          value: publicDataWrite.leafIndex,
+                          label: "leafSlot",
+                          value: publicDataWrite.leafSlot,
                         },
                         {
-                          label: "newValue",
-                          value: publicDataWrite.newValue,
+                          label: "value",
+                          value: publicDataWrite.value,
                         },
                       ]}
                     />

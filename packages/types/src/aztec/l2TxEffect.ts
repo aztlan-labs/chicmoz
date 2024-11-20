@@ -50,7 +50,7 @@ export const chicmozL2TxEffectSchema = z.object({
   nullifiers: z.array(frSchema),
   l2ToL1Msgs: z.array(frSchema),
   publicDataWrites: z.array(
-    z.object({ leafIndex: frSchema, newValue: frSchema }),
+    z.object({ leafSlot: frSchema, value: frSchema }),
   ),
   noteEncryptedLogsLength: frNumberSchema,
   encryptedLogsLength: frNumberSchema,
