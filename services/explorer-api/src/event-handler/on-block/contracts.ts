@@ -60,20 +60,27 @@ const storeObj = async <T>(
 };
 
 export const storeContracts = async (b: L2Block, blockHash: string) => {
-  const blockLogs = b.body.txEffects
-    .flatMap((txEffect) => (txEffect ? [txEffect.unencryptedLogs] : []))
-    .flatMap((txLog) => txLog.unrollLogs());
+  const encryptedBlockLogs = b.body.txEffects
+    .flatMap((txEffect) => txEffect.encryptedLogs.unrollLogs())
+  const contractInstances = ContractInstanceDeployedEvent.fromLogs(encryptedBlockLogs);
+
+  const contractClassLogs = b.body.txEffects
+    .flatMap((txEffect) => txEffect.contractClassLogs.unrollLogs());
   const contractClasses = ContractClassRegisteredEvent.fromLogs(
-    blockLogs,
+    contractClassLogs,
     ProtocolContractAddress.ContractClassRegisterer
   );
-  const contractInstances = ContractInstanceDeployedEvent.fromLogs(blockLogs);
+  const unencryptedBlockLogs = b.body.txEffects
+    .flatMap((txEffect) => txEffect.unencryptedLogs.unrollLogs())
+  unencryptedBlockLogs.forEach(l => {
+    logger.info(`ERMEGERD: We might have a human readable log ${JSON.stringify(l.toHumanReadable())}`);
+  });
   const privateFnEvents = PrivateFunctionBroadcastedEvent.fromLogs(
-    blockLogs,
+    unencryptedBlockLogs,
     ProtocolContractAddress.ContractClassRegisterer
   );
   const unconstrainedFnEvents = UnconstrainedFunctionBroadcastedEvent.fromLogs(
-    blockLogs,
+    unencryptedBlockLogs,
     ProtocolContractAddress.ContractClassRegisterer
   );
 

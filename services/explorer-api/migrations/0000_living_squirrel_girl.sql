@@ -163,8 +163,9 @@ CREATE TABLE IF NOT EXISTS "tx" (
 	"note_encrypted_logs" text NOT NULL,
 	"encrypted_logs" text NOT NULL,
 	"unencrypted_logs" text NOT NULL,
+	"contract_class_logs" text NOT NULL,
 	"client_ivc_proof" text NOT NULL,
-	"enqueued_public_functions" jsonb NOT NULL,
+	"enqueued_public_function_calls" jsonb NOT NULL,
 	"public_teardown_function_call" text NOT NULL
 );
 --> statement-breakpoint

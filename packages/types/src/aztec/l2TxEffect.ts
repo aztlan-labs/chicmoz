@@ -23,8 +23,9 @@ export const chicmozL2PendingTxSchema = z.object({
   noteEncryptedLogs: z.string(),
   encryptedLogs: z.string(),
   unencryptedLogs: z.string(),
+  contractClassLogs: z.string(),
   clientIvcProof: z.string(),
-  enqueuedPublicFunctions: z.array(z.string()),
+  enqueuedPublicFunctionCalls: z.array(z.string()),
   publicTeardownFunctionCall: z.string(),
 });
 

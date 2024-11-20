@@ -51,7 +51,8 @@ export const frNumberSchema = z.preprocess((val) => {
 export const frTimestampSchema = z.preprocess((val) => {
   if (typeof val === "number") return val;
   const v = frToHexString(val);
-  if (typeof v === "string" && v.startsWith("0x")) return parseInt(v, 16) * 1000;
+  if (typeof v === "string" && v.startsWith("0x"))
+    return parseInt(v, 16) * 1000;
   return val;
 }, z.coerce.number());
 
@@ -67,6 +68,7 @@ export const bufferSchema = z.preprocess(
   (val) => {
     if (val && (val as StringifiedBuffer).data)
       return Buffer.from((val as StringifiedBuffer).data);
+    if (val && (val as string)) return Buffer.from(val as string, "hex");
     return val;
   },
   z.custom<Buffer>(

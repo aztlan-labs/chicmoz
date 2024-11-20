@@ -1,5 +1,5 @@
 {
-  "id": "2acb58a9-0003-4b9e-a565-d3c6de19676a",
+  "id": "017305a2-4023-4a27-84c5-0b0127e9d7be",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1050,14 +1050,20 @@
           "primaryKey": false,
           "notNull": true
         },
+        "contract_class_logs": {
+          "name": "contract_class_logs",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "client_ivc_proof": {
           "name": "client_ivc_proof",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "enqueued_public_functions": {
-          "name": "enqueued_public_functions",
+        "enqueued_public_function_calls": {
+          "name": "enqueued_public_function_calls",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
