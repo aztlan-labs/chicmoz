@@ -101,6 +101,7 @@ export const l2ContractClassRegistered = pgTable(
   {
     blockHash: varchar("block_hash")
       .notNull()
+      .$type<HexString>()
       .references(() => l2Block.hash, { onDelete: "cascade" }),
     contractClassId: generateFrColumn("contract_class_id").notNull(),
     version: bigint("version", { mode: "number" }).notNull(),

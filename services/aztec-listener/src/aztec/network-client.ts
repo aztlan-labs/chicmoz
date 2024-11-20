@@ -50,6 +50,7 @@ const callNodeFunction = async <K extends keyof AztecNode>(
       )) as Promise<ReturnType<AztecNode[K]>>;
     }, backOffOptions);
   } catch (e) {
+    logger.warn(`Aztec failed to call ${fnName}`);
     if ((e as Error).cause) {
       logger.warn(
         `Aztec failed to fetch: ${JSON.stringify((e as Error).cause)}`

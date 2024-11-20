@@ -6,6 +6,7 @@ import {
   connectedToAztecHandler,
   pendingTxHandler,
 } from "./event-handler/index.js";
+import {onNewChainDetected} from "./event-handler/on-new-chain-detected.js";
 import { setComponentInitializing, setComponentUp } from "./health.js";
 import * as httpServer from "./http-server/index.js";
 import * as mb from "./message-bus/index.js";
@@ -30,6 +31,9 @@ export const start = async () => {
     ID: db.ID,
     init: db.init,
   });
+  if (process.env.NODE_ENV === "development") 
+    await onNewChainDetected();
+  
   await initialize({
     ID: httpServer.ID,
     init: httpServer.init,

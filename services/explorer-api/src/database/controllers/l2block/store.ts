@@ -182,8 +182,8 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
           id: publicDataWriteId,
           txEffectHash: txEff.hash,
           index: Number(pdwIndex),
-          leafIndex: pdw.leafIndex,
-          newValue: pdw.newValue,
+          leafSlot: pdw.leafSlot,
+          value: pdw.value,
         });
       }
 

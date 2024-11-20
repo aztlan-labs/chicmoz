@@ -23,8 +23,9 @@ export const chicmozL2PendingTxSchema = z.object({
   noteEncryptedLogs: z.string(),
   encryptedLogs: z.string(),
   unencryptedLogs: z.string(),
+  contractClassLogs: z.string(),
   clientIvcProof: z.string(),
-  enqueuedPublicFunctions: z.array(z.string()),
+  enqueuedPublicFunctionCalls: z.array(z.string()),
   publicTeardownFunctionCall: z.string(),
 });
 
@@ -49,7 +50,7 @@ export const chicmozL2TxEffectSchema = z.object({
   nullifiers: z.array(frSchema),
   l2ToL1Msgs: z.array(frSchema),
   publicDataWrites: z.array(
-    z.object({ leafIndex: frSchema, newValue: frSchema }),
+    z.object({ leafSlot: frSchema, value: frSchema }),
   ),
   noteEncryptedLogsLength: frNumberSchema,
   encryptedLogsLength: frNumberSchema,

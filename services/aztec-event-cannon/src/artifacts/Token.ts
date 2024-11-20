@@ -228,6 +228,9 @@ decimals: {
     /** setup_refund(fee_payer: struct, user: struct, funded_amount: field, nonce: field) */
     setup_refund: ((fee_payer: AztecAddressLike, user: AztecAddressLike, funded_amount: FieldLike, nonce: FieldLike) => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
 
+    /** sync_notes() */
+    sync_notes: (() => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
+
     /** total_supply() */
     total_supply: (() => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
 

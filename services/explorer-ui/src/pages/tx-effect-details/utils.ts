@@ -11,7 +11,7 @@ export type TxEffectDataType =
       }>;
     }>
   | Array<{ logs: Array<{ data: string }> }>
-  | Array<{ leafIndex: string; newValue: string }>;
+  | Array<{ leafSlot: string; value: string }>;
 
 export const getTxEffectData = (data: ChicmozL2TxEffectDeluxe) => [
   {

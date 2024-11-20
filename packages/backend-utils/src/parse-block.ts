@@ -19,6 +19,7 @@ export const parseBlock = (b: L2Block): ChicmozL2Block => {
   const blockHash = b.hash();
   const blockWithTxEffectsHashesAdded = {
     ...b,
+    txsEffectsHash: b.header.contentCommitment.txsEffectsHash.toJSON(),
     body: {
       ...b.body,
       txEffects: getTxEffectWithHashes(b.body.txEffects),
