@@ -1,7 +1,6 @@
 // docs:start:token_all
 // docs:start:imports
 mod types;
-mod test;
 
 use dep::aztec::macros::aztec;
 
