@@ -22,7 +22,12 @@ import { handleDuplicateError } from "../utils.js";
 
 const parseObjs = <T>(
   blockHash: string,
-  objs: (ContractClassRegisteredEvent | ContractInstanceDeployedEvent | PrivateFunctionBroadcastedEvent | UnconstrainedFunctionBroadcastedEvent)[],
+  objs: (
+    | ContractClassRegisteredEvent
+    | ContractInstanceDeployedEvent
+    | PrivateFunctionBroadcastedEvent
+    | UnconstrainedFunctionBroadcastedEvent
+  )[],
   parseFn: (obj: unknown) => T
 ) => {
   const parsedObjs: T[] = [];
@@ -60,21 +65,22 @@ const storeObj = async <T>(
 };
 
 export const storeContracts = async (b: L2Block, blockHash: string) => {
-  const encryptedBlockLogs = b.body.txEffects
-    .flatMap((txEffect) => txEffect.encryptedLogs.unrollLogs())
-  const contractInstances = ContractInstanceDeployedEvent.fromLogs(encryptedBlockLogs);
+  const encryptedBlockLogs = b.body.txEffects.flatMap((txEffect) =>
+    txEffect.encryptedLogs.unrollLogs()
+  );
+  const contractInstances =
+    ContractInstanceDeployedEvent.fromLogs(encryptedBlockLogs);
 
-  const contractClassLogs = b.body.txEffects
-    .flatMap((txEffect) => txEffect.contractClassLogs.unrollLogs());
+  const contractClassLogs = b.body.txEffects.flatMap((txEffect) =>
+    txEffect.contractClassLogs.unrollLogs()
+  );
   const contractClasses = ContractClassRegisteredEvent.fromLogs(
     contractClassLogs,
     ProtocolContractAddress.ContractClassRegisterer
   );
-  const unencryptedBlockLogs = b.body.txEffects
-    .flatMap((txEffect) => txEffect.unencryptedLogs.unrollLogs())
-  unencryptedBlockLogs.forEach(l => {
-    logger.info(`ERMEGERD: We might have a human readable log ${JSON.stringify(l.toHumanReadable())}`);
-  });
+  const unencryptedBlockLogs = b.body.txEffects.flatMap((txEffect) =>
+    txEffect.unencryptedLogs.unrollLogs()
+  );
   const privateFnEvents = PrivateFunctionBroadcastedEvent.fromLogs(
     unencryptedBlockLogs,
     ProtocolContractAddress.ContractClassRegisterer
@@ -102,7 +108,9 @@ export const storeContracts = async (b: L2Block, blockHash: string) => {
     );
   const parsedUnconstrainedFnEvents: ChicmozL2UnconstrainedFunctionBroadcastedEvent[] =
     parseObjs(blockHash, unconstrainedFnEvents, (unconstrainedFnEvent) =>
-      chicmozL2UnconstrainedFunctionBroadcastedEventSchema.parse(unconstrainedFnEvent)
+      chicmozL2UnconstrainedFunctionBroadcastedEventSchema.parse(
+        unconstrainedFnEvent
+      )
     );
 
   await storeObj(

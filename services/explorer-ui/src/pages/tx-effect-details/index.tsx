@@ -23,7 +23,7 @@ export const TxEffectDetails: FC = () => {
     // check for the first avalible tab with data
     if (txEffects) {
       const firstAvailableTab = txEffectTabs.find(
-        (tab) => tab.id in txEffectData,
+        (tab) => tab.id in txEffectData
       );
 
       if (firstAvailableTab) setSelectedTab(firstAvailableTab.id);
@@ -85,7 +85,7 @@ export const TxEffectDetails: FC = () => {
                         <KeyValueDisplay key={index} data={flattenedEntries} />
                       </div>
                     );
-                  },
+                  }
                 )}
               </div>
             )}
@@ -93,13 +93,26 @@ export const TxEffectDetails: FC = () => {
               <div className="">
                 {txEffects.unencryptedLogs.functionLogs.map(
                   (unencrypted, index) => {
-                    const entries = unencrypted.logs.map((log) => {
-                      return Object.entries(log).map(([key, value]) => ({
-                        label: key,
-                        value: value,
-                        isClickable: false,
-                      }));
-                    });
+                    const entries = unencrypted.logs.map(
+                      ({ data, contractAddress }) => {
+                        return [
+                          {
+                            label: "Data",
+                            value: data
+                              .match(/.{1,64}/g)
+                              ?.map((hex) => parseInt(hex, 16))
+                              .map((charCode) => String.fromCharCode(charCode))
+                              .join("") ?? "",
+                            isClickable: false,
+                          },
+                          {
+                            label: "Contract Address",
+                            value: contractAddress,
+                            isClickable: true,
+                          },
+                        ];
+                      }
+                    );
                     // Flatten the nested arrays
                     const flattenedEntries = entries.flat();
 
@@ -115,7 +128,7 @@ export const TxEffectDetails: FC = () => {
                         ))}
                       </div>
                     );
-                  },
+                  }
                 )}
               </div>
             )}
@@ -150,7 +163,7 @@ export const TxEffectDetails: FC = () => {
                         <KeyValueDisplay key={index} data={flattenedEntries} />
                       </div>
                     );
-                  },
+                  }
                 )}
               </div>
             )}
