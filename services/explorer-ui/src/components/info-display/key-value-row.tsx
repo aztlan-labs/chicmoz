@@ -8,6 +8,7 @@ interface KeyValueRowProps {
   value: string;
   link?: string;
   isLast?: boolean;
+  extLink?: string;
 }
 
 enum DisplayType {
@@ -22,11 +23,13 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
   value,
   isLast,
   link,
+  extLink,
 }) => {
   let displayType = DisplayType.TEXT;
   if (link) displayType = DisplayType.LINK;
-  if (value.startsWith("0x")) displayType = DisplayType.HEX;
-  if (value.startsWith("http")) displayType = DisplayType.EXTERNAL_LINK;
+  else if (value.startsWith("0x")) displayType = DisplayType.HEX;
+  else if (extLink) displayType = DisplayType.EXTERNAL_LINK;
+
   return (
     <div
       key={label}
@@ -58,13 +61,13 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
       )}
       {displayType === DisplayType.EXTERNAL_LINK && (
         <a
-          href={value}
+          href={extLink}
           target="_blank"
           rel="noreferrer"
           className="text-sm flex-grow text-primary-600 text-primary cursor-pointer md:text-end"
         >
           {value}
-          <span className="ml-1">🔗</span>
+          <span className="ml-1">↗️</span>
         </a>
       )}
     </div>

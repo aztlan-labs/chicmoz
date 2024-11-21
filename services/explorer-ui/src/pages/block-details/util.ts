@@ -46,8 +46,9 @@ export const getBlockDetails = (latestBlock: ChicmozL2BlockLight) => {
       value: "" + latestBlock.header.globalVariables.gasFees.feePerL2Gas,
     },
     {
-      label: "API Endpoint",
-      value: `${API_URL}/${aztecExplorer.getL2BlockByHash}${latestBlock.height}`,
+      label: "Raw Data",
+      value: `/${aztecExplorer.getL2BlockByHash}${latestBlock.height}`,
+      extLink: `${API_URL}/${aztecExplorer.getL2BlockByHash}${latestBlock.height}`,
     },
   ];
 };
