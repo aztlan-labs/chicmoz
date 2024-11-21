@@ -105,7 +105,7 @@ export const ContractClassDetails: FC = () => {
           {selectedTab === "privateFunctions" &&
             contractClassPrivateFunctionsHookRes.data && (
               <div className="bg-white w-full rounded-lg shadow-md p-4">
-                <h3>Private Functions</h3>
+                <h4>Private Functions</h4>
                 {contractClassPrivateFunctionsHookRes.data.map(
                   (privateFunction) => (
                     <div>
@@ -167,7 +167,7 @@ export const ContractClassDetails: FC = () => {
           {selectedTab === "unconstrainedFunctions" &&
             contractClassUnconstrainedFunctionsHookRes.data && (
               <div className="bg-white w-full rounded-lg shadow-md p-4">
-                <h3>Unconstrained Functions</h3>
+                <h4>Unconstrained Functions</h4>
                 {contractClassUnconstrainedFunctionsHookRes.data.map(
                   (unconstrainedFunction) => (
                     <div>

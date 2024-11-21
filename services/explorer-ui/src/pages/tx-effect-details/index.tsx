@@ -72,7 +72,7 @@ export const TxEffectDetails: FC = () => {
                     // Render KeyValueDisplay with the flattened entries
                     return (
                       <div key={index}>
-                        <h3>Log {index + 1}</h3>
+                        <h4>Log {index + 1}</h4>
                         <KeyValueDisplay key={index} data={flattenedEntries} />
                       </div>
                     );
@@ -110,7 +110,7 @@ export const TxEffectDetails: FC = () => {
                     // Render KeyValueDisplay with the flattened entries
                     return (
                       <div key={index}>
-                        <h3>Log {index + 1}</h3>
+                        <h4>Log {index + 1}</h4>
                         {flattenedEntries.map((entry) => (
                           <div key={entry.label}>
                             <a>{entry.label}</a>
@@ -134,7 +134,7 @@ export const TxEffectDetails: FC = () => {
               </div>
             )}
             {selectedTab === "noteEncryptedLogs" && (
-              <div className="flex flex-col gap-4 w-10 mb-4">
+              <div className="">
                 {txEffects.noteEncryptedLogs.functionLogs.map(
                   (noteEncryptedLogs, index) => {
                     const entries = noteEncryptedLogs.logs.map((log) => {
@@ -150,7 +150,7 @@ export const TxEffectDetails: FC = () => {
                     // Render KeyValueDisplay with the flattened entries
                     return (
                       <div key={index}>
-                        <h3>Log {index + 1}</h3>
+                        <h4>Log {index + 1}</h4>
                         <KeyValueDisplay key={index} data={flattenedEntries} />
                       </div>
                     );
