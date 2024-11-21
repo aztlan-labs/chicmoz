@@ -4,11 +4,7 @@ import { useParams } from "@tanstack/react-router";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { Button } from "~/components/ui";
 import { useGetBlockByIdentifier, useGetTxEffectsByBlockHeight } from "~/hooks";
-import { API_URL, aztecExplorer } from "~/service/constants";
 import { getBlockDetails, getTxEffects } from "./util";
-import { truncateHashString } from "~/lib/create-hash-string";
-
-const API_ENDPOINT_URL = `${API_URL}/${aztecExplorer.getL2BlockByHash}`;
 
 export const BlockDetails: FC = () => {
   const { blockNumber } = useParams({
@@ -27,8 +23,6 @@ export const BlockDetails: FC = () => {
     error: txEffectsError,
   } = useGetTxEffectsByBlockHeight(height);
 
-  const apiEndpointUrl = `${API_ENDPOINT_URL}${blockNumber}`;
-
   //TODO: Check for better solution
   if (!latestBlock) return <div> No block hash</div>;
 
@@ -36,12 +30,9 @@ export const BlockDetails: FC = () => {
     <div className="mx-auto px-7 max-w-[1440px] md:px-[70px]">
       <div>
         <div>
-          <h2>Block Details</h2>
-          <p className="md:hidden">{truncateHashString(latestBlock.hash)}</p>
-          <p className="hidden md:block">{latestBlock.hash}</p>
-          <a href={apiEndpointUrl} target="_blank" rel="noreferrer">
-            (API Endpoint)
-          </a>
+          <h2>
+            Block Details{" "}
+          </h2>
         </div>
         <div className="flex flex-col gap-4 mt-8">
           <div className="bg-white rounded-lg shadow-md p-4">

@@ -2,14 +2,11 @@ import { useParams } from "@tanstack/react-router";
 import { useState, type FC, useEffect } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { useGetTxEffectByHash } from "~/hooks/";
-import { API_URL, aztecExplorer } from "~/service/constants";
 import { txEffectTabs, type TabId } from "./constants";
 import { getTxEffectData, mapTxEffectsData } from "./utils";
 import { truncateHashString } from "~/lib/create-hash-string";
 import { Textarea } from "~/components/ui/textarea";
 import { OptionButtons } from "./tabs";
-
-const API_ENDPOINT_URL = `${API_URL}/${aztecExplorer.getL2TxEffectByHash}`;
 
 export const TxEffectDetails: FC = () => {
   const [selectedTab, setSelectedTab] = useState<TabId>("encryptedLogs");
@@ -40,17 +37,11 @@ export const TxEffectDetails: FC = () => {
   if (error) return <div>Error</div>;
   if (!txEffects) return <div>No data</div>;
 
-  const apiEndpointUrl = `${API_ENDPOINT_URL}${hash}`;
-
   return (
     <div className="mx-auto px-7 max-w-[1440px] md:px-[70px]">
       <div>
         <div>
           <h2>TxEffect details</h2>
-          <p>{truncateHashString(txEffects.hash)}</p>
-          <a href={apiEndpointUrl} target="_blank" rel="noreferrer">
-            (API Endpoint)
-          </a>
         </div>
         <div className="flex flex-col gap-4 mt-8">
           <div className="bg-white rounded-lg shadow-md p-4">

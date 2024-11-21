@@ -4,6 +4,7 @@ import {
 } from "@chicmoz-pkg/types";
 import { getTxEffectTableObj } from "~/components/tx-effects/tx-effects-schema";
 import { formatTimeSince } from "~/lib/utils";
+import { API_URL, aztecExplorer } from "~/service/constants";
 
 export const getBlockDetails = (latestBlock: ChicmozL2BlockLight) => {
   const timestamp = latestBlock.header.globalVariables.timestamp;
@@ -24,7 +25,6 @@ export const getBlockDetails = (latestBlock: ChicmozL2BlockLight) => {
       label: "coinbase",
       value: "" + latestBlock.header.globalVariables.coinbase,
     },
-    // TODO: stats on logs
     {
       label: "number of transactions",
       value: "" + latestBlock.body.txEffects.length,
@@ -45,12 +45,16 @@ export const getBlockDetails = (latestBlock: ChicmozL2BlockLight) => {
       label: "feePerL2Gas",
       value: "" + latestBlock.header.globalVariables.gasFees.feePerL2Gas,
     },
+    {
+      label: "API Endpoint",
+      value: `${API_URL}/${aztecExplorer.getL2BlockByHash}${latestBlock.height}`,
+    },
   ];
 };
 
 export const getTxEffects = (
   txEffects?: ChicmozL2Block["body"]["txEffects"],
-  latestBlock?: ChicmozL2BlockLight,
+  latestBlock?: ChicmozL2BlockLight
 ) => {
   if (!txEffects) return undefined;
   if (!latestBlock) return undefined;

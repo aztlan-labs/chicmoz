@@ -1,5 +1,6 @@
 import { type ChicmozL2ContractClassRegisteredEvent } from "@chicmoz-pkg/types";
 import { routes } from "~/routes/__root";
+import {API_URL, aztecExplorer} from "~/service/constants";
 
 export const getContractClassKeyValueData = (
   data: ChicmozL2ContractClassRegisteredEvent
@@ -25,5 +26,9 @@ export const getContractClassKeyValueData = (
   {
     label: "PRIVATE FUNCTIONS ROOT",
     value: data.privateFunctionsRoot,
+  },
+  {
+    label: "API ENDPOINT",
+    value: `${API_URL}/${aztecExplorer.getL2ContractClassByIdAndVersion(data.contractClassId, data.version.toString())}`,
   },
 ];

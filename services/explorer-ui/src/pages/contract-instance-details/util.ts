@@ -1,5 +1,6 @@
 import { type ChicmozL2ContractInstanceDeluxe } from "@chicmoz-pkg/types";
 import { routes } from "~/routes/__root";
+import {API_URL, aztecExplorer} from "~/service/constants";
 
 export const getContractData = (data: ChicmozL2ContractInstanceDeluxe) => {
   const link = `${routes.contracts.route}${routes.contracts.children.classes.route}/${data.contractClassId}/versions/${data.version}`;
@@ -20,5 +21,6 @@ export const getContractData = (data: ChicmozL2ContractInstanceDeluxe) => {
     },
     { label: "VERSION", value: data.version.toString(), link },
     { label: "DEPLOYER", value: data.deployer },
+    { label: "API ENDPOINT", value: `${API_URL}/${aztecExplorer.getL2ContractInstance(data.address)}` },
   ];
 };
