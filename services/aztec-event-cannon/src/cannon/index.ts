@@ -20,9 +20,9 @@ export async function init() {
 export const start = async () => {
   logger.info("Starting Cannon...");
   const scenarios = [
-    //deploySimpleDefaultAccount,
-    //deployAndInteractTokenContract,
-    //deployBroadcastFunctionsVote,
+    deploySimpleDefaultAccount,
+    deployAndInteractTokenContract,
+    deployBroadcastFunctionsVote,
     deploySimpleLog,
   ] as (() => Promise<void>)[];
   for (const fn of scenarios) await fn();

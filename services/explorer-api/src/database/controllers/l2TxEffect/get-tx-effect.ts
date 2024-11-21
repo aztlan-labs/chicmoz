@@ -55,7 +55,7 @@ export const getTxEffectNestedByHash = async (
 > => {
   const publicDataWrites = await db()
     .select({
-      publicDataWrite: getTableColumns(publicDataWrite),
+      ...getTableColumns(publicDataWrite),
     })
     .from(publicDataWrite)
     .innerJoin(
@@ -140,7 +140,7 @@ export const getTxEffectNestedByHash = async (
   }
 
   return {
-    publicDataWrites: publicDataWrites.map((pdw) => pdw.publicDataWrite),
+    publicDataWrites,
     ...initialLogs,
   };
 };
