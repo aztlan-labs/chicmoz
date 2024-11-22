@@ -8,6 +8,14 @@ interface KeyValueRowProps {
   value: string;
   link?: string;
   isLast?: boolean;
+  extLink?: string;
+}
+
+enum DisplayType {
+  TEXT = "text",
+  LINK = "link",
+  HEX = "hex",
+  EXTERNAL_LINK = "external-link",
 }
 
 export const KeyValueRow: FC<KeyValueRowProps> = ({
@@ -15,9 +23,13 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
   value,
   isLast,
   link,
+  extLink,
 }) => {
-  const isHashSring = value.includes("0x");
-  const truncatedValue = isHashSring ? truncateHashString(value) : value;
+  let displayType = DisplayType.TEXT;
+  if (link) displayType = DisplayType.LINK;
+  else if (value.startsWith("0x")) displayType = DisplayType.HEX;
+  else if (extLink) displayType = DisplayType.EXTERNAL_LINK;
+
   return (
     <div
       key={label}
@@ -26,7 +38,10 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
       } md:flex-row md:items-center`}
     >
       <span className="text-gray-600 w-1/3">{label}</span>
-      {link ? (
+      {displayType === DisplayType.TEXT && (
+        <span className={`text-sm flex-grow md:text-end`}>{value}</span>
+      )}
+      {displayType === DisplayType.LINK && (
         <Link
           to={link}
           className="text-sm flex-grow text-primary-600 text-primary cursor-pointer md:text-end"
@@ -34,20 +49,26 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
           {value}
           <span className="ml-1">🔗</span>
         </Link>
-      ) : (
-        <>
-          <span className={`text-sm flex-grow md:text-end`}>
-            {isHashSring ? (
-              <CopyableText
-                text={truncatedValue}
-                toCopy={value}
-                additionalClasses="md:justify-end md:text-end"
-              />
-            ) : (
-              truncatedValue
-            )}
-          </span>
-        </>
+      )}
+      {displayType === DisplayType.HEX && (
+        <span className={`text-sm flex-grow md:text-end`}>
+          <CopyableText
+            text={truncateHashString(value)}
+            toCopy={value}
+            additionalClasses="md:justify-end md:text-end"
+          />
+        </span>
+      )}
+      {displayType === DisplayType.EXTERNAL_LINK && (
+        <a
+          href={extLink}
+          target="_blank"
+          rel="noreferrer"
+          className="text-sm flex-grow text-primary-600 text-primary cursor-pointer md:text-end"
+        >
+          {value}
+          <span className="ml-1">↗️</span>
+        </a>
       )}
     </div>
   );
