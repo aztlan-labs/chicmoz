@@ -5,7 +5,7 @@ import { getPxe, getWallets } from "../pxe.js";
 import { deployContract, logAndWaitForTx } from "./utils/index.js";
 
 export async function run() {
-  logger.info("SIMPLE LOG");
+  logger.info("===== SIMPLE LOG CONTRACT =====");
   const pxe = getPxe();
   await waitForPXE(pxe);
   const namedWallets = getWallets();

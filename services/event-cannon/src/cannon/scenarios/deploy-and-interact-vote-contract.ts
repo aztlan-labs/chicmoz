@@ -8,7 +8,7 @@ import {
 } from "@aztec/noir-contracts.js";
 
 export async function run() {
-  logger.info("VOTING CONTRACT - deploy & broadcast functions");
+  logger.info("===== VOTING CONTRACT =====");
   const pxe = getPxe();
   await waitForPXE(pxe);
   const namedWallets = getWallets();
@@ -20,7 +20,7 @@ export async function run() {
     contractLoggingName: "Voting Contract",
     deployFn: (): DeploySentTx<EasyPrivateVotingContract> =>
       EasyPrivateVotingContract.deploy(deployerWallet, votingAdmin).send(),
-    broadcastWithWallet: deployerWallet,
+    broadcastWithWallet: deployerWallet, // NOTE: comment this out to not broadcast
   });
 
   const votingContractAlice = await Contract.at(

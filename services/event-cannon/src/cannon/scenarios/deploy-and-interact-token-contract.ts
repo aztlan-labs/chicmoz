@@ -5,7 +5,7 @@ import { deployContract, logAndWaitForTx } from "./utils/index.js";
 import { TokenContract } from "@aztec/noir-contracts.js";
 
 export async function run() {
-  logger.info("TOKEN CONTRACT - deploy & interact functions");
+  logger.info("===== TOKEN CONTRACT =====");
   const pxe = getPxe();
   await waitForPXE(pxe);
   const namedWallets = getWallets();
