@@ -13,6 +13,7 @@ export const TxEffectDetails: FC = () => {
     from: "/tx-effects/$hash",
   });
   const { data: txEffects, isLoading, error } = useGetTxEffectByHash(hash);
+  console.log(txEffects);
   const txEffectData = mapTxEffectsData(txEffects);
 
   useEffect(() => {

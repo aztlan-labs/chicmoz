@@ -1,7 +1,9 @@
 import { getInitialTestAccountsWallets } from "@aztec/accounts/testing";
 import {
   AccountWallet,
+  AztecNode,
   PXE,
+  createAztecNodeClient,
   createPXEClient,
   waitForPXE,
 } from "@aztec/aztec.js";
@@ -9,6 +11,7 @@ import { AZTEC_RPC_URL } from "../environment.js";
 import { logger } from "../logger.js";
 
 let pxe: PXE;
+let aztecNode: AztecNode;
 let namedWallets: {
   alice: AccountWallet;
   bob: AccountWallet;
@@ -16,6 +19,7 @@ let namedWallets: {
 } | null = null;
 
 export const setup = async () => {
+  aztecNode = createAztecNodeClient(AZTEC_RPC_URL);
   pxe = createPXEClient(AZTEC_RPC_URL);
   await waitForPXE(pxe);
   const info = await pxe.getPXEInfo();
@@ -27,6 +31,11 @@ export const setup = async () => {
     charlie,
   };
 };
+
+export const getAztecNodeClient = () => {
+  if (!aztecNode) throw new Error("Aztec Node not initialized");
+  return aztecNode;
+}
 
 export const getPxe = () => {
   if (!pxe) throw new Error("PXE not initialized");

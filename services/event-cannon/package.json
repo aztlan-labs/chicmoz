@@ -11,6 +11,7 @@
   "dependencies": {
     "@aztec/accounts": "0.63.1",
     "@aztec/aztec.js": "0.63.1",
+    "@aztec/l1-artifacts": "0.63.1",
     "@aztec/noir-contracts.js": "0.63.1",
     "@chicmoz-pkg/logger-server": "workspace:^"
   },

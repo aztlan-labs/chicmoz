@@ -40,5 +40,8 @@
     "tslib@2.6.3": {
       "unplugged": true
     }
+  },
+  "resolutions": {
+    "viem": "2.20.0"
   }
 }
