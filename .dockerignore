@@ -17,7 +17,7 @@
 # find . -name 'package.json' -not -path './.yarn/*' -not -path './packages/*' -maxdepth 3 | sed -e 's/^.\//!/'
 !services/auth/package.json
 !services/dummy-node/package.json
-!services/aztec-event-cannon/package.json
+!services/event-cannon/package.json
 !services/aztec-listener/package.json
 !services/ethereum-listener/package.json
 !services/explorer-api/package.json

@@ -7,7 +7,7 @@ requires:
   - path: ./explorer-api/image.yaml
   - path: ./websocket-event-publisher/image.yaml
   - path: ./auth/image.yaml
-  - path: ./aztec-event-cannon/image.yaml
+  - path: ./event-cannon/image.yaml
   - path: ./aztec-listener/image.yaml
 deploy:
   kubectl:
@@ -24,7 +24,7 @@ manifests:
     - k8s/local/websocket-event-publisher/service.yaml
     - k8s/local/auth/deployment.yaml
     - k8s/local/auth/service.yaml
-    - k8s/local/aztec-event-cannon/deployment.yaml
+    - k8s/local/event-cannon/deployment.yaml
     - k8s/local/aztec-listener/deployment.yaml
     - k8s/local/aztec-sandbox-node/ingress.yaml
     - k8s/local/aztec-sandbox-node/deployment.yaml

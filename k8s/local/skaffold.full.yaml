@@ -8,7 +8,7 @@ requires:
   - path: ./explorer-api/image.yaml
   - path: ./websocket-event-publisher/image.yaml
   - path: ./auth/image.yaml
-  - path: ./aztec-event-cannon/image.yaml
+  - path: ./event-cannon/image.yaml
   - path: ./ethereum-listener/image.yaml
   - path: ./aztec-listener/image.yaml
 deploy:
@@ -29,7 +29,7 @@ manifests:
     - k8s/local/websocket-event-publisher/service.yaml
     - k8s/local/auth/deployment.yaml
     - k8s/local/auth/service.yaml
-    - k8s/local/aztec-event-cannon/deployment.yaml
+    - k8s/local/event-cannon/deployment.yaml
     - k8s/local/aztec-listener/deployment.yaml
     - k8s/local/ethereum-listener/deployment.yaml # NOTE: eth-listener is WIP!
     - k8s/local/kafka-ui/configmap.yaml

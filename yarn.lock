@@ -925,27 +925,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@chicmoz/aztec-event-cannon@workspace:services/aztec-event-cannon":
-  version: 0.0.0-use.local
-  resolution: "@chicmoz/aztec-event-cannon@workspace:services/aztec-event-cannon"
-  dependencies:
-    "@aztec/accounts": "npm:0.63.1"
-    "@aztec/aztec.js": "npm:0.63.1"
-    "@aztec/noir-contracts.js": "npm:0.63.1"
-    "@chicmoz-pkg/logger-server": "workspace:^"
-    "@types/node": "npm:20.5.0"
-    "@typescript-eslint/eslint-plugin": "npm:6.11.0"
-    "@typescript-eslint/parser": "npm:6.11.0"
-    eslint: "npm:8.53.0"
-    eslint-config-prettier: "npm:9.0.0"
-    eslint-config-standard-with-typescript: "npm:37.0.0"
-    eslint-plugin-import: "npm:2.29.0"
-    eslint-plugin-n: "npm:15.0.0 || 16.0.0 "
-    eslint-plugin-promise: "npm:6.0.0"
-    typescript: "npm:5.2.2"
-  languageName: unknown
-  linkType: soft
-
 "@chicmoz/aztec-listener@workspace:services/aztec-listener":
   version: 0.0.0-use.local
   resolution: "@chicmoz/aztec-listener@workspace:services/aztec-listener"
@@ -1019,6 +998,27 @@ __metadata:
     exponential-backoff: "npm:3.1.1"
     typescript: "npm:5.2.2"
     viem: "npm:2.21.36"
+  languageName: unknown
+  linkType: soft
+
+"@chicmoz/event-cannon@workspace:services/event-cannon":
+  version: 0.0.0-use.local
+  resolution: "@chicmoz/event-cannon@workspace:services/event-cannon"
+  dependencies:
+    "@aztec/accounts": "npm:0.63.1"
+    "@aztec/aztec.js": "npm:0.63.1"
+    "@aztec/noir-contracts.js": "npm:0.63.1"
+    "@chicmoz-pkg/logger-server": "workspace:^"
+    "@types/node": "npm:20.5.0"
+    "@typescript-eslint/eslint-plugin": "npm:6.11.0"
+    "@typescript-eslint/parser": "npm:6.11.0"
+    eslint: "npm:8.53.0"
+    eslint-config-prettier: "npm:9.0.0"
+    eslint-config-standard-with-typescript: "npm:37.0.0"
+    eslint-plugin-import: "npm:2.29.0"
+    eslint-plugin-n: "npm:15.0.0 || 16.0.0 "
+    eslint-plugin-promise: "npm:6.0.0"
+    typescript: "npm:5.2.2"
   languageName: unknown
   linkType: soft
 
