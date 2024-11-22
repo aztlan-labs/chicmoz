@@ -1,11 +1,11 @@
 import { Contract, DeploySentTx, Fr, waitForPXE } from "@aztec/aztec.js";
-import {
-  EasyPrivateVotingContract,
-  EasyPrivateVotingContractArtifact,
-} from "../../artifacts/EasyPrivateVoting.js";
 import { logger } from "../../logger.js";
 import { getPxe, getWallets } from "../pxe.js";
 import { deployContract, logAndWaitForTx } from "./utils/index.js";
+import {
+  EasyPrivateVotingContract,
+  EasyPrivateVotingContractArtifact,
+} from "@aztec/noir-contracts.js";
 
 export async function run() {
   logger.info("VOTING CONTRACT - deploy & broadcast functions");

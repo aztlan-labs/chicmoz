@@ -18,7 +18,7 @@ export const logAndWaitForTx = async (tx: SentTx, additionalInfo: string) => {
   const hash = (await tx.getTxHash()).to0xString();
   logger.info(`📫 TX ${hash} (${additionalInfo})`);
   const receipt = await tx.wait();
-  logger.info(`⛏  TX ${hash} block ${receipt.blockNumber}`);
+  logger.info(`⛏  TX ${hash} (${additionalInfo}) block ${receipt.blockNumber}`);
   return receipt;
 };
 

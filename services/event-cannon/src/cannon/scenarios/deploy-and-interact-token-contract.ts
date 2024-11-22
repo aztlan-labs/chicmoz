@@ -1,8 +1,8 @@
 import { Contract, DeploySentTx, waitForPXE } from "@aztec/aztec.js";
-import { TokenContract } from "../../artifacts/Token.js";
 import { logger } from "../../logger.js";
 import { getPxe, getWallets } from "../pxe.js";
 import { deployContract, logAndWaitForTx } from "./utils/index.js";
+import { TokenContract } from "@aztec/noir-contracts.js";
 
 export async function run() {
   logger.info("TOKEN CONTRACT - deploy & interact functions");
@@ -49,52 +49,62 @@ export async function run() {
   const [balanceAlice, balanceBob, balanceCharlie] = await Promise.all([
     tokenContract.methods
       .balance_of_public(namedWallets.alice.getAddress())
-      .simulate().then((balance) => balance as bigint),
+      .simulate()
+      .then((balance) => balance as bigint),
     tokenContract.methods
       .balance_of_public(namedWallets.bob.getAddress())
-      .simulate().then((balance) => balance as bigint),
+      .simulate()
+      .then((balance) => balance as bigint),
     tokenContract.methods
       .balance_of_public(namedWallets.charlie.getAddress())
-      .simulate().then((balance) => balance as bigint),
+      .simulate()
+      .then((balance) => balance as bigint),
   ]);
   logger.info(`Alice balance: ${balanceAlice}`);
   logger.info(`Bob balance: ${balanceBob}`);
   logger.info(`Charlie balance: ${balanceCharlie}`);
 
-  const aliceContract = await Contract.at(
+  const aliceContract = (await Contract.at(
     tokenContract.address,
     TokenContract.artifact,
     namedWallets.alice
-  ) as TokenContract;
+  )) as TokenContract;
 
-  const bobsTokenContract = await Contract.at(
+  const bobsTokenContract = (await Contract.at(
     tokenContract.address,
     TokenContract.artifact,
     namedWallets.bob
-  ) as TokenContract;
+  )) as TokenContract;
 
-  const charliesTokenContract = await Contract.at(
+  const charliesTokenContract = (await Contract.at(
     tokenContract.address,
     TokenContract.artifact,
     namedWallets.charlie
-  ) as TokenContract;
+  )) as TokenContract;
 
   let bobNonce = 0;
   await logAndWaitForTx(
     bobsTokenContract.methods
-      .transfer_in_public(namedWallets.bob.getAddress(), namedWallets.alice.getAddress(), 100, bobNonce)
+      .transfer_in_public(
+        namedWallets.bob.getAddress(),
+        namedWallets.alice.getAddress(),
+        100,
+        bobNonce
+      )
       .send(),
-      "Public transfer from Alice to Bob"
+    "Public transfer from Alice to Bob"
   );
   bobNonce++;
 
   const [balanceAliceAfter, balanceBobAfter] = await Promise.all([
     tokenContract.methods
       .balance_of_public(namedWallets.alice.getAddress())
-      .simulate().then((balance) => balance as bigint),
+      .simulate()
+      .then((balance) => balance as bigint),
     tokenContract.methods
       .balance_of_public(namedWallets.bob.getAddress())
-      .simulate().then((balance) => balance as bigint),
+      .simulate()
+      .then((balance) => balance as bigint),
   ]);
 
   logger.info(`Alice balance after: ${balanceAliceAfter}`);
@@ -104,13 +114,18 @@ export async function run() {
     charliesTokenContract.methods
       .transfer_to_private(namedWallets.alice.getAddress(), 100)
       .send(),
-      "Public to private transfer from Charlie to Alice"
+    "Public to private transfer from Charlie to Alice"
   );
 
   let aliceNonce = 0;
   await logAndWaitForTx(
     aliceContract.methods
-      .transfer_in_private(namedWallets.alice.getAddress(), namedWallets.bob.getAddress(), 100, aliceNonce)
+      .transfer_in_private(
+        namedWallets.alice.getAddress(),
+        namedWallets.bob.getAddress(),
+        100,
+        aliceNonce
+      )
       .send(),
     "Private transfer from Bob to Alice"
   );
@@ -126,22 +141,28 @@ export async function run() {
   ] = await Promise.all([
     tokenContract.methods
       .balance_of_private(namedWallets.alice.getAddress())
-      .simulate().then((balance) => balance as bigint),
+      .simulate()
+      .then((balance) => balance as bigint),
     tokenContract.methods
       .balance_of_public(namedWallets.alice.getAddress())
-      .simulate().then((balance) => balance as bigint),
+      .simulate()
+      .then((balance) => balance as bigint),
     tokenContract.methods
       .balance_of_private(namedWallets.bob.getAddress())
-      .simulate().then((balance) => balance as bigint),
+      .simulate()
+      .then((balance) => balance as bigint),
     tokenContract.methods
       .balance_of_public(namedWallets.bob.getAddress())
-      .simulate().then((balance) => balance as bigint),
+      .simulate()
+      .then((balance) => balance as bigint),
     tokenContract.methods
       .balance_of_private(namedWallets.charlie.getAddress())
-      .simulate().then((balance) => balance as bigint),
+      .simulate()
+      .then((balance) => balance as bigint),
     tokenContract.methods
       .balance_of_public(namedWallets.charlie.getAddress())
-      .simulate().then((balance) => balance as bigint),
+      .simulate()
+      .then((balance) => balance as bigint),
   ]);
   logger.info(`Alice private balance: ${balancePrivateAlice}`);
   logger.info(`Alice public balance: ${balancePublicAlice}`);
