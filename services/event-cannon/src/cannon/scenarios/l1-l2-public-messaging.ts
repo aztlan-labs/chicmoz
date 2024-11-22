@@ -11,7 +11,11 @@ import {
 } from "@aztec/aztec.js";
 import { logger } from "../../logger.js";
 import { getAztecNodeClient, getPxe, getWallets } from "../pxe.js";
-import { deployContract, logAndWaitForTx, publicDeployAccounts } from "./utils/index.js";
+import {
+  deployContract,
+  logAndWaitForTx,
+  publicDeployAccounts,
+} from "./utils/index.js";
 import {
   createPublicClient,
   createWalletClient,
@@ -22,6 +26,7 @@ import { mnemonicToAccount } from "viem/accounts";
 import { foundry } from "viem/chains";
 import { ETHEREUM_RPC_URL } from "../../environment.js";
 import {
+  RollupAbi,
   TestERC20Abi,
   TestERC20Bytecode,
   TokenPortalAbi,
@@ -103,8 +108,11 @@ export const run = async () => {
   const bridge = await deployContract({
     contractLoggingName: "Token Bridge Contract",
     deployFn: (): DeploySentTx<TokenBridgeContract> => {
-      return TokenBridgeContract.deploy(wallet, token.address, tokenPortalAddress)
-        .send();
+      return TokenBridgeContract.deploy(
+        wallet,
+        token.address,
+        tokenPortalAddress
+      ).send();
     },
   });
 
@@ -126,6 +134,12 @@ export const run = async () => {
     throw new Error(`Bridge is not a minter`);
 
   const { l1ContractAddresses } = await pxe.getNodeInfo();
+  const rollup = getContract({
+    address: l1ContractAddresses.rollupAddress.toString(),
+    abi: RollupAbi,
+    client: walletClient,
+  });
+
   await tokenPortal.write.initialize(
     [
       l1ContractAddresses.registryAddress.toString(),
@@ -213,9 +227,68 @@ export const run = async () => {
 
   assert(l2TokenBalance === bridgeAmount);
 
-  //const underlyingERC20 = getContract({
-  //  address: underlyingERC20Address.toString(),
-  //  abi: TestERC20Abi,
-  //  client: walletClient,
-  //});
+  logger.info("🐰 4. withdrawing funds from L2");
+  const withdrawAmount = 9n;
+  const nonce = Fr.random();
+
+  const user1Wallet = wallet;
+  await logAndWaitForTx(
+    user1Wallet
+      .setPublicAuthWit(
+        {
+          caller: l2Bridge.address,
+          action: l2Token.methods
+            .burn_public(ownerAddress, withdrawAmount, nonce)
+            .request(),
+        },
+        true
+      )
+      .send(),
+    "setting public auth wit"
+  );
+
+  logger.info("🐰 5. withdrawing owner funds from L2 to L1");
+  const l2ToL1Message = l1TokenPortalManager.getL2ToL1MessageLeaf(
+    9n,
+    ethAccount,
+    l2Bridge.address,
+    EthAddress.ZERO
+  );
+  const l2TxReceipt = await logAndWaitForTx(
+    l2Bridge.methods
+      .exit_to_l1_public(ethAccount, withdrawAmount, EthAddress.ZERO, nonce)
+      .send(),
+    "exiting to L1"
+  );
+  assert(
+    (await l2Token.methods.balance_of_public(ownerAddress).simulate()) ===
+      bridgeAmount - withdrawAmount
+  );
+  assert(
+    (await l1TokenManager.getL1TokenBalance(ethAccount.toString())) ===
+      l1TokenBalance - bridgeAmount
+  );
+
+  const [l2ToL1MessageIndex, siblingPath] =
+    await aztecNode.getL2ToL1MessageMembershipWitness(
+      l2TxReceipt.blockNumber!,
+      l2ToL1Message
+    );
+  // TODO: Not sure if this is necessary. Prefer to have some "wait-thingy" instead
+  await rollup.write.setAssumeProvenThroughBlockNumber([
+    await rollup.read.getPendingBlockNumber(),
+  ]);
+
+  await l1TokenPortalManager.withdrawFunds(
+    withdrawAmount,
+    ethAccount,
+    BigInt(l2TxReceipt.blockNumber!),
+    l2ToL1MessageIndex,
+    siblingPath
+  );
+  assert(
+    (await l1TokenManager.getL1TokenBalance(ethAccount.toString())) ===
+      l1TokenBalance - bridgeAmount + withdrawAmount
+  );
+  logger.info("🐰🐰🐰🐰🐰🐰🐰🐰🐰🐰🐰🐰🐰🐰🐰");
 };
