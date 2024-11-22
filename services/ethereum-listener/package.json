@@ -15,8 +15,7 @@
     "@chicmoz-pkg/message-bus": "workspace:^",
     "@chicmoz-pkg/message-registry": "workspace:^",
     "@chicmoz-pkg/types": "workspace:^",
-    "exponential-backoff": "3.1.1",
-    "viem": "2.21.36"
+    "exponential-backoff": "3.1.1"
   },
   "devDependencies": {
     "@types/node": "20.5.0",

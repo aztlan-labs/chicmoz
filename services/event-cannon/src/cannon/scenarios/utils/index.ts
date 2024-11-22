@@ -1,12 +1,26 @@
-import { Contract, DeploySentTx, Fr, FunctionSelector, PXE, SentTx, Wallet } from "@aztec/aztec.js";
+import {
+  BatchCall,
+  Contract,
+  DeploySentTx,
+  Fr,
+  FunctionSelector,
+  PXE,
+  SentTx,
+  Wallet,
+} from "@aztec/aztec.js";
 import { FunctionType } from "@aztec/foundation/abi";
 import { deriveSigningKey } from "@aztec/circuits.js";
 import { logger } from "../../../logger.js";
 import {
   broadcastPrivateFunction,
   broadcastUnconstrainedFunction,
+  deployInstance,
+  registerContractClass,
 } from "@aztec/aztec.js/deployment";
-import { getSchnorrAccount } from "@aztec/accounts/schnorr";
+import {
+  SchnorrAccountContractArtifact,
+  getSchnorrAccount,
+} from "@aztec/accounts/schnorr";
 
 export const truncateHashString = (value: string) => {
   const startHash = value.substring(0, 6);
@@ -18,7 +32,9 @@ export const logAndWaitForTx = async (tx: SentTx, additionalInfo: string) => {
   const hash = (await tx.getTxHash()).to0xString();
   logger.info(`📫 TX ${hash} (${additionalInfo})`);
   const receipt = await tx.wait();
-  logger.info(`⛏  TX ${hash} (${additionalInfo}) block ${receipt.blockNumber}`);
+  logger.info(
+    `⛏  TX ${hash} (${additionalInfo}) block ${receipt.blockNumber}`
+  );
   return receipt;
 };
 
@@ -132,4 +148,35 @@ export const broadcastFunctions = async ({
       );
     }
   }
+};
+
+export const publicDeployAccounts = async (
+  sender: Wallet,
+  accountsToDeploy: Wallet[],
+  pxe: PXE
+) => {
+  const accountAddressesToDeploy = await Promise.all(
+    accountsToDeploy.map(async (a) => {
+      const address = a.getAddress();
+      const isDeployed = await pxe.isContractPubliclyDeployed(address);
+      return { address, isDeployed };
+    })
+  ).then((results) =>
+    results
+      .filter((result) => !result.isDeployed)
+      .map((result) => result.address)
+  );
+  if (accountAddressesToDeploy.length === 0) return;
+  const instances = await Promise.all(
+    accountAddressesToDeploy.map((account) =>
+      sender.getContractInstance(account)
+    )
+  );
+  const batch = new BatchCall(sender, [
+    (
+      await registerContractClass(sender, SchnorrAccountContractArtifact)
+    ).request(),
+    ...instances.map((instance) => deployInstance(sender, instance!).request()),
+  ]);
+  await batch.send().wait();
 };

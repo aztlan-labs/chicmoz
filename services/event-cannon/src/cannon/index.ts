@@ -4,6 +4,7 @@ import { run as deployAndInteractFunctionsVote } from "./scenarios/deploy-and-in
 import { run as deploySimpleDefaultAccount } from "./scenarios/deploy-simple-default-account.js";
 import { run as deployAndInteractTokenContract } from "./scenarios/deploy-and-interact-token-contract.js";
 import { run as deploySimpleLog } from "./scenarios/deploy-and-run-simple-log.js";
+import { run as l1L2PublicMessaging } from "./scenarios/l1-l2-public-messaging.js";
 
 export async function init() {
   logger.info("Initializing Cannon...");
@@ -24,6 +25,7 @@ export const start = async () => {
     deployAndInteractTokenContract,
     deployAndInteractFunctionsVote,
     deploySimpleLog,
+    l1L2PublicMessaging,
   ] as (() => Promise<void>)[];
   for (const fn of scenarios) await fn();
 };
