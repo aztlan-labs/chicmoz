@@ -290,5 +290,4 @@ export const run = async () => {
     (await l1TokenManager.getL1TokenBalance(ethAccount.toString())) ===
       l1TokenBalance - bridgeAmount + withdrawAmount
   );
-  logger.info("🐰🐰🐰🐰🐰🐰🐰🐰🐰🐰🐰🐰🐰🐰🐰");
 };

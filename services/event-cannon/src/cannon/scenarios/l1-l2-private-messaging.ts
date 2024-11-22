@@ -64,7 +64,6 @@ export const run = async () => {
   });
   logger.info("🐰 Deploying contracts...");
 
-  // Deploy underlying ERC20
   const underlyingERC20Address = await deployL1Contract(
     walletClient,
     publicClient,
@@ -75,7 +74,6 @@ export const run = async () => {
     `🐰 Underlying ERC20 deployed at ${underlyingERC20Address.toString()}`
   );
 
-  // Deploy Token Portal
   logger.info("🐰 Deploying TokenPortal contract...");
   const { address: tokenPortalAddress } = await deployL1Contract(
     walletClient,
@@ -90,7 +88,6 @@ export const run = async () => {
     client: walletClient,
   });
 
-  // Deploy L2 Token
   const owner = wallet.getAddress();
   const token = await deployContract({
     contractLoggingName: "Token Contract",
@@ -105,7 +102,6 @@ export const run = async () => {
     },
   });
 
-  // Deploy L2 Bridge
   const bridge = await deployContract({
     contractLoggingName: "Token Bridge Contract",
     deployFn: (): DeploySentTx<TokenBridgeContract> => {
@@ -117,7 +113,6 @@ export const run = async () => {
     },
   });
 
-  // Validate token and bridge setup
   if ((await token.methods.get_admin().simulate()) !== owner.toBigInt())
     throw new Error(`Token admin is not ${owner.toString()}`);
 
@@ -128,7 +123,6 @@ export const run = async () => {
   )
     throw new Error(`Bridge token is not ${token.address.toString()}`);
 
-  // Set bridge as minter
   await logAndWaitForTx(
     token.methods.set_minter(bridge.address, true).send(),
     "setting minter"
@@ -136,7 +130,6 @@ export const run = async () => {
   if ((await token.methods.is_minter(bridge.address).simulate()) === 1n)
     throw new Error(`Bridge is not a minter`);
 
-  // Get L1 contract addresses
   const { l1ContractAddresses } = await pxe.getNodeInfo();
   const rollup = getContract({
     address: l1ContractAddresses.rollupAddress.toString(),
@@ -144,7 +137,6 @@ export const run = async () => {
     client: walletClient,
   });
 
-  // Initialize token portal
   await tokenPortal.write.initialize(
     [
       l1ContractAddresses.registryAddress.toString(),
@@ -154,7 +146,6 @@ export const run = async () => {
     {}
   );
 
-  // Setup token portal manager
   const l1TokenPortalManager = new L1TokenPortalManager(
     tokenPortalAddress,
     underlyingERC20Address,
@@ -167,7 +158,6 @@ export const run = async () => {
   const ownerAddress = wallet.getAddress();
   logger.info("🐰 Initialization complete");
 
-  // Prepare for cross-chain messaging
   const l1TokenBalance = 1000000n;
   const bridgeAmount = 100n;
 
@@ -178,11 +168,9 @@ export const run = async () => {
   const l2Token = token;
   const l2Bridge = bridge;
 
-  // 1. Mint tokens on L1
   logger.info("🐰 1. minting tokens on L1");
   await l1TokenManager.mint(l1TokenBalance, ethAccount.toString());
 
-  // 2. Deposit tokens to the TokenPortal privately
   logger.info("🐰 2. depositing tokens to the TokenPortal privately");
   const shouldMint = false;
   const claim = await l1TokenPortalManager.bridgeTokensPrivate(
@@ -196,7 +184,6 @@ export const run = async () => {
   );
   const msgHash = Fr.fromString(claim.messageHash);
 
-  // 3. Wait for message to be available
   logger.info("waiting for the message to be available for consumption...");
   await retryUntil(
     async () => await aztecNode.isL1ToL2MessageSynced(msgHash),
@@ -204,7 +191,6 @@ export const run = async () => {
     10
   );
 
-  // 4. Make message consumable (by progressing the rollup)
   await logAndWaitForTx(
     l2Token.methods.mint_to_public(ownerAddress, 0n).send(),
     "minting public tokens A"
@@ -214,7 +200,6 @@ export const run = async () => {
     "minting public tokens B"
   );
 
-  // 5. Verify message leaf index
   logger.info("checking message leaf index matches...");
   const maybeIndexAndPath = await aztecNode.getL1ToL2MessageMembershipWitness(
     "latest",
@@ -223,7 +208,6 @@ export const run = async () => {
   assert(maybeIndexAndPath !== undefined);
   assert(maybeIndexAndPath[0] === claim.messageLeafIndex);
 
-  // 6. Consume L1 -> L2 message and mint private tokens
   logger.info(
     "🐰 3. consuming L1 -> L2 message and minting private tokens on L2"
   );
@@ -235,25 +219,21 @@ export const run = async () => {
     "claiming private tokens"
   );
 
-  // 7. Verify private token balance
   const l2TokenBalance = (await l2Token.methods
     .balance_of_private(ownerAddress)
     .simulate()) as bigint;
   assert(l2TokenBalance === bridgeAmount);
 
-  // 8. Withdraw funds from L2
   logger.info("🐰 4. withdrawing funds from L2");
   const withdrawAmount = 9n;
   const nonce = Fr.random();
 
-  // Create auth wit for burning private tokens
   const user1Wallet = wallet;
   await user1Wallet.createAuthWit({
     caller: l2Bridge.address,
     action: l2Token.methods.burn_private(ownerAddress, withdrawAmount, nonce),
   });
 
-  // 9. Withdraw owner funds from L2 to L1
   logger.info("🐰 5. withdrawing owner funds from L2 to L1");
   const l2ToL1Message = l1TokenPortalManager.getL2ToL1MessageLeaf(
     withdrawAmount,
@@ -274,7 +254,6 @@ export const run = async () => {
     "exiting to L1"
   );
 
-  // Verify balances
   assert(
     (await l2Token.methods.balance_of_private(ownerAddress).simulate()) ===
       bridgeAmount - withdrawAmount
@@ -284,19 +263,16 @@ export const run = async () => {
       l1TokenBalance - bridgeAmount
   );
 
-  // 10. Get message witness and withdraw funds
   const [l2ToL1MessageIndex, siblingPath] =
     await aztecNode.getL2ToL1MessageMembershipWitness(
       l2TxReceipt.blockNumber!,
       l2ToL1Message
     );
 
-  // Assume block is proven (temporary solution)
   await rollup.write.setAssumeProvenThroughBlockNumber([
     await rollup.read.getPendingBlockNumber(),
   ]);
 
-  // Withdraw funds from L1 bridge
   await l1TokenPortalManager.withdrawFunds(
     withdrawAmount,
     ethAccount,
@@ -305,11 +281,8 @@ export const run = async () => {
     siblingPath
   );
 
-  // Final balance check
   assert(
     (await l1TokenManager.getL1TokenBalance(ethAccount.toString())) ===
       l1TokenBalance - bridgeAmount + withdrawAmount
   );
-
-  logger.info("🐰🐰🐰🐰🐰🐰🐰🐰🐰🐰🐰🐰🐰🐰🐰");
 };
