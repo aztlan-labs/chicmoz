@@ -90,7 +90,7 @@ export const TxEffectDetails: FC = () => {
                       ({ data, contractAddress }) => {
                         return [
                           {
-                            label: "Data",
+                            label: "data",
                             value:
                               data
                                 .match(/.{1,64}/g)
@@ -116,12 +116,7 @@ export const TxEffectDetails: FC = () => {
                     return (
                       <div key={index}>
                         <h4>Log {index + 1}</h4>
-                        {flattenedEntries.map((entry) => (
-                          <div key={entry.label}>
-                            <a>{entry.label}</a>
-                            <Textarea value={entry.value} disabled />
-                          </div>
-                        ))}
+                        <KeyValueDisplay key={index} data={flattenedEntries} />
                       </div>
                     );
                   },
