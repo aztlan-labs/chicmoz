@@ -10,6 +10,10 @@ requires:
   - path: ./auth/image.yaml
   - path: ./event-cannon/image.yaml
   - path: ./aztec-listener/image.yaml
+deploy:
+  kubectl:
+    flags:
+      apply: ["--force"]
 manifests:
   rawYaml:
     - k8s/local/common/namespace.yaml
