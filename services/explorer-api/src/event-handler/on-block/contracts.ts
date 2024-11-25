@@ -18,11 +18,16 @@ import {
 } from "@chicmoz-pkg/types";
 import { controllers } from "../../database/index.js";
 import { logger } from "../../logger.js";
-import { handleDuplicateError } from "./utils.js";
+import { handleDuplicateError } from "../utils.js";
 
 const parseObjs = <T>(
   blockHash: string,
-  objs: (ContractClassRegisteredEvent | ContractInstanceDeployedEvent | PrivateFunctionBroadcastedEvent | UnconstrainedFunctionBroadcastedEvent)[],
+  objs: (
+    | ContractClassRegisteredEvent
+    | ContractInstanceDeployedEvent
+    | PrivateFunctionBroadcastedEvent
+    | UnconstrainedFunctionBroadcastedEvent
+  )[],
   parseFn: (obj: unknown) => T
 ) => {
   const parsedObjs: T[] = [];
@@ -60,26 +65,33 @@ const storeObj = async <T>(
 };
 
 export const storeContracts = async (b: L2Block, blockHash: string) => {
-  const blockLogs = b.body.txEffects
-    .flatMap((txEffect) => (txEffect ? [txEffect.unencryptedLogs] : []))
-    .flatMap((txLog) => txLog.unrollLogs());
+  const encryptedBlockLogs = b.body.txEffects.flatMap((txEffect) =>
+    txEffect.encryptedLogs.unrollLogs()
+  );
+  const contractInstances =
+    ContractInstanceDeployedEvent.fromLogs(encryptedBlockLogs);
+
+  const contractClassLogs = b.body.txEffects.flatMap((txEffect) =>
+    txEffect.contractClassLogs.unrollLogs()
+  );
   const contractClasses = ContractClassRegisteredEvent.fromLogs(
-    blockLogs,
+    contractClassLogs,
     ProtocolContractAddress.ContractClassRegisterer
   );
-  const contractInstances = ContractInstanceDeployedEvent.fromLogs(blockLogs);
-  logger.info(
-    `Parsing and storing ${contractClasses.length} contract classes and ${contractInstances.length} contract instances`
+  const unencryptedBlockLogs = b.body.txEffects.flatMap((txEffect) =>
+    txEffect.unencryptedLogs.unrollLogs()
   );
-
   const privateFnEvents = PrivateFunctionBroadcastedEvent.fromLogs(
-    blockLogs,
+    unencryptedBlockLogs,
+    ProtocolContractAddress.ContractClassRegisterer
+  );
+  const unconstrainedFnEvents = UnconstrainedFunctionBroadcastedEvent.fromLogs(
+    unencryptedBlockLogs,
     ProtocolContractAddress.ContractClassRegisterer
   );
 
-  const unconstrainedFnEvents = UnconstrainedFunctionBroadcastedEvent.fromLogs(
-    blockLogs,
-    ProtocolContractAddress.ContractClassRegisterer
+  logger.info(
+    `📜 Parsing and storing ${contractClasses.length} contract classes and ${contractInstances.length} contract instances, ${privateFnEvents.length} private function events, and ${unconstrainedFnEvents.length} unconstrained function events`
   );
 
   const parsedContractClasses: ChicmozL2ContractClassRegisteredEvent[] =
@@ -90,17 +102,15 @@ export const storeContracts = async (b: L2Block, blockHash: string) => {
     parseObjs(blockHash, contractInstances, (contractInstance) =>
       chicmozL2ContractInstanceDeployedEventSchema.parse(contractInstance)
     );
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const parsedPrivateFnEvents: ChicmozL2PrivateFunctionBroadcastedEvent[] =
     parseObjs(blockHash, privateFnEvents, (privateFnEvent) =>
       chicmozL2PrivateFunctionBroadcastedEventSchema.parse(privateFnEvent)
     );
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const parsedUnconstrainedFnEvents: ChicmozL2UnconstrainedFunctionBroadcastedEvent[] =
     parseObjs(blockHash, unconstrainedFnEvents, (unconstrainedFnEvent) =>
-      chicmozL2UnconstrainedFunctionBroadcastedEventSchema.parse(unconstrainedFnEvent)
+      chicmozL2UnconstrainedFunctionBroadcastedEventSchema.parse(
+        unconstrainedFnEvent
+      )
     );
 
   await storeObj(
@@ -115,6 +125,16 @@ export const storeContracts = async (b: L2Block, blockHash: string) => {
     "contractInstance",
     "address"
   );
-
-  // TODO: store broadcasted functions
+  await storeObj(
+    parsedPrivateFnEvents,
+    controllers.l2Contract.storePrivateFunction,
+    "privateFunction",
+    "artifactMetadataHash"
+  );
+  await storeObj(
+    parsedUnconstrainedFnEvents,
+    controllers.l2Contract.storeUnconstrainedFunction,
+    "unconstrainedFunction",
+    "artifactMetadataHash"
+  );
 };

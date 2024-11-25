@@ -4,13 +4,15 @@ import { routes } from "~/routes/__root";
 import { DataTableColumnHeader } from "~/components/data-table";
 import { type TxEffectTableSchema } from "./tx-effects-schema";
 import { formatTimeSince } from "~/lib/utils";
+import { CopyableText } from "../copy-text";
+import { truncateHashString } from "~/lib/create-hash-string";
 
 const text = {
   hash: "TX EFFECT HASH",
-  transactionFee: "TRANSACTION FEE (FPA)",
-  totalLengthOfLogs: "TOTAL LOGS LENGTH",
-  blockHeight: "BLOCK HEIGHT",
-  timeSince: "TIME SINCE",
+  txHash: "TX HASH",
+  transactionFee: "FEE (FPA)",
+  blockHeight: "HEIGHT",
+  timeSince: "AGE",
 };
 
 export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
@@ -29,63 +31,29 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
       const r = `${routes.txEffects.route}/${hash}`;
       const truncatedTxHash = `${hash.slice(0, 6)}...${hash.slice(-4)}`;
       return (
-        <div className="text-purple-light font-mono font-bold">
+        <div className="text-purple-light font-mono">
           <Link to={r}>{truncatedTxHash}</Link>
         </div>
       );
     },
   },
   {
-    accessorKey: "transactionFee",
+    accessorKey: "txHash",
     header: ({ column }) => (
       <DataTableColumnHeader
         className="text-purple-dark text-sm "
         column={column}
-        title={text.transactionFee}
+        title={text.txHash}
       />
     ),
     cell: ({ row }) => (
-      <div className="text-purple-dark">{row.getValue("transactionFee")}</div>
-    ),
-    enableSorting: true,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "totalLengthOfLogs",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        className="text-purple-dark text-sm "
-        column={column}
-        title={text.totalLengthOfLogs}
+      <CopyableText
+        toCopy={row.getValue("txHash")}
+        text={truncateHashString(row.getValue("txHash"))}
       />
     ),
-    cell: ({ row }) => (
-      <div className="text-purple-dark">{row.getValue("totalLengthOfLogs")}</div>
-    ),
-    enableSorting: true,
+    enableSorting: false,
     enableHiding: false,
-  },
-  {
-    accessorKey: "blockNumber",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        className="text-purple-dark text-sm "
-        column={column}
-        title={text.blockHeight}
-      />
-    ),
-    cell: ({ row }) => {
-      const blockNumber = row.getValue("blockNumber");
-      if (typeof blockNumber !== "number") return null;
-      const r = `${routes.blocks.route}/${blockNumber}`;
-      return (
-        <div className="text-purple-light font-mono font-bold">
-          <Link to={r}>{blockNumber}</Link>
-        </div>
-      );
-    },
-    enableSorting: true,
-    enableHiding: true,
   },
   {
     accessorKey: "timestamp",
@@ -105,5 +73,42 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
     },
     enableSorting: true,
     enableHiding: false,
+  },
+  {
+    accessorKey: "transactionFee",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className="text-purple-dark text-sm"
+        column={column}
+        title={text.transactionFee}
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="font-mono">{row.getValue("transactionFee")}</div>
+    ),
+    enableSorting: true,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "blockNumber",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className="text-purple-dark text-sm "
+        column={column}
+        title={text.blockHeight}
+      />
+    ),
+    cell: ({ row }) => {
+      const blockNumber = row.getValue("blockNumber");
+      if (typeof blockNumber !== "number") return null;
+      const r = `${routes.blocks.route}/${blockNumber}`;
+      return (
+        <div className="text-purple-light font-mono">
+          <Link to={r}>{blockNumber}</Link>
+        </div>
+      );
+    },
+    enableSorting: true,
+    enableHiding: true,
   },
 ];

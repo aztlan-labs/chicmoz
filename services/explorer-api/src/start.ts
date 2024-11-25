@@ -4,6 +4,7 @@ import {
   blockHandler,
   catchupHandler,
   connectedToAztecHandler,
+  pendingTxHandler,
 } from "./event-handler/index.js";
 import { setComponentInitializing, setComponentUp } from "./health.js";
 import * as httpServer from "./http-server/index.js";
@@ -37,9 +38,11 @@ export const start = async () => {
     ID: mb.ID,
     init: mb.init,
   });
+  // TODO: clear pending txs DB
   setComponentInitializing("SUBSCRIPTIONS");
   await mb.startSubscribe(blockHandler);
   await mb.startSubscribe(catchupHandler);
+  await mb.startSubscribe(pendingTxHandler);
   await mb.startSubscribe(connectedToAztecHandler);
   setComponentUp("SUBSCRIPTIONS");
 };

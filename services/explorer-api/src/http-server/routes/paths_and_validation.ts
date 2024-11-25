@@ -9,6 +9,7 @@ export const txEffectHash = "txEffectHash";
 export const address = "address";
 export const classId = "classId";
 export const version = "version";
+export const functionSelector = "functionSelector";
 
 export const paths = {
   latestHeight: "/l2/latest-height",
@@ -20,9 +21,16 @@ export const paths = {
   txEffectByBlockHeightAndIndex: `/l2/blocks/:${blockHeight}/tx-effects/:${txEffectIndex}`,
   txEffectsByTxHash: `/l2/tx-effects/:${txEffectHash}`,
 
+  txs: "/l2/txs",
+
   contractClass: `/l2/contract-classes/:${classId}/versions/:${version}`,
   contractClassesByClassId: `/l2/contract-classes/:${classId}`,
   contractClasses: `/l2/contract-classes`,
+
+  contractClassPrivateFunctions: `/l2/contract-classes/:${classId}/private-functions`,
+  contractClassPrivateFunction: `/l2/contract-classes/:${classId}/private-functions/:${functionSelector}`,
+  contractClassUnconstrainedFunctions: `/l2/contract-classes/:${classId}/unconstrained-functions`,
+  contractClassUnconstrainedFunction: `/l2/contract-classes/:${classId}/unconstrained-functions/:${functionSelector}`,
 
   contractInstancesByContractClassId: `/l2/contract-classes/:${classId}/contract-instances`,
   contractInstancesByBlockHash: `/l2/blocks/:${blockHash}/contract-instances`,
@@ -102,6 +110,17 @@ export const getContractClassesByClassIdSchema = z.object({
     [classId]: hexStringSchema,
   }),
 });
+
+export const getContractClassPrivateFunctionsSchema = getContractClassesByClassIdSchema;
+export const getContractClassPrivateFunctionSchema = z.object({
+  params: z.object({
+    [classId]: hexStringSchema,
+    [functionSelector]: hexStringSchema,
+  }),
+});
+export const getContractClassUnconstrainedFunctionsSchema = getContractClassPrivateFunctionsSchema;
+export const getContractClassUnconstrainedFunctionSchema = getContractClassPrivateFunctionSchema;
+
 export const getContractInstancesByContractClassIdSchema =
   getContractClassesByClassIdSchema;
 

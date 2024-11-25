@@ -1,0 +1,13 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+requires:
+  - path: ../chicmoz-base-image.yaml
+build:
+  artifacts:
+    - image: event-cannon
+      context: ../../../services/event-cannon
+      docker:
+        dockerfile: Dockerfile
+      requires:
+        - image: chicmoz-base
+          alias: BASE

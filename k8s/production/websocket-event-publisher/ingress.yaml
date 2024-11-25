@@ -6,15 +6,15 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-    cert-manager.io/cluster-issuer: "chicmoz-issuer-production"
+    cert-manager.io/cluster-issuer: "aztecscout-issuer-production"
 spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - ws.chicmoz.info
+        - ws.aztecscout.xyz
       secretName: chicmoz-ws-tls
   rules:
-    - host: ws.chicmoz.info
+    - host: ws.aztecscout.xyz
       http:
         paths:
           - path: /

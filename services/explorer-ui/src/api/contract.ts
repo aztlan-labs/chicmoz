@@ -1,8 +1,12 @@
 import {
   chicmozL2ContractClassRegisteredEventSchema,
   chicmozL2ContractInstanceDeluxeSchema,
+  chicmozL2PrivateFunctionBroadcastedEventSchema,
+  chicmozL2UnconstrainedFunctionBroadcastedEventSchema,
   type ChicmozL2ContractClassRegisteredEvent,
   type ChicmozL2ContractInstanceDeluxe,
+  type ChicmozL2PrivateFunctionBroadcastedEvent,
+  type ChicmozL2UnconstrainedFunctionBroadcastedEvent,
 } from "@chicmoz-pkg/types";
 import { aztecExplorer } from "~/service/constants";
 import client, { validateResponse } from "./client";
@@ -28,6 +32,36 @@ export const ContractL2API = {
     );
     return validateResponse(
       chicmozL2ContractClassRegisteredEventSchema.array(),
+      response.data
+    );
+  },
+  getContractClassPrivateFunctions: async (
+    classId: string,
+    functionSelector?: string
+  ): Promise<ChicmozL2PrivateFunctionBroadcastedEvent[]> => {
+    const response = await client.get(
+      aztecExplorer.getL2ContractClassPrivateFunctions(
+        classId,
+        functionSelector
+      )
+    );
+    return validateResponse(
+      chicmozL2PrivateFunctionBroadcastedEventSchema.array(),
+      response.data
+    );
+  },
+  getL2ContractClassUnconstrainedFunctions: async (
+    classId: string,
+    functionSelector?: string
+  ): Promise<ChicmozL2UnconstrainedFunctionBroadcastedEvent[]> => {
+    const response = await client.get(
+      aztecExplorer.getL2ContractClassUnconstrainedFunctions(
+        classId,
+        functionSelector
+      )
+    );
+    return validateResponse(
+      chicmozL2UnconstrainedFunctionBroadcastedEventSchema.array(),
       response.data
     );
   },

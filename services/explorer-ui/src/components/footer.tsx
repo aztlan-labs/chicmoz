@@ -4,10 +4,9 @@ import { DiscordIcon, GithubIcon, ObscuraLogoWhite, XIcon } from "~/assets";
 import { DISCORD_URL, GITHUB_URL, X_URL } from "~/service/constants";
 import { ChicmozHomeLink } from "~/components/ui/chicmoz-home-link";
 
-// TODO: add the footer links
 export const Footer = () => {
   return (
-    <footer className="">
+    <footer className="pt-20">
       <Strips />
       <div className="bg-purple-light py-10">
         <div className="mx-auto px-[70px] max-w-[1440px]">

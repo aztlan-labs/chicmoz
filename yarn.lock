@@ -12,13 +12,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@adraffy/ens-normalize@npm:1.11.0":
-  version: 1.11.0
-  resolution: "@adraffy/ens-normalize@npm:1.11.0"
-  checksum: 5111d0f1a273468cb5661ed3cf46ee58de8f32f84e2ebc2365652e66c1ead82649df94c736804e2b9cfa831d30ef24e1cc3575d970dbda583416d3a98d8870a6
-  languageName: node
-  linkType: hard
-
 "@alloc/quick-lru@npm:^5.2.0":
   version: 5.2.0
   resolution: "@alloc/quick-lru@npm:5.2.0"
@@ -48,43 +41,43 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aztec/accounts@npm:0.61.0":
-  version: 0.61.0
-  resolution: "@aztec/accounts@npm:0.61.0"
+"@aztec/accounts@npm:0.63.1":
+  version: 0.63.1
+  resolution: "@aztec/accounts@npm:0.63.1"
   dependencies:
-    "@aztec/aztec.js": "npm:0.61.0"
-    "@aztec/circuit-types": "npm:0.61.0"
-    "@aztec/circuits.js": "npm:0.61.0"
-    "@aztec/entrypoints": "npm:0.61.0"
-    "@aztec/ethereum": "npm:0.61.0"
-    "@aztec/foundation": "npm:0.61.0"
-    "@aztec/types": "npm:0.61.0"
+    "@aztec/aztec.js": "npm:0.63.1"
+    "@aztec/circuit-types": "npm:0.63.1"
+    "@aztec/circuits.js": "npm:0.63.1"
+    "@aztec/entrypoints": "npm:0.63.1"
+    "@aztec/ethereum": "npm:0.63.1"
+    "@aztec/foundation": "npm:0.63.1"
+    "@aztec/types": "npm:0.63.1"
     tslib: "npm:^2.4.0"
-  checksum: 96bf694aa23f781e9a7c81fc97e74f76b261b760693116cc0a202dad4fa4a84c1d7844f599b649c4827976b68a694d31410b512f473fec7b379596a3f4546f77
+  checksum: 6e94205797c04fb51c881b21f82948fdfbbfb8b4640adb60bdcc137a581e672641cb49334c23e2903f04bdc67fdd951610c46feed9ad0499c283519e9ae756bf
   languageName: node
   linkType: hard
 
-"@aztec/aztec.js@npm:0.61.0":
-  version: 0.61.0
-  resolution: "@aztec/aztec.js@npm:0.61.0"
+"@aztec/aztec.js@npm:0.63.1":
+  version: 0.63.1
+  resolution: "@aztec/aztec.js@npm:0.63.1"
   dependencies:
-    "@aztec/circuit-types": "npm:0.61.0"
-    "@aztec/circuits.js": "npm:0.61.0"
-    "@aztec/ethereum": "npm:0.61.0"
-    "@aztec/foundation": "npm:0.61.0"
-    "@aztec/l1-artifacts": "npm:0.61.0"
-    "@aztec/protocol-contracts": "npm:0.61.0"
-    "@aztec/types": "npm:0.61.0"
+    "@aztec/circuit-types": "npm:0.63.1"
+    "@aztec/circuits.js": "npm:0.63.1"
+    "@aztec/ethereum": "npm:0.63.1"
+    "@aztec/foundation": "npm:0.63.1"
+    "@aztec/l1-artifacts": "npm:0.63.1"
+    "@aztec/protocol-contracts": "npm:0.63.1"
+    "@aztec/types": "npm:0.63.1"
     axios: "npm:^1.7.2"
     tslib: "npm:^2.4.0"
     viem: "npm:^2.7.15"
-  checksum: 97f9cdf5b11e05e9f83761f24a8e91ea2d37a75813dc01466879e7a48df55f28dcc40dfa1d594d927f6754ef502dd40e215d792f0055f6e687335a320b35de8b
+  checksum: 489651ef963a4b0d9306bb8580a1e484b2b6707501655bb8109f26b33d929dfc7cfd8c258dcea82537d8c741c3abbc81ad6426e9f4531d240af54cf060517ffb
   languageName: node
   linkType: hard
 
-"@aztec/bb.js@npm:0.61.0":
-  version: 0.61.0
-  resolution: "@aztec/bb.js@npm:0.61.0"
+"@aztec/bb.js@npm:0.63.1":
+  version: 0.63.1
+  resolution: "@aztec/bb.js@npm:0.63.1"
   dependencies:
     comlink: "npm:^4.4.1"
     commander: "npm:^10.0.1"
@@ -93,73 +86,77 @@ __metadata:
     tslib: "npm:^2.4.0"
   bin:
     bb.js: dest/node/main.js
-  checksum: b7d7bf6b1d5a6a7943f47a470bde863e44c1ea0eac80f99f65cad35a395af6be42caca02ff47e977f24ef1b6b8780dd37d6bac8578ddcc66ab2d114e77fba9cd
+  checksum: cf751c954176b8de74a669ae2c7ed7fc86d5f23318694d46332a130bb75f7b62c16ffb54d13165da6ce13dafdfbfed3a7ba5e5f6a174111d220b32bbe0bb6bf9
   languageName: node
   linkType: hard
 
-"@aztec/circuit-types@npm:0.61.0":
-  version: 0.61.0
-  resolution: "@aztec/circuit-types@npm:0.61.0"
+"@aztec/circuit-types@npm:0.63.1":
+  version: 0.63.1
+  resolution: "@aztec/circuit-types@npm:0.63.1"
   dependencies:
-    "@aztec/circuits.js": "npm:0.61.0"
-    "@aztec/ethereum": "npm:0.61.0"
-    "@aztec/foundation": "npm:0.61.0"
-    "@aztec/types": "npm:0.61.0"
+    "@aztec/circuits.js": "npm:0.63.1"
+    "@aztec/ethereum": "npm:0.63.1"
+    "@aztec/foundation": "npm:0.63.1"
+    "@aztec/types": "npm:0.63.1"
     browserify-cipher: "npm:^1.0.1"
     lodash.clonedeep: "npm:^4.5.0"
     lodash.isequal: "npm:^4.5.0"
     lodash.times: "npm:^4.3.2"
     tslib: "npm:^2.5.0"
-  checksum: 243338436659a07ba1a6e724697c42980a766bce88cd1358c272fb78ba58ed19a0e2ed9bc6939083459895cc19e9c23e7a5491f28f31cb20cd70de48485e8acc
+    zod: "npm:^3.23.8"
+  checksum: caba6c899686eff8c48f6833311df966a9fdc01e0bb1d224d3275906ca626fb75ce63f4d62a70344c073741993a16264ed465e4d9f64bbdeb4ccd5c78c9f907a
   languageName: node
   linkType: hard
 
-"@aztec/circuits.js@npm:0.61.0":
-  version: 0.61.0
-  resolution: "@aztec/circuits.js@npm:0.61.0"
+"@aztec/circuits.js@npm:0.63.1":
+  version: 0.63.1
+  resolution: "@aztec/circuits.js@npm:0.63.1"
   dependencies:
-    "@aztec/bb.js": "npm:0.61.0"
-    "@aztec/foundation": "npm:0.61.0"
-    "@aztec/types": "npm:0.61.0"
+    "@aztec/bb.js": "npm:0.63.1"
+    "@aztec/ethereum": "npm:0.63.1"
+    "@aztec/foundation": "npm:0.63.1"
+    "@aztec/types": "npm:0.63.1"
     eslint: "npm:^8.35.0"
     lodash.chunk: "npm:^4.2.0"
     tslib: "npm:^2.4.0"
-  checksum: 2605c0bd337988676c22590289ec97ea842563035550556c9ccb093ce880c64d5df33b10ac99f425b92934cab4e75da1b4da96d254810f2436852d533642dd58
+    zod: "npm:^3.23.8"
+  checksum: df1fc778cca1b4c0fc1f29d3d8ff51ddc0f34db4628525b0f9a2731d3b551eecf727a291ad5feb379eba0e3357b50cf97474b5bd06882fb1cab2ec589400fb64
   languageName: node
   linkType: hard
 
-"@aztec/entrypoints@npm:0.61.0":
-  version: 0.61.0
-  resolution: "@aztec/entrypoints@npm:0.61.0"
+"@aztec/entrypoints@npm:0.63.1":
+  version: 0.63.1
+  resolution: "@aztec/entrypoints@npm:0.63.1"
   dependencies:
-    "@aztec/aztec.js": "npm:0.61.0"
-    "@aztec/circuit-types": "npm:0.61.0"
-    "@aztec/circuits.js": "npm:0.61.0"
-    "@aztec/foundation": "npm:0.61.0"
-    "@aztec/protocol-contracts": "npm:0.61.0"
+    "@aztec/aztec.js": "npm:0.63.1"
+    "@aztec/circuit-types": "npm:0.63.1"
+    "@aztec/circuits.js": "npm:0.63.1"
+    "@aztec/foundation": "npm:0.63.1"
+    "@aztec/protocol-contracts": "npm:0.63.1"
     tslib: "npm:^2.4.0"
-  checksum: 58ffdbb282415bce62ea4a25490e2939be59e7b1ffd26c8a9d506c48b2682bc5ce9a403d8b94262aca8df8facfb472db2ce3272aea270c1daaf1efdedc83b3d3
+  checksum: 53a2900909ed6b73805bd8550449ba639ad9e727d14a5ab0485d76f1d908791171fcc06ab41a5ddada947da8168526cea71eadd4eb90ec4f35ff63dcae514690
   languageName: node
   linkType: hard
 
-"@aztec/ethereum@npm:0.61.0":
-  version: 0.61.0
-  resolution: "@aztec/ethereum@npm:0.61.0"
+"@aztec/ethereum@npm:0.63.1":
+  version: 0.63.1
+  resolution: "@aztec/ethereum@npm:0.63.1"
   dependencies:
-    "@aztec/foundation": "npm:0.61.0"
-    "@aztec/l1-artifacts": "npm:0.61.0"
+    "@aztec/foundation": "npm:0.63.1"
+    "@aztec/l1-artifacts": "npm:0.63.1"
     dotenv: "npm:^16.0.3"
     tslib: "npm:^2.4.0"
     viem: "npm:^2.7.15"
-  checksum: 48f89a0a5e1e1ab4b7f632505eceb9e6da7e88d5d2597560ba538c0dbd06f1ed122b72bc085d85b19c67a78e071f3827152047ba986398cd507f43ea933df9a3
+    zod: "npm:^3.23.8"
+  checksum: 232ff3a786f21707735364fe1e95d3554b4a5dcc61b6d345b34a6aa2d163d071b72ae99d811b8f8fe970c7b3ef064c42d9d31b765cf4863192dca23f1e1cce4c
   languageName: node
   linkType: hard
 
-"@aztec/foundation@npm:0.61.0":
-  version: 0.61.0
-  resolution: "@aztec/foundation@npm:0.61.0"
+"@aztec/foundation@npm:0.63.1":
+  version: 0.63.1
+  resolution: "@aztec/foundation@npm:0.63.1"
   dependencies:
-    "@aztec/bb.js": "npm:0.61.0"
+    "@aztec/bb.js": "npm:0.63.1"
     "@koa/cors": "npm:^5.0.0"
     "@noble/curves": "npm:^1.2.0"
     bn.js: "npm:^5.2.1"
@@ -178,50 +175,50 @@ __metadata:
     memdown: "npm:^6.1.1"
     pako: "npm:^2.1.0"
     sha3: "npm:^2.1.4"
-    zod: "npm:^3.22.4"
-  checksum: 2b274c3531c218260e69bde74bc19f4bbc3e427386cae5bdfca77b699cda133e6ab0466453c4f6fc1a937fd5d1e928f77ea050ea7eef66c0b9d277696714b124
+    zod: "npm:^3.23.8"
+  checksum: 672e46db15f983088b49f9aa2a9648b1ae6503c66edc7e3dd964e93ed769f9d975868912d71e5f6473bb0904c1ae68c5aec0b3ab5f4ca09484b69d90bd7b243d
   languageName: node
   linkType: hard
 
-"@aztec/l1-artifacts@npm:0.61.0":
-  version: 0.61.0
-  resolution: "@aztec/l1-artifacts@npm:0.61.0"
+"@aztec/l1-artifacts@npm:0.63.1":
+  version: 0.63.1
+  resolution: "@aztec/l1-artifacts@npm:0.63.1"
   dependencies:
     tslib: "npm:^2.4.0"
-  checksum: 971754ab9e8899e3906d689e651ca6de9a0c35eff0af358077fee6e9091da2623e00015d237d7d70954f0f13922169e2eabdddb97915f756b9334634e9d21b3b
+  checksum: f82ecbc8907ea6d12d733227ddf10bbe7ea068cdb865c7457b207a9d1ae709410baef7fe504b1a36250d32fcce9b1330366b30c01a3a37978e7b2b21df7864d0
   languageName: node
   linkType: hard
 
-"@aztec/noir-contracts.js@npm:0.61.0":
-  version: 0.61.0
-  resolution: "@aztec/noir-contracts.js@npm:0.61.0"
+"@aztec/noir-contracts.js@npm:0.63.1":
+  version: 0.63.1
+  resolution: "@aztec/noir-contracts.js@npm:0.63.1"
   dependencies:
-    "@aztec/aztec.js": "npm:0.61.0"
+    "@aztec/aztec.js": "npm:0.63.1"
     tslib: "npm:^2.4.0"
-  checksum: 71caa7b17f47b61fbc2994937e22960c1f944ccd3959a4a6a36ca402fe687c2df1519035a50d8249f8c53f1dab2fcfe36232031fbab2fe53eb531203f5ae73cd
+  checksum: 14947082b9857cf4f40c92e0915d23ef19e76ca54c3ac0f2ca2fd39dae692806d63d839768bce6d8e38319a89e58bb3c7e0b98003d892b8bbbadfe9080bf94a9
   languageName: node
   linkType: hard
 
-"@aztec/protocol-contracts@npm:0.61.0":
-  version: 0.61.0
-  resolution: "@aztec/protocol-contracts@npm:0.61.0"
+"@aztec/protocol-contracts@npm:0.63.1":
+  version: 0.63.1
+  resolution: "@aztec/protocol-contracts@npm:0.63.1"
   dependencies:
-    "@aztec/circuits.js": "npm:0.61.0"
-    "@aztec/foundation": "npm:0.61.0"
-    "@aztec/types": "npm:0.61.0"
+    "@aztec/circuits.js": "npm:0.63.1"
+    "@aztec/foundation": "npm:0.63.1"
+    "@aztec/types": "npm:0.63.1"
     lodash.omit: "npm:^4.5.0"
     tslib: "npm:^2.4.0"
-  checksum: 37dba8ce2bb3ea6659754bb2f9b4b4adc815761b4ebab982d027ae60f9f10c18c200857aff84b69641c0fc28dac1c6cf63ba6271b6d376ba8a7742fff81b8f89
+  checksum: fee5b8d06613a934c363162fd8c3f343c21547ed2c3a53d480c893c8b661f33db0bd09c24d7133e596b35ccc87aaf9dab73d91aa4a3264bf32248e16b4155d08
   languageName: node
   linkType: hard
 
-"@aztec/types@npm:0.61.0":
-  version: 0.61.0
-  resolution: "@aztec/types@npm:0.61.0"
+"@aztec/types@npm:0.63.1":
+  version: 0.63.1
+  resolution: "@aztec/types@npm:0.63.1"
   dependencies:
-    "@aztec/ethereum": "npm:0.61.0"
-    "@aztec/foundation": "npm:0.61.0"
-  checksum: 3018c9b27381034d4a8362a6c172c99f04eeeac64d8822dfc4efc52e93c4e06ac6c038802f1519ad84b80722b8b15cb80143e41136ef22fcb7006e59da9e4224
+    "@aztec/ethereum": "npm:0.63.1"
+    "@aztec/foundation": "npm:0.63.1"
+  checksum: 2d8542957fb8c09ec6861ff784905a5076c0e824572e3bde437f754b08544dc2cc159ddcfb025bfcb0e8c8912e6c8bb457791add73468bfddc15921bcd4aa5ec
   languageName: node
   linkType: hard
 
@@ -769,7 +766,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@chicmoz-pkg/backend-utils@workspace:packages/backend-utils"
   dependencies:
-    "@aztec/aztec.js": "npm:0.61.0"
+    "@aztec/aztec.js": "npm:0.63.1"
     "@chicmoz-pkg/types": "workspace:^"
     "@typescript-eslint/eslint-plugin": "npm:6.11.0"
     "@typescript-eslint/parser": "npm:6.11.0"
@@ -849,7 +846,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@chicmoz-pkg/message-registry@workspace:packages/message-registry"
   dependencies:
-    "@aztec/aztec.js": "npm:0.61.0"
+    "@aztec/aztec.js": "npm:0.63.1"
     "@chicmoz-pkg/types": "workspace:^"
     "@typescript-eslint/eslint-plugin": "npm:6.11.0"
     "@typescript-eslint/parser": "npm:6.11.0"
@@ -921,33 +918,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@chicmoz/aztec-event-cannon@workspace:services/aztec-event-cannon":
-  version: 0.0.0-use.local
-  resolution: "@chicmoz/aztec-event-cannon@workspace:services/aztec-event-cannon"
-  dependencies:
-    "@aztec/accounts": "npm:0.61.0"
-    "@aztec/aztec.js": "npm:0.61.0"
-    "@aztec/noir-contracts.js": "npm:0.61.0"
-    "@chicmoz-pkg/logger-server": "workspace:^"
-    "@types/node": "npm:20.5.0"
-    "@typescript-eslint/eslint-plugin": "npm:6.11.0"
-    "@typescript-eslint/parser": "npm:6.11.0"
-    eslint: "npm:8.53.0"
-    eslint-config-prettier: "npm:9.0.0"
-    eslint-config-standard-with-typescript: "npm:37.0.0"
-    eslint-plugin-import: "npm:2.29.0"
-    eslint-plugin-n: "npm:15.0.0 || 16.0.0 "
-    eslint-plugin-promise: "npm:6.0.0"
-    typescript: "npm:5.2.2"
-  languageName: unknown
-  linkType: soft
-
 "@chicmoz/aztec-listener@workspace:services/aztec-listener":
   version: 0.0.0-use.local
   resolution: "@chicmoz/aztec-listener@workspace:services/aztec-listener"
   dependencies:
-    "@aztec/aztec.js": "npm:0.61.0"
-    "@aztec/circuits.js": "npm:0.61.0"
+    "@aztec/aztec.js": "npm:0.63.1"
+    "@aztec/circuits.js": "npm:0.63.1"
     "@chicmoz-pkg/logger-server": "workspace:^"
     "@chicmoz-pkg/message-bus": "workspace:^"
     "@chicmoz-pkg/message-registry": "workspace:^"
@@ -997,8 +973,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@chicmoz/ethereum-listener@workspace:services/ethereum-listener"
   dependencies:
-    "@aztec/aztec.js": "npm:0.61.0"
-    "@aztec/l1-artifacts": "npm:0.61.0"
+    "@aztec/aztec.js": "npm:0.63.1"
+    "@aztec/l1-artifacts": "npm:0.63.1"
     "@chicmoz-pkg/logger-server": "workspace:^"
     "@chicmoz-pkg/message-bus": "workspace:^"
     "@chicmoz-pkg/message-registry": "workspace:^"
@@ -1014,7 +990,28 @@ __metadata:
     eslint-plugin-promise: "npm:6.0.0"
     exponential-backoff: "npm:3.1.1"
     typescript: "npm:5.2.2"
-    viem: "npm:2.21.36"
+  languageName: unknown
+  linkType: soft
+
+"@chicmoz/event-cannon@workspace:services/event-cannon":
+  version: 0.0.0-use.local
+  resolution: "@chicmoz/event-cannon@workspace:services/event-cannon"
+  dependencies:
+    "@aztec/accounts": "npm:0.63.1"
+    "@aztec/aztec.js": "npm:0.63.1"
+    "@aztec/l1-artifacts": "npm:0.63.1"
+    "@aztec/noir-contracts.js": "npm:0.63.1"
+    "@chicmoz-pkg/logger-server": "workspace:^"
+    "@types/node": "npm:20.5.0"
+    "@typescript-eslint/eslint-plugin": "npm:6.11.0"
+    "@typescript-eslint/parser": "npm:6.11.0"
+    eslint: "npm:8.53.0"
+    eslint-config-prettier: "npm:9.0.0"
+    eslint-config-standard-with-typescript: "npm:37.0.0"
+    eslint-plugin-import: "npm:2.29.0"
+    eslint-plugin-n: "npm:15.0.0 || 16.0.0 "
+    eslint-plugin-promise: "npm:6.0.0"
+    typescript: "npm:5.2.2"
   languageName: unknown
   linkType: soft
 
@@ -1023,9 +1020,9 @@ __metadata:
   resolution: "@chicmoz/explorer-api@workspace:services/explorer-api"
   dependencies:
     "@anatine/zod-openapi": "npm:2.2.6"
-    "@aztec/aztec.js": "npm:0.61.0"
-    "@aztec/circuits.js": "npm:0.61.0"
-    "@aztec/protocol-contracts": "npm:0.61.0"
+    "@aztec/aztec.js": "npm:0.63.1"
+    "@aztec/circuits.js": "npm:0.63.1"
+    "@aztec/protocol-contracts": "npm:0.63.1"
     "@chicmoz-pkg/backend-utils": "workspace:^"
     "@chicmoz-pkg/error-middleware": "workspace:^"
     "@chicmoz-pkg/logger-server": "workspace:^"
@@ -1139,7 +1136,6 @@ __metadata:
     vite: "npm:5.3.4"
     vite-plugin-svgr: "npm:4.2.0"
     zod: "npm:3.22.4"
-    zustand: "npm:4.3.8"
   languageName: unknown
   linkType: soft
 
@@ -2129,15 +2125,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noble/curves@npm:1.6.0, @noble/curves@npm:~1.6.0":
-  version: 1.6.0
-  resolution: "@noble/curves@npm:1.6.0"
-  dependencies:
-    "@noble/hashes": "npm:1.5.0"
-  checksum: f3262aa4d39148e627cd82b5ac1c93f88c5bb46dd2566b5e8e52ffac3a0fc381ad30c2111656fd2bd3b0d37d43d540543e0d93a5ff96a6cb184bc3bfe10d1cd9
-  languageName: node
-  linkType: hard
-
 "@noble/curves@npm:^1.2.0, @noble/curves@npm:^1.4.0":
   version: 1.5.0
   resolution: "@noble/curves@npm:1.5.0"
@@ -2160,13 +2147,6 @@ __metadata:
   version: 1.4.0
   resolution: "@noble/hashes@npm:1.4.0"
   checksum: 8c3f005ee72e7b8f9cff756dfae1241485187254e3f743873e22073d63906863df5d4f13d441b7530ea614b7a093f0d889309f28b59850f33b66cb26a779a4a5
-  languageName: node
-  linkType: hard
-
-"@noble/hashes@npm:1.5.0, @noble/hashes@npm:~1.5.0":
-  version: 1.5.0
-  resolution: "@noble/hashes@npm:1.5.0"
-  checksum: 1b46539695fbfe4477c0822d90c881a04d4fa2921c08c552375b444a48cac9930cb1ee68de0a3c7859e676554d0f3771999716606dc4d8f826e414c11692cdd9
   languageName: node
   linkType: hard
 
@@ -3803,13 +3783,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@scure/base@npm:~1.1.7, @scure/base@npm:~1.1.8":
-  version: 1.1.9
-  resolution: "@scure/base@npm:1.1.9"
-  checksum: 77a06b9a2db8144d22d9bf198338893d77367c51b58c72b99df990c0a11f7cadd066d4102abb15e3ca6798d1529e3765f55c4355742465e49aed7a0c01fe76e8
-  languageName: node
-  linkType: hard
-
 "@scure/bip32@npm:1.4.0":
   version: 1.4.0
   resolution: "@scure/bip32@npm:1.4.0"
@@ -3821,17 +3794,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@scure/bip32@npm:1.5.0":
-  version: 1.5.0
-  resolution: "@scure/bip32@npm:1.5.0"
-  dependencies:
-    "@noble/curves": "npm:~1.6.0"
-    "@noble/hashes": "npm:~1.5.0"
-    "@scure/base": "npm:~1.1.7"
-  checksum: 3319beda59e7f129d770cbe49709a2d1742f2deb6989b12e37aa1a47cd128a8c943bdd9286c6a5513ef4539307c4bca8f89f9aa91f294cac4598cbf95fa0c01d
-  languageName: node
-  linkType: hard
-
 "@scure/bip39@npm:1.3.0":
   version: 1.3.0
   resolution: "@scure/bip39@npm:1.3.0"
@@ -3839,16 +3801,6 @@ __metadata:
     "@noble/hashes": "npm:~1.4.0"
     "@scure/base": "npm:~1.1.6"
   checksum: 1ae1545a7384a4d9e33e12d9e9f8824f29b0279eb175b0f0657c0a782c217920054f9a1d28eb316a417dfc6c4e0b700d6fbdc6da160670107426d52fcbe017a8
-  languageName: node
-  linkType: hard
-
-"@scure/bip39@npm:1.4.0":
-  version: 1.4.0
-  resolution: "@scure/bip39@npm:1.4.0"
-  dependencies:
-    "@noble/hashes": "npm:~1.5.0"
-    "@scure/base": "npm:~1.1.8"
-  checksum: dcdceeac348ed9c0f545c1a7ef8854ef62d6eb4e7b7aaafa4e2ef27f7e1c5744b0cd26292afd04e1ee59ae035b19abdd65174a444b8db8c238ccc662f6b90eac
   languageName: node
   linkType: hard
 
@@ -5118,21 +5070,6 @@ __metadata:
     zod:
       optional: true
   checksum: dc954877fba19e2b7a70f1025807d69fa5aabec8bd58ce94e68d1a5ec1697fff3fe5214b4392508db7191762150f19a2396cf66ffb1d3ba8c1f37a89fd25e598
-  languageName: node
-  linkType: hard
-
-"abitype@npm:1.0.6":
-  version: 1.0.6
-  resolution: "abitype@npm:1.0.6"
-  peerDependencies:
-    typescript: ">=5.0.4"
-    zod: ^3 >=3.22.0
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-    zod:
-      optional: true
-  checksum: 30ca97010bbf34b9aaed401858eeb6bc30419f7ff11eb34adcb243522dd56c9d8a9d3d406aa5d4f60a7c263902f5136043005698e3f073ea882a4922d43a2929
   languageName: node
   linkType: hard
 
@@ -9056,15 +8993,6 @@ __metadata:
   peerDependencies:
     ws: "*"
   checksum: 46f43b07edcf148acba735ddfc6ed985e1e124446043ea32b71023e67671e46619c8818eda8c34a9ac91cb37c475af12a3aeeee676a88a0aceb5d67a3082313f
-  languageName: node
-  linkType: hard
-
-"isows@npm:1.0.6":
-  version: 1.0.6
-  resolution: "isows@npm:1.0.6"
-  peerDependencies:
-    ws: "*"
-  checksum: f89338f63ce2f497d6cd0f86e42c634209328ebb43b3bdfdc85d8f1589ee75f02b7e6d9e1ba274101d0f6f513b1b8cbe6985e6542b4aaa1f0c5fd50d9c1be95c
   languageName: node
   linkType: hard
 
@@ -13150,15 +13078,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-sync-external-store@npm:1.2.0":
-  version: 1.2.0
-  resolution: "use-sync-external-store@npm:1.2.0"
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: ac4814e5592524f242921157e791b022efe36e451fe0d4fd4d204322d5433a4fc300d63b0ade5185f8e0735ded044c70bcf6d2352db0f74d097a238cebd2da02
-  languageName: node
-  linkType: hard
-
 "use-sync-external-store@npm:^1.2.2":
   version: 1.2.2
   resolution: "use-sync-external-store@npm:1.2.2"
@@ -13237,29 +13156,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:2.21.36":
-  version: 2.21.36
-  resolution: "viem@npm:2.21.36"
-  dependencies:
-    "@adraffy/ens-normalize": "npm:1.11.0"
-    "@noble/curves": "npm:1.6.0"
-    "@noble/hashes": "npm:1.5.0"
-    "@scure/bip32": "npm:1.5.0"
-    "@scure/bip39": "npm:1.4.0"
-    abitype: "npm:1.0.6"
-    isows: "npm:1.0.6"
-    webauthn-p256: "npm:0.0.10"
-    ws: "npm:8.18.0"
-  peerDependencies:
-    typescript: ">=5.0.4"
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-  checksum: 2c6bbde5ccabc94064d199543d1e597e0f2d3475ab202d8e4bfc5018aeb019ad3b58b15aed0471ca36acb42f8f4f3316905ea1eae3c4a48fc1d3ad0766c9ea80
-  languageName: node
-  linkType: hard
-
-"viem@npm:^2.7.15":
+"viem@npm:2.20.0":
   version: 2.20.0
   resolution: "viem@npm:2.20.0"
   dependencies:
@@ -13459,16 +13356,6 @@ __metadata:
   dependencies:
     makeerror: "npm:1.0.12"
   checksum: a17e037bccd3ca8a25a80cb850903facdfed0de4864bd8728f1782370715d679fa72e0a0f5da7c1c1379365159901e5935f35be531229da53bbfc0efdabdb48e
-  languageName: node
-  linkType: hard
-
-"webauthn-p256@npm:0.0.10":
-  version: 0.0.10
-  resolution: "webauthn-p256@npm:0.0.10"
-  dependencies:
-    "@noble/curves": "npm:^1.4.0"
-    "@noble/hashes": "npm:^1.4.0"
-  checksum: 27d836d81a1fec24a31d2d9b652f8ff6876b51940d1003bbd14dc5cfa57c58d84223b5a4eece229516522fd997bc0bc7be618ac42b129fb5fa42fa530060b16d
   languageName: node
   linkType: hard
 
@@ -13769,22 +13656,5 @@ __metadata:
   version: 3.23.8
   resolution: "zod@npm:3.23.8"
   checksum: 8f14c87d6b1b53c944c25ce7a28616896319d95bc46a9660fe441adc0ed0a81253b02b5abdaeffedbeb23bdd25a0bf1c29d2c12dd919aef6447652dd295e3e69
-  languageName: node
-  linkType: hard
-
-"zustand@npm:4.3.8":
-  version: 4.3.8
-  resolution: "zustand@npm:4.3.8"
-  dependencies:
-    use-sync-external-store: "npm:1.2.0"
-  peerDependencies:
-    immer: ">=9.0"
-    react: ">=16.8"
-  peerDependenciesMeta:
-    immer:
-      optional: true
-    react:
-      optional: true
-  checksum: 9d82fa4f159204ab19b56f60d6567c012972b2af80f59e0c27710b4642431078ef3851d0bebd9790ec5dd264ee0f406043e4229bcff7887775072df2dda7a11c
   languageName: node
   linkType: hard

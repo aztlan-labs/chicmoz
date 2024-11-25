@@ -5,7 +5,7 @@ kind: Service
 metadata:
   annotations:
     service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"
-    service.beta.kubernetes.io/do-loadbalancer-hostname: "workaround.chicmoz.info"
+    service.beta.kubernetes.io/do-loadbalancer-hostname: "workaround.aztecscout.xyz"
   labels:
     helm.sh/chart: ingress-nginx-4.11.2
     app.kubernetes.io/name: ingress-nginx

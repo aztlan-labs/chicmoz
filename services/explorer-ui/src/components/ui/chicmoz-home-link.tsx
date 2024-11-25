@@ -9,14 +9,13 @@ export function ChicmozHomeLink({
 }) {
   return (
     <div className={className}>
-      <Link to={routes.home.route} className="flex flex-col items-center">
-        <div className="flex items-center">
-          <AztecIconWhite className={iconClasses} />
-          <p className={`${textClasses} text-white ml-1 font-bold text-[24px]`}>
-            Chicmoz
-          </p>
-        </div>
-        <p className="text-xs text-white">Aztec Block Explorer</p>
+      <Link to={routes.home.route} className="flex flex-row items-center">
+        <AztecIconWhite className={iconClasses} />
+        <p
+          className={`${textClasses} text-white ml-1 font-bold text-[24px] font-space-grotesk`}
+        >
+          Aztec-Scout
+        </p>
       </Link>
     </div>
   );

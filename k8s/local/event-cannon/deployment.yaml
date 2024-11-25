@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: event-cannon
+  name: event-cannon
+  namespace: chicmoz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: event-cannon
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: event-cannon
+    spec:
+      containers:
+        - image: event-cannon:latest
+          resources:
+            limits:
+              memory: 750Mi
+              cpu: 250m
+          name: event-cannon
+          env:
+            - name: NODE_ENV
+              value: "development"
+            - name: AZTEC_RPC_URL
+              value: "http://aztec-sandbox-node:8081"
+status: {}

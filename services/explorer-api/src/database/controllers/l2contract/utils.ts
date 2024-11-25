@@ -7,6 +7,7 @@ import { ChicmozL2ContractInstanceDeluxe, chicmozL2ContractInstanceDeluxeSchema 
 export const parseDeluxe = (contractClass: any, instance: any): ChicmozL2ContractInstanceDeluxe => {
   return chicmozL2ContractInstanceDeluxeSchema.parse({
     ...contractClass,
+    blockHash: instance.blockHash,
     packedPublicBytecode: Buffer.from(contractClass.packedPublicBytecode),
     address: instance.address,
     version: instance.version,

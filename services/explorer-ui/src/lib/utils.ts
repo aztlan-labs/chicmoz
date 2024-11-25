@@ -63,28 +63,55 @@ export const hexToHSL = (hex: string): string => {
 };
 
 const intervals = [
-  { label: "day", seconds: 86400 },
-  { label: "hour", seconds: 3600 },
-  { label: "minute", seconds: 60 },
-  { label: "second", seconds: 1 },
+  { label: "day", seconds: 86400, shortLabel: "day" },
+  { label: "hour", seconds: 3600, shortLabel: "hr" },
+  { label: "minute", seconds: 60, shortLabel: "min" },
+  { label: "second", seconds: 1, shortLabel: "sec" },
 ];
 
-export const formatDuration = (durationSeconds: number) => {
+export const formatDuration = (durationSeconds: number, short?: boolean) => {
   for (let i = 0; i < intervals.length; i++) {
     const interval = intervals[i];
     const count = Math.floor(durationSeconds / interval.seconds);
     if (count >= 1) {
-      return `${count} ${interval.label}${count > 1 ? "s" : ""}`;
+      const label = short ? interval.shortLabel : interval.label;
+      return `${count} ${label}${count > 1 ? "s" : ""}`;
     }
   }
   return "just now";
 };
 
-export const formatTimeSince = (unixTimestamp: number | null) => {
+export const formatTimeSince = (unixTimestamp: number | null, short = true) => {
   if (unixTimestamp === null) return "no timestamp";
   const now = new Date().getTime();
   const secondsSince = Math.round((now - unixTimestamp) / 1000);
-  const duration = formatDuration(secondsSince);
+  const duration = formatDuration(secondsSince, short);
   if (duration === "just now") return duration;
-  return `${duration} ago`;
+  return `${duration}`;
+};
+
+
+const feesPrefix = [
+  { label: "", value: 1 },
+  { label: "k", value: 1_000 },
+  { label: "M", value: 1_000_000 },
+  { label: "G", value: 1_000_000_000 },
+];
+
+export const formatFees = (fees: string | undefined) => {
+  if (fees === undefined) return { denomination: "", value: "No data" };
+  const feesNumber = Number(fees);
+  for (let i = feesPrefix.length - 1; i >= 0; i--) {
+    const prefix = feesPrefix[i];
+    if (feesNumber >= prefix.value) {
+      return {
+        denomination: prefix.label,
+        value: (feesNumber / prefix.value).toFixed(2),
+      };
+    }
+  }
+  return {
+    denomination: "",
+    value: feesNumber.toFixed(2),
+  };
 };

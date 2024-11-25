@@ -27,14 +27,21 @@ import {
 } from "~/components/ui/table";
 
 import { cn } from "~/lib/utils";
+import { Loader } from "../loader";
 
 interface DataTableProps<TData, TValue> {
+  isLoading?: boolean;
+  title?: string;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  disableSizeSelector?: boolean;
 }
 export function DataTable<TData, TValue>({
+  isLoading,
+  title,
   columns,
   data,
+  disableSizeSelector,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -73,14 +80,22 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="space-y-4 bg-white rounded-xl p-3 mb-7">
+    <div className="space-y-4 bg-white rounded-lg p-5">
+      { title && <h3 className="ml-0.5">{title}</h3> }
       <div className="min-w-full">
-        <Table className="border-spacing-x-1">
-          <DataTableHeader table={table} />
-          <DataTableBody table={table} columns={columns} />
-        </Table>
+        {isLoading && <Loader amount={10} />}
+        {!isLoading && (
+          <Table className="border-spacing-x-1">
+            <DataTableHeader table={table} />
+            <DataTableBody table={table} columns={columns} />
+          </Table>
+        )}
       </div>
-      <DataTablePagination table={table} />
+
+      <DataTablePagination
+        table={table}
+        disableSizeSelector={disableSizeSelector}
+      />
     </div>
   );
 }
@@ -103,7 +118,7 @@ function DataTableHeader<TData, TValue>({
                 {header.isPlaceholder ||
                   flexRender(
                     header.column.columnDef.header,
-                    header.getContext(),
+                    header.getContext()
                   )}
                 <div
                   {...{
@@ -140,7 +155,7 @@ function DataTableBody<TData, TValue>({
             className={cn(
               row.getCanExpand()
                 ? "cursor-pointer hover:bg-grey-dark/10 hover:text-pink "
-                : "",
+                : ""
             )}
           >
             {row.getVisibleCells().map((cell) => (

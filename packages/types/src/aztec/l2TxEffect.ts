@@ -16,6 +16,22 @@ export const unencryptedLogEntrySchema = z.object({
   contractAddress: aztecAddressSchema,
 });
 
+export const chicmozL2PendingTxSchema = z.object({
+  hash: hexStringSchema,
+  birthTimestamp: z.number(),
+  data: z.string(),
+  noteEncryptedLogs: z.string(),
+  encryptedLogs: z.string(),
+  unencryptedLogs: z.string(),
+  contractClassLogs: z.string(),
+  clientIvcProof: z.string(),
+  enqueuedPublicFunctionCalls: z.array(z.string()),
+  publicTeardownFunctionCall: z.string(),
+});
+
+/**
+  * Represents effects of a transaction on the L2 state.
+  */
 export const chicmozL2TxEffectSchema = z.object({
   revertCode: z.preprocess(
     (val) => {
@@ -24,13 +40,17 @@ export const chicmozL2TxEffectSchema = z.object({
     },
     z.object({ code: z.number() }),
   ),
+  /** The hash of the transaction that caused these effects. */
   hash: hexStringSchema,
+  /** The hash of the transaction and its effects. */
+  txHash: hexStringSchema,
+  txBirthTimestamp: z.number().optional(),
   transactionFee: frNumberSchema,
   noteHashes: z.array(frSchema),
   nullifiers: z.array(frSchema),
   l2ToL1Msgs: z.array(frSchema),
   publicDataWrites: z.array(
-    z.object({ leafIndex: frSchema, newValue: frSchema }),
+    z.object({ leafSlot: frSchema, value: frSchema }),
   ),
   noteEncryptedLogsLength: frNumberSchema,
   encryptedLogsLength: frNumberSchema,
@@ -62,4 +82,5 @@ export type NoteEncryptedLogEntry = z.infer<typeof noteEncryptedLogEntrySchema>;
 export type EncryptedLogEntry = z.infer<typeof encryptedLogEntrySchema>;
 export type UnencryptedLogEntry = z.infer<typeof unencryptedLogEntrySchema>;
 
+export type ChicmozL2PendingTx = z.infer<typeof chicmozL2PendingTxSchema>;
 export type ChicmozL2TxEffect = z.infer<typeof chicmozL2TxEffectSchema>;

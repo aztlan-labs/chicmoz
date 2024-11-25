@@ -12,11 +12,8 @@ export const getTxEffectTableObj = (
 ): TxEffectTableSchema => {
   return txEffectSchema.parse({
     hash: txEffect.hash,
+    txHash: txEffect.txHash,
     transactionFee: txEffect.transactionFee,
-    totalLengthOfLogs:
-      txEffect.encryptedLogsLength +
-      txEffect.unencryptedLogsLength +
-      txEffect.noteEncryptedLogsLength,
     blockNumber: block.height,
     timestamp: block.header.globalVariables.timestamp,
   });
@@ -24,8 +21,8 @@ export const getTxEffectTableObj = (
 
 const txEffectSchema = z.object({
   hash: z.string(),
+  txHash: z.string(),
   transactionFee: z.number(),
-  totalLengthOfLogs: z.number(),
   blockNumber: z.number(),
   timestamp: z.number(),
 });

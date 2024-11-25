@@ -30,11 +30,11 @@ export const Contracts: FC = () => {
 
   return (
     <div className="mx-auto px-7 max-w-[1440px] md:px-[70px]">
-      <div className="flex flex-wrap justify-center gap-3 m-5 ">
-        <h2 className="mt-2 text-primary md:hidden">All contracts</h2>
-        <h1 className="hidden md:block md:mt-16">All contracts</h1>
+      <div className="flex flex-wrap justify-center m-5">
+        <h2 className="mt-2 text-primary md:hidden">All Contracts</h2>
+        <h1 className="hidden md:block md:mt-16">All Contracts</h1>
       </div>
-      <div className="flex flex-row justify-center gap-4 m-8">
+      <div className="grid grid-cols-2 gap-3 my-10 md:gap-5 ">
         <InfoBadge
           title="Total Contract Classes"
           isLoading={loadingAmountContracts}
@@ -49,18 +49,18 @@ export const Contracts: FC = () => {
         />
       </div>
 
-      <div className="flex flex-col gap-4 md:flex-row ">
-        <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
-          <h3>Latest Contract Classes</h3>
+      <div className="flex flex-col gap-4 md:flex-row">
+        <div className="bg-white rounded-lg shadow-lg w-full md:w-1/2">
           <ContractClassesTable
+            title="Latest Contract Classes"
             contracts={mapContractClasses(classesData)}
             isLoading={isLoadingClasses}
             error={errorClasses}
           />
         </div>
-        <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
-          <h3>Latest Contract Instances</h3>
+        <div className="bg-white rounded-lg shadow-lg w-full md:w-1/2">
           <ContractInstancesTable
+            title="Latest Contract Instances"
             contracts={mapContractInstances(instancesData)}
             isLoading={isLoadingInstances}
             error={errorInstances}

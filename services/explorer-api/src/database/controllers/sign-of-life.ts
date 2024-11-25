@@ -2,11 +2,11 @@ import { desc, eq, sql } from "drizzle-orm";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { getDb as db } from "../../database/index.js";
 import {
-  bodyToTxEffects,
+  body,
   l2Block,
   txEffect,
 } from "../../database/schema/l2block/index.js";
-import { l2ContractInstanceDeployed } from "../schema/index.js";
+import { l2ContractInstanceDeployed, l2PrivateFunction, l2UnconstrainedFunction } from "../schema/index.js";
 
 export const getABlock = async () => {
   const res = await db()
@@ -39,9 +39,9 @@ export const getABlockWithTxEffects = async () => {
         ),
       txEffectCount: sql<number>`count(${txEffect.hash})`.as("txEffectCount"),
     })
-    .from(bodyToTxEffects)
-    .innerJoin(txEffect, eq(bodyToTxEffects.txEffectHash, txEffect.hash))
-    .innerJoin(l2Block, eq(bodyToTxEffects.bodyId, l2Block.bodyId))
+    .from(txEffect)
+    .innerJoin(body, eq(txEffect.bodyId, body.id))
+    .innerJoin(l2Block, eq(body.blockHash, l2Block.hash))
     .groupBy(l2Block.height, l2Block.hash)
     .orderBy(sql`count(${txEffect.hash}) DESC, ${l2Block.height} DESC`)
     .limit(1)
@@ -95,5 +95,42 @@ export const getABlockWithContractInstances = async () => {
       version: dbRes[0].l2ContractInstanceDeployed.version,
       classId: dbRes[0].l2ContractInstanceDeployed.classId,
     },
+  };
+};
+
+const getAL2PrivateFunction = async () => {
+  const dbRes = await db()
+    .select({
+      classId: l2PrivateFunction.contractClassId,
+      functionSelector: l2PrivateFunction.privateFunction_selector_value,
+    })
+    .from(l2PrivateFunction)
+    .limit(1)
+    .execute();
+  if (dbRes.length === 0) return null;
+  return dbRes[0];
+}
+
+const getAL2UnconstrainedFunction = async () => {
+  const dbRes = await db()
+    .select({
+      classId: l2UnconstrainedFunction.contractClassId,
+      functionSelector: l2UnconstrainedFunction.unconstrainedFunction_selector_value,
+    })
+    .from(l2UnconstrainedFunction)
+    .limit(1)
+    .execute();
+  if (dbRes.length === 0) return null;
+  return dbRes[0]
+}
+
+export const getL2ContractFunctions = async () => {
+  const [privateFunction, unconstrainedFunction] = await Promise.all([
+    getAL2PrivateFunction(),
+    getAL2UnconstrainedFunction(),
+  ]);
+  return {
+    privateFunction,
+    unconstrainedFunction,
   };
 };

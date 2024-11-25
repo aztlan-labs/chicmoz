@@ -6,6 +6,7 @@ const getTxEffectWithHashes = (txEffects: L2Block["body"]["txEffects"]) => {
     return {
       ...txEffect,
       hash: "0x" + txEffect.hash().toString("hex"),
+      txHash: txEffect.txHash.to0xString(),
     };
   });
 };
@@ -18,6 +19,7 @@ export const parseBlock = (b: L2Block): ChicmozL2Block => {
   const blockHash = b.hash();
   const blockWithTxEffectsHashesAdded = {
     ...b,
+    txsEffectsHash: b.header.contentCommitment.txsEffectsHash.toJSON(),
     body: {
       ...b.body,
       txEffects: getTxEffectWithHashes(b.body.txEffects),

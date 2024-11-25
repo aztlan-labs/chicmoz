@@ -8,7 +8,6 @@ import { getDb as db } from "../../../database/index.js";
 import {
   archive,
   body,
-  bodyToTxEffects,
   contentCommitment,
   gasFees,
   globalVariables,
@@ -96,28 +95,28 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2BlockLight[]> =
       bodyId: body.id,
     })
     .from(l2Block)
-    .innerJoin(archive, eq(l2Block.archiveId, archive.id))
-    .innerJoin(header, eq(l2Block.headerId, header.id))
-    .innerJoin(lastArchive, eq(header.lastArchiveId, lastArchive.id))
+    .innerJoin(archive, eq(l2Block.hash, archive.fk))
+    .innerJoin(header, eq(l2Block.hash, header.blockHash))
+    .innerJoin(lastArchive, eq(header.id, lastArchive.fk))
     .innerJoin(
       contentCommitment,
-      eq(header.contentCommitmentId, contentCommitment.id)
+      eq(header.id, contentCommitment.headerId)
     )
-    .innerJoin(state, eq(header.stateId, state.id))
+    .innerJoin(state, eq(header.id, state.headerId))
     .innerJoin(
       l1ToL2MessageTree,
-      eq(state.l1ToL2MessageTreeId, l1ToL2MessageTree.id)
+      eq(state.id, l1ToL2MessageTree.fk)
     )
-    .innerJoin(partial, eq(state.partialId, partial.id))
-    .innerJoin(noteHashTree, eq(partial.noteHashTreeId, noteHashTree.id))
-    .innerJoin(nullifierTree, eq(partial.nullifierTreeId, nullifierTree.id))
-    .innerJoin(publicDataTree, eq(partial.publicDataTreeId, publicDataTree.id))
+    .innerJoin(partial, eq(state.id, partial.stateId))
+    .innerJoin(noteHashTree, eq(partial.id, noteHashTree.fk))
+    .innerJoin(nullifierTree, eq(partial.id, nullifierTree.fk))
+    .innerJoin(publicDataTree, eq(partial.id, publicDataTree.fk))
     .innerJoin(
       globalVariables,
-      eq(header.globalVariablesId, globalVariables.id)
+      eq(header.id, globalVariables.headerId)
     )
-    .innerJoin(gasFees, eq(globalVariables.gasFeesId, gasFees.id))
-    .innerJoin(body, eq(l2Block.bodyId, body.id));
+    .innerJoin(gasFees, eq(globalVariables.id, gasFees.globalVariablesId))
+    .innerJoin(body, eq(l2Block.hash, body.blockHash));
 
   let whereQuery;
 
@@ -148,9 +147,8 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2BlockLight[]> =
       .select({
         hash: txEffect.hash,
       })
-      .from(bodyToTxEffects)
-      .innerJoin(txEffect, eq(bodyToTxEffects.txEffectHash, txEffect.hash))
-      .where(eq(bodyToTxEffects.bodyId, result.bodyId))
+      .from(txEffect)
+      .where(eq(txEffect.bodyId, result.bodyId))
       .orderBy(asc(txEffect.index))
       .execute();
 

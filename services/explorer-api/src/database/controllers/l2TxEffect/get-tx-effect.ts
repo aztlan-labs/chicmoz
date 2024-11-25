@@ -10,12 +10,12 @@ import {
   noteEncryptedLogEntrySchema,
   unencryptedLogEntrySchema,
 } from "@chicmoz-pkg/types";
-import { and, asc, eq, getTableColumns } from "drizzle-orm";
+import { SQL, and, asc, eq, getTableColumns } from "drizzle-orm";
 import { z } from "zod";
 import { DB_MAX_TX_EFFECTS } from "../../../environment.js";
 import { getDb as db } from "../../../database/index.js";
 import {
-  bodyToTxEffects,
+  body,
   functionLogs,
   globalVariables,
   header,
@@ -24,10 +24,7 @@ import {
   publicDataWrite,
   txEffect,
   txEffectToLogs,
-  txEffectToPublicDataWrite,
 } from "../../../database/schema/l2block/index.js";
-// TODO: this should be removed (and caught by dbWrapper)
-import { dbParseErrorCallback } from "../utils.js";
 
 enum GetTypes {
   BlockHeight,
@@ -58,15 +55,15 @@ export const getTxEffectNestedByHash = async (
 > => {
   const publicDataWrites = await db()
     .select({
-      publicDataWrite: getTableColumns(publicDataWrite),
+      ...getTableColumns(publicDataWrite),
     })
-    .from(txEffectToPublicDataWrite)
+    .from(publicDataWrite)
     .innerJoin(
-      publicDataWrite,
-      eq(txEffectToPublicDataWrite.publicDataWriteId, publicDataWrite.id)
+      txEffect,
+      eq(txEffect.hash, publicDataWrite.txEffectHash)
     )
-    .where(eq(txEffectToPublicDataWrite.txEffectHash, txEffectHash))
-    .orderBy(asc(txEffectToPublicDataWrite.index))
+    .where(eq(publicDataWrite.txEffectHash, txEffectHash))
+    .orderBy(asc(publicDataWrite.index))
     .execute();
 
   const mixedLogs = await db()
@@ -75,8 +72,8 @@ export const getTxEffectNestedByHash = async (
       ...getTableColumns(logs),
     })
     .from(txEffectToLogs)
-    .innerJoin(logs, eq(txEffectToLogs.logId, logs.id))
-    .innerJoin(functionLogs, eq(txEffectToLogs.functionLogId, functionLogs.id))
+    .innerJoin(logs, eq(txEffectToLogs.id, logs.txEffectToLogsId))
+    .innerJoin(functionLogs, eq(txEffectToLogs.id, functionLogs.txEffectToLogsId))
     .where(eq(txEffectToLogs.txEffectHash, txEffectHash))
     .orderBy(asc(functionLogs.index), asc(logs.index))
     .execute();
@@ -127,21 +124,15 @@ export const getTxEffectNestedByHash = async (
 
   for (const log of mixedLogs) {
     if (log.type === "noteEncrypted") {
-      const l = await noteEncryptedLogEntrySchema
-        .parseAsync(log)
-        .catch(dbParseErrorCallback);
+      const l = noteEncryptedLogEntrySchema.parse(log);
       initialLogs.noteEncryptedLogs.functionLogs[
         log.functionLogIndex
       ].logs.push(l);
     } else if (log.type === "encrypted") {
-      const l = await encryptedLogEntrySchema
-        .parseAsync(log)
-        .catch(dbParseErrorCallback);
+      const l = encryptedLogEntrySchema.parse(log);
       initialLogs.encryptedLogs.functionLogs[log.functionLogIndex].logs.push(l);
     } else if (log.type === "unencrypted") {
-      const l = await unencryptedLogEntrySchema
-        .parseAsync(log)
-        .catch(dbParseErrorCallback);
+      const l = unencryptedLogEntrySchema.parse(log);
       initialLogs.unencryptedLogs.functionLogs[log.functionLogIndex].logs.push(
         l
       );
@@ -149,7 +140,7 @@ export const getTxEffectNestedByHash = async (
   }
 
   return {
-    publicDataWrites: publicDataWrites.map((pdw) => pdw.publicDataWrite),
+    publicDataWrites,
     ...initialLogs,
   };
 };
@@ -185,12 +176,12 @@ const _getTxEffects = async (
       timestamp: globalVariables.timestamp,
     })
     .from(l2Block)
-    .innerJoin(bodyToTxEffects, eq(l2Block.bodyId, bodyToTxEffects.bodyId))
-    .innerJoin(txEffect, eq(bodyToTxEffects.txEffectHash, txEffect.hash))
-    .innerJoin(header, eq(l2Block.headerId, header.id))
+    .innerJoin(body, eq(l2Block.hash, body.blockHash))
+    .innerJoin(txEffect, eq(body.id, txEffect.bodyId))
+    .innerJoin(header, eq(l2Block.hash, header.blockHash))
     .innerJoin(
       globalVariables,
-      eq(header.globalVariablesId, globalVariables.id)
+      eq(header.id, globalVariables.headerId)
     );
 
   let whereQuery;
@@ -221,19 +212,29 @@ const _getTxEffects = async (
       const nestedData = await getTxEffectNestedByHash(txEffect.hash);
       return {
         ...txEffect,
+        txBirthTimestamp: txEffect.txBirthTimestamp.valueOf(),
         ...nestedData,
       };
     })
   );
 
-  return z
-    .array(chicmozL2TxEffectDeluxeSchema)
-    .parseAsync(txEffects)
-    .catch(dbParseErrorCallback);
+  return z.array(chicmozL2TxEffectDeluxeSchema).parse(txEffects);
 };
 
-export const getTxeffectByHash = async (
+export const getTxEffectByTxHash = async (
+  txHash: HexString
+): Promise<ChicmozL2TxEffectDeluxe | null> => {
+  return getTxEffectDynamicWhere(eq(txEffect.txHash, txHash));
+};
+
+export const getTxEffectByHash = async (
   hash: HexString
+): Promise<ChicmozL2TxEffectDeluxe | null> => {
+  return getTxEffectDynamicWhere(eq(txEffect.hash, hash));
+};
+
+export const getTxEffectDynamicWhere = async (
+  whereMatcher: SQL<unknown>
 ): Promise<ChicmozL2TxEffectDeluxe | null> => {
   const dbRes = await db()
     .select({
@@ -242,14 +243,14 @@ export const getTxeffectByHash = async (
       timestamp: globalVariables.timestamp,
     })
     .from(txEffect)
-    .innerJoin(bodyToTxEffects, eq(txEffect.hash, bodyToTxEffects.txEffectHash))
-    .innerJoin(l2Block, eq(bodyToTxEffects.bodyId, l2Block.bodyId))
-    .innerJoin(header, eq(l2Block.headerId, header.id))
+    .innerJoin(body, eq(txEffect.bodyId, body.id))
+    .innerJoin(l2Block, eq(body.blockHash, l2Block.hash))
+    .innerJoin(header, eq(l2Block.hash, header.blockHash))
     .innerJoin(
       globalVariables,
-      eq(header.globalVariablesId, globalVariables.id)
+      eq(header.id, globalVariables.headerId)
     )
-    .where(eq(txEffect.hash, hash))
+    .where(whereMatcher)
     .limit(1)
     .execute();
 
@@ -257,10 +258,9 @@ export const getTxeffectByHash = async (
 
   const nestedData = await getTxEffectNestedByHash(dbRes[0].hash);
 
-  return chicmozL2TxEffectDeluxeSchema
-    .parseAsync({
-      ...dbRes[0],
-      ...nestedData,
-    })
-    .catch(dbParseErrorCallback);
+  return chicmozL2TxEffectDeluxeSchema.parse({
+    ...dbRes[0],
+    txBirthTimestamp: dbRes[0].txBirthTimestamp.valueOf(),
+    ...nestedData,
+  });
 };

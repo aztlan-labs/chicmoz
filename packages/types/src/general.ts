@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ChicmozL2Block, ChicmozL2PendingTx } from "./index.js";
 
 export const hexStringSchema = z.custom<`0x${string}`>(
   (value) => {
@@ -21,3 +22,8 @@ export const ethAddressSchema = z.custom<`0x${string}`>((value) => {
   );
 });
 export type EthAddress = z.infer<typeof ethAddressSchema>;
+
+export type WebsocketUpdateMessage = {
+  block?: ChicmozL2Block;
+  txs?: ChicmozL2PendingTx[];
+};

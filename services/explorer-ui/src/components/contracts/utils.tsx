@@ -10,7 +10,7 @@ export const getClassVersionLink = (
   if (typeof version !== "number") return null;
   const r = `${routes.contracts.route}/${routes.contracts.children.classes.route}/${contractClassId}/versions/${version}`;
   return (
-    <div className="text-purple-light font-mono font-bold">
+    <div className="text-purple-light font-mono">
       <Link to={r}>{linkText ?? version}</Link>
     </div>
   );

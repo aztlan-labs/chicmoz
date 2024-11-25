@@ -7,6 +7,7 @@ export const queryKeyGenerator = {
     height,
   ],
   txEffectByHash: (hash: string) => ["txEffectByHash", hash],
+  pendingTxs: ["pendingTxs"],
   latestBlock: ["latestBlock"],
   latestBlocks: ["latestBlocks"],
   blockByHeight: (height: string) => ["blockByHeight", height],
@@ -17,6 +18,8 @@ export const queryKeyGenerator = {
   averageFees: [statsKey, "averageFees"],
   averageBlockTime: [statsKey, "averageBlockTime"],
   contractClass: (classId?: string) => ["contractClass", classId],
+  contractClassPrivateFunctions: (classId: string) => ["contractClassPrivateFunctions", classId],
+  contractClassUnconstrainedFunctions: (classId: string) => ["contractClassUnconstrainedFunctions", classId],
   latestContractClasses: (classId?: string) => [
     "latestContractClasses",
     classId,

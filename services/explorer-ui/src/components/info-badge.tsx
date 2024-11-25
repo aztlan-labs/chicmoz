@@ -19,10 +19,10 @@ export const InfoBadge: FC<InfoBadgeProps> = ({
     return "No Data";
   }, [data, error]);
   return (
-    <div className="flex flex-col bg-white w-5/12 justify-between rounded-lg shadow-md p-4 md:w-96">
+    <div className="flex flex-col bg-white w-full justify-between rounded-lg shadow-md p-4 ">
       <p className="text-sm">{title}</p>
       {isLoading ? (
-        <Loader amout={1} />
+        <Loader amount={1} />
       ) : (
         <h3 className="text-primary">{text}</h3>
       )}

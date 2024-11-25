@@ -1,15 +1,11 @@
 import { useParams } from "@tanstack/react-router";
-import { useState, type FC } from "react";
+import { useState, type FC, useEffect } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { useGetTxEffectByHash } from "~/hooks/";
-import { API_URL, aztecExplorer } from "~/service/constants";
 import { txEffectTabs, type TabId } from "./constants";
 import { getTxEffectData, mapTxEffectsData } from "./utils";
-import { truncateHashString } from "~/lib/create-hash-string";
 import { Textarea } from "~/components/ui/textarea";
 import { OptionButtons } from "./tabs";
-
-const API_ENDPOINT_URL = `${API_URL}/${aztecExplorer.getL2TxEffectByHash}`;
 
 export const TxEffectDetails: FC = () => {
   const [selectedTab, setSelectedTab] = useState<TabId>("encryptedLogs");
@@ -17,8 +13,20 @@ export const TxEffectDetails: FC = () => {
     from: "/tx-effects/$hash",
   });
   const { data: txEffects, isLoading, error } = useGetTxEffectByHash(hash);
-
+  console.log(txEffects);
   const txEffectData = mapTxEffectsData(txEffects);
+
+  useEffect(() => {
+    // check for the first avalible tab with data
+    if (txEffects) {
+      const firstAvailableTab = txEffectTabs.find(
+        (tab) => tab.id in txEffectData
+      );
+
+      if (firstAvailableTab) setSelectedTab(firstAvailableTab.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [txEffects]);
 
   const getSelectedItem = (value: string) => {
     setSelectedTab(value as TabId);
@@ -29,26 +37,22 @@ export const TxEffectDetails: FC = () => {
   if (error) return <div>Error</div>;
   if (!txEffects) return <div>No data</div>;
 
-  const apiEndpointUrl = `${API_ENDPOINT_URL}${hash}`;
-
   return (
     <div className="mx-auto px-7 max-w-[1440px] md:px-[70px]">
       <div>
         <div>
           <h2>TxEffect details</h2>
-          <p>{truncateHashString(txEffects.hash)}</p>
-          <a href={apiEndpointUrl} target="_blank" rel="noreferrer">
-            (API Endpoint)
-          </a>
         </div>
         <div className="flex flex-col gap-4 mt-8">
           <div className="bg-white rounded-lg shadow-md p-4">
             <KeyValueDisplay data={getTxEffectData(txEffects)} />
           </div>
           <OptionButtons
+            key={selectedTab}
             availableData={txEffectData}
             requiredOptions={txEffectTabs}
             onOptionSelect={getSelectedItem}
+            selectedItem={selectedTab}
           />
           <div className="bg-white rounded-lg shadow-md p-4">
             {selectedTab === "encryptedLogs" && (
@@ -68,11 +72,11 @@ export const TxEffectDetails: FC = () => {
                     // Render KeyValueDisplay with the flattened entries
                     return (
                       <div key={index}>
-                        <h3>Log {index + 1}</h3>
+                        <h4>Log {index + 1}</h4>
                         <KeyValueDisplay key={index} data={flattenedEntries} />
                       </div>
                     );
-                  },
+                  }
                 )}
               </div>
             )}
@@ -80,20 +84,33 @@ export const TxEffectDetails: FC = () => {
               <div className="">
                 {txEffects.unencryptedLogs.functionLogs.map(
                   (unencrypted, index) => {
-                    const entries = unencrypted.logs.map((log) => {
-                      return Object.entries(log).map(([key, value]) => ({
-                        label: key,
-                        value: value,
-                        isClickable: false,
-                      }));
-                    });
+                    const entries = unencrypted.logs.map(
+                      ({ data, contractAddress }) => {
+                        return [
+                          {
+                            label: "Data",
+                            value: data
+                              .match(/.{1,64}/g)
+                              ?.map((hex) => parseInt(hex, 16))
+                              .map((charCode) => String.fromCharCode(charCode))
+                              .join("") ?? "",
+                            isClickable: false,
+                          },
+                          {
+                            label: "Contract Address",
+                            value: contractAddress,
+                            isClickable: true,
+                          },
+                        ];
+                      }
+                    );
                     // Flatten the nested arrays
                     const flattenedEntries = entries.flat();
 
                     // Render KeyValueDisplay with the flattened entries
                     return (
                       <div key={index}>
-                        <h3>Log {index + 1}</h3>
+                        <h4>Log {index + 1}</h4>
                         {flattenedEntries.map((entry) => (
                           <div key={entry.label}>
                             <a>{entry.label}</a>
@@ -102,21 +119,22 @@ export const TxEffectDetails: FC = () => {
                         ))}
                       </div>
                     );
-                  },
+                  }
                 )}
               </div>
             )}
             {selectedTab === "nullifiers" && (
               <div className="">
-                {txEffects.nullifiers.map((nullifier) => (
+                {txEffects.nullifiers.map((nullifier, key) => (
                   <KeyValueDisplay
+                    key={key}
                     data={[{ label: "Nullifier", value: nullifier }]}
                   />
                 ))}
               </div>
             )}
             {selectedTab === "noteEncryptedLogs" && (
-              <div className="flex flex-col gap-4 w-10 mb-4">
+              <div className="">
                 {txEffects.noteEncryptedLogs.functionLogs.map(
                   (noteEncryptedLogs, index) => {
                     const entries = noteEncryptedLogs.logs.map((log) => {
@@ -132,11 +150,11 @@ export const TxEffectDetails: FC = () => {
                     // Render KeyValueDisplay with the flattened entries
                     return (
                       <div key={index}>
-                        <h3>Log {index + 1}</h3>
+                        <h4>Log {index + 1}</h4>
                         <KeyValueDisplay key={index} data={flattenedEntries} />
                       </div>
                     );
-                  },
+                  }
                 )}
               </div>
             )}
@@ -166,12 +184,12 @@ export const TxEffectDetails: FC = () => {
                     <KeyValueDisplay
                       data={[
                         {
-                          label: "leafIndex",
-                          value: publicDataWrite.leafIndex,
+                          label: "leafSlot",
+                          value: publicDataWrite.leafSlot,
                         },
                         {
-                          label: "newValue",
-                          value: publicDataWrite.newValue,
+                          label: "value",
+                          value: publicDataWrite.value,
                         },
                       ]}
                     />

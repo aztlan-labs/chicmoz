@@ -1,17 +1,17 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: chicmoz-issuer-production
+  name: aztecscout-issuer-production
   namespace: cert-manager
 spec:
   acme:
     # The ACME server URL
     server: https://acme-v02.api.letsencrypt.org/directory
     # Email address used for ACME registration
-    email: mauro@eijsenring.com
+    email: tls@kryha.io
     # Name of a secret used to store the ACME account private key
     privateKeySecretRef:
-      name: chicmoz-issuer-production
+      name: aztecscout-issuer-production
     # Enable the HTTP-01 challenge provider
     solvers:
       - http01:

@@ -1,4 +1,4 @@
-import { blockHandler } from "./event-handler/index.js";
+import { blockHandler, pendingTxHandler } from "./event-handler/index.js";
 import { logger } from "./logger.js";
 import { init as initMb, startSubscribe } from "./message-bus/index.js";
 import { init as initWsServer } from "./ws-server/index.js";
@@ -12,4 +12,5 @@ export const start = async () => {
   logger.info("✅ MB");
   registerShutdownCallback(shutdownMb);
   await startSubscribe(blockHandler);
+  await startSubscribe(pendingTxHandler);
 };

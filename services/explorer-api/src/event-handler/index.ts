@@ -1,7 +1,12 @@
-import { AZTEC_MESSAGES, NewBlockEvent } from "@chicmoz-pkg/message-registry";
+import {
+  AZTEC_MESSAGES,
+  NewBlockEvent,
+  PendingTxsEvent,
+} from "@chicmoz-pkg/message-registry";
 import { logger } from "../logger.js";
 import { onBlock } from "./on-block/index.js";
 import { onAztecConnectionEvent } from "./on-aztec-connection-event.js";
+import { onPendingTxs } from "./on-pending-txs.js";
 
 export type EventHandler = {
   consumerGroup: string;
@@ -23,6 +28,14 @@ export const catchupHandler: EventHandler = {
     return onBlock(event);
   }) as (arg0: unknown) => Promise<void>,
   topicBase: "CATCHUP_BLOCK_EVENT",
+};
+
+export const pendingTxHandler: EventHandler = {
+  consumerGroup: "pendingTx",
+  cb: ((event: PendingTxsEvent) => {
+    return onPendingTxs(event);
+  }) as (arg0: unknown) => Promise<void>,
+  topicBase: "PENDING_TXS_EVENT",
 };
 
 export const connectedToAztecHandler: EventHandler = {

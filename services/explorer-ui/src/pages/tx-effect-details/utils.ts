@@ -1,5 +1,7 @@
 import { type ChicmozL2TxEffectDeluxe } from "@chicmoz-pkg/types";
-import { tabId } from "./constants";
+import { type tabId } from "./constants";
+import { formatTimeSince } from "~/lib/utils";
+import { API_URL, aztecExplorer } from "~/service/constants";
 export type TxEffectDataType =
   | string[]
   | Array<{ logs: Array<{ data: string; contractAddress: string }> }>
@@ -10,12 +12,16 @@ export type TxEffectDataType =
       }>;
     }>
   | Array<{ logs: Array<{ data: string }> }>
-  | Array<{ leafIndex: string; newValue: string }>;
+  | Array<{ leafSlot: string; value: string }>;
 
 export const getTxEffectData = (data: ChicmozL2TxEffectDeluxe) => [
   {
     label: "HASH",
     value: data.hash,
+  },
+  {
+    label: "TRANSACTION HASH",
+    value: data.txHash,
   },
   {
     label: "TRANSACTION FEE (FPA)",
@@ -26,32 +32,38 @@ export const getTxEffectData = (data: ChicmozL2TxEffectDeluxe) => [
     value: data.blockHeight.toString(),
     link: `/blocks/${data.blockHeight}`,
   },
-  { label: "TIMESTAMP", value: data.timestamp.toString() },
+  { label: "MINED ON CHAIN", value: formatTimeSince(data.timestamp) },
+  {
+    label: "CREATED AS TRANSACTION",
+    value: formatTimeSince(data.txBirthTimestamp),
+  },
+  {
+    label: "RAW DATA",
+    value: `/${aztecExplorer.getL2TxEffectByHash}${data.hash}`,
+    extLink: `${API_URL}/${aztecExplorer.getL2TxEffectByHash}${data.hash}`,
+  },
 ];
 
 export const mapTxEffectsData = (
-  data?: ChicmozL2TxEffectDeluxe,
+  data?: ChicmozL2TxEffectDeluxe
 ): Record<string, TxEffectDataType | undefined> => {
   if (!data) return {};
 
-  console.log(
-    data.encryptedLogs?.functionLogs?.filter((log) => log.logs.length > 0),
-  );
   const effectsMap: Record<tabId, TxEffectDataType | undefined> = {
-    encryptedLogs: !data.encryptedLogs?.functionLogs?.filter(
-      (log) => log.logs.length > 0,
-    )
+    encryptedLogs: data.encryptedLogs?.functionLogs?.filter(
+      (log) => log.logs.length > 0
+    ).length
       ? data.encryptedLogs.functionLogs.filter((log) => log.logs.length > 0)
       : undefined,
-    unencryptedLogs: !data.unencryptedLogs?.functionLogs?.filter(
-      (log) => log.logs.length > 0,
-    )
+    unencryptedLogs: data.unencryptedLogs?.functionLogs?.filter(
+      (log) => log.logs.length > 0
+    ).length
       ? data.unencryptedLogs.functionLogs
       : undefined,
     nullifiers: data.nullifiers?.length ? data.nullifiers : undefined,
-    noteEncryptedLogs: !data.noteEncryptedLogs?.functionLogs?.filter(
-      (log) => log.logs.length > 0,
-    )
+    noteEncryptedLogs: data.noteEncryptedLogs?.functionLogs?.filter(
+      (log) => log.logs.length > 0
+    ).length
       ? data.noteEncryptedLogs.functionLogs
       : undefined,
     noteHashes: data.noteHashes?.length ? data.noteHashes : undefined,
@@ -61,18 +73,10 @@ export const mapTxEffectsData = (
       : undefined,
   };
 
+  console.log("effectsMap", effectsMap);
+
   // Filter out undefined values
   return Object.fromEntries(
-    Object.entries(effectsMap).filter(([_, value]) => value !== undefined),
+    Object.entries(effectsMap).filter(([_, value]) => value !== undefined)
   );
 };
-export function areAllOptionsAvailable<
-  T extends Record<string, TxEffectDataType>,
->(record: T, options: string[]): boolean {
-  return options.every(
-    (option) =>
-      option in record &&
-      record[option] !== undefined &&
-      record[option] !== null,
-  );
-}

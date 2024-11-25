@@ -21,7 +21,7 @@ export const TxEffects: FC = () => {
 
   const latestTxEffectsData = useGetTxEffectsByBlockHeightRange(
     latestBlocks?.at(-1)?.height,
-    latestBlocks?.at(0)?.height,
+    latestBlocks?.at(0)?.height
   );
   const {
     isLoadingTxEffects,
@@ -31,11 +31,11 @@ export const TxEffects: FC = () => {
 
   return (
     <div className="mx-auto px-5 max-w-[1440px] md:px-[70px]">
-      <div className="flex flex-wrap justify-center gap-3 m-5 ">
-        <h2 className="mt-2 text-primary md:hidden">All tx-effects</h2>
-        <h1 className="hidden md:block md:mt-16">All tx-effects</h1>
+      <div className="flex flex-wrap justify-center m-5">
+        <h2 className="mt-2 text-primary md:hidden">All Tx Effects</h2>
+        <h1 className="hidden md:block md:mt-16">All Tx Effects</h1>
       </div>
-      <div className="flex flex-row justify-center gap-4 m-8">
+      <div className="grid grid-cols-2 gap-3 my-10 md:gap-5 ">
         <InfoBadge
           title="Total transactions"
           isLoading={loadingTotalEffects}
@@ -49,11 +49,13 @@ export const TxEffects: FC = () => {
           data={totalTxEffects24h}
         />
       </div>
-      <TxEffectsTable
-        txEffects={latestTxEffects}
-        isLoading={isLoading || isLoadingTxEffects}
-        error={error ?? txEffectsError}
-      />
+      <div className="rounded-lg shadow-lg">
+        <TxEffectsTable
+          txEffects={latestTxEffects}
+          isLoading={isLoading || isLoadingTxEffects}
+          error={error ?? txEffectsError}
+        />
+      </div>
     </div>
   );
 };

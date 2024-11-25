@@ -20,16 +20,16 @@ export const Blocks: FC = () => {
   } = useAvarageBlockTime();
 
   const averageBlockTimeFormatted = formatDuration(
-    Number(avarageBlockTime) / 1000,
+    Number(avarageBlockTime) / 1000
   );
 
   return (
     <div className="mx-auto px-5 max-w-[1440px] md:px-[70px]">
-      <div className="flex flex-wrap justify-center gap-3 m-5 ">
-        <h2 className="mt-2 text-primary md:hidden">Blocks</h2>
-        <h1 className="hidden md:block md:mt-16">Blocks</h1>
+      <div className="flex flex-wrap justify-center m-5">
+        <h2 className="mt-2 text-primary md:hidden">All Blocks</h2>
+        <h1 className="hidden md:block md:mt-16">All Blocks</h1>
       </div>
-      <div className="flex flex-row justify-center gap-4 m-8">
+      <div className="grid grid-cols-2 gap-3 my-10 md:gap-5 ">
         <InfoBadge
           title="Average fees (FPA)"
           isLoading={loadingAvarageFees}
@@ -43,11 +43,13 @@ export const Blocks: FC = () => {
           data={averageBlockTimeFormatted}
         />
       </div>
-      <BlocksTable
-        blocks={parseLatestBlocks(latestBlocks)}
-        isLoading={isLoading}
-        error={error}
-      />
+      <div className="rounded-lg shadow-lg">
+        <BlocksTable
+          blocks={parseLatestBlocks(latestBlocks)}
+          isLoading={isLoading}
+          error={error}
+        />
+      </div>
     </div>
   );
 };
