@@ -13,6 +13,7 @@ interface KeyValueRowProps {
 
 enum DisplayType {
   TEXT = "text",
+  TEXTAREA = "textarea",
   LINK = "link",
   HEX = "hex",
   EXTERNAL_LINK = "external-link",
@@ -27,6 +28,7 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
 }) => {
   let displayType = DisplayType.TEXT;
   if (link) displayType = DisplayType.LINK;
+  else if (label === "data") displayType = DisplayType.TEXTAREA;
   else if (value.startsWith("0x")) displayType = DisplayType.HEX;
   else if (extLink) displayType = DisplayType.EXTERNAL_LINK;
 
@@ -66,9 +68,12 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
           rel="noreferrer"
           className="text-sm flex-grow text-primary-600 text-primary cursor-pointer md:text-end"
         >
-          {value}
+          View raw data
           <span className="ml-1">↗️</span>
         </a>
+      )}
+      {displayType === DisplayType.TEXTAREA && (
+        <CopyableText text={value} toCopy={value} textArea />
       )}
     </div>
   );
