@@ -4,7 +4,6 @@ import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { useGetTxEffectByHash } from "~/hooks/";
 import { txEffectTabs, type TabId } from "./constants";
 import { getTxEffectData, mapTxEffectsData } from "./utils";
-import { Textarea } from "~/components/ui/textarea";
 import { OptionButtons } from "./tabs";
 
 export const TxEffectDetails: FC = () => {
