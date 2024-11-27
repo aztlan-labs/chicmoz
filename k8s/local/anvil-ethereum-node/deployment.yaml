@@ -17,14 +17,17 @@ spec:
         app: anvil-ethereum-node
     spec:
       containers:
-        - image: ghcr.io/foundry-rs/foundry@sha256:29ba6e34379e79c342ec02d437beb7929c9e254261e8032b17e187be71a2609f
+        - image: aztecprotocol/foundry:25f24e677a6a32a62512ad4f561995589ac2c7dc-amd64
           name: anvil-ethereum-node
           resources:
             limits:
               memory: 4096Mi
               cpu: 250m
-          args:
-            - "anvil -p 8545 --host 0.0.0.0 --chain-id 31337"
+          command:
+            - /bin/sh
+            - -c
+            - |
+              anvil -p 8545 --host 0.0.0.0 --chain-id 31337
           ports:
             - name: anvil-port
               containerPort: 8545

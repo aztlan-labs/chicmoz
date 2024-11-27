@@ -2,9 +2,9 @@ use dep::aztec::macros::aztec;
 
 #[aztec]
 contract SimpleLogging {
-    use dep::aztec::prelude::{AztecAddress, Map, PublicMutable, SharedImmutable};
+    use dep::aztec::prelude::{Map, PublicMutable};
     use dep::aztec::{
-        keys::getters::get_public_keys,
+        //keys::getters::get_public_keys,
         macros::{storage::storage, functions::{public, initializer, private, internal}},
     };
     #[storage]
