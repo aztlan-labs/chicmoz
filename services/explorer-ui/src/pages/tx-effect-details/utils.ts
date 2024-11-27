@@ -73,8 +73,6 @@ export const mapTxEffectsData = (
       : undefined,
   };
 
-  console.log("effectsMap", effectsMap);
-
   // Filter out undefined values
   return Object.fromEntries(
     Object.entries(effectsMap).filter(([_, value]) => value !== undefined)
