@@ -72,4 +72,6 @@ spec:
               value: "false"
             - name: AZTEC_LISTEN_FOR_BLOCKS
               value: "true"
+            - name: AZTEC_LISTEN_FOR_PENDING_TXS
+              value: "true"
 status: {}

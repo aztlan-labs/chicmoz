@@ -16,7 +16,7 @@ export const PrivacyPolicy: FC = () => {
         </p>
         <ul className="list-disc list-inside">
           <li>
-            Visit our website at https://chicmoz.info, or any website of ours
+            Visit our website at https://aztecscout.xyz, or any website of ours
             that links to this privacy notice{" "}
           </li>
           <li>

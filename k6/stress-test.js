@@ -44,7 +44,7 @@ export const options = {
   },
 };
 
-const BASE_URL = "https://api.chicmoz.info/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4";
+const BASE_URL = "https://api.aztecscout.xyz/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4";
 
 let VALID_BLOCK_HEIGHT = 2;
 
