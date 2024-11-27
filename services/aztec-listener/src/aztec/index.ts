@@ -41,12 +41,12 @@ export const init = async () => {
     );
     await storeHeight(0);
   }
+  if (AZTEC_GENESIS_CATCHUP)
+    await startCatchup({ from: 1, to: chainHeight });
   const pollFromHeight =
     !isOffSync && latestProcessedHeight
       ? latestProcessedHeight + 1
       : chainHeight;
-  if (AZTEC_GENESIS_CATCHUP)
-    await startCatchup({ from: 1, to: pollFromHeight });
   if (AZTEC_LISTEN_FOR_BLOCKS)
     startPollingBlocks({ fromHeight: pollFromHeight });
 

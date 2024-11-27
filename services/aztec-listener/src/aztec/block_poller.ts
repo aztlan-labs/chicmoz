@@ -62,9 +62,9 @@ const fetchAndPublishLatestBlockReoccurring = async () => {
 };
 
 const catchUpOnMissedBlocks = async (from: number, to: number) => {
-  if (from - to > MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS) {
+  if (to - from > MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS) {
     logger.error(
-      `[fetchAndPublishLatestBlockReoccurring]: more than ${MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS} blocks missed, skipping catchup...`
+      `[fetchAndPublishLatestBlockReoccurring]: more than ${MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS} blocks missed from ${from} to ${to}, skipping catchup...`
     );
   } else {
     logger.info(

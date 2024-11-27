@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { createAztecNodeClient, AztecNode, NodeInfo } from "@aztec/aztec.js";
-import { AZTEC_RPC_URL, NODE_ENV } from "../constants.js";
+import { AZTEC_RPC_URL, MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS, NODE_ENV } from "../constants.js";
 import { logger } from "../logger.js";
 import { IBackOffOptions, backOff } from "exponential-backoff";
 
@@ -99,13 +99,16 @@ export const getBlock = async (height: number) =>
   callNodeFunction("getBlock", [height]);
 
 export const getBlocks = async (fromHeight: number, toHeight: number) => {
+  if (toHeight - fromHeight > MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS) throw new Error("Too many blocks to fetch");
   const blocks = [];
   for (let i = fromHeight; i < toHeight; i++) {
     if (NODE_ENV === "development")
       await new Promise((r) => setTimeout(r, 500));
+    else await new Promise((r) => setTimeout(r, 200));
     const block = await getBlock(i);
     blocks.push(block);
   }
+
   return blocks;
 };
 
