@@ -6,6 +6,9 @@ primary:
         WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'aztec_listener')\gexec
         SELECT 'CREATE DATABASE explorer_api'
         WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'explorer_api')\gexec
+        CREATE USER grafanareader WITH PASSWORD 'password';
+        GRANT USAGE ON DATABASE explorer_api TO grafanareader;
+        GRANT SELECT ON ALL TABLES IN DATABASE explorer_api TO grafanareader;
         SELECT 'CREATE DATABASE auth'
         WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'auth')\gexec
         \c auth
