@@ -1,0 +1,32 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+metadata:
+  name: chicmoz
+requires:
+  - path: ./chicmoz-base-image.yaml
+  - path: ./event-cannon/image.yaml
+deploy:
+  kubectl:
+    flags:
+      apply: ["--force"]
+manifests:
+  rawYaml:
+    - k8s/local/common/namespace.yaml
+    - k8s/local/event-cannon/deployment.yaml
+    - k8s/local/aztec-sandbox-node/ingress.yaml
+    - k8s/local/aztec-sandbox-node/deployment.yaml
+    - k8s/local/aztec-sandbox-node/service.yaml
+    - k8s/local/anvil-ethereum-node/ingress.yaml
+    - k8s/local/anvil-ethereum-node/deployment.yaml
+    - k8s/local/anvil-ethereum-node/service.yaml
+  helm:
+    releases:
+      - name: ingress-nginx
+        remoteChart: ingress-nginx
+        repo: https://kubernetes.github.io/ingress-nginx
+        namespace: chicmoz
+        createNamespace: false
+        recreatePods: false
+        skipBuildDependencies: false
+        useHelmSecrets: false
+        wait: false
