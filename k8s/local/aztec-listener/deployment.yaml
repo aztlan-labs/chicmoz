@@ -66,7 +66,7 @@ spec:
             - name: AZTEC_DISABLED
               value: "false"
             - name: AZTEC_GENESIS_CATCHUP
-              value: "false"
+              value: "true"
             - name: AZTEC_LISTEN_FOR_BLOCKS
               value: "true"
             - name: AZTEC_LISTEN_FOR_PENDING_TXS
