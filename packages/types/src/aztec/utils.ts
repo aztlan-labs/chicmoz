@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+// TODO: use aztec/foundation/schemas instead of "home made" schemas
+
 export type AztecFr = {
   toString(): string;
 };

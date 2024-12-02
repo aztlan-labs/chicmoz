@@ -18,10 +18,10 @@ export const stopPolling = () => {
 };
 
 const internalOnPendingTxs = async (pendingTxs: Tx[]) => {
-  const newPendingTxs = pendingTxs.filter((tx) => !handledTxs.includes(tx.getTxHash().to0xString()));
+  const newPendingTxs = pendingTxs.filter((tx) => !handledTxs.includes(tx.getTxHash().toString()));
   if (newPendingTxs.length === 0) return;
   await onPendingTxs(pendingTxs);
-  handledTxs = pendingTxs.map((tx) => tx.getTxHash().to0xString());
+  handledTxs = pendingTxs.map((tx) => tx.getTxHash().toString());
 };
 
 const fetchAndPublishPendingTxs = async () => {

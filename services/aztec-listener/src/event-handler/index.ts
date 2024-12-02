@@ -4,7 +4,7 @@ import { getNodeInfo } from "../aztec/index.js";
 import { logger } from "../logger.js";
 import { publishMessage } from "../message-bus/index.js";
 import { AZTEC_RPC_URL } from "../constants.js";
-import { PendingTxsEvent } from "@chicmoz-pkg/message-registry";
+// import { PendingTxsEvent } from "@chicmoz-pkg/message-registry";
 
 export const onBlock = async (block: L2Block) => {
   const height = Number(block.header.globalVariables.blockNumber);
@@ -27,17 +27,22 @@ export const onCatchupBlock = async (block: L2Block) => {
 };
 // TODO: onCatchupRequestFromExplorerApi
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export const onPendingTxs = async (txs: Tx[]) => {
   if (!txs || txs.length === 0) return;
-  await publishMessage("PENDING_TXS_EVENT", {
-    txs: txs.map((tx) => {
-      return {
-        ...tx.toJSON(),
-        hash: tx.getTxHash().to0xString(),
-        birthTimestamp: new Date().getTime(),
-      };
-    }),
-  } as PendingTxsEvent);
+  logger.info("=====================================");
+  txs.forEach((tx) => {
+    logger.info(JSON.stringify(tx));
+  });
+  //await publishMessage("PENDING_TXS_EVENT", {
+  //  txs: txs.map((tx) => {
+  //    return {
+  //      ...tx,
+  //      hash: tx.getTxHash().toString(),
+  //      birthTimestamp: new Date().getTime(),
+  //    };
+  //  }),
+  //} as PendingTxsEvent);
 };
 
 export const onConnectedToAztec = async (
