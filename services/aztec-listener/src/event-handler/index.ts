@@ -4,7 +4,7 @@ import { getNodeInfo } from "../aztec/index.js";
 import { logger } from "../logger.js";
 import { publishMessage } from "../message-bus/index.js";
 import { AZTEC_RPC_URL } from "../constants.js";
-// import { PendingTxsEvent } from "@chicmoz-pkg/message-registry";
+import { PendingTxsEvent } from "@chicmoz-pkg/message-registry";
 
 export const onBlock = async (block: L2Block) => {
   const height = Number(block.header.globalVariables.blockNumber);
@@ -27,22 +27,37 @@ export const onCatchupBlock = async (block: L2Block) => {
 };
 // TODO: onCatchupRequestFromExplorerApi
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export const onPendingTxs = async (txs: Tx[]) => {
   if (!txs || txs.length === 0) return;
-  logger.info("=====================================");
-  txs.forEach((tx) => {
-    logger.info(JSON.stringify(tx));
-  });
-  //await publishMessage("PENDING_TXS_EVENT", {
-  //  txs: txs.map((tx) => {
-  //    return {
-  //      ...tx,
-  //      hash: tx.getTxHash().toString(),
-  //      birthTimestamp: new Date().getTime(),
-  //    };
-  //  }),
-  //} as PendingTxsEvent);
+
+  await publishMessage("PENDING_TXS_EVENT", {
+    txs: txs.map((tx) => {
+      return {
+        // TODO
+        //...Tx.schema.parse(tx.toBuffer()),
+        //data: tx.data.toBuffer(),
+        //clientIvcProof: tx.clientIvcProof.toBuffer(),
+        //contractClassLogs: tx.contractClassLogs.toBuffer(),
+        //unencryptedLogs: tx.unencryptedLogs.toBuffer(),
+        //encryptedLogs: tx.encryptedLogs.toBuffer(),
+        //noteEncryptedLogs: tx.noteEncryptedLogs.toBuffer(),
+        //enqueuedPublicFunctionCalls: tx.enqueuedPublicFunctionCalls.map((call) =>
+        //  call.toBuffer()
+        //),
+        //publicTeardownFunctionCall: {
+        //  callContext: {
+        //    ...tx.publicTeardownFunctionCall.callContext,
+        //    contractAddress: tx.publicTeardownFunctionCall.callContext.contractAddress.toString(),
+        //    msgSender: tx.publicTeardownFunctionCall.callContext.msgSender.toString(),
+        //    functionSelector: tx.publicTeardownFunctionCall.callContext.functionSelector.toString(),
+        //  },
+        //  args: tx.publicTeardownFunctionCall.args.map((arg) => arg.toString()),
+        //},
+        hash: tx.getTxHash().toString(),
+        birthTimestamp: new Date().getTime(),
+      };
+    }),
+  } as PendingTxsEvent);
 };
 
 export const onConnectedToAztec = async (

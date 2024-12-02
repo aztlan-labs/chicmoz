@@ -16,17 +16,37 @@ export const unencryptedLogEntrySchema = z.object({
   contractAddress: aztecAddressSchema,
 });
 
+const logsSchema = (logEntrySchema: typeof noteEncryptedLogEntrySchema | typeof encryptedLogEntrySchema | typeof unencryptedLogEntrySchema) =>
+  z.object({
+    functionLogs: z.array(
+      z.object({
+        logs: z.array(logEntrySchema),
+      }),
+    ),
+  });
+
+//const functionSelectorSchema = z.string().length(10).regex(/^0x[0-9a-fA-F]+$/);
+
 export const chicmozL2PendingTxSchema = z.object({
+  // TODO: this schema needs to be properly defined, perhaps merged with txEffect
   hash: hexStringSchema,
   birthTimestamp: z.number(),
-  data: z.string(),
-  noteEncryptedLogs: z.string(),
-  encryptedLogs: z.string(),
-  unencryptedLogs: z.string(),
-  contractClassLogs: z.string(),
-  clientIvcProof: z.string(),
-  enqueuedPublicFunctionCalls: z.array(z.string()),
-  publicTeardownFunctionCall: z.string(),
+  //data: bufferSchema,
+  //noteEncryptedLogs: logsSchema(noteEncryptedLogEntrySchema),
+  //encryptedLogs: logsSchema(encryptedLogEntrySchema),
+  //unencryptedLogs: logsSchema(unencryptedLogEntrySchema),
+  //contractClassLogs: bufferSchema,
+  //clientIvcProof: bufferSchema,
+  //enqueuedPublicFunctionCalls: z.array(bufferSchema),
+  //publicTeardownFunctionCall: z.object({
+  //  callContext: z.object({
+  //    msgSender: aztecAddressSchema,
+  //    contractAddress: aztecAddressSchema,
+  //    functionSelector: functionSelectorSchema,
+  //    isStaticCall: z.boolean(),
+  //  }),
+  //  args: z.array(frSchema),
+  //}),
 });
 
 /**
@@ -55,27 +75,9 @@ export const chicmozL2TxEffectSchema = z.object({
   noteEncryptedLogsLength: frNumberSchema,
   encryptedLogsLength: frNumberSchema,
   unencryptedLogsLength: frNumberSchema,
-  noteEncryptedLogs: z.object({
-    functionLogs: z.array(
-      z.object({
-        logs: z.array(noteEncryptedLogEntrySchema),
-      }),
-    ),
-  }),
-  encryptedLogs: z.object({
-    functionLogs: z.array(
-      z.object({
-        logs: z.array(encryptedLogEntrySchema),
-      }),
-    ),
-  }),
-  unencryptedLogs: z.object({
-    functionLogs: z.array(
-      z.object({
-        logs: z.array(unencryptedLogEntrySchema),
-      }),
-    ),
-  }),
+  noteEncryptedLogs: logsSchema(noteEncryptedLogEntrySchema),
+  encryptedLogs: logsSchema(encryptedLogEntrySchema),
+  unencryptedLogs: logsSchema(unencryptedLogEntrySchema),
 });
 
 export type NoteEncryptedLogEntry = z.infer<typeof noteEncryptedLogEntrySchema>;
