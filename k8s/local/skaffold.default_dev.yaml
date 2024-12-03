@@ -25,4 +25,4 @@ manifests:
     - k8s/local/auth/service.yaml
     - k8s/local/event-cannon/deployment.yaml
     - k8s/local/aztec-listener/deployment.yaml
-    - k8s/local/aztec-listener/remote_aztec_deployment.yaml
+    #- k8s/local/aztec-listener/remote_aztec_deployment.yaml

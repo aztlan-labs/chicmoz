@@ -52,8 +52,8 @@ CREATE TABLE IF NOT EXISTS "public_data_write" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"tx_effect_hash" varchar NOT NULL,
 	"index" integer NOT NULL,
-	"leaf_index" varchar(66) NOT NULL,
-	"new_value" varchar(66) NOT NULL
+	"leaf_slot" varchar(66) NOT NULL,
+	"value" varchar(66) NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tx_effect" (
@@ -158,15 +158,7 @@ CREATE TABLE IF NOT EXISTS "state" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tx" (
 	"hash" varchar PRIMARY KEY NOT NULL,
-	"birth_timestamp" timestamp DEFAULT now() NOT NULL,
-	"data" text NOT NULL,
-	"note_encrypted_logs" text NOT NULL,
-	"encrypted_logs" text NOT NULL,
-	"unencrypted_logs" text NOT NULL,
-	"contract_class_logs" text NOT NULL,
-	"client_ivc_proof" text NOT NULL,
-	"enqueued_public_function_calls" jsonb NOT NULL,
-	"public_teardown_function_call" text NOT NULL
+	"birth_timestamp" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l2_contract_class_registered" (

@@ -29,7 +29,7 @@ export const truncateHashString = (value: string) => {
 };
 
 export const logAndWaitForTx = async (tx: SentTx, additionalInfo: string) => {
-  const hash = (await tx.getTxHash()).to0xString();
+  const hash = (await tx.getTxHash()).toString();
   logger.info(`📫 TX ${hash} (${additionalInfo})`);
   const receipt = await tx.wait();
   logger.info(
@@ -93,7 +93,7 @@ export const deployContract = async <T extends Contract>({
 }): Promise<T> => {
   logger.info(`DEPLOYING ${contractLoggingName}`);
   const contractTx = deployFn();
-  const hash = (await contractTx.getTxHash()).to0xString();
+  const hash = (await contractTx.getTxHash()).toString();
   logger.info(
     `📫 ${contractLoggingName} ${truncateHashString(hash)} (Deploying contract)`
   );

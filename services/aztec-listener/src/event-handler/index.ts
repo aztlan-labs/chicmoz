@@ -29,11 +29,31 @@ export const onCatchupBlock = async (block: L2Block) => {
 
 export const onPendingTxs = async (txs: Tx[]) => {
   if (!txs || txs.length === 0) return;
+
   await publishMessage("PENDING_TXS_EVENT", {
     txs: txs.map((tx) => {
       return {
-        ...tx.toJSON(),
-        hash: tx.getTxHash().to0xString(),
+        // TODO
+        //...Tx.schema.parse(tx.toBuffer()),
+        //data: tx.data.toBuffer(),
+        //clientIvcProof: tx.clientIvcProof.toBuffer(),
+        //contractClassLogs: tx.contractClassLogs.toBuffer(),
+        //unencryptedLogs: tx.unencryptedLogs.toBuffer(),
+        //encryptedLogs: tx.encryptedLogs.toBuffer(),
+        //noteEncryptedLogs: tx.noteEncryptedLogs.toBuffer(),
+        //enqueuedPublicFunctionCalls: tx.enqueuedPublicFunctionCalls.map((call) =>
+        //  call.toBuffer()
+        //),
+        //publicTeardownFunctionCall: {
+        //  callContext: {
+        //    ...tx.publicTeardownFunctionCall.callContext,
+        //    contractAddress: tx.publicTeardownFunctionCall.callContext.contractAddress.toString(),
+        //    msgSender: tx.publicTeardownFunctionCall.callContext.msgSender.toString(),
+        //    functionSelector: tx.publicTeardownFunctionCall.callContext.functionSelector.toString(),
+        //  },
+        //  args: tx.publicTeardownFunctionCall.args.map((arg) => arg.toString()),
+        //},
+        hash: tx.getTxHash().toString(),
         birthTimestamp: new Date().getTime(),
       };
     }),

@@ -1,5 +1,5 @@
 {
-  "id": "017305a2-4023-4a27-84c5-0b0127e9d7be",
+  "id": "af074cee-b3a6-4eff-9768-66ad1eace0e0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -326,14 +326,14 @@
           "primaryKey": false,
           "notNull": true
         },
-        "leaf_index": {
-          "name": "leaf_index",
+        "leaf_slot": {
+          "name": "leaf_slot",
           "type": "varchar(66)",
           "primaryKey": false,
           "notNull": true
         },
-        "new_value": {
-          "name": "new_value",
+        "value": {
+          "name": "value",
           "type": "varchar(66)",
           "primaryKey": false,
           "notNull": true
@@ -1025,54 +1025,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
-        },
-        "data": {
-          "name": "data",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "note_encrypted_logs": {
-          "name": "note_encrypted_logs",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "encrypted_logs": {
-          "name": "encrypted_logs",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "unencrypted_logs": {
-          "name": "unencrypted_logs",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "contract_class_logs": {
-          "name": "contract_class_logs",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "client_ivc_proof": {
-          "name": "client_ivc_proof",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "enqueued_public_function_calls": {
-          "name": "enqueued_public_function_calls",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "public_teardown_function_call": {
-          "name": "public_teardown_function_call",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
         }
       },
       "indexes": {},
