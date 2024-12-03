@@ -33,14 +33,10 @@ const parseObjs = <T>(
   const parsedObjs: T[] = [];
   for (const obj of objs) {
     try {
-      const parsed = parseFn(
-        JSON.parse(
-          JSON.stringify({
-            blockHash,
-            ...obj,
-          })
-        )
-      );
+      const parsed = parseFn({
+        blockHash,
+        ...obj,
+      });
       parsedObjs.push(parsed);
     } catch (e) {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions

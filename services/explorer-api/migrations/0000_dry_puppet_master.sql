@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS "logs" (
 	"index" integer NOT NULL,
 	"tx_effect_to_logs_id" uuid NOT NULL,
 	"type" varchar(20) NOT NULL,
-	"data" varchar NOT NULL,
+	"data" "bytea" NOT NULL,
 	"masked_contract_address" varchar(66),
 	"contract_address" varchar(66)
 );

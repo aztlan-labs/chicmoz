@@ -5,6 +5,24 @@ import { controllers } from "../../database/index.js";
 import { logger } from "../../logger.js";
 import { storeContracts } from "./contracts.js";
 import { handleDuplicateBlockError } from "../utils.js";
+import {L2Block} from "@aztec/aztec.js";
+
+const truncateString = (value: string) => {
+  const startHash = value.substring(0, 100);
+  const endHash = value.substring(value.length - 100, value.length);
+  return `${startHash}...${endHash}`;
+};
+
+const hackyLogBlock = (b: L2Block) => {
+  const blockString = JSON.stringify(b, null, 2);
+  const logString = blockString.split(":").map((v) => {
+    if (v.length > 200 && v.includes(",")) 
+      return truncateString(v);
+    
+    return v;
+  }).join(":");
+  logger.error(`🚫 Block: ${logString}`);
+};
 
 export const onBlock = async ({ block, blockNumber }: NewBlockEvent) => {
   // TODO: start storing NODE_INFO connected to the block
@@ -22,6 +40,7 @@ export const onBlock = async ({ block, blockNumber }: NewBlockEvent) => {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       `Failed to parse block ${blockNumber}: ${(e as Error)?.stack ?? e}`,
     );
+    hackyLogBlock(b);
     return;
   }
   await storeBlock(parsedBlock);

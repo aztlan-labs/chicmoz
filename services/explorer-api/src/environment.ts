@@ -1,9 +1,30 @@
 import { CHAIN_NAME } from "./constants.js";
 
-export const PUBLIC_API_KEY = process.env.PUBLIC_API_KEY ?? "d1e2083a-660c-4314-a6f2-1d42f4b944f4";
+const DEFAULT_VERIFIED_CONTRACT_ADDRESSES = [
+  "0x11a81043f8c2cb2e95fa28e051f042a87e76c9e42d442188638eb2c07ae445b2",
+  "0x17eafcd0961cc68c56b79305fa6fa8ee49bf8185b2bff279be84f3ceb1ae03ec",
+  "0x12fb76c6e2ccbad0919c554c07257fc69993ddd9c799c62179345b5b82a95dd8",
+];
+const verifiedContractAddresses = process.env.VERIFIED_CONTRACT_ADDRESSES;
+
+const isValidVerifiedContractAddresses = verifiedContractAddresses
+  ?.split(",")
+  .every((address) => {
+    return address.length === 66 && address.startsWith("0x");
+  });
+if (verifiedContractAddresses && !isValidVerifiedContractAddresses)
+  throw new Error("Invalid VERIFIED_CONTRACT_ADDRESSES");
+
+export const VERIFIED_CONTRACT_ADDRESSES = verifiedContractAddresses
+  ? verifiedContractAddresses.split(",")
+  : DEFAULT_VERIFIED_CONTRACT_ADDRESSES;
+
+export const PUBLIC_API_KEY =
+  process.env.PUBLIC_API_KEY ?? "d1e2083a-660c-4314-a6f2-1d42f4b944f4";
 
 export const CACHE_TTL_SECONDS = Number(process.env.CACHE_TTL) || 60;
-export const CACHE_LATEST_TTL_SECONDS = Number(process.env.CACHE_LATEST_TTL) || 10;
+export const CACHE_LATEST_TTL_SECONDS =
+  Number(process.env.CACHE_LATEST_TTL) || 10;
 export const REDIS_HOST = process.env.REDIS_HOST ?? "redis-master";
 export const REDIS_PORT = Number(process.env.REDIS_PORT) || 6379;
 

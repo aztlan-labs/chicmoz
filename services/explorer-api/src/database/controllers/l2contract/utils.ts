@@ -2,11 +2,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { ChicmozL2ContractInstanceDeluxe, chicmozL2ContractInstanceDeluxeSchema } from "@chicmoz-pkg/types";
+import { VERIFIED_CONTRACT_ADDRESSES } from "../../../environment.js";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const parseDeluxe = (contractClass: any, instance: any): ChicmozL2ContractInstanceDeluxe => {
   return chicmozL2ContractInstanceDeluxeSchema.parse({
     ...contractClass,
+    aztecScoutVerified: VERIFIED_CONTRACT_ADDRESSES.some((address) => address === instance.address),
     blockHash: instance.blockHash,
     packedPublicBytecode: Buffer.from(contractClass.packedPublicBytecode),
     address: instance.address,

@@ -10,6 +10,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import {
+  bufferType,
   generateAztecAddressColumn,
   generateFrColumn,
   generateFrNumberColumn,
@@ -74,7 +75,7 @@ export const logs = pgTable("logs", {
     .notNull()
     .references(() => txEffectToLogs.id, { onDelete: "cascade" }),
   type: varchar("type", { length: 20 }).notNull(), // 'noteEncrypted', 'encrypted', or 'unencrypted'
-  data: varchar("data").notNull(),
+  data: bufferType("data").notNull(),
   maskedContractAddress: generateFrColumn("masked_contract_address"),
   contractAddress: generateAztecAddressColumn("contract_address"),
 });

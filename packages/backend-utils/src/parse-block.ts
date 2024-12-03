@@ -28,6 +28,13 @@ export const parseBlock = (b: L2Block): ChicmozL2Block => {
   return chicmozL2BlockSchema.parse({
     hash: blockHash.toString(),
     height: b.number,
-    ...JSON.parse(JSON.stringify(blockWithTxEffectsHashesAdded)),
+    ...blockWithTxEffectsHashesAdded,
+    header: {
+      ...blockWithTxEffectsHashesAdded.header,
+      globalVariables: {
+        ...blockWithTxEffectsHashesAdded.header.globalVariables,
+        coinbase: blockWithTxEffectsHashesAdded.header.globalVariables.coinbase.toString(),
+      },
+    },
   });
 };
