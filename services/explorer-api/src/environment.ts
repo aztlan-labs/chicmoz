@@ -1,23 +1,16 @@
-import { CHAIN_NAME } from "./constants.js";
+export const NODE_ENV = process.env.NODE_ENV ?? "development";
+import {
+  CHAIN_NAME,
+  DEFAULT_VERIFIED_CONTRACT_ADDRESSES_DEV,
+  DEFAULT_VERIFIED_CONTRACT_ADDRESSES_PROD,
+} from "./constants.js";
 
-const DEFAULT_VERIFIED_CONTRACT_ADDRESSES = [
-  "0x11a81043f8c2cb2e95fa28e051f042a87e76c9e42d442188638eb2c07ae445b2",
-  "0x17eafcd0961cc68c56b79305fa6fa8ee49bf8185b2bff279be84f3ceb1ae03ec",
-  "0x12fb76c6e2ccbad0919c554c07257fc69993ddd9c799c62179345b5b82a95dd8",
-];
-const verifiedContractAddresses = process.env.VERIFIED_CONTRACT_ADDRESSES;
-
-const isValidVerifiedContractAddresses = verifiedContractAddresses
-  ?.split(",")
-  .every((address) => {
-    return address.length === 66 && address.startsWith("0x");
-  });
-if (verifiedContractAddresses && !isValidVerifiedContractAddresses)
-  throw new Error("Invalid VERIFIED_CONTRACT_ADDRESSES");
+const verifiedContractAddresses =
+  NODE_ENV === "production"
+    ? DEFAULT_VERIFIED_CONTRACT_ADDRESSES_PROD
+    : DEFAULT_VERIFIED_CONTRACT_ADDRESSES_DEV;
 
 export const VERIFIED_CONTRACT_ADDRESSES = verifiedContractAddresses
-  ? verifiedContractAddresses.split(",")
-  : DEFAULT_VERIFIED_CONTRACT_ADDRESSES;
 
 export const PUBLIC_API_KEY =
   process.env.PUBLIC_API_KEY ?? "d1e2083a-660c-4314-a6f2-1d42f4b944f4";
@@ -31,7 +24,6 @@ export const REDIS_PORT = Number(process.env.REDIS_PORT) || 6379;
 export const PORT = Number(process.env.PORT) || 5000;
 export const BODY_LIMIT = process.env.BODY_LIMIT ?? "64kb";
 export const PARAMETER_LIMIT = Number(process.env.PARAMETER_LIMIT) || 100;
-export const NODE_ENV = process.env.NODE_ENV ?? "development";
 
 export const DB_MAX_BLOCKS = 20;
 export const DB_MAX_TX_EFFECTS = 20;
