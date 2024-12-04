@@ -6,6 +6,42 @@ import { txEffectTabs, type TabId } from "./constants";
 import { getTxEffectData, mapTxEffectsData } from "./utils";
 import { OptionButtons } from "./tabs";
 
+const naiveDecode = (data: Buffer): string => {
+  // TODO
+  let counterZero = 0;
+  let counterAbove128 = 0;
+  let counterAbove255 = 0;
+  let sum = 0;
+  let totCount = 0;
+  const res = data.toString("hex").match(/.{1,64}/g)
+    ?.map((hex) => parseInt(hex, 16))
+    .map((charCode): string => {
+      if (charCode === 0) {
+        counterZero++;
+      } else {
+        //console.log(`charCode: ${charCode} char: ${String.fromCharCode(charCode)}`);
+      }
+      if (charCode > 128) {
+        counterAbove128++;
+      }
+      if (charCode > 255) {
+        counterAbove255++;
+      }
+      sum += charCode;
+      totCount++;
+      const char = String.fromCharCode(charCode);
+      return char;
+    })
+    .join("");
+  const avg = sum / totCount;
+  console.log("avg", avg);
+  console.log("counterAbove128", counterAbove128);
+  console.log("counterAbove255", counterAbove255);
+  console.log("counterZero", counterZero);
+  console.log("totCount", totCount);
+  return res;
+};
+
 export const TxEffectDetails: FC = () => {
   const [selectedTab, setSelectedTab] = useState<TabId>("encryptedLogs");
   const { hash } = useParams({
@@ -19,7 +55,7 @@ export const TxEffectDetails: FC = () => {
     // check for the first avalible tab with data
     if (txEffects) {
       const firstAvailableTab = txEffectTabs.find(
-        (tab) => tab.id in txEffectData,
+        (tab) => tab.id in txEffectData
       );
 
       if (firstAvailableTab) setSelectedTab(firstAvailableTab.id);
@@ -62,7 +98,8 @@ export const TxEffectDetails: FC = () => {
                       return Object.entries(log).map(([key, value]) => {
                         return {
                           label: key,
-                          value: value,
+                          value:
+                            value instanceof Buffer ? value.toString() : value,
                           isClickable: false,
                         };
                       });
@@ -77,7 +114,7 @@ export const TxEffectDetails: FC = () => {
                         <KeyValueDisplay key={index} data={flattenedEntries} />
                       </div>
                     );
-                  },
+                  }
                 )}
               </div>
             )}
@@ -85,29 +122,21 @@ export const TxEffectDetails: FC = () => {
               <div className="">
                 {txEffects.unencryptedLogs.functionLogs.map(
                   (unencrypted, index) => {
-                    const entries = unencrypted.logs.map(
-                      ({ data, contractAddress }) => {
-                        return [
-                          {
-                            label: "data",
-                            value:
-                              data
-                                .match(/.{1,64}/g)
-                                ?.map((hex) => parseInt(hex, 16))
-                                .map((charCode) =>
-                                  String.fromCharCode(charCode),
-                                )
-                                .join("") ?? "",
-                            isClickable: false,
-                          },
-                          {
-                            label: "Contract Address",
-                            value: contractAddress,
-                            isClickable: true,
-                          },
-                        ];
-                      },
-                    );
+                    const entries = unencrypted.logs.map((unEncLog) => {
+                      return [
+                        {
+                          label: "data",
+                          value: naiveDecode(unEncLog.data),
+                          isClickable: false,
+                        },
+                        {
+                          label: "Contract Address",
+                          value: (unEncLog as { contractAddress: string })
+                            .contractAddress,
+                          isClickable: true,
+                        },
+                      ];
+                    });
                     // Flatten the nested arrays
                     const flattenedEntries = entries.flat();
 
@@ -118,7 +147,7 @@ export const TxEffectDetails: FC = () => {
                         <KeyValueDisplay key={index} data={flattenedEntries} />
                       </div>
                     );
-                  },
+                  }
                 )}
               </div>
             )}
@@ -139,7 +168,8 @@ export const TxEffectDetails: FC = () => {
                     const entries = noteEncryptedLogs.logs.map((log) => {
                       return Object.entries(log).map(([key, value]) => ({
                         label: key,
-                        value: value,
+                        value:
+                          value instanceof Buffer ? value.toString() : value,
                         isClickable: false,
                       }));
                     });
@@ -153,7 +183,7 @@ export const TxEffectDetails: FC = () => {
                         <KeyValueDisplay key={index} data={flattenedEntries} />
                       </div>
                     );
-                  },
+                  }
                 )}
               </div>
             )}

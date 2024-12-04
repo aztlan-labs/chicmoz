@@ -84,7 +84,7 @@ export const init = ({ router }: { router: Router }) => {
 
   router.get(paths.txEffectsByBlockHeight, controller.GET_L2_TX_EFFECTS_BY_BLOCK_HEIGHT);
   router.get(paths.txEffectByBlockHeightAndIndex, controller.GET_L2_TX_EFFECT_BY_BLOCK_HEIGHT_AND_INDEX);
-  router.get(paths.txEffectsByTxHash, controller.GET_L2_TX_EFFECT_BY_TX_EFFECT_HASH);
+  router.get(paths.txEffectsByTxEffectHash, controller.GET_L2_TX_EFFECT_BY_TX_EFFECT_HASH);
 
   router.get(paths.txs, controller.GET_PENDING_TXS);
 
