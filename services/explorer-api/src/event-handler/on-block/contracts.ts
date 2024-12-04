@@ -74,6 +74,7 @@ export const storeContracts = async (b: L2Block, blockHash: string) => {
     contractClassLogs,
     ProtocolContractAddress.ContractClassRegisterer
   );
+
   const unencryptedBlockLogs = b.body.txEffects.flatMap((txEffect) =>
     txEffect.unencryptedLogs.unrollLogs()
   );
@@ -85,6 +86,22 @@ export const storeContracts = async (b: L2Block, blockHash: string) => {
     unencryptedBlockLogs,
     ProtocolContractAddress.ContractClassRegisterer
   );
+
+  if (
+    contractClasses.length > 0
+  ) {
+    logger.info(
+      contractClasses.map((contractClass) => contractClass.contractClassId.toString())
+    );
+  }
+
+  if (
+    contractInstances.length > 0
+  ) {
+    logger.info(
+      contractInstances.map((contractInstance) => `Contract instance: ${contractInstance.address.toString()} Contract class: ${contractInstance.contractClassId.toString()}`)
+    );
+  }
 
   logger.info(
     `📜 Parsing and storing ${contractClasses.length} contract classes and ${contractInstances.length} contract instances, ${privateFnEvents.length} private function events, and ${unconstrainedFnEvents.length} unconstrained function events`
