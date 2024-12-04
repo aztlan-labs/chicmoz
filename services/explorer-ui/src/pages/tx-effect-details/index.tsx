@@ -39,7 +39,7 @@ const naiveDecode = (data: Buffer): string => {
   console.log("counterAbove255", counterAbove255);
   console.log("counterZero", counterZero);
   console.log("totCount", totCount);
-  return res;
+  return res ?? "";
 };
 
 export const TxEffectDetails: FC = () => {

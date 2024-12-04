@@ -30,8 +30,8 @@ export const getContractData = (data: ChicmozL2ContractInstanceDeluxe) => {
   if (data.aztecScoutVerified) {
     displayData.push({
       label: "VERIFIED ✅",
-      value: "Contract verified by Aztec Scout",
-      // TODO: link to a page on verified contracts and what verified means
+      value: "Contract deployer verified by Aztec Scout.",
+      link: routes.verifiedContracts.route,
     });
   }
   return displayData;
