@@ -1,6 +1,7 @@
 import { logger } from "../logger.js";
 import { setup } from "./pxe.js";
-import { run as deployAndInteractFunctionsVote } from "./scenarios/deploy-and-interact-vote-contract.js";
+//import { run as deployAndInteractFunctionsVote } from "./scenarios/deploy-and-interact-vote-contract.js";
+import { run as deploySimpleContract } from "./scenarios/simple-deploy-contract.js";
 //import { run as deploySimpleDefaultAccount } from "./scenarios/deploy-simple-default-account.js";
 //import { run as deployAndInteractTokenContract } from "./scenarios/deploy-and-interact-token-contract.js";
 //import { run as deploySimpleLog } from "./scenarios/deploy-and-run-simple-log.js";
@@ -24,7 +25,8 @@ export const start = async () => {
   const scenarios = [
     //deploySimpleDefaultAccount,
     //deployAndInteractTokenContract,
-    deployAndInteractFunctionsVote,
+    //deployAndInteractFunctionsVote,
+    deploySimpleContract,
     //deploySimpleLog,
     //l1L2PublicMessaging,
     //l1L2PrivateMessaging,
