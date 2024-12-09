@@ -29,6 +29,7 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
     await db.signOfLife.getABlockWithContractInstances();
   const { privateFunction, unconstrainedFunction } =
     await db.signOfLife.getL2ContractFunctions();
+  const someUnencryptedLogsTxEffects = await db.signOfLife.getSomeTxEffectWithUnencryptedLogs();
   const r = [paths.latestHeight, paths.latestBlock, `${paths.blocks}?from=0`];
   const searchRoutes = [];
 
@@ -59,7 +60,7 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
         )
     );
     r.push(
-      paths.txEffectsByTxHash.replace(
+      paths.txEffectsByTxEffectHash.replace(
         `:${txEffectHash}`,
         blockAndTxEffect.txEffects[0].hash
       )
@@ -70,7 +71,7 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
   } else {
     r.push(paths.txEffectsByBlockHeight + "NOT FOUND");
     r.push(paths.txEffectByBlockHeightAndIndex + "NOT FOUND");
-    r.push(paths.txEffectsByTxHash + "NOT FOUND");
+    r.push(paths.txEffectsByTxEffectHash + "NOT FOUND");
   }
 
   if (blockAndAContractInstance) {
@@ -168,6 +169,13 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
       <ul>
         ${r
           .map((route) => `<li><a href=${SUB_PATH + route}>${route}</a></li>`)
+          .join("")}
+      </ul>
+      <br>
+      <h2>Some unencrypted logs tx effects</h2>
+      <ul>
+        ${someUnencryptedLogsTxEffects
+          ?.map((hash) => `<li><a href=localhost:5173/tx-effects/${hash}>${hash}</a></li>`)
           .join("")}
       </ul>
       <br>

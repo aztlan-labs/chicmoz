@@ -17,6 +17,7 @@ import { Route as TermsAndConditionsImport } from './routes/terms-and-conditions
 
 // Create Virtual Routes
 
+const VerifiedContractsLazyImport = createFileRoute('/verified-contracts')()
 const PrivacyPolicyLazyImport = createFileRoute('/privacy-policy')()
 const AboutUsLazyImport = createFileRoute('/about-us')()
 const IndexLazyImport = createFileRoute('/')()
@@ -33,6 +34,13 @@ const ContractsClassesIdVersionsVersionLazyImport = createFileRoute(
 )()
 
 // Create/Update Routes
+
+const VerifiedContractsLazyRoute = VerifiedContractsLazyImport.update({
+  path: '/verified-contracts',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/verified-contracts.lazy').then((d) => d.Route),
+)
 
 const PrivacyPolicyLazyRoute = PrivacyPolicyLazyImport.update({
   path: '/privacy-policy',
@@ -139,6 +147,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyPolicyLazyImport
       parentRoute: typeof rootRoute
     }
+    '/verified-contracts': {
+      id: '/verified-contracts'
+      path: '/verified-contracts'
+      fullPath: '/verified-contracts'
+      preLoaderRoute: typeof VerifiedContractsLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/blocks/$blockNumber': {
       id: '/blocks/$blockNumber'
       path: '/blocks/$blockNumber'
@@ -198,6 +213,7 @@ export const routeTree = rootRoute.addChildren({
   TermsAndConditionsRoute,
   AboutUsLazyRoute,
   PrivacyPolicyLazyRoute,
+  VerifiedContractsLazyRoute,
   BlocksBlockNumberLazyRoute,
   TxEffectsHashLazyRoute,
   BlocksIndexLazyRoute,
@@ -219,6 +235,7 @@ export const routeTree = rootRoute.addChildren({
         "/terms-and-conditions",
         "/about-us",
         "/privacy-policy",
+        "/verified-contracts",
         "/blocks/$blockNumber",
         "/tx-effects/$hash",
         "/blocks/",
@@ -239,6 +256,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/privacy-policy": {
       "filePath": "privacy-policy.lazy.tsx"
+    },
+    "/verified-contracts": {
+      "filePath": "verified-contracts.lazy.tsx"
     },
     "/blocks/$blockNumber": {
       "filePath": "blocks/$blockNumber.lazy.tsx"

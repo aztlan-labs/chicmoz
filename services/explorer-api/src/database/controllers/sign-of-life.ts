@@ -1,10 +1,12 @@
-import { desc, eq, sql } from "drizzle-orm";
+import { desc, eq, isNotNull, sql } from "drizzle-orm";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { getDb as db } from "../../database/index.js";
 import {
   body,
   l2Block,
+  logs,
   txEffect,
+  txEffectToLogs,
 } from "../../database/schema/l2block/index.js";
 import { l2ContractInstanceDeployed, l2PrivateFunction, l2UnconstrainedFunction } from "../schema/index.js";
 
@@ -63,6 +65,20 @@ export const getABlockWithTxEffects = async () => {
     })),
   };
 };
+
+export const getSomeTxEffectWithUnencryptedLogs = async () => {
+  const dbRes = await db()
+    .select({
+      hash: txEffectToLogs.txEffectHash,
+    })
+    .from(logs)
+    .where(isNotNull(logs.contractAddress))
+    .innerJoin(txEffectToLogs, eq(logs.txEffectToLogsId, txEffectToLogs.id))
+    .limit(10)
+    .execute();
+  if (dbRes.length === 0) return null;
+  return dbRes.map((row) => row.hash);
+}
 
 export const getABlockWithContractInstances = async () => {
   const dbRes = await db()

@@ -1,18 +1,18 @@
 import { z } from "zod";
 import { hexStringSchema } from "../general.js";
-import { aztecAddressSchema, frNumberSchema, frSchema } from "./utils.js";
+import { aztecAddressSchema, bufferSchema, frNumberSchema, frSchema } from "./utils.js";
 
 export const noteEncryptedLogEntrySchema = z.object({
-  data: z.string(),
+  data: bufferSchema,
 });
 
 export const encryptedLogEntrySchema = z.object({
-  data: z.string(),
+  data: bufferSchema,
   maskedContractAddress: frSchema,
 });
 
 export const unencryptedLogEntrySchema = z.object({
-  data: z.string(),
+  data: bufferSchema,
   contractAddress: aztecAddressSchema,
 });
 

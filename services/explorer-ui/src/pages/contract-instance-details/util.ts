@@ -4,7 +4,7 @@ import { API_URL, aztecExplorer } from "~/service/constants";
 
 export const getContractData = (data: ChicmozL2ContractInstanceDeluxe) => {
   const link = `${routes.contracts.route}${routes.contracts.children.classes.route}/${data.contractClassId}/versions/${data.version}`;
-  return [
+  const displayData = [
     {
       label: "ADDRESS",
       value: data.address,
@@ -27,4 +27,12 @@ export const getContractData = (data: ChicmozL2ContractInstanceDeluxe) => {
       extLink: `${API_URL}/${aztecExplorer.getL2ContractInstance(data.address)}`,
     },
   ];
+  if (data.aztecScoutVerified) {
+    displayData.push({
+      label: "VERIFIED ✅",
+      value: "Contract deployer verified by Aztec Scout.",
+      link: routes.verifiedContracts.route,
+    });
+  }
+  return displayData;
 };

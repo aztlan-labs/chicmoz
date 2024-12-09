@@ -98,8 +98,9 @@ export const deployContract = async <T extends Contract>({
     `📫 ${contractLoggingName} ${truncateHashString(hash)} (Deploying contract)`
   );
   const deployedContract = await contractTx.deployed();
+  const receipt = await contractTx.wait();
   const addressString = deployedContract.address.toString();
-  logger.info(`⛏  ${contractLoggingName} deployed at: ${addressString}`);
+  logger.info(`⛏  ${contractLoggingName} deployed at: ${addressString} block: ${receipt.blockNumber}`);
   if (broadcastWithWallet) {
     await broadcastFunctions({
       wallet: broadcastWithWallet,

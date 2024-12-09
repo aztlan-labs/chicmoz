@@ -4,14 +4,14 @@ import { formatTimeSince } from "~/lib/utils";
 import { API_URL, aztecExplorer } from "~/service/constants";
 export type TxEffectDataType =
   | string[]
-  | Array<{ logs: Array<{ data: string; contractAddress: string }> }>
+  | Array<{ logs: Array<{ data: Buffer; contractAddress: string }> }>
   | Array<{
       logs: Array<{
-        data: string;
+        data: Buffer;
         maskedContractAddress: string;
       }>;
     }>
-  | Array<{ logs: Array<{ data: string }> }>
+  | Array<{ logs: Array<{ data: Buffer }> }>
   | Array<{ leafSlot: string; value: string }>;
 
 export const getTxEffectData = (data: ChicmozL2TxEffectDeluxe) => [

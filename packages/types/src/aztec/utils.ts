@@ -10,11 +10,6 @@ export type AztecAddress = {
   toString(): string;
 };
 
-export type StringifiedAztecFr = {
-  type: "Fr";
-  value: `0x${string}`;
-};
-
 export type StringifiedAztecAddress = {
   type: "AztecAddress";
   value: `0x${string}`;
@@ -22,8 +17,6 @@ export type StringifiedAztecAddress = {
 
 const frToHexString = (val: unknown) => {
   if (!val) return val;
-  else if ((val as StringifiedAztecFr).value)
-    return (val as StringifiedAztecFr).value;
   else if ((val as AztecFr).toString) return (val as AztecFr).toString();
   else return val;
 };
@@ -36,12 +29,28 @@ export const frSchema = z.preprocess(
     .regex(/^0x[0-9a-fA-F]+$/)
 );
 
-export const frPointSchema = z.object({
+type FrPoint = {
+  x: AztecFr;
+  y: AztecFr;
+  isInfinite: boolean;
+  kind: "point";
+};
+
+const frPointToObj = (val: unknown) => {
+  if (!val) return val;
+  else if ((val as FrPoint).x) return val;
+  else return val;
+};
+
+export const frPointSchema = z.preprocess(
+  frPointToObj,
+z.object({
   x: frSchema,
   y: frSchema,
   isInfinite: z.boolean(),
   kind: z.enum(["point"]),
-});
+})
+);
 
 export const frNumberSchema = z.preprocess((val) => {
   if (typeof val === "number") return val;
