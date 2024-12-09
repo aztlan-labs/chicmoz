@@ -34,11 +34,11 @@ const naiveDecode = (data: Buffer): string => {
     })
     .join("");
   const avg = sum / totCount;
-  console.log("avg", avg);
-  console.log("counterAbove128", counterAbove128);
-  console.log("counterAbove255", counterAbove255);
-  console.log("counterZero", counterZero);
-  console.log("totCount", totCount);
+  //console.log("avg", avg);
+  //console.log("counterAbove128", counterAbove128);
+  //console.log("counterAbove255", counterAbove255);
+  //console.log("counterZero", counterZero);
+  //console.log("totCount", totCount);
   return res ?? "";
 };
 
