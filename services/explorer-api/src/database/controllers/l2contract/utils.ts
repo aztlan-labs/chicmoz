@@ -10,7 +10,7 @@ export const parseDeluxe = (contractClass: any, instance: any): ChicmozL2Contrac
     ...contractClass,
     aztecScoutVerified: VERIFIED_CONTRACT_ADDRESSES.some((address) => address === instance.address),
     blockHash: instance.blockHash,
-    packedPublicBytecode: Buffer.from(contractClass.packedPublicBytecode),
+    packedBytecode: Buffer.from(contractClass.packedBytecode),
     address: instance.address,
     version: instance.version,
     salt: instance.salt,

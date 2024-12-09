@@ -1,13 +1,9 @@
 import {
   ChicmozL2TxEffect,
   ChicmozL2TxEffectDeluxe,
-  EncryptedLogEntry,
   HexString,
-  NoteEncryptedLogEntry,
   UnencryptedLogEntry,
   chicmozL2TxEffectDeluxeSchema,
-  encryptedLogEntrySchema,
-  noteEncryptedLogEntrySchema,
   unencryptedLogEntrySchema,
 } from "@chicmoz-pkg/types";
 import { SQL, and, asc, eq, getTableColumns } from "drizzle-orm";
@@ -44,24 +40,13 @@ type GetTxEffectsByBlockHeight = {
 
 export const getTxEffectNestedByHash = async (
   txEffectHash: string
-): Promise<
-  Pick<
-    ChicmozL2TxEffect,
-    | "publicDataWrites"
-    | "noteEncryptedLogs"
-    | "encryptedLogs"
-    | "unencryptedLogs"
-  >
-> => {
+): Promise<Pick<ChicmozL2TxEffect, "publicDataWrites" | "unencryptedLogs">> => {
   const publicDataWrites = await db()
     .select({
       ...getTableColumns(publicDataWrite),
     })
     .from(publicDataWrite)
-    .innerJoin(
-      txEffect,
-      eq(txEffect.hash, publicDataWrite.txEffectHash)
-    )
+    .innerJoin(txEffect, eq(txEffect.hash, publicDataWrite.txEffectHash))
     .where(eq(publicDataWrite.txEffectHash, txEffectHash))
     .orderBy(asc(publicDataWrite.index))
     .execute();
@@ -73,48 +58,27 @@ export const getTxEffectNestedByHash = async (
     })
     .from(txEffectToLogs)
     .innerJoin(logs, eq(txEffectToLogs.id, logs.txEffectToLogsId))
-    .innerJoin(functionLogs, eq(txEffectToLogs.id, functionLogs.txEffectToLogsId))
+    .innerJoin(
+      functionLogs,
+      eq(txEffectToLogs.id, functionLogs.txEffectToLogsId)
+    )
     .where(eq(txEffectToLogs.txEffectHash, txEffectHash))
     .orderBy(asc(functionLogs.index), asc(logs.index))
     .execute();
 
-  const {
-    highestIndexNoteEncryptedLogs,
-    highestIndexEncryptedLogs,
-    highestIndexUnencryptedLogs,
-  } = mixedLogs.reduce(
+  const { highestIndexUnencryptedLogs } = mixedLogs.reduce(
     (acc, { functionLogIndex }) => ({
-      highestIndexNoteEncryptedLogs: Math.max(
-        acc.highestIndexNoteEncryptedLogs,
-        functionLogIndex
-      ),
-      highestIndexEncryptedLogs: Math.max(
-        acc.highestIndexEncryptedLogs,
-        functionLogIndex
-      ),
       highestIndexUnencryptedLogs: Math.max(
         acc.highestIndexUnencryptedLogs,
         functionLogIndex
       ),
     }),
     {
-      highestIndexNoteEncryptedLogs: -1,
-      highestIndexEncryptedLogs: -1,
       highestIndexUnencryptedLogs: -1,
     }
   );
 
   const initialLogs = {
-    noteEncryptedLogs: {
-      functionLogs: new Array<{ logs: NoteEncryptedLogEntry[] }>(
-        highestIndexNoteEncryptedLogs + 1
-      ).fill({ logs: [] }),
-    },
-    encryptedLogs: {
-      functionLogs: new Array<{ logs: EncryptedLogEntry[] }>(
-        highestIndexEncryptedLogs + 1
-      ).fill({ logs: [] }),
-    },
     unencryptedLogs: {
       functionLogs: new Array<{ logs: UnencryptedLogEntry[] }>(
         highestIndexUnencryptedLogs + 1
@@ -123,20 +87,8 @@ export const getTxEffectNestedByHash = async (
   };
 
   for (const log of mixedLogs) {
-    if (log.type === "noteEncrypted") {
-      const l = noteEncryptedLogEntrySchema.parse(log);
-      initialLogs.noteEncryptedLogs.functionLogs[
-        log.functionLogIndex
-      ].logs.push(l);
-    } else if (log.type === "encrypted") {
-      const l = encryptedLogEntrySchema.parse(log);
-      initialLogs.encryptedLogs.functionLogs[log.functionLogIndex].logs.push(l);
-    } else if (log.type === "unencrypted") {
-      const l = unencryptedLogEntrySchema.parse(log);
-      initialLogs.unencryptedLogs.functionLogs[log.functionLogIndex].logs.push(
-        l
-      );
-    }
+    const l = unencryptedLogEntrySchema.parse(log);
+    initialLogs.unencryptedLogs.functionLogs[log.functionLogIndex].logs.push(l);
   }
 
   return {
@@ -179,10 +131,7 @@ const _getTxEffects = async (
     .innerJoin(body, eq(l2Block.hash, body.blockHash))
     .innerJoin(txEffect, eq(body.id, txEffect.bodyId))
     .innerJoin(header, eq(l2Block.hash, header.blockHash))
-    .innerJoin(
-      globalVariables,
-      eq(header.id, globalVariables.headerId)
-    );
+    .innerJoin(globalVariables, eq(header.id, globalVariables.headerId));
 
   let whereQuery;
 
@@ -246,10 +195,7 @@ export const getTxEffectDynamicWhere = async (
     .innerJoin(body, eq(txEffect.bodyId, body.id))
     .innerJoin(l2Block, eq(body.blockHash, l2Block.hash))
     .innerJoin(header, eq(l2Block.hash, header.blockHash))
-    .innerJoin(
-      globalVariables,
-      eq(header.id, globalVariables.headerId)
-    )
+    .innerJoin(globalVariables, eq(header.id, globalVariables.headerId))
     .where(whereMatcher)
     .limit(1)
     .execute();
