@@ -107,7 +107,7 @@ export const l2ContractClassRegistered = pgTable(
     version: bigint("version", { mode: "number" }).notNull(),
     artifactHash: generateFrColumn("artifact_hash").notNull(),
     privateFunctionsRoot: generateFrColumn("private_functions_root").notNull(),
-    packedPublicBytecode: bufferType("packed_public_bytecode").notNull(),
+    packedBytecode: bufferType("packed_bytecode").notNull(),
   },
   (t) => ({
     primaryKey: primaryKey({
@@ -153,11 +153,8 @@ export const l2PrivateFunction = pgTable(
     artifactFunctionTreeLeafIndex: bigint("artifact_function_tree_leaf_index", {
       mode: "number",
     }).notNull(),
-    privateFunction_selector_type: varchar(
-      "private_function_selector_type"
-    ).notNull(), // TODO: enum
-    privateFunction_selector_value: varchar(
-      "private_function_selector_value"
+    privateFunction_selector_value: bigint(
+      "private_function_selector_value", { mode: "number" }
     ).notNull(),
     privateFunction_metadataHash: generateFrColumn(
       "private_function_metadata_hash"
@@ -189,11 +186,8 @@ export const l2UnconstrainedFunction = pgTable(
     artifactFunctionTreeLeafIndex: bigint("artifact_function_tree_leaf_index", {
       mode: "number",
     }).notNull(),
-    unconstrainedFunction_selector_type: varchar(
-      "unconstrained_function_selector_type"
-    ).notNull(), // TODO: enum
-    unconstrainedFunction_selector_value: varchar(
-      "unconstrained_function_selector_value"
+    unconstrainedFunction_selector_value: bigint(
+      "unconstrained_function_selector_value", { mode: "number" }
     ).notNull(),
     unconstrainedFunction_metadataHash: generateFrColumn(
       "unconstrained_function_metadata_hash"

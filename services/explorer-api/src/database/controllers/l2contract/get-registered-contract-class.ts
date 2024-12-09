@@ -38,7 +38,7 @@ export const getL2RegisteredContractClasses = async (
       version: l2ContractClassRegistered.version,
       artifactHash: l2ContractClassRegistered.artifactHash,
       privateFunctionsRoot: l2ContractClassRegistered.privateFunctionsRoot,
-      packedPublicBytecode: l2ContractClassRegistered.packedPublicBytecode,
+      packedBytecode: l2ContractClassRegistered.packedBytecode,
     })
     .from(l2ContractClassRegistered)
     .where(whereQuery)
@@ -60,7 +60,7 @@ export const getLatestL2RegisteredContractClasses = async (): Promise<
       version: l2ContractClassRegistered.version,
       artifactHash: l2ContractClassRegistered.artifactHash,
       privateFunctionsRoot: l2ContractClassRegistered.privateFunctionsRoot,
-      packedPublicBytecode: l2ContractClassRegistered.packedPublicBytecode,
+      packedBytecode: l2ContractClassRegistered.packedBytecode,
     })
     .from(l2ContractClassRegistered)
     .innerJoin(l2Block, eq(l2Block.hash, l2ContractClassRegistered.blockHash))

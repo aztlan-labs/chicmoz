@@ -130,7 +130,7 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
     r.push(
       paths.contractClassPrivateFunction
         .replace(`:${classId}`, privateFunction.classId)
-        .replace(`:${functionSelector}`, privateFunction.functionSelector)
+        .replace(`:${functionSelector}`, privateFunction.functionSelector.toString())
     );
   }
   if (unconstrainedFunction) {
@@ -143,7 +143,7 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
     r.push(
       paths.contractClassUnconstrainedFunction
         .replace(`:${classId}`, unconstrainedFunction.classId)
-        .replace(`:${functionSelector}`, unconstrainedFunction.functionSelector)
+        .replace(`:${functionSelector}`, unconstrainedFunction.functionSelector.toString())
     );
   } else {
     r.push(paths.contractClassPrivateFunctions + "NOT FOUND");

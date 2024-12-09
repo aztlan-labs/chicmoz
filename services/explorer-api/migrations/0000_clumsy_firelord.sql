@@ -44,7 +44,6 @@ CREATE TABLE IF NOT EXISTS "logs" (
 	"tx_effect_to_logs_id" uuid NOT NULL,
 	"type" varchar(20) NOT NULL,
 	"data" "bytea" NOT NULL,
-	"masked_contract_address" varchar(66),
 	"contract_address" varchar(66)
 );
 --> statement-breakpoint
@@ -67,9 +66,8 @@ CREATE TABLE IF NOT EXISTS "tx_effect" (
 	"note_hashes" jsonb NOT NULL,
 	"nullifiers" jsonb NOT NULL,
 	"l2_to_l1_msgs" jsonb NOT NULL,
-	"note_encrypted_logs_length" bigint NOT NULL,
-	"encrypted_logs_length" bigint NOT NULL,
-	"unencrypted_logs_length" bigint NOT NULL
+	"unencrypted_logs_length" bigint NOT NULL,
+	"private_logs" jsonb NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tx_effect_to_logs" (
@@ -167,7 +165,7 @@ CREATE TABLE IF NOT EXISTS "l2_contract_class_registered" (
 	"version" bigint NOT NULL,
 	"artifact_hash" varchar(66) NOT NULL,
 	"private_functions_root" varchar(66) NOT NULL,
-	"packed_public_bytecode" "bytea" NOT NULL,
+	"packed_bytecode" "bytea" NOT NULL,
 	CONSTRAINT "contract_class_id_version" PRIMARY KEY("contract_class_id","version")
 );
 --> statement-breakpoint
@@ -207,8 +205,7 @@ CREATE TABLE IF NOT EXISTS "l2_private_function" (
 	"private_function_tree_leaf_index" bigint NOT NULL,
 	"artifact_function_tree_sibling_path" jsonb NOT NULL,
 	"artifact_function_tree_leaf_index" bigint NOT NULL,
-	"private_function_selector_type" varchar NOT NULL,
-	"private_function_selector_value" varchar NOT NULL,
+	"private_function_selector_value" bigint NOT NULL,
 	"private_function_metadata_hash" varchar(66) NOT NULL,
 	"private_function_vk_hash" varchar(66) NOT NULL,
 	"private_function_bytecode" "bytea" NOT NULL,
@@ -221,8 +218,7 @@ CREATE TABLE IF NOT EXISTS "l2_unconstrained_function" (
 	"private_functions_artifact_tree_root" varchar(66) NOT NULL,
 	"artifact_function_tree_sibling_path" jsonb NOT NULL,
 	"artifact_function_tree_leaf_index" bigint NOT NULL,
-	"unconstrained_function_selector_type" varchar NOT NULL,
-	"unconstrained_function_selector_value" varchar NOT NULL,
+	"unconstrained_function_selector_value" bigint NOT NULL,
 	"unconstrained_function_metadata_hash" varchar(66) NOT NULL,
 	"unconstrained_function_bytecode" "bytea" NOT NULL,
 	CONSTRAINT "unconstrained_function_contract_class" PRIMARY KEY("contract_class_id","unconstrained_function_selector_value")
