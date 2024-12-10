@@ -66,6 +66,19 @@ export const getABlockWithTxEffects = async () => {
   };
 };
 
+export const getSomeTxEffectWithPrivateLogs = async () => {
+  const dbRes = await db()
+    .select({
+      hash: txEffect.hash,
+    })
+    .from(txEffect)
+    .where(isNotNull(txEffect.privateLogs))
+    .limit(10)
+    .execute();
+  if (dbRes.length === 0) return null;
+  return dbRes.map((row) => row.hash);
+};
+
 export const getSomeTxEffectWithUnencryptedLogs = async () => {
   const dbRes = await db()
     .select({

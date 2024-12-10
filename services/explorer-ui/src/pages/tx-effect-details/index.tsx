@@ -8,38 +8,21 @@ import { OptionButtons } from "./tabs";
 
 const naiveDecode = (data: Buffer): string => {
   // TODO
-  //let counterZero = 0;
-  //let counterAbove128 = 0;
-  //let counterAbove255 = 0;
-  //let sum = 0;
-  //let totCount = 0;
-  const res = data.toString("hex").match(/.{1,64}/g)
+  let counterZero = 0;
+  let counterAbove128 = 0;
+  const res = data
+    .toString("hex")
+    .match(/.{1,64}/g)
     ?.map((hex) => parseInt(hex, 16))
     .map((charCode): string => {
-      if (charCode === 0) {
-        //counterZero++;
-      } else {
-        //console.log(`charCode: ${charCode} char: ${String.fromCharCode(charCode)}`);
-      }
-      //if (charCode > 128) {
-        //counterAbove128++;
-      //}
-      //if (charCode > 255) {
-        //counterAbove255++;
-      //}
-      //sum += charCode;
-      //totCount++;
+      if (charCode === 0) counterZero++;
+      if (charCode > 128) counterAbove128++;
       const char = String.fromCharCode(charCode);
       return char;
     })
-    .join("");
-  //const avg = sum / totCount;
-  //console.log("avg", avg);
-  //console.log("counterAbove128", counterAbove128);
-  //console.log("counterAbove255", counterAbove255);
-  //console.log("counterZero", counterZero);
-  //console.log("totCount", totCount);
-  return res ?? "";
+    .join("") ?? "";
+  const isProbablyADecodedString = counterZero === 0 && counterAbove128 === 0;
+  return isProbablyADecodedString ? res : data.toString("hex");
 };
 
 export const TxEffectDetails: FC = () => {
@@ -48,7 +31,6 @@ export const TxEffectDetails: FC = () => {
     from: "/tx-effects/$hash",
   });
   const { data: txEffects, isLoading, error } = useGetTxEffectByHash(hash);
-  console.log(txEffects);
   const txEffectData = mapTxEffectsData(txEffects);
 
   useEffect(() => {
@@ -92,21 +74,26 @@ export const TxEffectDetails: FC = () => {
           <div className="bg-white rounded-lg shadow-md p-4">
             {selectedTab === "privateLogs" && (
               <div className="">
-                {txEffects.privateLogs.map(
-                  (log, index) => {
-                    const entries = [{
+                {txEffects.privateLogs.map((log, index) => {
+                  //const entries = log.map((logNbr, i) => ({
+                  //  label: `Log ${i + 1}`,
+                  //  value: logNbr.toString(),
+                  //  isClickable: false,
+                  //}));
+                  const entries = [
+                    {
                       label: "data",
-                      value: log,
+                      value: log.toString(),
                       isClickable: false,
-                    }];
-                    return (
-                      <div key={index}>
-                        <h4>Log {index + 1}</h4>
-                        <KeyValueDisplay key={index} data={entries} />
-                      </div>
-                    );
-                  }
-                )}
+                    },
+                  ];
+                  return (
+                    <div key={index}>
+                      <h4>Log {index + 1}</h4>
+                      <KeyValueDisplay key={index} data={entries} />
+                    </div>
+                  );
+                })}
               </div>
             )}
             {selectedTab === "unencryptedLogs" && (
