@@ -55,7 +55,7 @@ export const ContractClassDetails: FC = () => {
 
   if (!id) return <div>No classId</div>;
   const selectedVersion = classesData?.find(
-    (contract) => contract.version === Number(version),
+    (contract) => contract.version === Number(version)
   );
   if (!selectedVersion) return <div>No data</div>;
 
@@ -109,7 +109,12 @@ export const ContractClassDetails: FC = () => {
                 {contractClassPrivateFunctionsHookRes.data.map(
                   (privateFunction) => (
                     <div>
-                      <h4>{privateFunction.privateFunction.selector.value}</h4>
+                      <h4>
+                        {"0x" +
+                          privateFunction.privateFunction.selector.value.toString(
+                            16
+                          )}
+                      </h4>
                       <p>
                         artifactMetadataHash:{" "}
                         {privateFunction.artifactMetadataHash}
@@ -119,7 +124,7 @@ export const ContractClassDetails: FC = () => {
                           <p>
                             privateFunctionTreeSiblingPath-{index}: {path}
                           </p>
-                        ),
+                        )
                       )}
                       <p>
                         privateFunctionTreeLeafIndex:{" "}
@@ -130,17 +135,13 @@ export const ContractClassDetails: FC = () => {
                           <p>
                             artifactFunctionTreeSiblingPath-{index}: {path}
                           </p>
-                        ),
+                        )
                       )}
                       <p>
                         artifactFunctionTreeLeafIndex:{" "}
                         {privateFunction.artifactFunctionTreeLeafIndex}
                       </p>
                       <div>
-                        <p>
-                          privateFunction.selector.type:{" "}
-                          {privateFunction.privateFunction.selector.type}
-                        </p>
                         <p>
                           privateFunction.selector.value:{" "}
                           {privateFunction.privateFunction.selector.value}
@@ -160,7 +161,7 @@ export const ContractClassDetails: FC = () => {
                       </div>
                       <hr />
                     </div>
-                  ),
+                  )
                 )}
               </div>
             )}
@@ -172,10 +173,10 @@ export const ContractClassDetails: FC = () => {
                   (unconstrainedFunction) => (
                     <div>
                       <h4>
-                        {
-                          unconstrainedFunction.unconstrainedFunction.selector
-                            .value
-                        }
+                        {"0x" +
+                          unconstrainedFunction.unconstrainedFunction.selector.value.toString(
+                            16
+                          )}
                       </h4>
                       <p>
                         artifactMetadataHash:{" "}
@@ -190,20 +191,13 @@ export const ContractClassDetails: FC = () => {
                           <p>
                             artifactFunctionTreeSiblingPath-{index}: {path}
                           </p>
-                        ),
+                        )
                       )}
                       <p>
                         artifactFunctionTreeLeafIndex:{" "}
                         {unconstrainedFunction.artifactFunctionTreeLeafIndex}
                       </p>
                       <div>
-                        <p>
-                          unconstrainedFunction.selector.type:{" "}
-                          {
-                            unconstrainedFunction.unconstrainedFunction.selector
-                              .type
-                          }
-                        </p>
                         <p>
                           unconstrainedFunction.selector.value:{" "}
                           {
@@ -224,7 +218,7 @@ export const ContractClassDetails: FC = () => {
                       </div>
                       <hr />
                     </div>
-                  ),
+                  )
                 )}
               </div>
             )}

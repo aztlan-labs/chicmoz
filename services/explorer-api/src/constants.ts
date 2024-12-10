@@ -2,9 +2,9 @@ export const CHAIN_NAME = "AZTEC";
 export const SERVICE_NAME = "explorer-api";
 
 export const DEFAULT_VERIFIED_CONTRACT_ADDRESSES_DEV = [
-  "0x11a81043f8c2cb2e95fa28e051f042a87e76c9e42d442188638eb2c07ae445b2", // Account  address added by Sandbox
-  "0x17eafcd0961cc68c56b79305fa6fa8ee49bf8185b2bff279be84f3ceb1ae03ec", // Account  address added by Sandbox
-  "0x12fb76c6e2ccbad0919c554c07257fc69993ddd9c799c62179345b5b82a95dd8", // Account  address added by Sandbox
+  "0x0e5fe9a23c854f14262bb3b3e88dab8e33412d6db17baa199506f865ed746a0c", // Account  address added by Sandbox
+  "0x1b30d1a55ae44943dd696406367d8bcfc64e65184250147395adca286af92fc3", // Account  address added by Sandbox
+  "0x07888883915a799280b01d89bdc0913ea0b0d3e017fd97a8beeb6ec88352c4a9", // Account  address added by Sandbox
 ];
 
 export const DEFAULT_VERIFIED_CONTRACT_ADDRESSES_PROD: string[] = [

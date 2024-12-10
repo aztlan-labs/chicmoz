@@ -58,6 +58,7 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
             text={truncateHashString(value)}
             toCopy={value}
             additionalClasses="md:justify-end md:text-end"
+            additionalClassesIcon="justify-end"
           />
         </span>
       )}
