@@ -115,7 +115,7 @@ export const getContractClassPrivateFunctionsSchema = getContractClassesByClassI
 export const getContractClassPrivateFunctionSchema = z.object({
   params: z.object({
     [classId]: hexStringSchema,
-    [functionSelector]: hexStringSchema,
+    [functionSelector]: z.coerce.number().nonnegative(),
   }),
 });
 export const getContractClassUnconstrainedFunctionsSchema = getContractClassPrivateFunctionsSchema;

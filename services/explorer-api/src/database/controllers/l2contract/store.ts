@@ -70,7 +70,6 @@ export const storePrivateFunction = async (
     .insert(l2PrivateFunction)
     .values({
       ...rest,
-      privateFunction_selector_type: privateFunction.selector.type,
       privateFunction_selector_value: privateFunction.selector.value,
       privateFunction_metadataHash: privateFunction.metadataHash,
       privateFunction_vkHash: privateFunction.vkHash,
@@ -86,7 +85,6 @@ export const storeUnconstrainedFunction = async (
     .insert(l2UnconstrainedFunction)
     .values({
       ...rest,
-      unconstrainedFunction_selector_type: unconstrainedFunction.selector.type,
       unconstrainedFunction_selector_value:
         unconstrainedFunction.selector.value,
       unconstrainedFunction_metadataHash: unconstrainedFunction.metadataHash,

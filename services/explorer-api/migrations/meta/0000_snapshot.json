@@ -1,5 +1,5 @@
 {
-  "id": "4fe591f8-e500-430d-a332-4c1c8cde201c",
+  "id": "85e3f291-661b-40ed-afb0-9b7049a65b66",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -275,12 +275,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "masked_contract_address": {
-          "name": "masked_contract_address",
-          "type": "varchar(66)",
-          "primaryKey": false,
-          "notNull": false
-        },
         "contract_address": {
           "name": "contract_address",
           "type": "varchar(66)",
@@ -419,21 +413,15 @@
           "primaryKey": false,
           "notNull": true
         },
-        "note_encrypted_logs_length": {
-          "name": "note_encrypted_logs_length",
-          "type": "bigint",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "encrypted_logs_length": {
-          "name": "encrypted_logs_length",
-          "type": "bigint",
-          "primaryKey": false,
-          "notNull": true
-        },
         "unencrypted_logs_length": {
           "name": "unencrypted_logs_length",
           "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "private_logs": {
+          "name": "private_logs",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": true
         }
@@ -1066,8 +1054,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "packed_public_bytecode": {
-          "name": "packed_public_bytecode",
+        "packed_bytecode": {
+          "name": "packed_bytecode",
           "type": "bytea",
           "primaryKey": false,
           "notNull": true
@@ -1319,15 +1307,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "private_function_selector_type": {
-          "name": "private_function_selector_type",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
         "private_function_selector_value": {
           "name": "private_function_selector_value",
-          "type": "varchar",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": true
         },
@@ -1394,15 +1376,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "unconstrained_function_selector_type": {
-          "name": "unconstrained_function_selector_type",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
         "unconstrained_function_selector_value": {
           "name": "unconstrained_function_selector_value",
-          "type": "varchar",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": true
         },

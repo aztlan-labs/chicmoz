@@ -5,6 +5,8 @@ const getTxEffectWithHashes = (txEffects: L2Block["body"]["txEffects"]) => {
   return txEffects.map((txEffect) => {
     return {
       ...txEffect,
+      unencryptedLogslength: txEffect.unencryptedLogsLength.toNumber(),
+      privateLogs: txEffect.privateLogs.map((log) => log.toFields()),
       hash: "0x" + txEffect.hash().toString("hex"),
       txHash: txEffect.txHash.toString(),
     };

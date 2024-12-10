@@ -5,6 +5,7 @@ import { Textarea } from "./ui/textarea";
 
 interface Props {
   additionalClasses?: string;
+  additionalClassesIcon?: string;
   toCopy: string;
   text: string;
   textArea?: boolean;
@@ -12,6 +13,7 @@ interface Props {
 
 export const CopyableText: FC<Props> = ({
   additionalClasses,
+  additionalClassesIcon,
   toCopy,
   textArea = false,
   text,
@@ -27,7 +29,7 @@ export const CopyableText: FC<Props> = ({
 
   return (
     <div className={`flex w-full ${additionalClasses}`}>
-      <div className="flex w-full flex-row gap-2 justify-end items-center">
+      <div className={`flex w-full flex-row gap-2 items-center ${additionalClassesIcon}`}>
         <CopyIcon className="cursor-pointer" onClick={handleCopy} />
 
         {textArea ? (

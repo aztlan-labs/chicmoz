@@ -6,8 +6,8 @@ import { EasyPrivateVotingContract } from "@aztec/noir-contracts.js";
 import {
   ContractClassRegisteredEvent,
   ContractInstanceDeployedEvent,
-} from "@aztec/circuits.js";
-import { ProtocolContractAddress } from "@aztec/protocol-contracts";
+} from "@aztec/protocol-contracts";
+import assert from "assert";
 
 export async function run() {
   logger.info("===== SIMPLE DEPLOY CONTRACT =====");
@@ -33,26 +33,34 @@ export async function run() {
   if (blockNumber && blockNumber > 0) {
     const b = await node.getBlock(blockNumber);
     if (b) {
-      const encryptedBlockLogs = b.body.txEffects.flatMap((txEffect) =>
-        txEffect.encryptedLogs.unrollLogs()
+      const privateLogs = b.body.txEffects.flatMap(
+        (txEffect) => txEffect.privateLogs
       );
-      const contractInstances =
-        ContractInstanceDeployedEvent.fromLogs(encryptedBlockLogs);
+      const contractInstances = privateLogs
+        .filter((log) =>
+          ContractInstanceDeployedEvent.isContractInstanceDeployedEvent(log)
+        )
+        .map((log) => ContractInstanceDeployedEvent.fromLog(log))
+        .map((e) => e.toContractInstance());
 
-      const contractClassLogs = b.body.txEffects.flatMap((txEffect) =>
-        txEffect.contractClassLogs.unrollLogs()
-      );
-      const contractClasses = ContractClassRegisteredEvent.fromLogs(
-        contractClassLogs,
-        ProtocolContractAddress.ContractClassRegisterer
-      );
+      const contractClassLogs = b.body.txEffects
+        .flatMap((txEffect) => (txEffect ? [txEffect.contractClassLogs] : []))
+        .flatMap((txLog) => txLog.unrollLogs());
 
+      const contractClasses = contractClassLogs
+        .filter((log) =>
+          ContractClassRegisteredEvent.isContractClassRegisteredEvent(log.data)
+        )
+        .map((log) => ContractClassRegisteredEvent.fromLog(log.data))
+        .map((e) => e.toContractClassPublic());
       logger.info(
         JSON.stringify({
           contractClasses,
           contractInstances,
         })
       );
+      assert(contractClasses.length > 1, "Contract classes length is 0!!");
+      assert(contractInstances.length > 1, "Contract instances length is 0!!");
     }
   }
 }

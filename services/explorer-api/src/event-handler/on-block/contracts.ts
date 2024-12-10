@@ -4,8 +4,7 @@ import {
   ContractInstanceDeployedEvent,
   PrivateFunctionBroadcastedEvent,
   UnconstrainedFunctionBroadcastedEvent,
-} from "@aztec/circuits.js";
-import { ProtocolContractAddress } from "@aztec/protocol-contracts";
+} from "@aztec/protocol-contracts";
 import {
   chicmozL2ContractClassRegisteredEventSchema,
   chicmozL2ContractInstanceDeployedEventSchema,
@@ -19,12 +18,16 @@ import {
 import { controllers } from "../../database/index.js";
 import { logger } from "../../logger.js";
 import { handleDuplicateError } from "../utils.js";
+import {
+  type ContractInstanceWithAddress,
+  type ContractClassPublic,
+} from "@aztec/circuits.js";
 
 const parseObjs = <T>(
   blockHash: string,
   objs: (
-    | ContractClassRegisteredEvent
-    | ContractInstanceDeployedEvent
+    | ContractClassPublic
+    | ContractInstanceWithAddress
     | PrivateFunctionBroadcastedEvent
     | UnconstrainedFunctionBroadcastedEvent
   )[],
@@ -41,6 +44,8 @@ const parseObjs = <T>(
     } catch (e) {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       logger.error(`Failed to parse object: ${e}`);
+      logger.error((e as Error).stack);
+      logger.error(JSON.stringify(obj, null, 2));
     }
   }
   return parsedObjs;
@@ -60,55 +65,57 @@ const storeObj = async <T>(
   }
 };
 
+// NOTE: reference for parsing in aztec-packages: yarn-project/archiver/src/archiver/archiver.ts
 export const storeContracts = async (b: L2Block, blockHash: string) => {
-  const encryptedBlockLogs = b.body.txEffects.flatMap((txEffect) =>
-    txEffect.encryptedLogs.unrollLogs()
+  const privateLogs = b.body.txEffects.flatMap(
+    (txEffect) => txEffect.privateLogs
   );
-  const contractInstances =
-    ContractInstanceDeployedEvent.fromLogs(encryptedBlockLogs);
+  const contractInstances = privateLogs
+    .filter((log) =>
+      ContractInstanceDeployedEvent.isContractInstanceDeployedEvent(log)
+    )
+    .map((log) => ContractInstanceDeployedEvent.fromLog(log))
+    .map((e) => e.toContractInstance());
 
-  const contractClassLogs = b.body.txEffects.flatMap((txEffect) =>
-    txEffect.contractClassLogs.unrollLogs()
-  );
-  const contractClasses = ContractClassRegisteredEvent.fromLogs(
-    contractClassLogs,
-    ProtocolContractAddress.ContractClassRegisterer
-  );
+  const contractClassLogs = b.body.txEffects
+    .flatMap((txEffect) => (txEffect ? [txEffect.contractClassLogs] : []))
+    .flatMap((txLog) => txLog.unrollLogs());
 
-  const unencryptedBlockLogs = b.body.txEffects.flatMap((txEffect) =>
-    txEffect.unencryptedLogs.unrollLogs()
-  );
-  const privateFnEvents = PrivateFunctionBroadcastedEvent.fromLogs(
-    unencryptedBlockLogs,
-    ProtocolContractAddress.ContractClassRegisterer
-  );
-  const unconstrainedFnEvents = UnconstrainedFunctionBroadcastedEvent.fromLogs(
-    unencryptedBlockLogs,
-    ProtocolContractAddress.ContractClassRegisterer
-  );
+  const contractClasses = contractClassLogs
+    .filter((log) =>
+      ContractClassRegisteredEvent.isContractClassRegisteredEvent(log.data)
+    )
+    .map((log) => ContractClassRegisteredEvent.fromLog(log.data))
+    .map((e) => e.toContractClassPublic());
 
-  if (
-    contractClasses.length > 0
-  ) {
-    logger.info(
-      contractClasses.map((contractClass) => contractClass.contractClassId.toString())
-    );
-  }
-
-  if (
-    contractInstances.length > 0
-  ) {
-    logger.info(
-      contractInstances.map((contractInstance) => `Contract instance: ${contractInstance.address.toString()} Contract class: ${contractInstance.contractClassId.toString()}`)
-    );
-  }
+  const privateFnEvents = contractClassLogs
+    .filter((log) =>
+      PrivateFunctionBroadcastedEvent.isPrivateFunctionBroadcastedEvent(
+        log.data
+      )
+    )
+    .map((log) => PrivateFunctionBroadcastedEvent.fromLog(log.data));
+  const unconstrainedFnEvents = contractClassLogs
+    .filter((log) =>
+      UnconstrainedFunctionBroadcastedEvent.isUnconstrainedFunctionBroadcastedEvent(
+        log.data
+      )
+    )
+    .map((log) => UnconstrainedFunctionBroadcastedEvent.fromLog(log.data));
 
   logger.info(
     `📜 Parsing and storing ${contractClasses.length} contract classes and ${contractInstances.length} contract instances, ${privateFnEvents.length} private function events, and ${unconstrainedFnEvents.length} unconstrained function events`
   );
 
+  const contractClassesWithId = contractClasses.map((contractClass) => {
+    return {
+      ...contractClass,
+      contractClassId: contractClass.id
+    };
+  });
+
   const parsedContractClasses: ChicmozL2ContractClassRegisteredEvent[] =
-    parseObjs(blockHash, contractClasses, (contractClass) =>
+    parseObjs(blockHash, contractClassesWithId, (contractClass) =>
       chicmozL2ContractClassRegisteredEventSchema.parse(contractClass)
     );
   const parsedContractInstances: ChicmozL2ContractInstanceDeployedEvent[] =

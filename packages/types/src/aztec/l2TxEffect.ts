@@ -2,21 +2,12 @@ import { z } from "zod";
 import { hexStringSchema } from "../general.js";
 import { aztecAddressSchema, bufferSchema, frNumberSchema, frSchema } from "./utils.js";
 
-export const noteEncryptedLogEntrySchema = z.object({
-  data: bufferSchema,
-});
-
-export const encryptedLogEntrySchema = z.object({
-  data: bufferSchema,
-  maskedContractAddress: frSchema,
-});
-
 export const unencryptedLogEntrySchema = z.object({
   data: bufferSchema,
   contractAddress: aztecAddressSchema,
 });
 
-const logsSchema = (logEntrySchema: typeof noteEncryptedLogEntrySchema | typeof encryptedLogEntrySchema | typeof unencryptedLogEntrySchema) =>
+const logsSchema = (logEntrySchema: typeof unencryptedLogEntrySchema) =>
   z.object({
     functionLogs: z.array(
       z.object({
@@ -72,16 +63,11 @@ export const chicmozL2TxEffectSchema = z.object({
   publicDataWrites: z.array(
     z.object({ leafSlot: frSchema, value: frSchema }),
   ),
-  noteEncryptedLogsLength: frNumberSchema,
-  encryptedLogsLength: frNumberSchema,
   unencryptedLogsLength: frNumberSchema,
-  noteEncryptedLogs: logsSchema(noteEncryptedLogEntrySchema),
-  encryptedLogs: logsSchema(encryptedLogEntrySchema),
+  privateLogs: z.array(z.array(frSchema)),
   unencryptedLogs: logsSchema(unencryptedLogEntrySchema),
 });
 
-export type NoteEncryptedLogEntry = z.infer<typeof noteEncryptedLogEntrySchema>;
-export type EncryptedLogEntry = z.infer<typeof encryptedLogEntrySchema>;
 export type UnencryptedLogEntry = z.infer<typeof unencryptedLogEntrySchema>;
 
 export type ChicmozL2PendingTx = z.infer<typeof chicmozL2PendingTxSchema>;

@@ -2,8 +2,11 @@ import { type ChicmozL2ContractInstanceDeluxe } from "@chicmoz-pkg/types";
 import { routes } from "~/routes/__root";
 import { API_URL, aztecExplorer } from "~/service/constants";
 
+const HARDCODED_DEPLOYER = "0x0000000000000000000000000000000000000000000000000000000000000000";
+
 export const getContractData = (data: ChicmozL2ContractInstanceDeluxe) => {
   const link = `${routes.contracts.route}${routes.contracts.children.classes.route}/${data.contractClassId}/versions/${data.version}`;
+  const isVerified = data.aztecScoutVerified ?? (process.env.NODE_ENV === "development" && data.deployer === HARDCODED_DEPLOYER);
   const displayData = [
     {
       label: "ADDRESS",
@@ -27,7 +30,7 @@ export const getContractData = (data: ChicmozL2ContractInstanceDeluxe) => {
       extLink: `${API_URL}/${aztecExplorer.getL2ContractInstance(data.address)}`,
     },
   ];
-  if (data.aztecScoutVerified) {
+  if (isVerified) {
     displayData.push({
       label: "VERIFIED ✅",
       value: "Contract deployer verified by Aztec Scout.",
