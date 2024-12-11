@@ -8,7 +8,7 @@ import { VERIFIED_CONTRACT_ADDRESSES } from "../../../environment.js";
 export const parseDeluxe = (contractClass: any, instance: any): ChicmozL2ContractInstanceDeluxe => {
   return chicmozL2ContractInstanceDeluxeSchema.parse({
     ...contractClass,
-    aztecScoutVerified: VERIFIED_CONTRACT_ADDRESSES.some((address) => address === instance.address),
+    isVerified: VERIFIED_CONTRACT_ADDRESSES.some((address) => address === instance.address),
     blockHash: instance.blockHash,
     packedBytecode: Buffer.from(contractClass.packedBytecode),
     address: instance.address,

@@ -10,7 +10,7 @@ export const chicmozL2ContractInstanceDeluxeSchema = z.object({
   ...chicmozL2ContractInstanceDeployedEventSchema.shape,
   ...chicmozL2ContractClassRegisteredEventSchema.shape,
   blockHeight: chicmozL2BlockSchema.shape.height.optional(),
-  aztecScoutVerified: z.boolean().optional(),
+  isVerified: z.boolean().optional(),
 });
 
 export type ChicmozL2ContractInstanceDeluxe = z.infer<

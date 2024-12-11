@@ -6,7 +6,8 @@ const HARDCODED_DEPLOYER = "0x00000000000000000000000000000000000000000000000000
 
 export const getContractData = (data: ChicmozL2ContractInstanceDeluxe) => {
   const link = `${routes.contracts.route}${routes.contracts.children.classes.route}/${data.contractClassId}/versions/${data.version}`;
-  const isVerified = data.aztecScoutVerified ?? (process.env.NODE_ENV === "development" && data.deployer === HARDCODED_DEPLOYER);
+  const isVerified = data.isVerified;
+  const isDeployerContract = process.env.NODE_ENV === "development" && data.deployer === HARDCODED_DEPLOYER;
   const displayData = [
     {
       label: "ADDRESS",
@@ -30,10 +31,10 @@ export const getContractData = (data: ChicmozL2ContractInstanceDeluxe) => {
       extLink: `${API_URL}/${aztecExplorer.getL2ContractInstance(data.address)}`,
     },
   ];
-  if (isVerified) {
+  if (isVerified ?? isDeployerContract) {
     displayData.push({
       label: "VERIFIED ✅",
-      value: "Contract deployer verified by Aztec Scout.",
+      value: isVerified ? "Contract deployer verified by Aztec Scout." : "Contract deployer is hardcoded. (Development only)",
       link: routes.verifiedContracts.route,
     });
   }
