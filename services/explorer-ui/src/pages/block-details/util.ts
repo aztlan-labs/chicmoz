@@ -47,7 +47,7 @@ export const getBlockDetails = (latestBlock: ChicmozL2BlockLight) => {
     },
     {
       label: "Raw Data",
-      value: `/${aztecExplorer.getL2BlockByHash}${latestBlock.height}`,
+      value: "View raw data",
       extLink: `${API_URL}/${aztecExplorer.getL2BlockByHash}${latestBlock.height}`,
     },
   ];

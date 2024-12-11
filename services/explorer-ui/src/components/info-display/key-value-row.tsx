@@ -69,7 +69,7 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
           rel="noreferrer"
           className="text-sm flex-grow text-primary-600 text-primary cursor-pointer md:text-end"
         >
-          View raw data
+          {value}
           <span className="ml-1">↗️</span>
         </a>
       )}

@@ -3,12 +3,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { ChicmozL2ContractInstanceDeluxe, chicmozL2ContractInstanceDeluxeSchema } from "@chicmoz-pkg/types";
 import { VERIFIED_CONTRACT_ADDRESSES } from "../../../environment.js";
+import {logger} from "../../../logger.js";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const parseDeluxe = (contractClass: any, instance: any): ChicmozL2ContractInstanceDeluxe => {
+  const verifiedInfo = VERIFIED_CONTRACT_ADDRESSES[instance.address];
+  logger.info(JSON.stringify(verifiedInfo));
   return chicmozL2ContractInstanceDeluxeSchema.parse({
     ...contractClass,
-    isVerified: VERIFIED_CONTRACT_ADDRESSES.some((address) => address === instance.address),
+    verifiedInfo,
     blockHash: instance.blockHash,
     packedBytecode: Buffer.from(contractClass.packedBytecode),
     address: instance.address,
