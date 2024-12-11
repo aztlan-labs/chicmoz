@@ -1,7 +1,12 @@
 import { type FC } from "react";
-// TODO: make verified contracts link process env
+import { Link } from "@tanstack/react-router";
+import { useVerifiedContracts } from "~/hooks/verified-contract";
+import { routes } from "~/routes/__root";
 
+const contractInstanceDetailsRoute =
+  routes.contracts.route + routes.contracts.children.instances.route + "/";
 export const VerifiedContracts: FC = () => {
+  const { data, isError, isLoading } = useVerifiedContracts();
   return (
     <div className="flex flex-col items-center">
       <h1>Verified contracts</h1>
@@ -13,7 +18,7 @@ export const VerifiedContracts: FC = () => {
         <br />
         <p>
           ⚠️ Please note that this does not mean that the contract is safe to
-          use. ⚠️
+          use, nor that we endorse the contract. ⚠️
         </p>
         <br />
         <p>
@@ -27,6 +32,45 @@ export const VerifiedContracts: FC = () => {
           . If you think your contract should be verified, please create a PR to
           that file.
         </p>
+        <br />
+        <hr />
+        <h2>Verified contracts:</h2>
+        {isLoading && <p>Loading...</p>}
+        {isError && <p>Something went wrong...</p>}
+        {data && data.length === 0 && <p>No verified contracts found</p>}
+        {data && data.length > 0 && (
+          <ul>
+            {data.map((contract, index) => (
+              <li key={index}>
+                <hr />
+                <h3>"{contract.name}"</h3>
+                <p>{contract.details}</p>
+                <p>Contact: {contract.contact}</p>
+                <p>
+                  UI:
+                  <a href={contract.uiUrl} className="text-purple-light">
+                    {contract.uiUrl}
+                  </a>
+                </p>
+                <p>
+                  Repo:
+                  <a href={contract.repoUrl} className="text-purple-light">
+                    {contract.repoUrl}
+                  </a>
+                </p>
+                <Link
+                  to={
+                    contractInstanceDetailsRoute +
+                    contract.contractInstanceAddress
+                  }
+                  className="text-purple-light"
+                >
+                  View contract
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

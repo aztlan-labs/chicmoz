@@ -39,6 +39,9 @@ export const paths = {
 
   search: "/l2/search",
 
+  verifiedContract: `/l2/verified-contracts/:${address}`,
+  verifiedContracts: "/l2/verified-contracts",
+
   statsTotalTxEffects: "/l2/stats/total-tx-effects",
   statsTotalTxEffectsLast24h: "/l2/stats/tx-effects-last-24h",
   statsTotalContracts: "/l2/stats/total-contracts",
@@ -123,6 +126,8 @@ export const getContractClassUnconstrainedFunctionSchema = getContractClassPriva
 
 export const getContractInstancesByContractClassIdSchema =
   getContractClassesByClassIdSchema;
+
+export const getVerifiedContractSchema = getContractInstanceSchema;
 
 export const getSearchSchema = z.object({
   query: chicmozSearchQuerySchema,

@@ -33,7 +33,7 @@ export const openApiPaths = {
   ...controller.openapi_SEARCH,
 };
 
-const statsPaths = [
+const otherPaths = [
   {
     path: paths.statsTotalTxEffects,
     controller: controller.GET_STATS_TOTAL_TX_EFFECTS,
@@ -62,7 +62,7 @@ const statsPaths = [
 
 const checkDocsStatus = () => {
   const totalPaths = Object.keys(paths).length;
-  const totalStatsPaths = statsPaths.length;
+  const totalStatsPaths = otherPaths.length;
   const totalOpenApiPaths = Object.keys(openApiPaths).length;
   try {
     assert(totalPaths - totalStatsPaths === totalOpenApiPaths);
@@ -102,9 +102,12 @@ export const init = ({ router }: { router: Router }) => {
   router.get(paths.contractInstance, controller.GET_L2_CONTRACT_INSTANCE);
   router.get(paths.contractInstances, controller.GET_L2_CONTRACT_INSTANCES);
 
+  router.get(paths.verifiedContract, controller.GET_L2_VERIFIED_CONTRACT);
+  router.get(paths.verifiedContracts, controller.GET_L2_VERIFIED_CONTRACTS);
+
   router.get(paths.search, controller.L2_SEARCH);
 
-  statsPaths.forEach(({ path, controller }) => {
+  otherPaths.forEach(({ path, controller }) => {
     router.get(path, controller);
   });
 
