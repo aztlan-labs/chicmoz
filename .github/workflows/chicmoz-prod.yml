@@ -24,8 +24,6 @@ jobs:
       - name: Print version
         run: |
           git describe --tags
-          git log -1 --pretty=%B
-          bash scripts/generate_version_string.sh
         shell: bash
 
       - name: Install Skaffold
