@@ -4,7 +4,7 @@ import {
   EthAddress,
   Fr,
   L1TokenPortalManager,
-  createDebugLogger,
+  createLogger,
   deployL1Contract,
   retryUntil,
   waitForPXE,
@@ -159,7 +159,7 @@ export const run = async () => {
     l1ContractAddresses.outboxAddress,
     publicClient,
     walletClient,
-    createDebugLogger("TEST")
+    createLogger("L1TokenPortalManager-public")
   );
   const l1TokenManager = l1TokenPortalManager.getTokenManager();
   const ownerAddress = wallet.getAddress();
