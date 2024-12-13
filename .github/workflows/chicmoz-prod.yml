@@ -48,6 +48,7 @@ jobs:
           for i in $(seq 1 $MAX_RETRIES); do
             if bash -x scripts/production/deploy.sh; then
               echo "Deployment successful"
+              bash scripts/generate_version_string.sh
               exit 0
             fi
             echo "Attempt $i failed. Retrying in $RETRY_DELAY seconds..."
