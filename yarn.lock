@@ -1049,7 +1049,6 @@ __metadata:
     "@types/jest": "npm:29.5.11"
     "@types/morgan": "npm:1.9.4"
     "@types/node": "npm:20.5.0"
-    "@types/pg": "npm:8.11.8"
     "@types/redis": "npm:4.0.11"
     "@types/supertest": "npm:6.0.2"
     "@types/uuid": "npm:10.0.0"
