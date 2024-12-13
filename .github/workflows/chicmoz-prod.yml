@@ -18,6 +18,15 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+        with:
+          fetch-tags: true
+
+      - name: Print version
+        run: |
+          git describe --tags
+          git log -1 --pretty=%B
+          bash scripts/generate_version_string.sh
+        shell: bash
 
       - name: Install Skaffold
         run: |
@@ -48,7 +57,6 @@ jobs:
           for i in $(seq 1 $MAX_RETRIES); do
             if bash -x scripts/production/deploy.sh; then
               echo "Deployment successful"
-              bash scripts/generate_version_string.sh
               exit 0
             fi
             echo "Attempt $i failed. Retrying in $RETRY_DELAY seconds..."
