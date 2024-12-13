@@ -15,6 +15,7 @@ build:
           VITE_DISCORD_URL: "https://discord.gg/obscura-network"
           VITE_X_URL: "https://x.com/Obscura_Network"
           VITE_GITHUB_URL: "https://github.com/aztlan-labs/chicmoz"
+          VITE_VERSION_STRING: "{{.VERSION_STRING}}"
       requires:
         - image: chicmoz-base
           alias: BASE

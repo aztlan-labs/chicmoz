@@ -23,8 +23,8 @@ ENV VITE_GITHUB_URL $VITE_GITHUB_URL
 ARG VITE_X_URL
 ENV VITE_X_URL $VITE_X_URL
 
-RUN git describe --tags --abbrev=0 > /tmp/GIT_TAG
-ENV GIT_TAG=$(cat /tmp/GIT_TAG)
+ARG VITE_VERSION_STRING
+ENV VITE_VERSION_STRING $VITE_VERSION_STRING
 
 RUN yarn workspaces focus @chicmoz/explorer-ui
 
