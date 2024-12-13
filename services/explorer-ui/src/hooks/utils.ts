@@ -30,4 +30,9 @@ export const queryKeyGenerator = {
     "deployedContractInstances",
     classId,
   ],
+  verifiedContracts: ["verifiedContracts"],
+  verifiedContractByInstanceAddress: (address: string) => [
+    "verifiedContractByInstanceAddress",
+    address,
+  ],
 };

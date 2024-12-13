@@ -1,12 +1,6 @@
 import { logger } from "../logger.js";
 import { setup } from "./pxe.js";
-import { run as deployAndInteractFunctionsVote } from "./scenarios/deploy-and-interact-vote-contract.js";
-import { run as deploySimpleContract } from "./scenarios/simple-deploy-contract.js";
-import { run as deploySimpleDefaultAccount } from "./scenarios/deploy-simple-default-account.js";
-import { run as deployAndInteractTokenContract } from "./scenarios/deploy-and-interact-token-contract.js";
-import { run as deploySimpleLog } from "./scenarios/deploy-and-run-simple-log.js";
-import { run as l1L2PublicMessaging } from "./scenarios/l1-l2-public-messaging.js";
-import { run as l1L2PrivateMessaging } from "./scenarios/l1-l2-private-messaging.js";
+import * as scenarios from "./scenarios/index.js";
 
 export async function init() {
   logger.info("Initializing Cannon...");
@@ -22,14 +16,14 @@ export async function init() {
 
 export const start = async () => {
   logger.info("Starting Cannon...");
-  const scenarios = [
-    deploySimpleDefaultAccount,
-    deployAndInteractTokenContract,
-    deployAndInteractFunctionsVote,
-    deploySimpleContract,
-    deploySimpleLog,
-    l1L2PublicMessaging,
-    l1L2PrivateMessaging,
+  const scenariosToRun = [
+    scenarios.deploySimpleDefaultAccount,
+    scenarios.deployAndInteractTokenContract,
+    scenarios.deployAndInteractFunctionsVote,
+    scenarios.deploySimpleContract,
+    scenarios.deploySimpleLog,
+    scenarios.l1L2PublicMessaging,
+    scenarios.l1L2PrivateMessaging,
   ] as (() => Promise<void>)[];
-  for (const fn of scenarios) await fn();
+  for (const fn of scenariosToRun) await fn();
 };

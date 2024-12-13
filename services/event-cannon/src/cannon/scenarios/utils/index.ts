@@ -1,4 +1,9 @@
 import {
+  SchnorrAccountContractArtifact,
+  getSchnorrAccount,
+} from "@aztec/accounts/schnorr";
+import {
+  AztecNode,
   BatchCall,
   Contract,
   DeploySentTx,
@@ -8,19 +13,16 @@ import {
   SentTx,
   Wallet,
 } from "@aztec/aztec.js";
-import { FunctionType } from "@aztec/foundation/abi";
-import { deriveSigningKey } from "@aztec/circuits.js";
-import { logger } from "../../../logger.js";
 import {
   broadcastPrivateFunction,
   broadcastUnconstrainedFunction,
   deployInstance,
   registerContractClass,
 } from "@aztec/aztec.js/deployment";
-import {
-  SchnorrAccountContractArtifact,
-  getSchnorrAccount,
-} from "@aztec/accounts/schnorr";
+import { deriveSigningKey } from "@aztec/circuits.js";
+import { FunctionType } from "@aztec/foundation/abi";
+import { ContractClassRegisteredEvent } from "@aztec/protocol-contracts";
+import { logger } from "../../../logger.js";
 
 export const truncateHashString = (value: string) => {
   const startHash = value.substring(0, 6);
@@ -82,25 +84,49 @@ export const getNewAccount = async (pxe: PXE) => {
   });
 };
 
+const getNewContractClassId = async (node: AztecNode, blockNumber?: number) => {
+  if (!blockNumber) return undefined;
+  const block = await node.getBlock(blockNumber);
+  if (!block) throw new Error(`Block ${blockNumber} not found`);
+  const contractClassLogs = block.body.txEffects
+    .flatMap((txEffect) => (txEffect ? [txEffect.contractClassLogs] : []))
+    .flatMap((txLog) => txLog.unrollLogs());
+
+  const contractClasses = contractClassLogs
+    .filter((log) =>
+      ContractClassRegisteredEvent.isContractClassRegisteredEvent(log.data)
+    )
+    .map((log) => ContractClassRegisteredEvent.fromLog(log.data))
+    .map((e) => e.toContractClassPublic());
+
+  return contractClasses[0]?.id.toString();
+};
+
 export const deployContract = async <T extends Contract>({
   contractLoggingName,
   deployFn,
   broadcastWithWallet,
+  node,
 }: {
   contractLoggingName: string;
   deployFn: () => DeploySentTx<T>;
   broadcastWithWallet?: Wallet;
+  node: AztecNode;
 }): Promise<T> => {
   logger.info(`DEPLOYING ${contractLoggingName}`);
   const contractTx = deployFn();
   const hash = (await contractTx.getTxHash()).toString();
-  logger.info(
-    `📫 ${contractLoggingName} ${truncateHashString(hash)} (Deploying contract)`
-  );
+  logger.info(`📫 ${contractLoggingName} txHash: ${hash} (Deploying contract)`);
   const deployedContract = await contractTx.deployed();
   const receipt = await contractTx.wait();
   const addressString = deployedContract.address.toString();
-  logger.info(`⛏  ${contractLoggingName} deployed at: ${addressString} block: ${receipt.blockNumber}`);
+  const newClassId = await getNewContractClassId(node, receipt.blockNumber);
+  const classIdString = newClassId
+    ? `(🍏 also, a new contract class was added: ${newClassId})`
+    : `(🍎 attached classId: ${deployedContract.instance.contractClassId.toString()})`;
+  logger.info(
+    `⛏  ${contractLoggingName} instance deployed at: ${addressString} block: ${receipt.blockNumber} ${classIdString}`
+  );
   if (broadcastWithWallet) {
     await broadcastFunctions({
       wallet: broadcastWithWallet,

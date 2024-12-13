@@ -39,7 +39,6 @@ export const getL2ContractClassPrivateFunction = async (
       artifactFunctionTreeLeafIndex: res[0].artifactFunctionTreeLeafIndex,
       privateFunction: {
         selector: {
-          type: res[0].privateFunction_selector_type,
           value: res[0].privateFunction_selector_value,
         },
         metadataHash: res[0].privateFunction_metadataHash,
@@ -70,7 +69,6 @@ export const getL2ContractClassPrivateFunctions = async (
       artifactFunctionTreeLeafIndex: r.artifactFunctionTreeLeafIndex,
       privateFunction: {
         selector: {
-          type: r.privateFunction_selector_type,
           value: r.privateFunction_selector_value,
         },
         metadataHash: r.privateFunction_metadataHash,
@@ -109,7 +107,6 @@ export const getL2ContractClassUnconstrainedFunction = async (
       artifactFunctionTreeLeafIndex: res[0].artifactFunctionTreeLeafIndex,
       unconstrainedFunction: {
         selector: {
-          type: res[0].unconstrainedFunction_selector_type,
           value: res[0].unconstrainedFunction_selector_value,
         },
         metadataHash: res[0].unconstrainedFunction_metadataHash,
@@ -137,7 +134,6 @@ export const getL2ContractClassUnconstrainedFunctions = async (
       artifactFunctionTreeLeafIndex: r.artifactFunctionTreeLeafIndex,
       unconstrainedFunction: {
         selector: {
-          type: r.unconstrainedFunction_selector_type,
           value: r.unconstrainedFunction_selector_value,
         },
         metadataHash: r.unconstrainedFunction_metadataHash,

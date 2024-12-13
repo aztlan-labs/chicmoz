@@ -19,6 +19,7 @@ import { Route as TermsAndConditionsImport } from './routes/terms-and-conditions
 
 const VerifiedContractsLazyImport = createFileRoute('/verified-contracts')()
 const PrivacyPolicyLazyImport = createFileRoute('/privacy-policy')()
+const DevLazyImport = createFileRoute('/dev')()
 const AboutUsLazyImport = createFileRoute('/about-us')()
 const IndexLazyImport = createFileRoute('/')()
 const TxEffectsIndexLazyImport = createFileRoute('/tx-effects/')()
@@ -48,6 +49,11 @@ const PrivacyPolicyLazyRoute = PrivacyPolicyLazyImport.update({
 } as any).lazy(() =>
   import('./routes/privacy-policy.lazy').then((d) => d.Route),
 )
+
+const DevLazyRoute = DevLazyImport.update({
+  path: '/dev',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/dev.lazy').then((d) => d.Route))
 
 const AboutUsLazyRoute = AboutUsLazyImport.update({
   path: '/about-us',
@@ -140,6 +146,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutUsLazyImport
       parentRoute: typeof rootRoute
     }
+    '/dev': {
+      id: '/dev'
+      path: '/dev'
+      fullPath: '/dev'
+      preLoaderRoute: typeof DevLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/privacy-policy': {
       id: '/privacy-policy'
       path: '/privacy-policy'
@@ -212,6 +225,7 @@ export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
   TermsAndConditionsRoute,
   AboutUsLazyRoute,
+  DevLazyRoute,
   PrivacyPolicyLazyRoute,
   VerifiedContractsLazyRoute,
   BlocksBlockNumberLazyRoute,
@@ -234,6 +248,7 @@ export const routeTree = rootRoute.addChildren({
         "/",
         "/terms-and-conditions",
         "/about-us",
+        "/dev",
         "/privacy-policy",
         "/verified-contracts",
         "/blocks/$blockNumber",
@@ -253,6 +268,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/about-us": {
       "filePath": "about-us.lazy.tsx"
+    },
+    "/dev": {
+      "filePath": "dev.lazy.tsx"
     },
     "/privacy-policy": {
       "filePath": "privacy-policy.lazy.tsx"

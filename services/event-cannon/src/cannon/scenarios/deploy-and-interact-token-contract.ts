@@ -1,6 +1,10 @@
-import { Contract, DeploySentTx, waitForPXE } from "@aztec/aztec.js";
+import {
+  Contract,
+  DeploySentTx,
+  waitForPXE,
+} from "@aztec/aztec.js";
 import { logger } from "../../logger.js";
-import { getPxe, getWallets } from "../pxe.js";
+import { getAztecNodeClient, getPxe, getWallets } from "../pxe.js";
 import { deployContract, logAndWaitForTx } from "./utils/index.js";
 import { TokenContract } from "@aztec/noir-contracts.js";
 
@@ -24,6 +28,7 @@ export async function run() {
         9
       ).send();
     },
+    node: getAztecNodeClient(),
   });
 
   await Promise.all([

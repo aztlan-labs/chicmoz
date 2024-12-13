@@ -4,7 +4,9 @@ import { dbParseErrorCallback } from "../../../../database/controllers/utils.js"
 import {
   CACHE_LATEST_TTL_SECONDS,
   CACHE_TTL_SECONDS,
+  NODE_ENV,
 } from "../../../../environment.js";
+import { logger } from "../../../../logger.js";
 
 const LATEST_HEIGHT = "latestHeight";
 
@@ -41,7 +43,10 @@ export const get = async <DbReturnType>(
   const cacheKey = keys.join("-");
   const cachedVal = await c().get(cacheKey);
   const isCached = cachedVal !== null && cachedVal !== undefined;
-  if (isCached) return cachedVal;
+  if (isCached) {
+    if (NODE_ENV === "development") logger.info(`CACHE_HIT: ${cacheKey}`);
+    return cachedVal;
+  }
 
   const dbRes = await dbFn().catch(dbParseErrorCallback);
   if (dbRes !== null && dbRes !== undefined) {

@@ -35,6 +35,9 @@ export const aztecExplorer = {
     `l2/blocks/${hash}/contract-instances`,
   getL2ContractInstancesByClassId: (classId: string) =>
     `l2/contract-classes/${classId}/contract-instances`,
+  getL2VerifiedContracts: "l2/verified-contracts",
+  getL2VerifiedContractByInstanceAddress: (address: string) =>
+    `l2/verified-contracts/${address}`,
 
   getL2TotalTxEffects: "l2/stats/total-tx-effects",
   getL2TotalTxEffectsLast24h: "/l2/stats/tx-effects-last-24h",

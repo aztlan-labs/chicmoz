@@ -2,8 +2,6 @@
 import {
   HexString,
   type ChicmozL2Block,
-  type EncryptedLogEntry,
-  type NoteEncryptedLogEntry,
   type UnencryptedLogEntry,
 } from "@chicmoz-pkg/types";
 import { v4 as uuidv4 } from "uuid";
@@ -32,7 +30,6 @@ import {
 
 export const store = async (block: ChicmozL2Block): Promise<void> => {
   return await db().transaction(async (dbTx) => {
-
     // Insert l2Block
     await dbTx.insert(l2Block).values({
       hash: block.hash,
@@ -51,7 +48,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
     await dbTx.insert(archive).values({
       root: block.archive.root,
       nextAvailableLeafIndex: block.archive.nextAvailableLeafIndex,
-      fk: block.hash
+      fk: block.hash,
     });
 
     const lastArchiveId = uuidv4();
@@ -80,7 +77,6 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
       id: stateId,
       headerId,
     });
-
 
     const l1ToL2MessageTreeId = uuidv4();
     // Insert l1ToL2MessageTree
@@ -170,9 +166,8 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
         noteHashes: txEff.noteHashes as HexString[],
         nullifiers: txEff.nullifiers as HexString[],
         l2ToL1Msgs: txEff.l2ToL1Msgs as HexString[],
-        noteEncryptedLogsLength: txEff.noteEncryptedLogsLength,
-        encryptedLogsLength: txEff.encryptedLogsLength,
         unencryptedLogsLength: txEff.unencryptedLogsLength,
+        privateLogs: txEff.privateLogs,
       });
 
       // Insert public data writes
@@ -188,8 +183,6 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
       }
 
       for (const [logType, fLogs] of Object.entries({
-        noteEncrypted: txEff.noteEncryptedLogs.functionLogs,
-        encrypted: txEff.encryptedLogs.functionLogs,
         unencrypted: txEff.unencryptedLogs.functionLogs,
       })) {
         const txEffectToLogsId = uuidv4();
@@ -204,12 +197,10 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
           await dbTx.insert(functionLogs).values({
             id: functionLogId,
             index: Number(functionLogIndex),
-            txEffectToLogsId
+            txEffectToLogsId,
           });
           for (const [index, log] of Object.entries(
-            functionLog.logs as Array<
-              NoteEncryptedLogEntry | EncryptedLogEntry | UnencryptedLogEntry
-            >
+            functionLog.logs as Array<UnencryptedLogEntry>
           )) {
             const logId = uuidv4();
             await dbTx.insert(logs).values({
@@ -218,15 +209,11 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
               txEffectToLogsId,
               type: logType,
               data: log.data,
-              maskedContractAddress: (log as EncryptedLogEntry)
-                .maskedContractAddress,
-              contractAddress: (log as UnencryptedLogEntry).contractAddress,
+              contractAddress: log.contractAddress,
             });
-
           }
         }
       }
     }
-
   });
 };

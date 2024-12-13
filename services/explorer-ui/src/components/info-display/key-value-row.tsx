@@ -58,6 +58,7 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
             text={truncateHashString(value)}
             toCopy={value}
             additionalClasses="md:justify-end md:text-end"
+            additionalClassesIcon="justify-end"
           />
         </span>
       )}
@@ -68,7 +69,7 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
           rel="noreferrer"
           className="text-sm flex-grow text-primary-600 text-primary cursor-pointer md:text-end"
         >
-          View raw data
+          {value}
           <span className="ml-1">↗️</span>
         </a>
       )}

@@ -28,10 +28,7 @@ export const body = pgTable("body", {
 export const txEffect = pgTable(
   "tx_effect",
   {
-    hash: varchar("hash")
-      .notNull()
-      .$type<HexString>()
-      .primaryKey(),
+    hash: varchar("hash").notNull().$type<HexString>().primaryKey(),
     txHash: varchar("txHash").notNull().$type<HexString>(),
     bodyId: uuid("body_id")
       .notNull()
@@ -44,15 +41,10 @@ export const txEffect = pgTable(
     noteHashes: jsonb("note_hashes").notNull(),
     nullifiers: jsonb("nullifiers").notNull(),
     l2ToL1Msgs: jsonb("l2_to_l1_msgs").notNull().$type<HexString[]>(),
-    noteEncryptedLogsLength: generateFrNumberColumn(
-      "note_encrypted_logs_length"
-    ).notNull(),
-    encryptedLogsLength: generateFrNumberColumn(
-      "encrypted_logs_length"
-    ).notNull(),
     unencryptedLogsLength: generateFrNumberColumn(
       "unencrypted_logs_length"
     ).notNull(),
+    privateLogs: jsonb("private_logs").notNull(),
   },
   (table) => ({
     txHashIndex: index("tx_hash_index").on(table.txHash),
@@ -61,7 +53,9 @@ export const txEffect = pgTable(
 
 export const publicDataWrite = pgTable("public_data_write", {
   id: uuid("id").primaryKey().defaultRandom(),
-  txEffectHash: varchar("tx_effect_hash").notNull().references(() => txEffect.hash, { onDelete: "cascade" }),
+  txEffectHash: varchar("tx_effect_hash")
+    .notNull()
+    .references(() => txEffect.hash, { onDelete: "cascade" }),
   index: integer("index").notNull(),
   leafSlot: generateFrColumn("leaf_slot").notNull(),
   value: generateFrColumn("value").notNull(),
@@ -74,9 +68,8 @@ export const logs = pgTable("logs", {
   txEffectToLogsId: uuid("tx_effect_to_logs_id")
     .notNull()
     .references(() => txEffectToLogs.id, { onDelete: "cascade" }),
-  type: varchar("type", { length: 20 }).notNull(), // 'noteEncrypted', 'encrypted', or 'unencrypted'
+  type: varchar("type", { length: 20 }).notNull(), // unencrypted
   data: bufferType("data").notNull(),
-  maskedContractAddress: generateFrColumn("masked_contract_address"),
   contractAddress: generateAztecAddressColumn("contract_address"),
 });
 
@@ -90,5 +83,7 @@ export const functionLogs = pgTable("function_logs", {
 
 export const txEffectToLogs = pgTable("tx_effect_to_logs", {
   id: uuid("id").primaryKey().defaultRandom(),
-  txEffectHash: varchar("tx_effect_hash").notNull().references(() => txEffect.hash, { onDelete: "cascade" }),
+  txEffectHash: varchar("tx_effect_hash")
+    .notNull()
+    .references(() => txEffect.hash, { onDelete: "cascade" }),
 });

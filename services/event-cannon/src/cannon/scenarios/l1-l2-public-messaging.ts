@@ -24,7 +24,9 @@ import {
 } from "viem";
 import { mnemonicToAccount } from "viem/accounts";
 import { foundry } from "viem/chains";
-import { ETHEREUM_RPC_URL } from "../../environment.js";
+import {
+  ETHEREUM_RPC_URL,
+} from "../../environment.js";
 import {
   RollupAbi,
   TestERC20Abi,
@@ -103,6 +105,7 @@ export const run = async () => {
         18
       ).send();
     },
+    node: getAztecNodeClient(),
   });
 
   const bridge = await deployContract({
@@ -114,6 +117,7 @@ export const run = async () => {
         tokenPortalAddress
       ).send();
     },
+    node: getAztecNodeClient(),
   });
 
   if ((await token.methods.get_admin().simulate()) !== owner.toBigInt())

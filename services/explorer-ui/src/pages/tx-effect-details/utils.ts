@@ -3,6 +3,7 @@ import { type tabId } from "./constants";
 import { formatTimeSince } from "~/lib/utils";
 import { API_URL, aztecExplorer } from "~/service/constants";
 export type TxEffectDataType =
+  | string[][]
   | string[]
   | Array<{ logs: Array<{ data: Buffer; contractAddress: string }> }>
   | Array<{
@@ -39,7 +40,7 @@ export const getTxEffectData = (data: ChicmozL2TxEffectDeluxe) => [
   },
   {
     label: "RAW DATA",
-    value: `/${aztecExplorer.getL2TxEffectByHash}${data.hash}`,
+    value: "View raw data",
     extLink: `${API_URL}/${aztecExplorer.getL2TxEffectByHash}${data.hash}`,
   },
 ];
@@ -50,22 +51,13 @@ export const mapTxEffectsData = (
   if (!data) return {};
 
   const effectsMap: Record<tabId, TxEffectDataType | undefined> = {
-    encryptedLogs: data.encryptedLogs?.functionLogs?.filter(
-      (log) => log.logs.length > 0
-    ).length
-      ? data.encryptedLogs.functionLogs.filter((log) => log.logs.length > 0)
-      : undefined,
+    privateLogs: data.privateLogs.length ? data.privateLogs : undefined,
     unencryptedLogs: data.unencryptedLogs?.functionLogs?.filter(
       (log) => log.logs.length > 0
     ).length
       ? data.unencryptedLogs.functionLogs
       : undefined,
     nullifiers: data.nullifiers?.length ? data.nullifiers : undefined,
-    noteEncryptedLogs: data.noteEncryptedLogs?.functionLogs?.filter(
-      (log) => log.logs.length > 0
-    ).length
-      ? data.noteEncryptedLogs.functionLogs
-      : undefined,
     noteHashes: data.noteHashes?.length ? data.noteHashes : undefined,
     l2ToL1Msgs: data.l2ToL1Msgs?.length ? data.l2ToL1Msgs : undefined,
     publicDataWrites: data.publicDataWrites?.length

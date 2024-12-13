@@ -28,10 +28,7 @@ export const getContractClassKeyValueData = (
   },
   {
     label: "API ENDPOINT",
-    value: `/${aztecExplorer.getL2ContractClassByIdAndVersion(
-      data.contractClassId,
-      data.version.toString()
-    )}`,
+    value: "View raw data",
     extLink: `${API_URL}/${aztecExplorer.getL2ContractClassByIdAndVersion(
       data.contractClassId,
       data.version.toString()

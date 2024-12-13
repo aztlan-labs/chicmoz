@@ -6,11 +6,12 @@ import { VERIFIED_CONTRACT_ADDRESSES } from "../../../environment.js";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const parseDeluxe = (contractClass: any, instance: any): ChicmozL2ContractInstanceDeluxe => {
+  const verifiedInfo = VERIFIED_CONTRACT_ADDRESSES.find(info => info.contractInstanceAddress === instance.address);
   return chicmozL2ContractInstanceDeluxeSchema.parse({
     ...contractClass,
-    aztecScoutVerified: VERIFIED_CONTRACT_ADDRESSES.some((address) => address === instance.address),
+    verifiedInfo,
     blockHash: instance.blockHash,
-    packedPublicBytecode: Buffer.from(contractClass.packedPublicBytecode),
+    packedBytecode: Buffer.from(contractClass.packedBytecode),
     address: instance.address,
     version: instance.version,
     salt: instance.salt,
