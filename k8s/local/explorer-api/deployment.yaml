@@ -33,6 +33,8 @@ spec:
               value: "admin"
             - name: POSTGRES_PASSWORD
               value: "secret-local-password"
+            - name: TOTAL_DB_RESET
+              value: "false"
       containers:
         - image: explorer-api:latest
           resources:
