@@ -6,6 +6,7 @@ import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { useContractInstance } from "~/hooks/";
 import { getContractData, getVerifiedContractData } from "./util";
 import { routes } from "~/routes/__root";
+import { CustomTooltip } from "~/components/custom-tooltip";
 
 export const ContractInstanceDetails: FC = () => {
   const { address } = useParams({
@@ -48,10 +49,9 @@ export const ContractInstanceDetails: FC = () => {
                 Verified contract data
                 <div className="relative group">
                   <Link to={routes.verifiedContracts.route}>
-                    <CheckCircledIcon className="size-10 stroke-lime-700" />
-                    <div className="absolute hidden group-hover:block bg-gray-800 text-white text-sm rounded py-1 px-2 bottom-full mb-2 left-1/2 transform -translate-x-1/2">
-                      Read more about verified contracts here.
-                    </div>
+                    <CustomTooltip content="Read more about verified contracts here">
+                      <CheckCircledIcon className="size-10 stroke-lime-700" />
+                    </CustomTooltip>
                   </Link>
                 </div>
               </h2>
