@@ -28,7 +28,13 @@ async function printTableList(client: PoolClient, ID: string): Promise<void> {
 async function tryMigrate(pool: pg.Pool, db: ReturnType<typeof drizzle>) {
   const client = await pool.connect();
   await printTableList(client, "BEFORE MIGRATION");
-  if (TOTAL_DB_RESET) await dropAllTables(client);
+  if (TOTAL_DB_RESET) {
+    try {
+      await dropAllTables(client);
+    } catch (e) {
+      console.log("🤷‍♂️ Could not drop tables, perhaps already dropped?");
+    }
+  }
 
   await migrate(db, { migrationsFolder: "./migrations" });
   await printTableList(client, "AFTER MIGRATION");
