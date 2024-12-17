@@ -24,7 +24,7 @@ export const VerifiedContracts: FC = () => {
         <p>
           You can always find the latest verified contracts by checking{" "}
           <a
-            href="https://github.com/aztlan-labs/chicmoz/blob/feat/verified_contracts/services/explorer-api/src/constants.ts"
+            href="https://github.com/aztlan-labs/chicmoz/blob/main/services/explorer-api/src/constants.ts"
             className="text-purple-light hover:font-bold"
           >
             our github-repo
