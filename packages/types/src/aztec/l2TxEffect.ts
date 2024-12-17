@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { hexStringSchema } from "../general.js";
-import { aztecAddressSchema, bufferSchema, frNumberSchema, frSchema } from "./utils.js";
+import { aztecAddressSchema, hexStringSchema } from "../general.js";
+import { bufferSchema, frNumberSchema, frSchema } from "./utils.js";
 
 export const unencryptedLogEntrySchema = z.object({
   data: bufferSchema,
@@ -12,7 +12,7 @@ const logsSchema = (logEntrySchema: typeof unencryptedLogEntrySchema) =>
     functionLogs: z.array(
       z.object({
         logs: z.array(logEntrySchema),
-      }),
+      })
     ),
   });
 
@@ -41,15 +41,15 @@ export const chicmozL2PendingTxSchema = z.object({
 });
 
 /**
-  * Represents effects of a transaction on the L2 state.
-  */
+ * Represents effects of a transaction on the L2 state.
+ */
 export const chicmozL2TxEffectSchema = z.object({
   revertCode: z.preprocess(
     (val) => {
       if (typeof val === "number") return { code: val };
       return val;
     },
-    z.object({ code: z.number() }),
+    z.object({ code: z.number() })
   ),
   /** The hash of the transaction that caused these effects. */
   hash: hexStringSchema,
@@ -60,9 +60,7 @@ export const chicmozL2TxEffectSchema = z.object({
   noteHashes: z.array(frSchema),
   nullifiers: z.array(frSchema),
   l2ToL1Msgs: z.array(frSchema),
-  publicDataWrites: z.array(
-    z.object({ leafSlot: frSchema, value: frSchema }),
-  ),
+  publicDataWrites: z.array(z.object({ leafSlot: frSchema, value: frSchema })),
   unencryptedLogsLength: frNumberSchema,
   privateLogs: z.array(z.array(frSchema)),
   unencryptedLogs: logsSchema(unencryptedLogEntrySchema),

@@ -1,11 +1,7 @@
 import { z } from "zod";
-import {
-  aztecAddressSchema,
-  bufferSchema,
-  frPointSchema,
-  frSchema,
-} from "./utils.js";
+import { aztecAddressSchema } from "../general.js";
 import { chicmozL2BlockSchema } from "./l2Block.js";
+import { bufferSchema, frPointSchema, frSchema } from "./utils.js";
 
 export const chicmozL2ContractInstanceDeployedEventSchema = z.object({
   address: aztecAddressSchema,

@@ -67,9 +67,6 @@ export const frTimestampSchema = z.preprocess((val) => {
   return val;
 }, z.coerce.number());
 
-// NOTE: it's technically not the same as Fr but practically it is
-export const aztecAddressSchema = frSchema;
-
 export type StringifiedBuffer = {
   type: "Buffer";
   data: number[];

@@ -1,9 +1,12 @@
 import { z } from "zod";
-import { ethAddressSchema, hexStringSchema } from "../general.js";
+import {
+  aztecAddressSchema,
+  ethAddressSchema,
+  hexStringSchema,
+} from "../general.js";
 import { deepPartial } from "../utils.js";
 import { chicmozL2TxEffectSchema } from "./l2TxEffect.js";
 import {
-  aztecAddressSchema,
   bufferSchema,
   frNumberSchema,
   frSchema,
@@ -61,7 +64,7 @@ export const chicmozL2BlockSchema = z.object({
         feePerL2Gas: frNumberSchema,
       }),
     }),
-    totalFees: frNumberSchema,
+    totalFees: z.coerce.bigint(),
   }),
   body: z.object({
     txEffects: z.array(chicmozL2TxEffectSchema),

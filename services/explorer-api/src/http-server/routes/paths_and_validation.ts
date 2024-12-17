@@ -42,6 +42,8 @@ export const paths = {
   verifiedContract: `/l2/verified-contracts/:${address}`,
   verifiedContracts: "/l2/verified-contracts",
 
+  validators: "/l2/validators",
+
   statsTotalTxEffects: "/l2/stats/total-tx-effects",
   statsTotalTxEffectsLast24h: "/l2/stats/tx-effects-last-24h",
   statsTotalContracts: "/l2/stats/total-contracts",

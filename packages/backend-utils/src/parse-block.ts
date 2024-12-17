@@ -33,6 +33,7 @@ export const parseBlock = (b: L2Block): ChicmozL2Block => {
     ...blockWithTxEffectsHashesAdded,
     header: {
       ...blockWithTxEffectsHashesAdded.header,
+      totalFees: blockWithTxEffectsHashesAdded.header.totalFees.toBigInt(),
       globalVariables: {
         ...blockWithTxEffectsHashesAdded.header.globalVariables,
         coinbase: blockWithTxEffectsHashesAdded.header.globalVariables.coinbase.toString(),

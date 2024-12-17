@@ -6,5 +6,6 @@ export * from "./contract-classes.js";
 export * from "./contract-class-functions.js";
 export * from "./contract-instances.js";
 export * from "./verified-contracts.js";
+export * from "./validators.js";
 export * from "./search.js";
 export * from "./stats.js";

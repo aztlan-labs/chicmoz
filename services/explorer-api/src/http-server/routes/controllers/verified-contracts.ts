@@ -6,7 +6,7 @@ import {
 } from "./utils/open-api-responses.js";
 import { getVerifiedContractSchema } from "../paths_and_validation.js";
 
-export const openapi_GET_VERIFIED_CONTRACTS = {
+export const openapi_GET_L2_VERIFIED_CONTRACTS = {
   "/l2/verified-contracts": {
     get: {
       summary: "Get the latest block",
@@ -19,7 +19,7 @@ export const GET_L2_VERIFIED_CONTRACTS: RequestHandler = (_req, res) => {
   res.status(200).send(JSON.stringify(VERIFIED_CONTRACT_ADDRESSES));
 };
 
-export const openapi_GET_VERIFIED_CONTRACT = {
+export const openapi_GET_L2_VERIFIED_CONTRACT = {
   "/l2/verified-contracts/{contractInstanceAddress}": {
     get: {
       summary: "Get a verified contract by address",

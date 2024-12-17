@@ -24,6 +24,7 @@ import {
 } from "../../../database/schema/l2block/index.js";
 import { DB_MAX_BLOCKS } from "../../../environment.js";
 import { getBlocksWhereRange, getTableColumnsWithoutId } from "../utils.js";
+import {logger} from "../../../logger.js";
 
 enum GetTypes {
   BlockHeight,
@@ -151,6 +152,8 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2BlockLight[]> =
       .where(eq(txEffect.bodyId, result.bodyId))
       .orderBy(asc(txEffect.index))
       .execute();
+
+    logger.info(`//////////////// ${JSON.stringify(result.header_GlobalVariables)}`);
 
     const blockData = {
       hash: result.hash,

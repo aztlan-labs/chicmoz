@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
+import { bigint, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 import {
   bufferType,
   generateAztecAddressColumn,
@@ -15,7 +15,7 @@ export const header = pgTable("header", {
     .notNull()
     .$type<HexString>()
     .references(() => l2Block.hash, { onDelete: "cascade" }),
-  totalFees: generateFrNumberColumn("total_fees").notNull(),
+  totalFees: bigint("total_fees", { mode: "bigint" }).notNull(),
 });
 
 export const lastArchive = generateTreeTable(
