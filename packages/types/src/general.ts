@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { frSchema } from "./aztec/utils.js";
 import { ChicmozL2Block, ChicmozL2PendingTx } from "./index.js";
 
 export const hexStringSchema = z.custom<`0x${string}`>(
@@ -22,6 +23,11 @@ export const ethAddressSchema = z.custom<`0x${string}`>((value) => {
   );
 });
 export type EthAddress = z.infer<typeof ethAddressSchema>;
+
+// NOTE: it's technically not the same as Fr but practically it is
+export const aztecAddressSchema = frSchema;
+
+export type AztecAddress = z.infer<typeof aztecAddressSchema>;
 
 export type WebsocketUpdateMessage = {
   block?: ChicmozL2Block;

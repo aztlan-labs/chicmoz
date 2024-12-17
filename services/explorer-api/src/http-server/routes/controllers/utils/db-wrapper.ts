@@ -25,9 +25,9 @@ export const getLatestHeight = async () => {
   throw new Error("CACHE_ERROR: latest height not found");
 };
 
-export const getLatest = async <DbReturnType>(
+export const getLatest = async(
   keys: (string | number | undefined)[],
-  dbFn: () => Promise<DbReturnType>
+  dbFn: () => Promise<unknown>
 ): Promise<string> => {
   const latestHeight = await getLatestHeight();
   if (!latestHeight) throw new Error("CACHE_ERROR: latest height not found");
@@ -35,9 +35,17 @@ export const getLatest = async <DbReturnType>(
   return get([...keys, latestHeight], dbFn, CACHE_LATEST_TTL_SECONDS + 1);
 };
 
-export const get = async <DbReturnType>(
+const json = (param: unknown): string => {
+  return JSON.stringify(
+    param,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    (_key, value) => (typeof value === "bigint" ? value.toString() : value)
+  );
+};
+
+export const get = async(
   keys: (string | number | undefined)[],
-  dbFn: () => Promise<DbReturnType>,
+  dbFn: () => Promise<unknown>,
   ttl = CACHE_TTL_SECONDS
 ): Promise<string> => {
   const cacheKey = keys.join("-");
@@ -50,7 +58,7 @@ export const get = async <DbReturnType>(
 
   const dbRes = await dbFn().catch(dbParseErrorCallback);
   if (dbRes !== null && dbRes !== undefined) {
-    const dbVal = JSON.stringify(dbRes);
+    const dbVal = json(dbRes);
     await c().set(cacheKey, dbVal, {
       EX: ttl,
     });

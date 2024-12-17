@@ -30,6 +30,9 @@ export const openApiPaths = {
   ...controller.openapi_GET_L2_CONTRACT_INSTANCE,
   ...controller.openapi_GET_L2_CONTRACT_INSTANCES,
 
+  ...controller.openapi_GET_L2_VERIFIED_CONTRACT,
+  ...controller.openapi_GET_L2_VERIFIED_CONTRACTS,
+
   ...controller.openapi_SEARCH,
 };
 
@@ -104,6 +107,8 @@ export const init = ({ router }: { router: Router }) => {
 
   router.get(paths.verifiedContract, controller.GET_L2_VERIFIED_CONTRACT);
   router.get(paths.verifiedContracts, controller.GET_L2_VERIFIED_CONTRACTS);
+
+  router.get(paths.validators, controller.GET_L2_VALIDATORS);
 
   router.get(paths.search, controller.L2_SEARCH);
 
