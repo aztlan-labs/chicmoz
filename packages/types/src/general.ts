@@ -1,6 +1,6 @@
 import { z } from "zod";
+import { frSchema } from "./aztec/utils.js";
 import { ChicmozL2Block, ChicmozL2PendingTx } from "./index.js";
-import {frSchema} from "./aztec/utils.js";
 
 export const hexStringSchema = z.custom<`0x${string}`>(
   (value) => {

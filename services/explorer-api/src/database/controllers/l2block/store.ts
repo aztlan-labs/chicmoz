@@ -123,11 +123,6 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
       fk: partialId,
     });
 
-    // random number between 0 and 4
-    const random = Math.floor(Math.random() * 5);
-
-    const feeRecipient = block.header.globalVariables.feeRecipient.slice(undefined, -1).concat(random.toString());
-
     const globalVariablesId = uuidv4();
     // Insert global variables
     await dbTx.insert(globalVariables).values({
@@ -139,7 +134,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
       slotNumber: block.header.globalVariables.slotNumber,
       timestamp: block.header.globalVariables.timestamp,
       coinbase: block.header.globalVariables.coinbase,
-      feeRecipient,
+      feeRecipient: block.header.globalVariables.feeRecipient,
     });
 
     const gasFeesId = uuidv4();
