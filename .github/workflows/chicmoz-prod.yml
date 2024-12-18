@@ -21,9 +21,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Print version
+      - name: Print important information
+        env:
+          CHICMOZ_AZTEC_RPC: ${{ secrets.CHICMOZ_AZTEC_RPC }}
         run: |
-          git describe --tags
+          echo "VERSION: $(git describe --tags)"
+          echo "CHICMOZ_AZTEC_RPC: $CHICMOZ_AZTEC_RPC"
         shell: bash
 
       - name: Install Skaffold
