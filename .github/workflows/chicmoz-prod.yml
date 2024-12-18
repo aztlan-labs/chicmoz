@@ -23,7 +23,7 @@ jobs:
 
       - name: Print important information
         env:
-          CHICMOZ_AZTEC_RPC: ${{ env.CHICMOZ_AZTEC_RPC }}
+          CHICMOZ_AZTEC_RPC: ${{ vars.CHICMOZ_AZTEC_RPC }}
         run: |
           echo "VERSION: $(git describe --tags)"
           echo "CHICMOZ_AZTEC_RPC: $CHICMOZ_AZTEC_RPC"
@@ -52,7 +52,7 @@ jobs:
 
       - name: Deploy to cluster with Skaffold
         env:
-          CHICMOZ_AZTEC_RPC: ${{ env.CHICMOZ_AZTEC_RPC }}
+          CHICMOZ_AZTEC_RPC: ${{ vars.CHICMOZ_AZTEC_RPC }}
         run: |
           MAX_RETRIES=3
           RETRY_DELAY=10
