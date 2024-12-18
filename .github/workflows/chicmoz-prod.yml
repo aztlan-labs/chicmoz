@@ -23,7 +23,7 @@ jobs:
 
       - name: Print important information
         env:
-          CHICMOZ_AZTEC_RPC: ${{ secrets.CHICMOZ_AZTEC_RPC }}
+          CHICMOZ_AZTEC_RPC: ${{ env.CHICMOZ_AZTEC_RPC }}
         run: |
           echo "VERSION: $(git describe --tags)"
           echo "CHICMOZ_AZTEC_RPC: $CHICMOZ_AZTEC_RPC"
@@ -51,9 +51,13 @@ jobs:
         run: doctl kubernetes cluster kubeconfig save "chicmoz-prod"
 
       - name: Deploy to cluster with Skaffold
+        env:
+          CHICMOZ_AZTEC_RPC: ${{ env.CHICMOZ_AZTEC_RPC }}
         run: |
           MAX_RETRIES=3
           RETRY_DELAY=10
+
+          kubectl create secret generic global --from-literal=CHICMOZ_AZTEC_RPC=$CHICMOZ_AZTEC_RPC
 
           for i in $(seq 1 $MAX_RETRIES); do
             if bash -x scripts/production/deploy.sh; then
