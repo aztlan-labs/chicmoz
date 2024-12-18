@@ -50,21 +50,25 @@ export const getVerifiedContractData = (data: ChicmozL2ContractInstanceDeluxe) =
   return data.verifiedInfo
     ? [
         {
-          label: "NAME",
-          value: data.verifiedInfo.name,
+          label: "CONTRACT IDENTIFIER",
+          value: data.verifiedInfo.contractIdentifier,
         },
         {
           label: "DETAILS",
           value: data.verifiedInfo.details.slice(0, 50) + "...",
         },
         {
-          label: "CONTACT",
-          value: data.verifiedInfo.contact,
+          label: "CREATOR NAME",
+          value: data.verifiedInfo.creatorName,
         },
         {
-          label: "UI URL",
-          value: data.verifiedInfo.uiUrl,
-          extLink: data.verifiedInfo.uiUrl,
+          label: "CREATOR CONTACT",
+          value: data.verifiedInfo.creatorContact,
+        },
+        {
+          label: "APP URL",
+          value: data.verifiedInfo.appUrl,
+          extLink: data.verifiedInfo.appUrl,
         },
         {
           label: "REPO URL",

@@ -8,10 +8,11 @@ import { chicmozL2TxEffectSchema } from "./l2TxEffect.js";
 
 export const chicmozL2VerifiedContractAddressDataSchema = z.object({
   contractInstanceAddress: z.string(),
-  name: z.string(),
+  contractIdentifier: z.string(),
   details: z.string(),
-  contact: z.string(),
-  uiUrl: z.string(),
+  creatorName: z.string(),
+  creatorContact: z.string(),
+  appUrl: z.string(),
   repoUrl: z.string(),
 });
 

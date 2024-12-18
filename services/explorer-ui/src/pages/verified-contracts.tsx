@@ -42,14 +42,25 @@ export const VerifiedContracts: FC = () => {
           <ul>
             {data.map((contract, index) => (
               <li key={index}>
+              {
+                //  contractInstanceAddress: z.string(),
+  //contractIdentifier: z.string(),
+  //details: z.string(),
+  //creatorName: z.string(),
+  //creatorContact: z.string(),
+  //appUrl: z.string(),
+  //repoUrl: z.string(),
+              }
+
                 <hr />
-                <h3>"{contract.name}"</h3>
+                <h3>"{contract.contractIdentifier}"</h3>
                 <p>{contract.details}</p>
-                <p>Contact: {contract.contact}</p>
+                <p>Created by: {contract.creatorName}</p>
+                <p>Contact: {contract.creatorContact}</p>
                 <p>
-                  UI:
-                  <a href={contract.uiUrl} className="text-purple-light">
-                    {contract.uiUrl}
+                  App/UI:
+                  <a href={contract.appUrl} className="text-purple-light">
+                    {contract.appUrl}
                   </a>
                 </p>
                 <p>
