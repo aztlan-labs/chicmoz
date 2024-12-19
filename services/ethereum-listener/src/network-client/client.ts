@@ -120,6 +120,7 @@ export const getBlock = async (blockNumber: number) => {
 };
 
 export const getContractsEvents = async () => {
+  // NOTE: this probably won´t be needed
   if (!l1Contracts) throw new Error("Contracts not initialized");
   for (const [name, contract] of Object.entries(l1Contracts)) {
     const events = await publicClient.getContractEvents({
@@ -127,6 +128,39 @@ export const getContractsEvents = async () => {
       abi: contract.abi,
     });
     if (events.length > 0)
-      logger.info(`CONTRACT EVENTS! ${name}: ${JSON.stringify(events)}`);
+      logger.info(`CONTRACT EVENTS! ${name}: ${events.toString()}`);
+    else logger.info(`No events for ${name}`);
   }
 };
+
+export const queryStakingState = async () => {
+  if (!l1Contracts) throw new Error("Contracts not initialized");
+  const attesterCount = await publicClient.readContract({
+    address: l1Contracts.rollup.address,
+    abi: RollupAbi,
+    functionName: "getActiveAttesterCount",
+  });
+  logger.info(`Active attester count: ${attesterCount.toString()}`);
+  if (attesterCount > 0) {
+    for (let i = 0; i < attesterCount; i++) {
+      const attester = await publicClient.readContract({
+        address: l1Contracts.rollup.address,
+        abi: RollupAbi,
+        functionName: "getAttesterAtIndex",
+        args: [BigInt(i)],
+      });
+      logger.info(`Attester ${i}: ${attester.toString()}`);
+      const attesterInfo = await publicClient.readContract({
+        address: l1Contracts.rollup.address,
+        abi: RollupAbi,
+        functionName: "getInfo",
+        args: [attester],
+      });
+      logger.info(`Attester ${i} info: ${JSON.stringify({
+        ...attesterInfo,
+        stake: attesterInfo.stake.toString(),
+      })}`);
+
+    }
+  }
+}

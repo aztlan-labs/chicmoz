@@ -1,10 +1,12 @@
-import {
-  ConnectedToAztecEvent,
-} from "@chicmoz-pkg/message-registry";
-import { logger } from "../logger.js";
+import { ConnectedToAztecEvent } from "@chicmoz-pkg/message-registry";
 import { IBackOffOptions, backOff } from "exponential-backoff";
-import { getLatestHeight, initClient, initContracts } from "./client.js";
-import { start } from "./poller.js";
+import { logger } from "../logger.js";
+import {
+  getLatestHeight,
+  initClient,
+  initContracts,
+  queryStakingState,
+} from "./client.js";
 
 const backOffOptions: Partial<IBackOffOptions> = {
   numOfAttempts: 10,
@@ -40,5 +42,5 @@ export const startPolling = async (
 ) => {
   logger.info(`ETH: start polling: ${JSON.stringify(l1ContractAddresses)}`);
   initContracts(l1ContractAddresses);
-  await start();
+  await queryStakingState();
 };

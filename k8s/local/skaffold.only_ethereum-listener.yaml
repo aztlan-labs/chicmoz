@@ -1,0 +1,14 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+metadata:
+  name: chicmoz
+requires:
+  - path: ./chicmoz-base-image.yaml
+  - path: ./ethereum-listener/image.yaml
+deploy:
+  kubectl:
+    flags:
+      apply: ["--force"]
+manifests:
+  rawYaml:
+    - k8s/local/ethereum-listener/deployment.yaml
