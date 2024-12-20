@@ -6,6 +6,7 @@ import {
   initClient,
   initContracts,
   queryStakingState,
+  watchContractsEvents,
 } from "./client.js";
 
 const backOffOptions: Partial<IBackOffOptions> = {
@@ -32,15 +33,21 @@ export const init = async () => {
     id: "NC",
     // eslint-disable-next-line @typescript-eslint/require-await
     shutdownCb: async () => {
-      // TODO: stop polling
+      logger.info("ETH: shutting down...");
+      if (stopContractWatching) stopContractWatching();
+      else logger.warn("ETH: stopContractWatching not set");
+      logger.info("ETH: stopped watching contracts");
     },
   };
 };
+
+let stopContractWatching: () => void;
 
 export const startPolling = async (
   l1ContractAddresses: ConnectedToAztecEvent["nodeInfo"]["l1ContractAddresses"]
 ) => {
   logger.info(`ETH: start polling: ${JSON.stringify(l1ContractAddresses)}`);
   initContracts(l1ContractAddresses);
+  stopContractWatching = watchContractsEvents();
   await queryStakingState();
 };

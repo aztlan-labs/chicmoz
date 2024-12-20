@@ -5,7 +5,6 @@ metadata:
 requires:
   - path: ./chicmoz-base-image.yaml
   - path: ./aztec-listener/image.yaml
-  - path: ./event-cannon/image.yaml
   - path: ./ethereum-listener/image.yaml
 deploy:
   kubectl:
@@ -16,13 +15,6 @@ manifests:
     - k8s/local/common/namespace.yaml
     - k8s/local/aztec-listener/deployment.yaml
     - k8s/local/ethereum-listener/deployment.yaml
-    - k8s/local/event-cannon/deployment.yaml
-    - k8s/local/aztec-sandbox-node/ingress.yaml
-    - k8s/local/aztec-sandbox-node/deployment.yaml
-    - k8s/local/aztec-sandbox-node/service.yaml
-    - k8s/local/anvil-ethereum-node/ingress.yaml
-    - k8s/local/anvil-ethereum-node/deployment.yaml
-    - k8s/local/anvil-ethereum-node/service.yaml
   helm:
     releases:
       - name: postgresql

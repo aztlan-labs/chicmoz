@@ -1,9 +1,4 @@
-import {
-  defineChain,
-  createPublicClient,
-  http,
-  PublicClient,
-} from "viem";
+import { defineChain, createPublicClient, http, PublicClient, Log } from "viem";
 import {
   ETHEREUM_CHAIN_NAME,
   ETHEREUM_HTTP_RPC_URL,
@@ -21,6 +16,14 @@ import {
 import { ConnectedToAztecEvent } from "@chicmoz-pkg/message-registry";
 import { EthAddress } from "@chicmoz-pkg/types";
 import { logger } from "../logger.js";
+
+type AztecAbi =
+  | typeof RollupAbi
+  | typeof RegistryAbi
+  | typeof InboxAbi
+  | typeof OutboxAbi
+  //| typeof FeeJuiceAbi
+  | typeof FeeJuicePortalAbi;
 
 let l1Contracts:
   | {
@@ -119,18 +122,78 @@ export const getBlock = async (blockNumber: number) => {
   });
 };
 
-export const getContractsEvents = async () => {
-  // NOTE: this probably won´t be needed
+const watchContractEvents = ({
+  name,
+  address,
+  abi,
+  cb,
+}: {
+  name: string;
+  address: EthAddress;
+  abi: AztecAbi;
+  cb: (event: Log) => Promise<unknown>;
+}) => {
+  return publicClient.watchContractEvent({
+    address,
+    abi,
+    onLogs: (logs) => {
+      for (const log of logs) {
+        cb(log).catch((e) => {
+          logger.error(
+            `Callback function for ${name.toUpperCase()} failed: ${
+              (e as Error).stack
+            }`
+          );
+        });
+      }
+    },
+  });
+};
+
+const json = (param: unknown): string => {
+  return JSON.stringify(
+    param,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    (_key, value) => (typeof value === "bigint" ? value.toString() : value),
+    2
+  );
+};
+
+const isStakingEvent = (event: Log) => {
+  const eventName = (event as unknown as { eventName: string })?.eventName;
+  return (
+    eventName === "Deposit" ||
+    eventName === "WithdrawInitiated" ||
+    eventName === "WithdrawFinalised" ||
+    eventName === "Slashed"
+  );
+};
+
+export const watchContractsEvents = () => {
   if (!l1Contracts) throw new Error("Contracts not initialized");
-  for (const [name, contract] of Object.entries(l1Contracts)) {
-    const events = await publicClient.getContractEvents({
-      address: contract.address,
-      abi: contract.abi,
-    });
-    if (events.length > 0)
-      logger.info(`CONTRACT EVENTS! ${name}: ${events.toString()}`);
-    else logger.info(`No events for ${name}`);
-  }
+  const unwatches = Object.entries(l1Contracts).map(
+    ([name, { address, abi }]) => {
+      return watchContractEvents({
+        name,
+        address,
+        abi,
+        // eslint-disable-next-line @typescript-eslint/require-await
+        cb: async (event) => {
+          if (isStakingEvent(event))
+            logger.info("================= STAKING EVENT =================");
+
+          logger.info(
+            `${name.toUpperCase()} at block ${event.blockNumber
+              ?.valueOf()
+              .toString()}\n${json(event)}`
+          );
+        },
+      });
+    }
+  );
+  return () => {
+    unwatches.forEach((unwatch) => unwatch());
+  };
 };
 
 export const queryStakingState = async () => {
@@ -156,11 +219,12 @@ export const queryStakingState = async () => {
         functionName: "getInfo",
         args: [attester],
       });
-      logger.info(`Attester ${i} info: ${JSON.stringify({
-        ...attesterInfo,
-        stake: attesterInfo.stake.toString(),
-      })}`);
-
+      logger.info(
+        `Attester ${i} info: ${JSON.stringify({
+          ...attesterInfo,
+          stake: attesterInfo.stake.toString(),
+        })}`
+      );
     }
   }
-}
+};

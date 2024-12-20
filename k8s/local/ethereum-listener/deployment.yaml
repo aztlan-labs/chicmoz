@@ -34,6 +34,8 @@ spec:
               value: "true"
             - name: LISTEN_FOR_BLOCKS
               value: "true"
-            - name: ETHEREUM_RPC_URL
+            - name: ETHEREUM_HTTP_RPC_URL
               value: "http://anvil-ethereum-node:8545"
+            - name: ETHEREUM_WS_RPC_URL
+              value: "ws://anvil-ethereum-node:8545"
 status: {}
