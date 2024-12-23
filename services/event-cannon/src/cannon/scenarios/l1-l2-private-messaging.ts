@@ -24,9 +24,7 @@ import {
 } from "viem";
 import { mnemonicToAccount } from "viem/accounts";
 import { foundry } from "viem/chains";
-import {
-  ETHEREUM_RPC_URL,
-} from "../../environment.js";
+import { ETHEREUM_RPC_URL } from "../../environment.js";
 import {
   RollupAbi,
   TestERC20Abi,
@@ -34,8 +32,9 @@ import {
   TokenPortalAbi,
   TokenPortalBytecode,
 } from "@aztec/l1-artifacts";
-import { TokenBridgeContract, TokenContract } from "@aztec/noir-contracts.js";
 import assert from "assert";
+import { TokenContract } from "@aztec/noir-contracts.js/Token";
+import { TokenBridgeContract } from "@aztec/noir-contracts.js/TokenBridge";
 
 const MNEMONIC = "test test test test test test test test test test test junk";
 const TOKEN_NAME = "TokenName";

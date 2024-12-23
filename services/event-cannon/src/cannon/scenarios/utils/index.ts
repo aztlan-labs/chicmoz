@@ -21,7 +21,7 @@ import {
 } from "@aztec/aztec.js/deployment";
 import { deriveSigningKey } from "@aztec/circuits.js";
 import { FunctionType } from "@aztec/foundation/abi";
-import { ContractClassRegisteredEvent } from "@aztec/protocol-contracts";
+import { ContractClassRegisteredEvent } from "@aztec/protocol-contracts/class-registerer";
 import { logger } from "../../../logger.js";
 
 export const truncateHashString = (value: string) => {

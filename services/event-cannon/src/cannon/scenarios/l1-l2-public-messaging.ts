@@ -34,8 +34,9 @@ import {
   TokenPortalAbi,
   TokenPortalBytecode,
 } from "@aztec/l1-artifacts";
-import { TokenBridgeContract, TokenContract } from "@aztec/noir-contracts.js";
 import assert from "assert";
+import { TokenContract } from "@aztec/noir-contracts.js/Token";
+import { TokenBridgeContract } from "@aztec/noir-contracts.js/TokenBridge";
 
 const MNEMONIC = "test test test test test test test test test test test junk";
 const TOKEN_NAME = "TokenName";
