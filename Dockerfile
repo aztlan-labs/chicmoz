@@ -1,6 +1,6 @@
 FROM node:20-alpine
 
-RUN apk update && apk add jq
+RUN apk update && apk add jq python3 make g++
 
 WORKDIR /usr/main
 

@@ -15,13 +15,13 @@ const getTxEffectWithHashes = (txEffects: L2Block["body"]["txEffects"]) => {
 
 export const blockFromString = (stringifiedBlock: string): L2Block => {
   return L2Block.fromString(stringifiedBlock);
-}
+};
 
 export const parseBlock = (b: L2Block): ChicmozL2Block => {
   const blockHash = b.hash();
+
   const blockWithTxEffectsHashesAdded = {
     ...b,
-    txsEffectsHash: b.header.contentCommitment.blobsHash.toString(),
     body: {
       ...b.body,
       txEffects: getTxEffectWithHashes(b.body.txEffects),
@@ -34,9 +34,14 @@ export const parseBlock = (b: L2Block): ChicmozL2Block => {
     header: {
       ...blockWithTxEffectsHashesAdded.header,
       totalFees: blockWithTxEffectsHashesAdded.header.totalFees.toBigInt(),
+      contentCommitment: {
+        ...blockWithTxEffectsHashesAdded.header.contentCommitment,
+        txsEffectsHash: b.header.contentCommitment.blobsHash, // TODO: ⚠️ find real txsEffectsHash (or remove it)
+      },
       globalVariables: {
         ...blockWithTxEffectsHashesAdded.header.globalVariables,
-        coinbase: blockWithTxEffectsHashesAdded.header.globalVariables.coinbase.toString(),
+        coinbase:
+          blockWithTxEffectsHashesAdded.header.globalVariables.coinbase.toString(),
       },
     },
   });
