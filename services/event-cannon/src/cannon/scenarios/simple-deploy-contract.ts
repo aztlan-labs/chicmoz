@@ -1,8 +1,8 @@
 import { DeploySentTx, waitForPXE } from "@aztec/aztec.js";
-import { EasyPrivateVotingContract } from "@aztec/noir-contracts.js";
 import { logger } from "../../logger.js";
 import { getAztecNodeClient, getPxe, getWallets } from "../pxe.js";
 import { deployContract } from "./utils/index.js";
+import { EasyPrivateVotingContract } from "@aztec/noir-contracts.js/EasyPrivateVoting";
 
 export async function run() {
   logger.info("===== SIMPLE DEPLOY CONTRACT =====");

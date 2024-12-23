@@ -1,10 +1,10 @@
 import { L2Block } from "@aztec/aztec.js";
 import {
   ContractClassRegisteredEvent,
-  ContractInstanceDeployedEvent,
   PrivateFunctionBroadcastedEvent,
   UnconstrainedFunctionBroadcastedEvent,
-} from "@aztec/protocol-contracts";
+} from "@aztec/protocol-contracts/class-registerer";
+import { ContractInstanceDeployedEvent } from "@aztec/protocol-contracts/instance-deployer";
 import {
   chicmozL2ContractClassRegisteredEventSchema,
   chicmozL2ContractInstanceDeployedEventSchema,
@@ -110,7 +110,7 @@ export const storeContracts = async (b: L2Block, blockHash: string) => {
   const contractClassesWithId = contractClasses.map((contractClass) => {
     return {
       ...contractClass,
-      contractClassId: contractClass.id
+      contractClassId: contractClass.id,
     };
   });
 
