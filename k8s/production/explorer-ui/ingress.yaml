@@ -8,11 +8,22 @@ metadata:
 spec:
   ingressClassName: nginx
   tls:
-    - hosts:
+    - secretName: aztecscout-ui-tls
+      hosts:
         - aztecscout.xyz
-      secretName: aztecscout-ui-tls
+        - aztecscan.io
   rules:
     - host: aztecscout.xyz # TODO: change to env-var "DOMAIN"
+      http:
+        paths:
+          - backend:
+              service:
+                name: explorer-ui
+                port:
+                  name: http-app
+            path: /
+            pathType: Prefix
+    - host: aztecscan.io
       http:
         paths:
           - backend:
