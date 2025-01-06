@@ -28,4 +28,6 @@ spec:
               value: "development"
             - name: AZTEC_RPC_URL
               value: "http://aztec-sandbox-node:8081"
+            - name: ETHEREUM_RPC_URL
+              value: "http://anvil-ethereum-node:8545"
 status: {}
