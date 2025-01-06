@@ -28,8 +28,7 @@ export const body = pgTable("body", {
 export const txEffect = pgTable(
   "tx_effect",
   {
-    hash: varchar("hash").notNull().$type<HexString>().primaryKey(),
-    txHash: varchar("txHash").notNull().$type<HexString>(),
+    txHash: varchar("tx_hash").notNull().$type<HexString>().primaryKey(),
     bodyId: uuid("body_id")
       .notNull()
       .references(() => body.id, { onDelete: "cascade" }),
@@ -55,7 +54,7 @@ export const publicDataWrite = pgTable("public_data_write", {
   id: uuid("id").primaryKey().defaultRandom(),
   txEffectHash: varchar("tx_effect_hash")
     .notNull()
-    .references(() => txEffect.hash, { onDelete: "cascade" }),
+    .references(() => txEffect.txHash, { onDelete: "cascade" }),
   index: integer("index").notNull(),
   leafSlot: generateFrColumn("leaf_slot").notNull(),
   value: generateFrColumn("value").notNull(),
@@ -85,5 +84,5 @@ export const txEffectToLogs = pgTable("tx_effect_to_logs", {
   id: uuid("id").primaryKey().defaultRandom(),
   txEffectHash: varchar("tx_effect_hash")
     .notNull()
-    .references(() => txEffect.hash, { onDelete: "cascade" }),
+    .references(() => txEffect.txHash, { onDelete: "cascade" }),
 });

@@ -36,16 +36,16 @@ export const getABlockWithTxEffects = async () => {
         hash: l2Block.hash,
       },
       txEffects:
-        sql<string>`COALESCE(json_agg(json_build_object('hash', ${txEffect.hash}, 'index', ${txEffect.index})) FILTER (WHERE ${txEffect.hash} IS NOT NULL), '[]'::json)`.as(
+        sql<string>`COALESCE(json_agg(json_build_object('hash', ${txEffect.txHash}, 'index', ${txEffect.index})) FILTER (WHERE ${txEffect.txHash} IS NOT NULL), '[]'::json)`.as(
           "txEffects"
         ),
-      txEffectCount: sql<number>`count(${txEffect.hash})`.as("txEffectCount"),
+      txEffectCount: sql<number>`count(${txEffect.txHash})`.as("txEffectCount"),
     })
     .from(txEffect)
     .innerJoin(body, eq(txEffect.bodyId, body.id))
     .innerJoin(l2Block, eq(body.blockHash, l2Block.hash))
     .groupBy(l2Block.height, l2Block.hash)
-    .orderBy(sql`count(${txEffect.hash}) DESC, ${l2Block.height} DESC`)
+    .orderBy(sql`count(${txEffect.txHash}) DESC, ${l2Block.height} DESC`)
     .limit(1)
     .execute();
 
@@ -69,14 +69,14 @@ export const getABlockWithTxEffects = async () => {
 export const getSomeTxEffectWithPrivateLogs = async () => {
   const dbRes = await db()
     .select({
-      hash: txEffect.hash,
+      txHash: txEffect.txHash,
     })
     .from(txEffect)
     .where(isNotNull(txEffect.privateLogs))
     .limit(10)
     .execute();
   if (dbRes.length === 0) return null;
-  return dbRes.map((row) => row.hash);
+  return dbRes.map((row) => row.txHash);
 };
 
 export const getSomeTxEffectWithUnencryptedLogs = async () => {

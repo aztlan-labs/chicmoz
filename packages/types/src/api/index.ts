@@ -28,7 +28,7 @@ export const chicmozSearchResultsSchema = z.object({
     ),
     txEffects: z.array(
       z.object({
-        hash: chicmozL2TxEffectSchema.shape.hash,
+        txHash: chicmozL2TxEffectSchema.shape.txHash,
         partOfBlockWithHash: chicmozL2BlockSchema.shape.hash.optional(),
       })
     ),

@@ -14,7 +14,7 @@ import { mapLatestBlocks, parseTxEffectsData } from "./util";
 import { InfoBadge } from "~/components/info-badge";
 import { formatDuration, formatFees } from "~/lib/utils";
 import { usePendingTxs } from "~/hooks/tx";
-import { TxEffectTableSchema } from "~/components/tx-effects/tx-effects-schema";
+import { type TxEffectTableSchema } from "~/components/tx-effects/tx-effects-schema";
 
 export const Landing: FC = () => {
   const { data: latestBlocks, isLoading, error } = useLatestBlocks();
@@ -66,7 +66,6 @@ export const Landing: FC = () => {
     const disguisedPendingTxs = pendingTxs?.reduce((acc, tx) => {
       if (!latestTxEffects.some((effect) => effect.txHash === tx.hash)) {
         acc.push({
-          hash: "0x00000000",
           txHash: tx.hash,
           transactionFee: -1,
           blockNumber: -1,

@@ -1,5 +1,5 @@
 {
-  "id": "cd3636b0-cd9e-4f27-9e8f-05535d9f3d47",
+  "id": "d0b3729c-fa2b-4e34-bf10-58b2a86b5276",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -335,12 +335,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "public_data_write_tx_effect_hash_tx_effect_hash_fk": {
-          "name": "public_data_write_tx_effect_hash_tx_effect_hash_fk",
+        "public_data_write_tx_effect_hash_tx_effect_tx_hash_fk": {
+          "name": "public_data_write_tx_effect_hash_tx_effect_tx_hash_fk",
           "tableFrom": "public_data_write",
           "tableTo": "tx_effect",
           "columnsFrom": ["tx_effect_hash"],
-          "columnsTo": ["hash"],
+          "columnsTo": ["tx_hash"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -352,16 +352,10 @@
       "name": "tx_effect",
       "schema": "",
       "columns": {
-        "hash": {
-          "name": "hash",
+        "tx_hash": {
+          "name": "tx_hash",
           "type": "varchar",
           "primaryKey": true,
-          "notNull": true
-        },
-        "txHash": {
-          "name": "txHash",
-          "type": "varchar",
-          "primaryKey": false,
           "notNull": true
         },
         "body_id": {
@@ -431,7 +425,7 @@
           "name": "tx_hash_index",
           "columns": [
             {
-              "expression": "txHash",
+              "expression": "tx_hash",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -477,12 +471,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "tx_effect_to_logs_tx_effect_hash_tx_effect_hash_fk": {
-          "name": "tx_effect_to_logs_tx_effect_hash_tx_effect_hash_fk",
+        "tx_effect_to_logs_tx_effect_hash_tx_effect_tx_hash_fk": {
+          "name": "tx_effect_to_logs_tx_effect_hash_tx_effect_tx_hash_fk",
           "tableFrom": "tx_effect_to_logs",
           "tableTo": "tx_effect",
           "columnsFrom": ["tx_effect_hash"],
-          "columnsTo": ["hash"],
+          "columnsTo": ["tx_hash"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -513,8 +507,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "txs_effects_hash": {
-          "name": "txs_effects_hash",
+        "blobs_hash": {
+          "name": "blobs_hash",
           "type": "bytea",
           "primaryKey": false,
           "notNull": true

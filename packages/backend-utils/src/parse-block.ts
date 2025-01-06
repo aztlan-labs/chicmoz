@@ -7,7 +7,6 @@ const getTxEffectWithHashes = (txEffects: L2Block["body"]["txEffects"]) => {
       ...txEffect,
       unencryptedLogslength: txEffect.unencryptedLogsLength.toNumber(),
       privateLogs: txEffect.privateLogs.map((log) => log.toFields()),
-      hash: txEffect.txHash.toString(), // TODO: ⚠️ remove hash from txEffect
       txHash: txEffect.txHash.toString(),
     };
   });
@@ -36,7 +35,6 @@ export const parseBlock = (b: L2Block): ChicmozL2Block => {
       totalFees: blockWithTxEffectsHashesAdded.header.totalFees.toBigInt(),
       contentCommitment: {
         ...blockWithTxEffectsHashesAdded.header.contentCommitment,
-        txsEffectsHash: b.header.contentCommitment.blobsHash, // TODO: ⚠️ find real txsEffectsHash (or remove it)
       },
       globalVariables: {
         ...blockWithTxEffectsHashesAdded.header.globalVariables,

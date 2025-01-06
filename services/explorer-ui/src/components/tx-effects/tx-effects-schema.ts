@@ -11,7 +11,6 @@ export const getTxEffectTableObj = (
   block: ChicmozL2BlockLight
 ): TxEffectTableSchema => {
   return txEffectSchema.parse({
-    hash: txEffect.hash,
     txHash: txEffect.txHash,
     transactionFee: txEffect.transactionFee,
     blockNumber: block.height,
@@ -20,7 +19,6 @@ export const getTxEffectTableObj = (
 };
 
 const txEffectSchema = z.object({
-  hash: z.string(),
   txHash: z.string(),
   transactionFee: z.number(),
   blockNumber: z.number(),

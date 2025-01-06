@@ -18,10 +18,6 @@ export type TxEffectDataType =
 export const getTxEffectData = (data: ChicmozL2TxEffectDeluxe) => [
   {
     label: "HASH",
-    value: data.hash,
-  },
-  {
-    label: "TRANSACTION HASH",
     value: data.txHash,
   },
   {
@@ -41,7 +37,7 @@ export const getTxEffectData = (data: ChicmozL2TxEffectDeluxe) => [
   {
     label: "RAW DATA",
     value: "View raw data",
-    extLink: `${API_URL}/${aztecExplorer.getL2TxEffectByHash}${data.hash}`,
+    extLink: `${API_URL}/${aztecExplorer.getL2TxEffectByHash}${data.txHash}`,
   },
 ];
 

@@ -33,7 +33,7 @@ export const Header = () => {
         void navigate({ to: `/blocks/${block.hash}` });
         setIsMenuOpen(false);
       } else if (txEffect) {
-        void navigate({ to: `/tx-effects/${txEffect.hash}` });
+        void navigate({ to: `/tx-effects/${txEffect.txHash}` });
         setIsMenuOpen(false);
       } else if (instance) {
         void navigate({ to: `/contracts/instances/${instance.address}` });

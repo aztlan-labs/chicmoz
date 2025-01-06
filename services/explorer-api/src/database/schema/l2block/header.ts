@@ -31,7 +31,7 @@ export const contentCommitment = pgTable("content_commitment", {
     .notNull()
     .references(() => header.id, { onDelete: "cascade" }),
   numTxs: generateFrNumberColumn("num_txs").notNull(),
-  txsEffectsHash: bufferType("txs_effects_hash").notNull(),
+  blobsHash: bufferType("blobs_hash").notNull(),
   inHash: bufferType("in_hash").notNull(),
   outHash: bufferType("out_hash").notNull(),
 });
