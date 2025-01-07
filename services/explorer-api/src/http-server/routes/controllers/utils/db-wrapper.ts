@@ -35,7 +35,8 @@ export const getLatest = async(
   return get([...keys, latestHeight], dbFn, CACHE_LATEST_TTL_SECONDS + 1);
 };
 
-const json = (param: unknown): string => {
+const jsonStringify = (param: unknown): string => {
+  // TODO: move this to backend-utils and make use of it in websockets as well
   return JSON.stringify(
     param,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -46,7 +47,7 @@ const json = (param: unknown): string => {
 export const get = async(
   keys: (string | number | undefined)[],
   dbFn: () => Promise<unknown>,
-  ttl = CACHE_TTL_SECONDS
+  ttl = CACHE_TTL_SECONDS,
 ): Promise<string> => {
   const cacheKey = keys.join("-");
   const cachedVal = await c().get(cacheKey);
@@ -58,11 +59,11 @@ export const get = async(
 
   const dbRes = await dbFn().catch(dbParseErrorCallback);
   if (dbRes !== null && dbRes !== undefined) {
-    const dbVal = json(dbRes);
-    await c().set(cacheKey, dbVal, {
+    const dbResString = jsonStringify(dbRes);
+    await c().set(cacheKey, dbResString, {
       EX: ttl,
     });
-    return dbVal;
+    return dbResString;
   }
   throw new Error(`${cacheKey} not found`);
 };
