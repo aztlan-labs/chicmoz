@@ -15,7 +15,7 @@ spec:
     - secretName: aztecscout-api-tls
       hosts:
         - api.aztecscout.xyz
-        - api.aztecscan.io
+        - api.aztecscan.xyz
   rules:
     - host: api.aztecscout.xyz
       http:
@@ -27,7 +27,7 @@ spec:
                 name: explorer-api
                 port:
                   name: http-app
-    - host: api.aztecscan.io
+    - host: api.aztecscan.xyz
       http:
         paths:
           - path: /v1/([^/]+)/(.*)
