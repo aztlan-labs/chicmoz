@@ -23,4 +23,7 @@ export async function run() {
     deployFn: (): DeploySentTx<EasyPrivateVotingContract> => sentTx,
     node: getAztecNodeClient(),
   });
+
+  // TODO: 1. try to get the contract in explorer-api
+  // TODO: 2. try to verify the contract class code in explorer-api
 }
