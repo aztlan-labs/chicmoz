@@ -11,7 +11,7 @@ spec:
     - secretName: aztecscout-ui-tls
       hosts:
         - aztecscout.xyz
-        - aztecscan.io
+        - aztecscan.xyz
   rules:
     - host: aztecscout.xyz # TODO: change to env-var "DOMAIN"
       http:
@@ -23,7 +23,7 @@ spec:
                   name: http-app
             path: /
             pathType: Prefix
-    - host: aztecscan.io
+    - host: aztecscan.xyz
       http:
         paths:
           - backend:
