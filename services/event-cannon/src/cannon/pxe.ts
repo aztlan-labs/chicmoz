@@ -18,18 +18,8 @@ let namedWallets: {
   charlie: AccountWallet;
 } | null = null;
 
-let version: string | null = null;
-
 export const setup = async () => {
   aztecNode = createAztecNodeClient(AZTEC_RPC_URL);
-  const v = await aztecNode.getNodeVersion();
-  if (v === "0.1.0") {
-    // TODO: this is a temporary workaround for the versioning issue
-    version = "0.69.0";
-  } else {
-    logger.info(`Finally the getNodeVersion is working! ${v}`);
-    version = v;
-  }
   pxe = createPXEClient(AZTEC_RPC_URL);
   await waitForPXE(pxe);
   const info = await pxe.getPXEInfo();
@@ -41,11 +31,6 @@ export const setup = async () => {
     charlie,
   };
 };
-
-export const getNodeVersion = () => {
-  if (!version) throw new Error("Version not initialized");
-  return version;
-}
 
 export const getAztecNodeClient = () => {
   if (!aztecNode) throw new Error("Aztec Node not initialized");

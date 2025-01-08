@@ -144,7 +144,6 @@ export const openapi_POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT = {
           },
         },
       },
-      // TODO: add response schema
       responses: contractClassResponse,
     },
   },
@@ -196,7 +195,6 @@ export const POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT = asyncHandler(
       contractClass.version,
       stringifiedArtifactJson
     );
-    // TODO: update cache
-    res.status(200).send(completeContractClass);
+    res.status(201).send(completeContractClass);
   }
 );
