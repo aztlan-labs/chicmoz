@@ -1,18 +1,18 @@
 import { type FC } from "react";
 import { Link } from "@tanstack/react-router";
-import { useVerifiedContracts } from "~/hooks/verified-contract";
+import { useVerifiedContractInstances } from "~/hooks/verified-contract-instance";
 import { routes } from "~/routes/__root";
 
 const contractInstanceDetailsRoute =
   routes.contracts.route + routes.contracts.children.instances.route + "/";
-export const VerifiedContracts: FC = () => {
-  const { data, isError, isLoading } = useVerifiedContracts();
+export const VerifiedContractInstances: FC = () => {
+  const { data, isError, isLoading } = useVerifiedContractInstances();
   return (
     <div className="flex flex-col items-center">
-      <h1>Verified contracts</h1>
+      <h1>Verified contract instances</h1>
       <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
         <p>
-          Verified contracts mean that we have verified the deployer of the
+          Verified contract instances mean that we have verified the deployer of the
           contract.
         </p>
         <br />
@@ -22,14 +22,14 @@ export const VerifiedContracts: FC = () => {
         </p>
         <br />
         <p>
-          You can always find the latest verified contracts by checking{" "}
+          You can always find the latest verified contract instances by checking{" "}
           <a
             href="https://github.com/aztlan-labs/chicmoz/blob/main/services/explorer-api/src/constants.ts"
             className="text-purple-light hover:font-bold"
           >
             our github-repo
           </a>
-          . If you think your contract should be verified, please create a PR to
+          . If you think your contract instance should be verified, please create a PR to
           that file.
         </p>
         <br />
@@ -37,7 +37,7 @@ export const VerifiedContracts: FC = () => {
         <h2>Verified contracts:</h2>
         {isLoading && <p>Loading...</p>}
         {isError && <p>Something went wrong...</p>}
-        {data && data.length === 0 && <p>No verified contracts found</p>}
+        {data && data.length === 0 && <p>No verified contract instances found</p>}
         {data && data.length > 0 && (
           <ul>
             {data.map((contract, index) => (
@@ -62,7 +62,7 @@ export const VerifiedContracts: FC = () => {
                 <Link
                   to={
                     contractInstanceDetailsRoute +
-                    contract.contractInstanceAddress
+                    contract.address
                   }
                   className="text-purple-light"
                 >

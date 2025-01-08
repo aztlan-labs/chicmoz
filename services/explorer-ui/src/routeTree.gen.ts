@@ -17,7 +17,9 @@ import { Route as TermsAndConditionsImport } from './routes/terms-and-conditions
 
 // Create Virtual Routes
 
-const VerifiedContractsLazyImport = createFileRoute('/verified-contracts')()
+const VerifiedContractInstancesLazyImport = createFileRoute(
+  '/verified-contract-instances',
+)()
 const PrivacyPolicyLazyImport = createFileRoute('/privacy-policy')()
 const DevLazyImport = createFileRoute('/dev')()
 const AboutUsLazyImport = createFileRoute('/about-us')()
@@ -36,12 +38,13 @@ const ContractsClassesIdVersionsVersionLazyImport = createFileRoute(
 
 // Create/Update Routes
 
-const VerifiedContractsLazyRoute = VerifiedContractsLazyImport.update({
-  path: '/verified-contracts',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/verified-contracts.lazy').then((d) => d.Route),
-)
+const VerifiedContractInstancesLazyRoute =
+  VerifiedContractInstancesLazyImport.update({
+    path: '/verified-contract-instances',
+    getParentRoute: () => rootRoute,
+  } as any).lazy(() =>
+    import('./routes/verified-contract-instances.lazy').then((d) => d.Route),
+  )
 
 const PrivacyPolicyLazyRoute = PrivacyPolicyLazyImport.update({
   path: '/privacy-policy',
@@ -160,11 +163,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyPolicyLazyImport
       parentRoute: typeof rootRoute
     }
-    '/verified-contracts': {
-      id: '/verified-contracts'
-      path: '/verified-contracts'
-      fullPath: '/verified-contracts'
-      preLoaderRoute: typeof VerifiedContractsLazyImport
+    '/verified-contract-instances': {
+      id: '/verified-contract-instances'
+      path: '/verified-contract-instances'
+      fullPath: '/verified-contract-instances'
+      preLoaderRoute: typeof VerifiedContractInstancesLazyImport
       parentRoute: typeof rootRoute
     }
     '/blocks/$blockNumber': {
@@ -227,7 +230,7 @@ export const routeTree = rootRoute.addChildren({
   AboutUsLazyRoute,
   DevLazyRoute,
   PrivacyPolicyLazyRoute,
-  VerifiedContractsLazyRoute,
+  VerifiedContractInstancesLazyRoute,
   BlocksBlockNumberLazyRoute,
   TxEffectsHashLazyRoute,
   BlocksIndexLazyRoute,
@@ -250,7 +253,7 @@ export const routeTree = rootRoute.addChildren({
         "/about-us",
         "/dev",
         "/privacy-policy",
-        "/verified-contracts",
+        "/verified-contract-instances",
         "/blocks/$blockNumber",
         "/tx-effects/$hash",
         "/blocks/",
@@ -275,8 +278,8 @@ export const routeTree = rootRoute.addChildren({
     "/privacy-policy": {
       "filePath": "privacy-policy.lazy.tsx"
     },
-    "/verified-contracts": {
-      "filePath": "verified-contracts.lazy.tsx"
+    "/verified-contract-instances": {
+      "filePath": "verified-contract-instances.lazy.tsx"
     },
     "/blocks/$blockNumber": {
       "filePath": "blocks/$blockNumber.lazy.tsx"

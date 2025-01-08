@@ -39,8 +39,8 @@ export const paths = {
 
   search: "/l2/search",
 
-  verifiedContract: `/l2/verified-contracts/:${address}`,
-  verifiedContracts: "/l2/verified-contracts",
+  verifiedContract: `/l2/verified-contracts-instances/:${address}`,
+  verifiedContracts: "/l2/verified-contract-instances",
 
   validators: "/l2/validators",
 
@@ -140,7 +140,7 @@ export const postContrctClassArtifactSchema = z.lazy(() => {
 export const getContractInstancesByContractClassIdSchema =
   getContractClassesByClassIdSchema;
 
-export const getVerifiedContractSchema = getContractInstanceSchema;
+export const getVerifiedContractInstanceSchema = getContractInstanceSchema;
 
 export const getSearchSchema = z.object({
   query: chicmozSearchQuerySchema,

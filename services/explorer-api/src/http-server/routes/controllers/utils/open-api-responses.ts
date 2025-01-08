@@ -8,7 +8,7 @@ import {
   chicmozL2TxEffectDeluxeSchema,
   chicmozL2UnconstrainedFunctionBroadcastedEventSchema,
   chicmozSearchResultsSchema,
-  chicmozL2VerifiedContractAddressDataSchema,
+  chicmozL2VerifiedContractInstanceDataSchema,
 } from "@chicmoz-pkg/types";
 import { generateSchema } from "@anatine/zod-openapi";
 
@@ -46,7 +46,7 @@ export const contractClassUnconstrainedFunctionResponseArray = getResponse(z.arr
 export const contractInstanceResponse = getResponse(chicmozL2ContractInstanceDeluxeSchema);
 export const contractInstanceResponseArray = getResponse(z.array(chicmozL2ContractInstanceDeluxeSchema));
 
-export const verifiedContractResponse = getResponse(chicmozL2VerifiedContractAddressDataSchema);
-export const verifiedContractResponseArray = getResponse(z.array(chicmozL2VerifiedContractAddressDataSchema));
+export const verifiedContractInstanceResponse = getResponse(chicmozL2VerifiedContractInstanceDataSchema);
+export const verifiedContractInstanceResponseArray = getResponse(z.array(chicmozL2VerifiedContractInstanceDataSchema));
 
 export const searchResultResponse = getResponse(chicmozSearchResultsSchema);

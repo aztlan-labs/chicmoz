@@ -6,8 +6,8 @@ import {
 } from "./l2Contract.js";
 import { chicmozL2TxEffectSchema } from "./l2TxEffect.js";
 
-export const chicmozL2VerifiedContractAddressDataSchema = z.object({
-  contractInstanceAddress: z.string(),
+export const chicmozL2VerifiedContractInstanceDataSchema = z.object({
+  address: z.lazy(() => chicmozL2ContractInstanceDeployedEventSchema.shape.address),
   contractIdentifier: z.string(),
   details: z.string(),
   creatorName: z.string(),
@@ -16,15 +16,15 @@ export const chicmozL2VerifiedContractAddressDataSchema = z.object({
   repoUrl: z.string(),
 });
 
-export type ChicmozL2VerifiedContractAddressData = z.infer<
-  typeof chicmozL2VerifiedContractAddressDataSchema
+export type ChicmozL2VerifiedContractInctanceData = z.infer<
+  typeof chicmozL2VerifiedContractInstanceDataSchema
 >;
 
 export const chicmozL2ContractInstanceDeluxeSchema = z.object({
   ...chicmozL2ContractInstanceDeployedEventSchema.shape,
   ...chicmozL2ContractClassRegisteredEventSchema.shape,
   blockHeight: chicmozL2BlockSchema.shape.height.optional(),
-  verifiedInfo: chicmozL2VerifiedContractAddressDataSchema.optional(),
+  verifiedInfo: chicmozL2VerifiedContractInstanceDataSchema.optional(),
 });
 
 export type ChicmozL2ContractInstanceDeluxe = z.infer<
