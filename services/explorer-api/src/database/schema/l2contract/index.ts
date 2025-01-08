@@ -108,7 +108,7 @@ export const l2ContractClassRegistered = pgTable(
     artifactHash: generateFrColumn("artifact_hash").notNull(),
     privateFunctionsRoot: generateFrColumn("private_functions_root").notNull(),
     packedBytecode: bufferType("packed_bytecode").notNull(),
-    artifactJson: jsonb("artifact_json"),
+    artifactJson: varchar("artifact_json"),
   },
   (t) => ({
     primaryKey: primaryKey({

@@ -30,7 +30,7 @@ export const chicmozL2ContractClassRegisteredEventSchema = z.object({
   artifactHash: frSchema,
   privateFunctionsRoot: frSchema,
   packedBytecode: bufferSchema,
-  artifactJson: z.any().optional(),
+  artifactJson: z.string().nullable().optional(),
 });
 
 export type ChicmozL2ContractClassRegisteredEvent = z.infer<

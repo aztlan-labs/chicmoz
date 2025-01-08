@@ -1,5 +1,5 @@
 {
-  "id": "9c1c478b-6ab4-468c-9d51-8aa9e0f5631b",
+  "id": "b27f92b9-ee4f-47f1-8176-319856f9d1eb",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1056,7 +1056,7 @@
         },
         "artifact_json": {
           "name": "artifact_json",
-          "type": "jsonb",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         }

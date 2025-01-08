@@ -3,6 +3,7 @@ import { logger } from "../../logger.js";
 import { getAztecNodeClient, getPxe, getWallets } from "../pxe.js";
 import { deployContract } from "./utils/index.js";
 import { EasyPrivateVotingContract } from "@aztec/noir-contracts.js/EasyPrivateVoting";
+//import EasyPrivateVotingContractArtifactJson from "@aztec/noir-contracts.js/artifacts/easy_private_voting_contract-EasyPrivateVoting.json" assert { type: "json" };
 
 export async function run() {
   logger.info("===== SIMPLE DEPLOY CONTRACT =====");
@@ -23,7 +24,4 @@ export async function run() {
     deployFn: (): DeploySentTx<EasyPrivateVotingContract> => sentTx,
     node: getAztecNodeClient(),
   });
-
-  // TODO: 1. try to get the contract in explorer-api
-  // TODO: 2. try to verify the contract class code in explorer-api
 }

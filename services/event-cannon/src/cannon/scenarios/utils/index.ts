@@ -9,6 +9,7 @@ import {
   DeploySentTx,
   Fr,
   FunctionSelector,
+  NoirCompiledContract,
   PXE,
   SentTx,
   Wallet,
@@ -22,6 +23,8 @@ import {
 import { deriveSigningKey } from "@aztec/circuits.js";
 import { FunctionType } from "@aztec/foundation/abi";
 import { ContractClassRegisteredEvent } from "@aztec/protocol-contracts/class-registerer";
+import { request } from "http";
+import { EXPLORER_API_URL } from "../../../environment.js";
 import { logger } from "../../../logger.js";
 
 export const truncateHashString = (value: string) => {
@@ -206,4 +209,68 @@ export const publicDeployAccounts = async (
     ...instances.map((instance) => deployInstance(sender, instance!).request()),
   ]);
   await batch.send().wait();
+};
+
+export const registerContractClassArtifact = async (
+  contractLoggingName: string,
+  artifactJson: object,
+  contractClassId: string,
+  version: number
+) => {
+  const url = new URL(
+    `${EXPLORER_API_URL}/l2/contract-classes/${contractClassId}/versions/${version}`
+  );
+
+  const postData = JSON.stringify({
+    stringifiedArtifactJson: JSON.stringify(
+      artifactJson as unknown as NoirCompiledContract
+    ),
+  });
+
+  const sizeInMB = Buffer.byteLength(postData) / 1000 ** 2;
+  if (sizeInMB > 1) {
+    logger.warn(
+      `🚨📜 ${contractLoggingName} Artifact is too large to register in explorer-api: ${url.href} (byte length: ${sizeInMB} MB)`
+    );
+    return;
+  }
+  logger.info(
+    `📜 ${contractLoggingName} Trying to register artifact in explorer-api: ${url.href} (byte length: ${sizeInMB} MB)`
+  );
+  await new Promise((resolve, reject) => {
+    const req = request(
+      url,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Length": Buffer.byteLength(postData),
+        },
+      },
+      (res) => {
+        let data = "";
+        res.on("data", (chunk) => {
+          data += chunk;
+        });
+        res.on("end", () => {
+          resolve(JSON.parse(data));
+        });
+      }
+    );
+    req.on("error", (error) => {
+      logger.error(`🚨📜 ${contractLoggingName} Artifact registration failed.`);
+      reject(error);
+    });
+
+    // Set a timeout (e.g., 5 seconds)
+    req.setTimeout(5000, () => {
+      reject(new Error("Request timed out"));
+    });
+
+    req.write(postData);
+    req.end(); // This actually sends the request
+  });
+  logger.info(
+    `📜✅ ${contractLoggingName} Artifact registered in explorer-api.`
+  );
 };

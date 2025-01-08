@@ -100,6 +100,8 @@ export const init = ({ router }: { router: Router }) => {
   router.get(paths.contractClassUnconstrainedFunctions, controller.GET_L2_CONTRACT_CLASS_UNCONSTRAINED_FUNCTIONS);
   router.get(paths.contractClassUnconstrainedFunction, controller.GET_L2_CONTRACT_CLASS_UNCONSTRAINED_FUNCTION);
 
+  router.post(paths.contractClass, controller.POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT);
+
   router.get(paths.contractInstancesByBlockHash, controller.GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH);
   router.get(paths.contractInstancesByContractClassId, controller.GET_L2_CONTRACT_INSTANCES_BY_CONTRACT_CLASS_ID);
   router.get(paths.contractInstance, controller.GET_L2_CONTRACT_INSTANCE);

@@ -16,6 +16,11 @@ export const createErrorMiddleware = (logger: Logger): ErrorRequestHandler => {
       else logger.error(err);
     }
 
+    if ((err as Error).message === "PayloadTooLargeError") {
+      res.status(413).send({ message: "Payload too large" });
+      return;
+    }
+
     if (
       err instanceof UnauthorizedError ||
       err instanceof InsufficientScopeError

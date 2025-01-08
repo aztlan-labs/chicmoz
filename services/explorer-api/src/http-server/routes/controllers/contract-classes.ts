@@ -16,7 +16,6 @@ import {
   dbWrapper,
 } from "./utils/index.js";
 import { chicmozL2ContractClassRegisteredEventSchema } from "@chicmoz-pkg/types";
-import { logger } from "../../../logger.js";
 
 export const openapi_GET_L2_REGISTERED_CONTRACT_CLASS = {
   "/l2/contract-classes/{classId}/versions/{version}": {
@@ -158,22 +157,21 @@ export const POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT = asyncHandler(
       ["l2", "contract-classes", classId, version],
       () => db.l2Contract.getL2RegisteredContractClass(classId, version)
     );
-    //ChicmozL2ContractClassRegisteredEvent
-    const contractClass =
-      chicmozL2ContractClassRegisteredEventSchema.parse(contractClassString);
-    const uploadedArtifact = getContractClassFromArtifact(
-      loadContractArtifact(
-        stringifiedArtifactJson as unknown as NoirCompiledContract
-      )
+    const contractClass = chicmozL2ContractClassRegisteredEventSchema.parse(
+      JSON.parse(contractClassString)
     );
-    const isCorrectArtifact =
-      uploadedArtifact.packedBytecode === contractClass.packedBytecode;
-    logger.info(`🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍🔍
-    ${uploadedArtifact.packedBytecode.toString()}
-    ${contractClass.packedBytecode.toString()}
-    ${isCorrectArtifact}
-    `);
-    if (!isCorrectArtifact) throw new Error("Incorrect artifact");
-    res.status(200).send(isCorrectArtifact);
+    const uploadedArtifact = getContractClassFromArtifact(
+      loadContractArtifact(JSON.parse(stringifiedArtifactJson) as unknown as NoirCompiledContract)
+    );
+    const isMatchingByteCode = uploadedArtifact.packedBytecode.equals(
+      contractClass.packedBytecode
+    );
+    if (!isMatchingByteCode) throw new Error("Incorrect artifact");
+    const completeContractClass = {
+      ...contractClass,
+      artifactJson: stringifiedArtifactJson,
+    };
+    await db.l2Contract.addArtifactJson(contractClass.contractClassId, contractClass.version, stringifiedArtifactJson);
+    res.status(200).send(completeContractClass);
   }
 );

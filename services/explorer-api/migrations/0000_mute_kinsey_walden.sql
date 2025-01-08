@@ -165,7 +165,7 @@ CREATE TABLE IF NOT EXISTS "l2_contract_class_registered" (
 	"artifact_hash" varchar(66) NOT NULL,
 	"private_functions_root" varchar(66) NOT NULL,
 	"packed_bytecode" "bytea" NOT NULL,
-	"artifact_json" jsonb,
+	"artifact_json" varchar,
 	CONSTRAINT "contract_class_id_version" PRIMARY KEY("contract_class_id","version")
 );
 --> statement-breakpoint
