@@ -56,8 +56,7 @@ CREATE TABLE IF NOT EXISTS "public_data_write" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tx_effect" (
-	"hash" varchar PRIMARY KEY NOT NULL,
-	"txHash" varchar NOT NULL,
+	"tx_hash" varchar PRIMARY KEY NOT NULL,
 	"body_id" uuid NOT NULL,
 	"tx_time_of_birth" timestamp DEFAULT now() NOT NULL,
 	"index" integer NOT NULL,
@@ -79,7 +78,7 @@ CREATE TABLE IF NOT EXISTS "content_commitment" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"header_id" uuid NOT NULL,
 	"num_txs" bigint NOT NULL,
-	"txs_effects_hash" "bytea" NOT NULL,
+	"blobs_hash" "bytea" NOT NULL,
 	"in_hash" "bytea" NOT NULL,
 	"out_hash" "bytea" NOT NULL
 );
@@ -249,7 +248,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "public_data_write" ADD CONSTRAINT "public_data_write_tx_effect_hash_tx_effect_hash_fk" FOREIGN KEY ("tx_effect_hash") REFERENCES "public"."tx_effect"("hash") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "public_data_write" ADD CONSTRAINT "public_data_write_tx_effect_hash_tx_effect_tx_hash_fk" FOREIGN KEY ("tx_effect_hash") REFERENCES "public"."tx_effect"("tx_hash") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -261,7 +260,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "tx_effect_to_logs" ADD CONSTRAINT "tx_effect_to_logs_tx_effect_hash_tx_effect_hash_fk" FOREIGN KEY ("tx_effect_hash") REFERENCES "public"."tx_effect"("hash") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "tx_effect_to_logs" ADD CONSTRAINT "tx_effect_to_logs_tx_effect_hash_tx_effect_tx_hash_fk" FOREIGN KEY ("tx_effect_hash") REFERENCES "public"."tx_effect"("tx_hash") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -350,4 +349,4 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "tx_hash_index" ON "tx_effect" USING btree ("txHash");
+CREATE INDEX IF NOT EXISTS "tx_hash_index" ON "tx_effect" USING btree ("tx_hash");

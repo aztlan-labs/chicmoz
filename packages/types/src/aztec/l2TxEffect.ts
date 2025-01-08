@@ -51,9 +51,6 @@ export const chicmozL2TxEffectSchema = z.object({
     },
     z.object({ code: z.number() })
   ),
-  /** The hash of the transaction that caused these effects. */
-  hash: hexStringSchema,
-  /** The hash of the transaction and its effects. */
   txHash: hexStringSchema,
   txBirthTimestamp: z.number().optional(),
   transactionFee: frNumberSchema,

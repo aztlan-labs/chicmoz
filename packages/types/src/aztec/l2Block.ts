@@ -27,7 +27,7 @@ export const chicmozL2BlockSchema = z.object({
     }),
     contentCommitment: z.object({
       numTxs: frNumberSchema,
-      txsEffectsHash: bufferSchema,
+      blobsHash: bufferSchema,
       inHash: bufferSchema,
       outHash: bufferSchema,
     }),

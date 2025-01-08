@@ -4,39 +4,16 @@ import { routes } from "~/routes/__root";
 import { DataTableColumnHeader } from "~/components/data-table";
 import { type TxEffectTableSchema } from "./tx-effects-schema";
 import { formatTimeSince } from "~/lib/utils";
-import { CopyableText } from "../copy-text";
 import { truncateHashString } from "~/lib/create-hash-string";
 
 const text = {
-  hash: "TX EFFECT HASH",
-  txHash: "TX HASH",
+  txHash: "HASH",
   transactionFee: "FEE (FPA)",
   blockHeight: "HEIGHT",
   timeSince: "AGE",
 };
 
 export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
-  {
-    accessorKey: "hash",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        className="text-purple-dark text-sm "
-        column={column}
-        title={text.hash}
-      />
-    ),
-    cell: ({ row }) => {
-      const hash = row.getValue("hash");
-      if (typeof hash !== "string") return null;
-      const r = `${routes.txEffects.route}/${hash}`;
-      const truncatedTxHash = `${hash.slice(0, 6)}...${hash.slice(-4)}`;
-      return (
-        <div className="text-purple-light font-mono">
-          <Link to={r}>{truncatedTxHash}</Link>
-        </div>
-      );
-    },
-  },
   {
     accessorKey: "txHash",
     header: ({ column }) => (
@@ -46,14 +23,17 @@ export const TxEffectsTableColumns: ColumnDef<TxEffectTableSchema>[] = [
         title={text.txHash}
       />
     ),
-    cell: ({ row }) => (
-      <CopyableText
-        toCopy={row.getValue("txHash")}
-        text={truncateHashString(row.getValue("txHash"))}
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
+    cell: ({ row }) => {
+      const hash = row.getValue("txHash");
+      if (typeof hash !== "string") return null;
+      const r = `${routes.txEffects.route}/${hash}`;
+      const truncatedTxHash = truncateHashString(hash);
+      return (
+        <div className="text-purple-light font-mono">
+          <Link to={r}>{truncatedTxHash}</Link>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "timestamp",

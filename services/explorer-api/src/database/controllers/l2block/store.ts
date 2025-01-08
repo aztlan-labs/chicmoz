@@ -66,7 +66,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
       id: contentCommitmentId,
       headerId: headerId,
       numTxs: block.header.contentCommitment.numTxs,
-      txsEffectsHash: block.header.contentCommitment.txsEffectsHash,
+      blobsHash: block.header.contentCommitment.blobsHash,
       inHash: block.header.contentCommitment.inHash,
       outHash: block.header.contentCommitment.outHash,
     });
@@ -157,7 +157,6 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
     for (const [i, txEff] of Object.entries(block.body.txEffects)) {
       if (isNaN(Number(i))) throw new Error("Invalid txEffect index");
       await dbTx.insert(txEffect).values({
-        hash: txEff.hash,
         txHash: txEff.txHash,
         bodyId,
         index: Number(i),
@@ -175,7 +174,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
         const publicDataWriteId = uuidv4();
         await dbTx.insert(publicDataWrite).values({
           id: publicDataWriteId,
-          txEffectHash: txEff.hash,
+          txEffectHash: txEff.txHash,
           index: Number(pdwIndex),
           leafSlot: pdw.leafSlot,
           value: pdw.value,
@@ -189,7 +188,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
         // Create junction entry for txEffectToLogs
         await dbTx.insert(txEffectToLogs).values({
           id: txEffectToLogsId,
-          txEffectHash: txEff.hash,
+          txEffectHash: txEff.txHash,
         });
         for (const [functionLogIndex, functionLog] of Object.entries(fLogs)) {
           // Insert logs

@@ -46,13 +46,13 @@ const matchTxEffect = async (
 ): Promise<ChicmozSearchResults["results"]["txEffects"]> => {
   const res = await db()
     .select({
-      hash: txEffect.hash,
+      hash: txEffect.txHash,
     })
     .from(txEffect)
-    .where(or(eq(txEffect.hash, hash), eq(txEffect.txHash, hash)))
+    .where(or(eq(txEffect.txHash, hash), eq(txEffect.txHash, hash)))
     .execute();
   if (res.length === 0) return [];
-  return [{ hash: res[0].hash }];
+  return [{ txHash: res[0].hash }];
 };
 
 const matchContractClass = async (

@@ -5,7 +5,7 @@ import {
   type ChicmozL2Block,
   type ChicmozL2BlockLight,
   type ChicmozL2PendingTx,
-  type WebsocketUpdateMessage,
+  type WebsocketUpdateMessageReceiver,
 } from "@chicmoz-pkg/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
@@ -35,7 +35,7 @@ const updateTxEffects = (
   const txEffects = block.body.txEffects.map((txEffect) => {
     const effect = chicmozL2TxEffectSchema.parse(txEffect);
     queryClient.setQueryData(
-      queryKeyGenerator.txEffectByHash(effect.hash),
+      queryKeyGenerator.txEffectByHash(effect.txHash),
       {
         ...effect,
         blockHeight: block.height,
@@ -105,9 +105,9 @@ const handleWebSocketMessage = async (
   queryClient: ReturnType<typeof useQueryClient>,
   data: string
 ) => {
-  const update: WebsocketUpdateMessage = JSON.parse(
+  const update: WebsocketUpdateMessageReceiver = JSON.parse(
     data
-  ) as WebsocketUpdateMessage;
+  ) as WebsocketUpdateMessageReceiver;
   if (update.block) await handleBlock(queryClient, update.block);
   if (update.txs) handlePendingTxs(queryClient, update.txs);
 };

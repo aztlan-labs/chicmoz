@@ -1,7 +1,7 @@
 import {
   ChicmozL2Block,
   ChicmozL2PendingTx,
-  WebsocketUpdateMessage,
+  WebsocketUpdateMessageSender,
 } from "@chicmoz-pkg/types";
 import { WebSocketServer, WebSocket } from "ws";
 import { logger } from "../logger.js";
@@ -9,7 +9,7 @@ import { PORT } from "../environment.js";
 
 let wss: WebSocketServer;
 
-const sendUpdateToClients = (update: WebsocketUpdateMessage) => {
+const sendUpdateToClients = (update: WebsocketUpdateMessageSender) => {
   const stringifiedUpdate = JSON.stringify(update);
   if (!wss) throw new Error("WebSocket server is not initialized");
   const clientStatuses: {
@@ -43,7 +43,7 @@ const sendUpdateToClients = (update: WebsocketUpdateMessage) => {
 };
 
 export const sendPendingTxsToClients = (txs: ChicmozL2PendingTx[]) => {
-  const update: WebsocketUpdateMessage = { txs };
+  const update: WebsocketUpdateMessageSender = { txs };
   const { clientStatuses, totalClients } = sendUpdateToClients(update);
   logger.info(
     `📡 Sent ${txs.length} pending txs to ${clientStatuses.sent} clients (failed: ${clientStatuses.failed}, total: ${totalClients})`
@@ -51,8 +51,15 @@ export const sendPendingTxsToClients = (txs: ChicmozL2PendingTx[]) => {
 };
 
 export const sendBlockToClients = (block: ChicmozL2Block) => {
-  const update: WebsocketUpdateMessage = { block };
-  const { clientStatuses, totalClients } = sendUpdateToClients(update);
+  const { clientStatuses, totalClients } = sendUpdateToClients({
+    block: {
+      ...block,
+      header: {
+        ...block.header,
+        totalFees: block.header.totalFees.toString(),
+      },
+    },
+  });
   logger.info(
     `📡 Sent block ${block.header.globalVariables.blockNumber} to ${clientStatuses.sent} clients (failed: ${clientStatuses.failed}, total: ${totalClients})`
   );

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { frSchema } from "./aztec/utils.js";
-import { ChicmozL2Block, ChicmozL2PendingTx } from "./index.js";
+import { ChicmozL2Block, ChicmozL2PendingTx, chicmozL2BlockSchema } from "./index.js";
 
 export const hexStringSchema = z.custom<`0x${string}`>(
   (value) => {
@@ -29,7 +29,26 @@ export const aztecAddressSchema = frSchema;
 
 export type AztecAddress = z.infer<typeof aztecAddressSchema>;
 
-export type WebsocketUpdateMessage = {
+const stringableChicmozL2BlockSchema = z.lazy(() => {
+  return z.object({
+    ...chicmozL2BlockSchema.shape,
+    header: z.object({
+      ...chicmozL2BlockSchema.shape.header.shape,
+      totalFees: z.string(),
+    }),
+  });
+});
+
+export type StringableChicmozL2Block = z.infer<
+  typeof stringableChicmozL2BlockSchema
+>;
+
+export type WebsocketUpdateMessageSender = {
+  block?: StringableChicmozL2Block;
+  txs?: ChicmozL2PendingTx[];
+};
+
+export type WebsocketUpdateMessageReceiver = {
   block?: ChicmozL2Block;
   txs?: ChicmozL2PendingTx[];
 };

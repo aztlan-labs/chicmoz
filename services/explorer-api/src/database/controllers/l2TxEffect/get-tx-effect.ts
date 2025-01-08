@@ -46,7 +46,7 @@ export const getTxEffectNestedByHash = async (
       ...getTableColumns(publicDataWrite),
     })
     .from(publicDataWrite)
-    .innerJoin(txEffect, eq(txEffect.hash, publicDataWrite.txEffectHash))
+    .innerJoin(txEffect, eq(txEffect.txHash, publicDataWrite.txEffectHash))
     .where(eq(publicDataWrite.txEffectHash, txEffectHash))
     .orderBy(asc(publicDataWrite.index))
     .execute();
@@ -158,7 +158,7 @@ const _getTxEffects = async (
 
   const txEffects = await Promise.all(
     dbRes.map(async (txEffect) => {
-      const nestedData = await getTxEffectNestedByHash(txEffect.hash);
+      const nestedData = await getTxEffectNestedByHash(txEffect.txHash);
       return {
         ...txEffect,
         txBirthTimestamp: txEffect.txBirthTimestamp.valueOf(),
@@ -179,7 +179,7 @@ export const getTxEffectByTxHash = async (
 export const getTxEffectByHash = async (
   hash: HexString
 ): Promise<ChicmozL2TxEffectDeluxe | null> => {
-  return getTxEffectDynamicWhere(eq(txEffect.hash, hash));
+  return getTxEffectDynamicWhere(eq(txEffect.txHash, hash));
 };
 
 export const getTxEffectDynamicWhere = async (
@@ -202,7 +202,7 @@ export const getTxEffectDynamicWhere = async (
 
   if (dbRes.length === 0) return null;
 
-  const nestedData = await getTxEffectNestedByHash(dbRes[0].hash);
+  const nestedData = await getTxEffectNestedByHash(dbRes[0].txHash);
 
   return chicmozL2TxEffectDeluxeSchema.parse({
     ...dbRes[0],

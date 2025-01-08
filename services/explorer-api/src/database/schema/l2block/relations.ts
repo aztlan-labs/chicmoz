@@ -165,7 +165,7 @@ export const functionLogsRelations = relations(functionLogs, ({ many }) => ({
 export const txEffectToLogsRelations = relations(txEffectToLogs, ({ one }) => ({
   txEffect: one(txEffect, {
     fields: [txEffectToLogs.txEffectHash],
-    references: [txEffect.hash],
+    references: [txEffect.txHash],
   }),
   log: one(logs, {
     fields: [txEffectToLogs.id],

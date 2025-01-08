@@ -48,7 +48,7 @@ export type ChicmozL2TxEffectDeluxe = z.infer<
 export const chicmozL2BlockLightSchema = z.object({
   ...chicmozL2BlockSchema.shape,
   body: z.object({
-    txEffects: z.array(chicmozL2TxEffectSchema.pick({ hash: true })),
+    txEffects: z.array(chicmozL2TxEffectSchema.pick({ txHash: true })),
   }),
 });
 

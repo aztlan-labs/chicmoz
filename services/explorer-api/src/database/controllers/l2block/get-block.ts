@@ -145,7 +145,7 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2BlockLight[]> =
   for (const result of results) {
     const txEffectsHashes = await db()
       .select({
-        hash: txEffect.hash,
+        txHash: txEffect.txHash,
       })
       .from(txEffect)
       .where(eq(txEffect.bodyId, result.bodyId))
