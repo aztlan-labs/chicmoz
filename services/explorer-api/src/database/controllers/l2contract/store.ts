@@ -12,7 +12,6 @@ import {
   l2UnconstrainedFunction,
 } from "../../../database/schema/l2contract/index.js";
 import { and, eq } from "drizzle-orm";
-import {logger} from "../../../logger.js";
 
 export const storeContractInstance = async (
   instance: ChicmozL2ContractInstanceDeployedEvent
@@ -69,7 +68,6 @@ export const addArtifactJson = async (
   version: number,
   artifactJson: string
 ): Promise<void> => {
-  logger.info(`Adding artifactJson for contractClassId: ${contractClassId}, version: ${version}`);
   await db()
     .update(l2ContractClassRegistered)
     .set({ artifactJson })
