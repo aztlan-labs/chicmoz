@@ -3,6 +3,8 @@ import * as controller from "./controllers/index.js";
 import { paths } from "./paths_and_validation.js";
 import assert from "assert";
 import { logger } from "../../logger.js";
+import bodyParser from "body-parser";
+import {ARTIFACT_BODY_LIMIT} from "../../environment.js";
 
 export const openApiPaths = {
   ...controller.openapi_GET_LATEST_HEIGHT,
@@ -100,7 +102,13 @@ export const init = ({ router }: { router: Router }) => {
   router.get(paths.contractClassUnconstrainedFunctions, controller.GET_L2_CONTRACT_CLASS_UNCONSTRAINED_FUNCTIONS);
   router.get(paths.contractClassUnconstrainedFunction, controller.GET_L2_CONTRACT_CLASS_UNCONSTRAINED_FUNCTION);
 
-  router.post(paths.contractClass, controller.POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT);
+  router.post(
+    paths.contractClass,
+    bodyParser.json({
+      limit: ARTIFACT_BODY_LIMIT
+    }),
+    controller.POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT
+  );
 
   router.get(paths.contractInstancesByBlockHash, controller.GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH);
   router.get(paths.contractInstancesByContractClassId, controller.GET_L2_CONTRACT_INSTANCES_BY_CONTRACT_CLASS_ID);

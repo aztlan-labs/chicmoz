@@ -3,8 +3,12 @@ import {
   loadContractArtifact,
   type NoirCompiledContract,
 } from "@aztec/aztec.js";
+import { chicmozL2ContractClassRegisteredEventSchema } from "@chicmoz-pkg/types";
 import asyncHandler from "express-async-handler";
+import { getCache } from "../../../cache/index.js";
 import { controllers as db } from "../../../database/index.js";
+import { CACHE_TTL_SECONDS } from "../../../environment.js";
+import { logger } from "../../../logger.js";
 import {
   getContractClassesByClassIdSchema,
   getContractClassSchema,
@@ -15,7 +19,6 @@ import {
   contractClassResponseArray,
   dbWrapper,
 } from "./utils/index.js";
-import { chicmozL2ContractClassRegisteredEventSchema } from "@chicmoz-pkg/types";
 
 export const openapi_GET_L2_REGISTERED_CONTRACT_CLASS = {
   "/l2/contract-classes/{classId}/versions/{version}": {
@@ -160,8 +163,14 @@ export const POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT = asyncHandler(
     const contractClass = chicmozL2ContractClassRegisteredEventSchema.parse(
       JSON.parse(contractClassString)
     );
+    if (contractClass.artifactJson) {
+      res.status(200).send(contractClass);
+      return;
+    }
     const uploadedArtifact = getContractClassFromArtifact(
-      loadContractArtifact(JSON.parse(stringifiedArtifactJson) as unknown as NoirCompiledContract)
+      loadContractArtifact(
+        JSON.parse(stringifiedArtifactJson) as unknown as NoirCompiledContract
+      )
     );
     const isMatchingByteCode = uploadedArtifact.packedBytecode.equals(
       contractClass.packedBytecode
@@ -171,7 +180,23 @@ export const POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT = asyncHandler(
       ...contractClass,
       artifactJson: stringifiedArtifactJson,
     };
-    await db.l2Contract.addArtifactJson(contractClass.contractClassId, contractClass.version, stringifiedArtifactJson);
+    getCache()
+      .set(
+        ["l2", "contract-classes", classId, version].join("-"),
+        JSON.stringify(completeContractClass),
+        {
+          EX: CACHE_TTL_SECONDS,
+        }
+      )
+      .catch((err) => {
+        logger.warn(`Failed to cache contract class: ${err}`);
+      });
+    await db.l2Contract.addArtifactJson(
+      contractClass.contractClassId,
+      contractClass.version,
+      stringifiedArtifactJson
+    );
+    // TODO: update cache
     res.status(200).send(completeContractClass);
   }
 );

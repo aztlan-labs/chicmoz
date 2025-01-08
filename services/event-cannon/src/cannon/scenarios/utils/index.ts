@@ -229,7 +229,7 @@ export const registerContractClassArtifact = async (
   });
 
   const sizeInMB = Buffer.byteLength(postData) / 1000 ** 2;
-  if (sizeInMB > 1) {
+  if (sizeInMB > 10) {
     logger.warn(
       `🚨📜 ${contractLoggingName} Artifact is too large to register in explorer-api: ${url.href} (byte length: ${sizeInMB} MB)`
     );
