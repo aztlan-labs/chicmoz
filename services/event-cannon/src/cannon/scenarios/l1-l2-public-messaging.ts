@@ -15,6 +15,7 @@ import {
   deployContract,
   logAndWaitForTx,
   publicDeployAccounts,
+  registerContractClassArtifact,
 } from "./utils/index.js";
 import {
   createPublicClient,
@@ -24,9 +25,7 @@ import {
 } from "viem";
 import { mnemonicToAccount } from "viem/accounts";
 import { foundry } from "viem/chains";
-import {
-  ETHEREUM_RPC_URL,
-} from "../../environment.js";
+import { ETHEREUM_RPC_URL } from "../../environment.js";
 import {
   RollupAbi,
   TestERC20Abi,
@@ -36,7 +35,9 @@ import {
 } from "@aztec/l1-artifacts";
 import assert from "assert";
 import { TokenContract } from "@aztec/noir-contracts.js/Token";
+import * as tokenContractArtifactJson from "@aztec/noir-contracts.js/artifacts/token_contract-Token" assert { type: "json" };
 import { TokenBridgeContract } from "@aztec/noir-contracts.js/TokenBridge";
+import * as tokenBridgeContractArtifactJson from "@aztec/noir-contracts.js/artifacts/token_bridge_contract-TokenBridge" assert { type: "json" };
 
 const MNEMONIC = "test test test test test test test test test test test junk";
 const TOKEN_NAME = "TokenName";
@@ -95,8 +96,10 @@ export const run = async () => {
   });
 
   const owner = wallet.getAddress();
+
+  const tokenContractLoggingName = "Token Contract";
   const token = await deployContract({
-    contractLoggingName: "Token Contract",
+    contractLoggingName: tokenContractLoggingName,
     deployFn: (): DeploySentTx<TokenContract> => {
       return TokenContract.deploy(
         wallet,
@@ -109,8 +112,18 @@ export const run = async () => {
     node: getAztecNodeClient(),
   });
 
+  registerContractClassArtifact(
+    tokenContractLoggingName,
+    tokenContractArtifactJson,
+    token.instance.contractClassId.toString(),
+    token.instance.version
+  ).catch((err) => {
+    logger.error(err);
+  });
+
+  const tokenBridgeContractLoggingName = "Token Bridge Contract";
   const bridge = await deployContract({
-    contractLoggingName: "Token Bridge Contract",
+    contractLoggingName: tokenBridgeContractLoggingName,
     deployFn: (): DeploySentTx<TokenBridgeContract> => {
       return TokenBridgeContract.deploy(
         wallet,
@@ -119,6 +132,15 @@ export const run = async () => {
       ).send();
     },
     node: getAztecNodeClient(),
+  });
+
+  registerContractClassArtifact(
+    tokenBridgeContractLoggingName,
+    tokenBridgeContractArtifactJson,
+    bridge.instance.contractClassId.toString(),
+    bridge.instance.version
+  ).catch((err) => {
+    logger.error(err);
   });
 
   if ((await token.methods.get_admin().simulate()) !== owner.toBigInt())

@@ -1,8 +1,13 @@
 import { Contract, DeploySentTx, waitForPXE } from "@aztec/aztec.js";
 import { logger } from "../../logger.js";
 import { getAztecNodeClient, getPxe, getWallets } from "../pxe.js";
-import { deployContract, logAndWaitForTx } from "./utils/index.js";
+import {
+  deployContract,
+  logAndWaitForTx,
+  registerContractClassArtifact,
+} from "./utils/index.js";
 import { TokenContract } from "@aztec/noir-contracts.js/Token";
+import * as tokenContractArtifactJson from "@aztec/noir-contracts.js/artifacts/token_contract-Token" assert { type: "json" };
 
 export async function run() {
   logger.info("===== TOKEN CONTRACT =====");
@@ -13,8 +18,9 @@ export async function run() {
   const deployerWallet = namedWallets.alice;
   const tokenAdmin = namedWallets.alice.getAddress();
 
+  const contractLoggingName = "Token Contract";
   const tokenContract = await deployContract({
-    contractLoggingName: "Token Contract",
+    contractLoggingName,
     deployFn: (): DeploySentTx<TokenContract> => {
       return TokenContract.deploy(
         deployerWallet,
@@ -25,6 +31,15 @@ export async function run() {
       ).send();
     },
     node: getAztecNodeClient(),
+  });
+
+  registerContractClassArtifact(
+    contractLoggingName,
+    tokenContractArtifactJson,
+    tokenContract.instance.contractClassId.toString(),
+    tokenContract.instance.version
+  ).catch((err) => {
+    logger.error(err);
   });
 
   await Promise.all([

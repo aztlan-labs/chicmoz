@@ -17,13 +17,13 @@ export async function init() {
 export const start = async () => {
   logger.info("Starting Cannon...");
   const scenariosToRun = [
-    //scenarios.deploySimpleDefaultAccount,
-    //scenarios.deployAndInteractTokenContract,
-    //scenarios.deployAndInteractFunctionsVote,
-    //scenarios.deploySimpleContract,
+    scenarios.deploySimpleDefaultAccount,
+    scenarios.deployAndInteractTokenContract,
+    scenarios.deployAndInteractFunctionsVote,
+    scenarios.deploySimpleContract,
     scenarios.deploySimpleLog,
-    //scenarios.l1L2PublicMessaging,
-    //scenarios.l1L2PrivateMessaging,
+    scenarios.l1L2PublicMessaging,
+    scenarios.l1L2PrivateMessaging,
   ] as (() => Promise<void>)[];
   for (const fn of scenariosToRun) await fn();
 };

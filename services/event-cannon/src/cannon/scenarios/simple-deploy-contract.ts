@@ -1,9 +1,12 @@
 import { DeploySentTx, waitForPXE } from "@aztec/aztec.js";
 import { logger } from "../../logger.js";
 import { getAztecNodeClient, getPxe, getWallets } from "../pxe.js";
-import { deployContract } from "./utils/index.js";
+import {
+  deployContract,
+  registerContractClassArtifact,
+} from "./utils/index.js";
 import { EasyPrivateVotingContract } from "@aztec/noir-contracts.js/EasyPrivateVoting";
-//import EasyPrivateVotingContractArtifactJson from "@aztec/noir-contracts.js/artifacts/easy_private_voting_contract-EasyPrivateVoting.json" assert { type: "json" };
+import * as contractArtifactJson from "@aztec/noir-contracts.js/artifacts/easy_private_voting_contract-EasyPrivateVoting" assert { type: "json" };
 
 export async function run() {
   logger.info("===== SIMPLE DEPLOY CONTRACT =====");
@@ -19,9 +22,20 @@ export async function run() {
     votingAdmin
   ).send();
 
-  await deployContract({
-    contractLoggingName: "Voting Contract",
+  const contractLoggingName = "Voting Contract";
+
+  const contract = await deployContract({
+    contractLoggingName,
     deployFn: (): DeploySentTx<EasyPrivateVotingContract> => sentTx,
     node: getAztecNodeClient(),
+  });
+
+  registerContractClassArtifact(
+    contractLoggingName,
+    contractArtifactJson,
+    contract.instance.contractClassId.toString(),
+    contract.instance.version
+  ).catch((err) => {
+    logger.error(err);
   });
 }

@@ -215,7 +215,8 @@ export const registerContractClassArtifact = async (
   contractLoggingName: string,
   artifactJson: object,
   contractClassId: string,
-  version: number
+  version: number,
+  skipSleep = false
 ) => {
   const url = new URL(
     `${EXPLORER_API_URL}/l2/contract-classes/${contractClassId}/versions/${version}`
@@ -237,6 +238,8 @@ export const registerContractClassArtifact = async (
   logger.info(
     `📜 ${contractLoggingName} Trying to register artifact in explorer-api: ${url.href} (byte length: ${sizeInMB} MB)`
   );
+  if (!skipSleep) await new Promise((resolve) => setTimeout(resolve, 1000));
+
   await new Promise((resolve, reject) => {
     const req = request(
       url,
