@@ -1,11 +1,16 @@
 import { Contract, DeploySentTx, Fr, waitForPXE } from "@aztec/aztec.js";
 import { logger } from "../../logger.js";
 import { getAztecNodeClient, getPxe, getWallets } from "../pxe.js";
-import { deployContract, logAndWaitForTx } from "./utils/index.js";
+import {
+  deployContract,
+  logAndWaitForTx,
+  registerContractClassArtifact,
+} from "./utils/index.js";
 import {
   EasyPrivateVotingContract,
   EasyPrivateVotingContractArtifact,
 } from "@aztec/noir-contracts.js/EasyPrivateVoting";
+import * as contractArtifactJson from "@aztec/noir-contracts.js/artifacts/easy_private_voting_contract-EasyPrivateVoting" assert { type: "json" };
 
 export async function run() {
   logger.info("===== VOTING CONTRACT =====");
@@ -16,26 +21,35 @@ export async function run() {
   const deployerWallet = namedWallets.alice;
   const votingAdmin = namedWallets.alice.getAddress();
 
-  const votingContractDeployer = await deployContract({
-    contractLoggingName: "Voting Contract",
+  const contractLoggingName = "Voting Contract";
+  const contract = await deployContract({
+    contractLoggingName,
     deployFn: (): DeploySentTx<EasyPrivateVotingContract> =>
       EasyPrivateVotingContract.deploy(deployerWallet, votingAdmin).send(),
     broadcastWithWallet: deployerWallet, // NOTE: comment this out to not broadcast
     node: getAztecNodeClient(),
   });
+  registerContractClassArtifact(
+    contractLoggingName,
+    contractArtifactJson,
+    contract.instance.contractClassId.toString(),
+    contract.instance.version
+  ).catch((err) => {
+    logger.error(err);
+  });
 
   const votingContractAlice = await Contract.at(
-    votingContractDeployer.address,
+    contract.address,
     EasyPrivateVotingContractArtifact,
     namedWallets.alice
   );
   const votingContractBob = await Contract.at(
-    votingContractDeployer.address,
+    contract.address,
     EasyPrivateVotingContractArtifact,
     namedWallets.bob
   );
   const votingContractCharlie = await Contract.at(
-    votingContractDeployer.address,
+    contract.address,
     EasyPrivateVotingContractArtifact,
     namedWallets.charlie
   );
@@ -58,10 +72,10 @@ export async function run() {
     ),
   ]);
 
-  const votesA = (await votingContractDeployer.methods
+  const votesA = (await contract.methods
     .get_vote(candidateA)
     .simulate()) as bigint;
-  const votesB = (await votingContractDeployer.methods
+  const votesB = (await contract.methods
     .get_vote(candidateB)
     .simulate()) as bigint;
 

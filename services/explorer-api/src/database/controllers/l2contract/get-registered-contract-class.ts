@@ -2,7 +2,7 @@ import {
   chicmozL2ContractClassRegisteredEventSchema,
   type ChicmozL2ContractClassRegisteredEvent,
 } from "@chicmoz-pkg/types";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, getTableColumns } from "drizzle-orm";
 import { DB_MAX_CONTRACTS } from "../../../environment.js";
 import { getDb as db } from "../../../database/index.js";
 import { l2ContractClassRegistered } from "../../schema/l2contract/index.js";
@@ -32,14 +32,7 @@ export const getL2RegisteredContractClasses = async (
   const limit = version ? 1 : DB_MAX_CONTRACTS;
 
   const result = await db()
-    .select({
-      blockHash: l2ContractClassRegistered.blockHash,
-      contractClassId: l2ContractClassRegistered.contractClassId,
-      version: l2ContractClassRegistered.version,
-      artifactHash: l2ContractClassRegistered.artifactHash,
-      privateFunctionsRoot: l2ContractClassRegistered.privateFunctionsRoot,
-      packedBytecode: l2ContractClassRegistered.packedBytecode,
-    })
+    .select(getTableColumns(l2ContractClassRegistered))
     .from(l2ContractClassRegistered)
     .where(whereQuery)
     .limit(limit)

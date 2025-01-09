@@ -11,6 +11,7 @@ import {
   l2PrivateFunction,
   l2UnconstrainedFunction,
 } from "../../../database/schema/l2contract/index.js";
+import { and, eq } from "drizzle-orm";
 
 export const storeContractInstance = async (
   instance: ChicmozL2ContractInstanceDeployedEvent
@@ -60,6 +61,23 @@ export const storeContractClass = async (
     .values({
       ...contractClass,
     });
+};
+
+export const addArtifactJson = async (
+  contractClassId: string,
+  version: number,
+  artifactJson: string
+): Promise<void> => {
+  await db()
+    .update(l2ContractClassRegistered)
+    .set({ artifactJson })
+    .where(
+      and(
+        eq(l2ContractClassRegistered.contractClassId, contractClassId),
+        eq(l2ContractClassRegistered.version, version)
+      )
+    )
+    .execute();
 };
 
 export const storePrivateFunction = async (

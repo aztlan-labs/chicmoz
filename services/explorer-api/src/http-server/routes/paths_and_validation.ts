@@ -116,16 +116,27 @@ export const getContractClassesByClassIdSchema = z.object({
   }),
 });
 
-export const getContractClassPrivateFunctionsSchema = getContractClassesByClassIdSchema;
+export const getContractClassPrivateFunctionsSchema =
+  getContractClassesByClassIdSchema;
 export const getContractClassPrivateFunctionSchema = z.object({
   params: z.object({
     [classId]: hexStringSchema,
     [functionSelector]: z.coerce.number().nonnegative(),
   }),
 });
-export const getContractClassUnconstrainedFunctionsSchema = getContractClassPrivateFunctionsSchema;
-export const getContractClassUnconstrainedFunctionSchema = getContractClassPrivateFunctionSchema;
+export const getContractClassUnconstrainedFunctionsSchema =
+  getContractClassPrivateFunctionsSchema;
+export const getContractClassUnconstrainedFunctionSchema =
+  getContractClassPrivateFunctionSchema;
 
+export const postContrctClassArtifactSchema = z.lazy(() => {
+  return z.object({
+    ...getContractClassSchema.shape,
+    body: z.object({
+      stringifiedArtifactJson: z.string(),
+    }),
+  });
+});
 export const getContractInstancesByContractClassIdSchema =
   getContractClassesByClassIdSchema;
 

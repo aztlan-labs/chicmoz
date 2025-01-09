@@ -1,0 +1,17 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+metadata:
+  name: chicmoz
+deploy:
+  kubectl:
+    flags:
+      apply: ["--force"]
+manifests:
+  rawYaml:
+    - k8s/local/common/namespace.yaml
+    - k8s/local/aztec-sandbox-node/ingress.yaml
+    - k8s/local/aztec-sandbox-node/deployment.yaml
+    - k8s/local/aztec-sandbox-node/service.yaml
+    - k8s/local/anvil-ethereum-node/ingress.yaml
+    - k8s/local/anvil-ethereum-node/deployment.yaml
+    - k8s/local/anvil-ethereum-node/service.yaml

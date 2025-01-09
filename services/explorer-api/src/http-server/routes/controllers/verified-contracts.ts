@@ -1,10 +1,10 @@
 import { RequestHandler } from "express";
 import { VERIFIED_CONTRACT_ADDRESSES } from "../../../environment.js";
+import { getVerifiedContractSchema } from "../paths_and_validation.js";
 import {
   verifiedContractResponse,
   verifiedContractResponseArray,
 } from "./utils/open-api-responses.js";
-import { getVerifiedContractSchema } from "../paths_and_validation.js";
 
 export const openapi_GET_L2_VERIFIED_CONTRACTS = {
   "/l2/verified-contracts": {

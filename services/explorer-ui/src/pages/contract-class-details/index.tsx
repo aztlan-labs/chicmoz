@@ -222,6 +222,9 @@ export const ContractClassDetails: FC = () => {
                 )}
               </div>
             )}
+          {
+            // TODO: add artifactJson
+          }
         </div>
       </div>
     </div>

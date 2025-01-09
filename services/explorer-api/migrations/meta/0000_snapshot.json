@@ -1,5 +1,5 @@
 {
-  "id": "d0b3729c-fa2b-4e34-bf10-58b2a86b5276",
+  "id": "e05f0e53-f351-4052-989c-309de631bad5",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1053,6 +1053,12 @@
           "type": "bytea",
           "primaryKey": false,
           "notNull": true
+        },
+        "artifact_json": {
+          "name": "artifact_json",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
