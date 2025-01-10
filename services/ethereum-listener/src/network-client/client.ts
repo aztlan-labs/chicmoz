@@ -135,7 +135,9 @@ const watchContractEvents = ({
   cb: (event: Log) => Promise<unknown>;
 }) => {
   return publicClient.watchContractEvent({
-    address,
+    // TODO: fix these type-casts in a better way
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+    address: address as `0x${string}`,
     abi,
     onLogs: (logs) => {
       for (const log of logs) {
@@ -201,32 +203,35 @@ export const queryStakingStateAndEmitUpdates = async () => {
   // TODO: this entire function should be replaced with a watch on the contract (and some initial state query)
   if (!l1Contracts) throw new Error("Contracts not initialized");
   const attesterCount = await publicClient.readContract({
-    address: l1Contracts.rollup.address,
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+    address: l1Contracts.rollup.address as `0x${string}`,
     abi: RollupAbi,
     functionName: "getActiveAttesterCount",
   });
   logger.info(`Active attester count: ${attesterCount.toString()}`);
   if (attesterCount > 0) {
-    // TODO: this should be a loop over all attesters
-    //for (let i = 0; i < attesterCount; i++) {
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < attesterCount; i++) {
       const attester = await publicClient.readContract({
-        address: l1Contracts.rollup.address,
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+        address: l1Contracts.rollup.address as `0x${string}`,
         abi: RollupAbi,
         functionName: "getAttesterAtIndex",
         args: [BigInt(i)],
       });
       const attesterInfo = await publicClient.readContract({
-        address: l1Contracts.rollup.address,
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+        address: l1Contracts.rollup.address as `0x${string}`,
         abi: RollupAbi,
         functionName: "getInfo",
         args: [attester],
       });
       logger.info(`Attester ${i}: ${json(attesterInfo)}`);
-      await emit.l1Validator(chicmozL1L2ValidatorSchema.parse({
-        ...attesterInfo,
-        attester,
-      }));
+      await emit.l1Validator(
+        chicmozL1L2ValidatorSchema.parse({
+          ...attesterInfo,
+          attester,
+        })
+      );
     }
   }
 };

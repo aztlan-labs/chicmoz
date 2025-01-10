@@ -7,6 +7,8 @@ export const l1L2ValidatorTable = pgTable("l1_l2_validator", {
   firstSeenAt: timestamp("first_seen_at").notNull(),
 });
 
+// TODO: is it better to have block-height instead of timestamp for all below?
+
 export const l1L2ValidatorStakeTable = pgTable(
   "l1_l2_validator_stake",
   {

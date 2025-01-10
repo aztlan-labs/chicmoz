@@ -55,7 +55,18 @@ async function getL1L2ValidatorDynamicWhere(
       eq(l1L2ValidatorTable.attester, l1L2ValidatorProposerTable.attesterAddress)
     )
     .where(whereMatcher)
-    .groupBy(l1L2ValidatorTable.attester)
+    .groupBy(
+      l1L2ValidatorTable.attester,
+      l1L2ValidatorStakeTable.stake,
+      l1L2ValidatorStakeTable.timestamp,
+      l1L2ValidatorStatusTable.status,
+      l1L2ValidatorStatusTable.timestamp,
+      l1L2ValidatorWithdrawerTable.withdrawer,
+      l1L2ValidatorWithdrawerTable.timestamp,
+      l1L2ValidatorProposerTable.proposer,
+      l1L2ValidatorProposerTable.timestamp,
+      ...Object.values(getTableColumns(l1L2ValidatorTable))
+    )
     .orderBy(desc(sql`COALESCE(
       ${l1L2ValidatorStakeTable.timestamp},
       ${l1L2ValidatorStatusTable.timestamp},
