@@ -1,4 +1,9 @@
+import { generateSchema } from "@anatine/zod-openapi";
+import {
+  ethAddressSchema,
+} from "@chicmoz-pkg/types";
 import asyncHandler from "express-async-handler";
+import { z } from "zod";
 import { controllers as db } from "../../../database/index.js";
 import { getL1L2ValidatorSchema } from "../paths_and_validation.js";
 import {
@@ -7,9 +12,6 @@ import {
   l1L2ValidatorResponse,
   l1L2ValidatorResponseArray,
 } from "./utils/index.js";
-import { generateSchema } from "@anatine/zod-openapi";
-import { ethAddressSchema } from "@chicmoz-pkg/types";
-import { z } from "zod";
 
 export const openapi_GET_L1_L2_VALIDATORS = {
   "/l1/l2-validators": {

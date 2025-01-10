@@ -11,9 +11,17 @@ import {
   classId,
   version,
   functionSelector,
+  getL1L2ValidatorSchema,
 } from "../paths_and_validation.js";
 import { NODE_ENV, PUBLIC_API_KEY } from "../../../environment.js";
 import { getCache } from "../../../cache/index.js";
+import { dbWrapper } from "./utils/index.js";
+import {
+  L1L2ValidatorStatus,
+  chicmozL1L2ValidatorHistorySchema,
+  chicmozL1L2ValidatorSchema,
+} from "@chicmoz-pkg/types";
+import { logger } from "../../../logger.js";
 
 const SUB_PATH = `/v1/${PUBLIC_API_KEY}`;
 
@@ -29,8 +37,10 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
     await db.signOfLife.getABlockWithContractInstances();
   const { privateFunction, unconstrainedFunction } =
     await db.signOfLife.getL2ContractFunctions();
-  const somePrivateLogsTxEffects = await db.signOfLife.getSomeTxEffectWithPrivateLogs();
-  const someUnencryptedLogsTxEffects = await db.signOfLife.getSomeTxEffectWithUnencryptedLogs();
+  const somePrivateLogsTxEffects =
+    await db.signOfLife.getSomeTxEffectWithPrivateLogs();
+  const someUnencryptedLogsTxEffects =
+    await db.signOfLife.getSomeTxEffectWithUnencryptedLogs();
   const r = [paths.latestHeight, paths.latestBlock, `${paths.blocks}?from=0`];
   const searchRoutes = [];
 
@@ -131,7 +141,10 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
     r.push(
       paths.contractClassPrivateFunction
         .replace(`:${classId}`, privateFunction.classId)
-        .replace(`:${functionSelector}`, privateFunction.functionSelector.toString())
+        .replace(
+          `:${functionSelector}`,
+          privateFunction.functionSelector.toString()
+        )
     );
   }
   if (unconstrainedFunction) {
@@ -144,7 +157,10 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
     r.push(
       paths.contractClassUnconstrainedFunction
         .replace(`:${classId}`, unconstrainedFunction.classId)
-        .replace(`:${functionSelector}`, unconstrainedFunction.functionSelector.toString())
+        .replace(
+          `:${functionSelector}`,
+          unconstrainedFunction.functionSelector.toString()
+        )
     );
   } else {
     r.push(paths.contractClassPrivateFunctions + "NOT FOUND");
@@ -177,13 +193,19 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
       <h3>Private logs</h3>
       <ul>
         ${somePrivateLogsTxEffects
-          ?.map((hash) => `<li><a href=localhost:5173/tx-effects/${hash}>${hash}</a></li>`)
+          ?.map(
+            (hash) =>
+              `<li><a href=localhost:5173/tx-effects/${hash}>${hash}</a></li>`
+          )
           .join("")}
       </ul>
       <h3>Unencrypted logs</h3>
       <ul>
         ${someUnencryptedLogsTxEffects
-          ?.map((hash) => `<li><a href=localhost:5173/tx-effects/${hash}>${hash}</a></li>`)
+          ?.map(
+            (hash) =>
+              `<li><a href=localhost:5173/tx-effects/${hash}>${hash}</a></li>`
+          )
           .join("")}
       </ul>
       <br>
@@ -218,3 +240,91 @@ export const GET_AZTEC_CHAIN_CONNECTION = asyncHandler(async (_req, res) => {
   }
   res.json(chainConnection);
 });
+
+const intervals = [
+  { label: "day", seconds: 86400, shortLabel: "day" },
+  { label: "hour", seconds: 3600, shortLabel: "hr" },
+  { label: "minute", seconds: 60, shortLabel: "min" },
+  { label: "second", seconds: 1, shortLabel: "sec" },
+];
+
+export const formatDuration = (durationSeconds: number, short?: boolean) => {
+  for (const interval of intervals) {
+    const count = Math.floor(durationSeconds / interval.seconds);
+    if (count >= 1) {
+      const label = short ? interval.shortLabel : interval.label;
+      return `${count} ${label}${count > 1 ? "s" : ""}`;
+    }
+  }
+  return "just now";
+};
+
+export const formatTimeSince = (unixTimestamp: number | null, short = true) => {
+  if (unixTimestamp === null) return "no timestamp";
+  const now = new Date().getTime();
+  const secondsSince = Math.round((now - unixTimestamp) / 1000);
+  const duration = formatDuration(secondsSince, short);
+  if (duration === "just now") return duration;
+  return `${duration} ago`;
+};
+
+export const GET_L1_L2_VALIDATOR_STATUS_TEXT = asyncHandler(
+  async (req, res) => {
+    const { attesterAddress } = getL1L2ValidatorSchema.parse(req).params;
+    const validator = await dbWrapper.get(
+      ["l1", "l2-validators", attesterAddress],
+      () => db.l1.getL1L2Validator(attesterAddress)
+    );
+    const history = await dbWrapper.get(
+      ["l1", "l2-validators", attesterAddress, "history"],
+      () => db.l1.getL1L2ValidatorHistory(attesterAddress)
+    );
+    logger.info(JSON.stringify(JSON.parse(history), null, 2));
+    const formattedHistory = chicmozL1L2ValidatorHistorySchema
+      .parse(JSON.parse(history))
+      .sort(
+        ([timestampA], [timestampB]) =>
+          timestampB.getTime() - timestampA.getTime()
+      )
+      .map(
+        ([timestamp, keyChanged, newValue]) =>
+          `<pre>${formatTimeSince(timestamp.getTime()).padEnd(
+            20
+          )}<b>${keyChanged.padEnd(12)}</b>${newValue.padEnd(
+            50
+          )} ${timestamp.toISOString()}</pre>`
+      );
+
+    const validatorStatus = chicmozL1L2ValidatorSchema.parse(
+      JSON.parse(validator)
+    );
+    const validatorStatusText = `<pre>
+    <b>Status:</b>           ${L1L2ValidatorStatus[validatorStatus.status]}
+    <b>Attester address:</b> ${validatorStatus.attester}
+    <b>Withdrawer:</b>       ${validatorStatus.withdrawer}
+    <b>Proposer:</b>         ${validatorStatus.proposer}
+    <b>Stake:</b>            ${validatorStatus.stake}
+    <b>First seen at:</b>    ${validatorStatus.firstSeenAt.toISOString()}
+    <b>Latest change at:</b> ${validatorStatus.latestSeenChangeAt.toISOString()}
+    </pre>`;
+
+    const html = `
+    <html>
+      <head>
+        <title>Aztec Validator Status</title>
+      </head>
+      <body>
+       <h1>Validator status for ${attesterAddress}</h1>
+       <pre>Avaiable statuses: ${[0, 1, 2, 3]
+         .map((status) => L1L2ValidatorStatus[status])
+         .join(", ")}</pre>
+       <h2>Current status</h2>
+        ${validatorStatusText}
+       <h2>History</h2>
+        ${formattedHistory.join("")}
+      </body>
+    </html>
+    `;
+    res.send(html);
+  }
+);

@@ -58,7 +58,7 @@ export async function getL1L2ValidatorHistory(
     new Date(timestamp),
     keyChanged,
     keyChanged === "status"
-      ? (Number(newValue) as unknown as keyof typeof L1L2ValidatorStatus) || newValue
+      ? L1L2ValidatorStatus[newValue as keyof typeof L1L2ValidatorStatus].toString()
       : newValue,
   ]);
 }
