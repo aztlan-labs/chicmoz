@@ -6,11 +6,13 @@ import {
   uuid,
   bigint,
   PgColumnBuilderBase,
+  numeric,
 } from "drizzle-orm/pg-core";
 import { ColumnBuilderBaseConfig, ColumnDataType } from "drizzle-orm";
 
-export const generateFrColumn = (name: string) => varchar(name, { length: 66 });
+export const generateFrColumn = (name: string) => numeric(name, { precision: 77, scale: 0 });
 
+// NOTE: this column is used for values that are stored as Fr on chain, but really they are small numbers e.g. indexes, enums
 export const generateFrNumberColumn = (name: string) =>
   bigint(name, { mode: "number" });
 

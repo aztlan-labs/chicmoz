@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { frSchema } from "./aztec/utils.js";
-import { ChicmozL2Block, ChicmozL2PendingTx, chicmozL2BlockSchema } from "./index.js";
+import {
+  ChicmozL2Block,
+  ChicmozL2PendingTx,
+  chicmozL2BlockSchema,
+} from "./index.js";
 
 export const hexStringSchema = z.custom<`0x${string}`>(
   (value) => {
@@ -13,15 +17,35 @@ export const hexStringSchema = z.custom<`0x${string}`>(
 
 export type HexString = z.infer<typeof hexStringSchema>;
 
-export const ethAddressSchema = z.custom<`0x${string}`>((value) => {
-  if (!value) return false;
-  if (!(value as string).length) return false;
-  if (!(value as string).match) return false;
-  return (
-    (value as string).length === 42 &&
-    (value as string).match(/^0x[0-9a-fA-F]+$/) !== null
-  );
-});
+export const ethAddressSchema = z.custom<`0x${string}`>(
+  (value) => {
+    if (!value) throw new Error(`ethAddress is required, got ${JSON.stringify(value)}`);
+
+    if (typeof value !== "string")
+      throw new Error(`ethAddress must be a string, got ${typeof value}`);
+
+    if (value.length === 0) throw new Error("ethAddress must not be empty");
+
+    if (!value.startsWith("0x"))
+      throw new Error(`ethAddress must start with '0x', got ${value}`);
+
+    if (value.length !== 42) {
+      throw new Error(
+        `ethAddress must be 42 characters long (including '0x'). Got ${value}`
+      );
+    }
+
+    if (!value.match(/^0x[0-9a-fA-F]+$/)) {
+      throw new Error(
+        `ethAddress must be a hex string. Got ${value}`
+      );
+    }
+    return true;
+  },
+  {
+    message: "Invalid ethAddress format",
+  }
+);
 export type EthAddress = z.infer<typeof ethAddressSchema>;
 
 // NOTE: it's technically not the same as Fr but practically it is

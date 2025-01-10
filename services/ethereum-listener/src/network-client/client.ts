@@ -14,8 +14,9 @@ import {
   FeeJuicePortalAbi,
 } from "@aztec/l1-artifacts";
 import { ConnectedToAztecEvent } from "@chicmoz-pkg/message-registry";
-import { EthAddress } from "@chicmoz-pkg/types";
+import { EthAddress, chicmozL1L2ValidatorSchema } from "@chicmoz-pkg/types";
 import { logger } from "../logger.js";
+import { emit } from "../events/index.js";
 
 type AztecAbi =
   | typeof RollupAbi
@@ -196,7 +197,8 @@ export const watchContractsEvents = () => {
   };
 };
 
-export const queryStakingState = async () => {
+export const queryStakingStateAndEmitUpdates = async () => {
+  // TODO: this entire function should be replaced with a watch on the contract (and some initial state query)
   if (!l1Contracts) throw new Error("Contracts not initialized");
   const attesterCount = await publicClient.readContract({
     address: l1Contracts.rollup.address,
@@ -212,19 +214,17 @@ export const queryStakingState = async () => {
         functionName: "getAttesterAtIndex",
         args: [BigInt(i)],
       });
-      logger.info(`Attester ${i}: ${attester.toString()}`);
       const attesterInfo = await publicClient.readContract({
         address: l1Contracts.rollup.address,
         abi: RollupAbi,
         functionName: "getInfo",
         args: [attester],
       });
-      logger.info(
-        `Attester ${i} info: ${JSON.stringify({
-          ...attesterInfo,
-          stake: attesterInfo.stake.toString(),
-        })}`
-      );
+      logger.info(`Attester ${i}: ${json(attesterInfo)}`);
+      await emit.l1Validator(chicmozL1L2ValidatorSchema.parse({
+        ...attesterInfo,
+        attester,
+      }));
     }
   }
 };

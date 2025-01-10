@@ -66,11 +66,11 @@ spec:
             - name: AZTEC_DISABLED
               value: "false"
             - name: AZTEC_GENESIS_CATCHUP
-              value: "true"
+              value: "false"
             - name: AZTEC_LISTEN_FOR_BLOCKS
               value: "true"
             - name: AZTEC_LISTEN_FOR_PENDING_TXS
-              value: "true"
+              value: "false"
             - name: AZTEC_RPC_URL
               valueFrom:
                 secretKeyRef:

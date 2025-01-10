@@ -11,17 +11,17 @@ const validatorSchema = z.object({
   l2Address: aztecAddressSchema,
   feesReceived: z.coerce.bigint(),
   blocksProduced: z.number(),
-  partOfFeesReceived: z.number().optional(),
+  partOfTotalFeesReceived: z.number().optional(),
 });
 
 type Validator = z.infer<typeof validatorSchema>;
 
-const getPartOfFeesReceived = (validators: Validator[]): Validator[] => {
+const getPartOfTotalFeesReceived = (validators: Validator[]): Validator[] => {
   const totalFees = validators.reduce((acc, v) => acc + v.feesReceived, BigInt(0));
   return validators.map((v) => {
     return {
       ...v,
-      partOfFeesReceived: parseFloat((Number(v.feesReceived) / Number(totalFees)).toFixed(2)),
+      partOfTotalFeesReceived: parseFloat((Number(v.feesReceived) / Number(totalFees)).toFixed(2)),
     };
   });
 }
@@ -43,5 +43,5 @@ export const getValidators = async (): Promise<Validator[]> => {
     return validatorSchema.parse(r);
   });
 
-  return getPartOfFeesReceived(validators);
+  return getPartOfTotalFeesReceived(validators);
 };

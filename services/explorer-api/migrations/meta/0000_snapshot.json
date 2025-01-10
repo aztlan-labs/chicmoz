@@ -1,5 +1,5 @@
 {
-  "id": "e05f0e53-f351-4052-989c-309de631bad5",
+  "id": "f033af35-9ee9-40b8-a916-291de7a4053e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -108,7 +108,7 @@
         },
         "root": {
           "name": "root",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": false
         },
@@ -322,13 +322,13 @@
         },
         "leaf_slot": {
           "name": "leaf_slot",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
         "value": {
           "name": "value",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         }
@@ -713,7 +713,7 @@
         },
         "root": {
           "name": "root",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": false
         },
@@ -758,7 +758,7 @@
         },
         "root": {
           "name": "root",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": false
         },
@@ -803,7 +803,7 @@
         },
         "root": {
           "name": "root",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": false
         },
@@ -848,7 +848,7 @@
         },
         "root": {
           "name": "root",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": false
         },
@@ -926,7 +926,7 @@
         },
         "root": {
           "name": "root",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": false
         },
@@ -1026,7 +1026,7 @@
         },
         "contract_class_id": {
           "name": "contract_class_id",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
@@ -1038,13 +1038,13 @@
         },
         "artifact_hash": {
           "name": "artifact_hash",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
         "private_functions_root": {
           "name": "private_functions_root",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
@@ -1112,19 +1112,19 @@
         },
         "salt": {
           "name": "salt",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
         "contract_class_id": {
           "name": "contract_class_id",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
         "initialization_hash": {
           "name": "initialization_hash",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
@@ -1136,13 +1136,13 @@
         },
         "public_keys_master_nullifier_public_key_x": {
           "name": "public_keys_master_nullifier_public_key_x",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
         "public_keys_master_nullifier_public_key_y": {
           "name": "public_keys_master_nullifier_public_key_y",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
@@ -1160,13 +1160,13 @@
         },
         "public_keys_master_incoming_viewing_public_key_x": {
           "name": "public_keys_master_incoming_viewing_public_key_x",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
         "public_keys_master_incoming_viewing_public_key_y": {
           "name": "public_keys_master_incoming_viewing_public_key_y",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
@@ -1184,13 +1184,13 @@
         },
         "public_keys_master_outgoing_viewing_public_key_x": {
           "name": "public_keys_master_outgoing_viewing_public_key_x",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
         "public_keys_master_outgoing_viewing_public_key_y": {
           "name": "public_keys_master_outgoing_viewing_public_key_y",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
@@ -1208,13 +1208,13 @@
         },
         "public_keys_master_tagging_public_key_x": {
           "name": "public_keys_master_tagging_public_key_x",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
         "public_keys_master_tagging_public_key_y": {
           "name": "public_keys_master_tagging_public_key_y",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
@@ -1267,19 +1267,19 @@
       "columns": {
         "contract_class_id": {
           "name": "contract_class_id",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
         "artifact_metadata_hash": {
           "name": "artifact_metadata_hash",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
         "unconstrained_functions_artifact_tree_root": {
           "name": "unconstrained_functions_artifact_tree_root",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
@@ -1315,13 +1315,13 @@
         },
         "private_function_metadata_hash": {
           "name": "private_function_metadata_hash",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
         "private_function_vk_hash": {
           "name": "private_function_vk_hash",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
@@ -1348,19 +1348,19 @@
       "columns": {
         "contract_class_id": {
           "name": "contract_class_id",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
         "artifact_metadata_hash": {
           "name": "artifact_metadata_hash",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
         "private_functions_artifact_tree_root": {
           "name": "private_functions_artifact_tree_root",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
@@ -1384,7 +1384,7 @@
         },
         "unconstrained_function_metadata_hash": {
           "name": "unconstrained_function_metadata_hash",
-          "type": "varchar(66)",
+          "type": "numeric(77, 0)",
           "primaryKey": false,
           "notNull": true
         },
@@ -1406,6 +1406,58 @@
           ]
         }
       },
+      "uniqueConstraints": {}
+    },
+    "public.l1_l2_validator": {
+      "name": "l1_l2_validator",
+      "schema": "",
+      "columns": {
+        "attester": {
+          "name": "attester",
+          "type": "varchar(42)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "stake": {
+          "name": "stake",
+          "type": "numeric(77, 0)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "withdrawer": {
+          "name": "withdrawer",
+          "type": "varchar(42)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "proposer": {
+          "name": "proposer",
+          "type": "varchar(42)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "first_seen_at": {
+          "name": "first_seen_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "latest_seen_change_at": {
+          "name": "latest_seen_change_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }
   },
