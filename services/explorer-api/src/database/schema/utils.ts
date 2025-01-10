@@ -10,9 +10,12 @@ import {
 } from "drizzle-orm/pg-core";
 import { ColumnBuilderBaseConfig, ColumnDataType } from "drizzle-orm";
 
-export const generateFrColumn = (name: string) => numeric(name, { precision: 77, scale: 0 });
+// TODO: this should be changed to be the same as generateUint256Column
+export const generateFrColumn = (name: string) => varchar(name, { length: 66 });
 
-// NOTE: this column is used for values that are stored as Fr on chain, but really they are small numbers e.g. indexes, enums
+export const generateUint256Column = (name: string) => numeric(name, { precision: 77, scale: 0 });
+
+// NOTE: remove this function and replace with generateFrColumn. Beware of summarizing operations etc!
 export const generateFrNumberColumn = (name: string) =>
   bigint(name, { mode: "number" });
 

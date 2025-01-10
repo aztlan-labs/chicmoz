@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS "aztec-chain-connection" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "archive" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"root" numeric(77, 0),
+	"root" varchar(66),
 	"next_available_leaf_index" integer NOT NULL,
 	"block_hash" varchar NOT NULL
 );
@@ -51,8 +51,8 @@ CREATE TABLE IF NOT EXISTS "public_data_write" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"tx_effect_hash" varchar NOT NULL,
 	"index" integer NOT NULL,
-	"leaf_slot" numeric(77, 0) NOT NULL,
-	"value" numeric(77, 0) NOT NULL
+	"leaf_slot" varchar(66) NOT NULL,
+	"value" varchar(66) NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tx_effect" (
@@ -110,28 +110,28 @@ CREATE TABLE IF NOT EXISTS "header" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l1_to_l2_message_tree" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"root" numeric(77, 0),
+	"root" varchar(66),
 	"next_available_leaf_index" integer NOT NULL,
 	"state_id" uuid NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "last_archive" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"root" numeric(77, 0),
+	"root" varchar(66),
 	"next_available_leaf_index" integer NOT NULL,
 	"header_id" uuid NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "note_hash_tree" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"root" numeric(77, 0),
+	"root" varchar(66),
 	"next_available_leaf_index" integer NOT NULL,
 	"state_partial_id" uuid NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "nullifier_tree" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"root" numeric(77, 0),
+	"root" varchar(66),
 	"next_available_leaf_index" integer NOT NULL,
 	"state_partial_id" uuid NOT NULL
 );
@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS "partial" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "public_data_tree" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"root" numeric(77, 0),
+	"root" varchar(66),
 	"next_available_leaf_index" integer NOT NULL,
 	"state_partial_id" uuid NOT NULL
 );
@@ -160,10 +160,10 @@ CREATE TABLE IF NOT EXISTS "tx" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l2_contract_class_registered" (
 	"block_hash" varchar NOT NULL,
-	"contract_class_id" numeric(77, 0) NOT NULL,
+	"contract_class_id" varchar(66) NOT NULL,
 	"version" bigint NOT NULL,
-	"artifact_hash" numeric(77, 0) NOT NULL,
-	"private_functions_root" numeric(77, 0) NOT NULL,
+	"artifact_hash" varchar(66) NOT NULL,
+	"private_functions_root" varchar(66) NOT NULL,
 	"packed_bytecode" "bytea" NOT NULL,
 	"artifact_json" varchar,
 	CONSTRAINT "contract_class_id_version" PRIMARY KEY("contract_class_id","version")
@@ -174,52 +174,52 @@ CREATE TABLE IF NOT EXISTS "l2_contract_instance_deployed" (
 	"block_hash" varchar NOT NULL,
 	"address" varchar(66) NOT NULL,
 	"version" integer NOT NULL,
-	"salt" numeric(77, 0) NOT NULL,
-	"contract_class_id" numeric(77, 0) NOT NULL,
-	"initialization_hash" numeric(77, 0) NOT NULL,
+	"salt" varchar(66) NOT NULL,
+	"contract_class_id" varchar(66) NOT NULL,
+	"initialization_hash" varchar(66) NOT NULL,
 	"deployer" varchar(66) NOT NULL,
-	"public_keys_master_nullifier_public_key_x" numeric(77, 0) NOT NULL,
-	"public_keys_master_nullifier_public_key_y" numeric(77, 0) NOT NULL,
+	"public_keys_master_nullifier_public_key_x" varchar(66) NOT NULL,
+	"public_keys_master_nullifier_public_key_y" varchar(66) NOT NULL,
 	"public_keys_master_nullifier_public_key_is_infinite" boolean NOT NULL,
 	"public_keys_master_nullifier_public_key_kind" varchar NOT NULL,
-	"public_keys_master_incoming_viewing_public_key_x" numeric(77, 0) NOT NULL,
-	"public_keys_master_incoming_viewing_public_key_y" numeric(77, 0) NOT NULL,
+	"public_keys_master_incoming_viewing_public_key_x" varchar(66) NOT NULL,
+	"public_keys_master_incoming_viewing_public_key_y" varchar(66) NOT NULL,
 	"public_keys_master_incoming_viewing_public_key_is_infinite" boolean NOT NULL,
 	"public_keys_master_incoming_viewing_public_key_kind" varchar NOT NULL,
-	"public_keys_master_outgoing_viewing_public_key_x" numeric(77, 0) NOT NULL,
-	"public_keys_master_outgoing_viewing_public_key_y" numeric(77, 0) NOT NULL,
+	"public_keys_master_outgoing_viewing_public_key_x" varchar(66) NOT NULL,
+	"public_keys_master_outgoing_viewing_public_key_y" varchar(66) NOT NULL,
 	"public_keys_master_outgoing_viewing_public_key_is_infinite" boolean NOT NULL,
 	"public_keys_master_outgoing_viewing_public_key_kind" varchar NOT NULL,
-	"public_keys_master_tagging_public_key_x" numeric(77, 0) NOT NULL,
-	"public_keys_master_tagging_public_key_y" numeric(77, 0) NOT NULL,
+	"public_keys_master_tagging_public_key_x" varchar(66) NOT NULL,
+	"public_keys_master_tagging_public_key_y" varchar(66) NOT NULL,
 	"public_keys_master_tagging_public_key_is_infinite" boolean NOT NULL,
 	"public_keys_master_tagging_public_key_kind" varchar NOT NULL,
 	CONSTRAINT "l2_contract_instance_deployed_contract_class_id_address_version_unique" UNIQUE("contract_class_id","address","version")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l2_private_function" (
-	"contract_class_id" numeric(77, 0) NOT NULL,
-	"artifact_metadata_hash" numeric(77, 0) NOT NULL,
-	"unconstrained_functions_artifact_tree_root" numeric(77, 0) NOT NULL,
+	"contract_class_id" varchar(66) NOT NULL,
+	"artifact_metadata_hash" varchar(66) NOT NULL,
+	"unconstrained_functions_artifact_tree_root" varchar(66) NOT NULL,
 	"private_function_tree_sibling_path" jsonb NOT NULL,
 	"private_function_tree_leaf_index" bigint NOT NULL,
 	"artifact_function_tree_sibling_path" jsonb NOT NULL,
 	"artifact_function_tree_leaf_index" bigint NOT NULL,
 	"private_function_selector_value" bigint NOT NULL,
-	"private_function_metadata_hash" numeric(77, 0) NOT NULL,
-	"private_function_vk_hash" numeric(77, 0) NOT NULL,
+	"private_function_metadata_hash" varchar(66) NOT NULL,
+	"private_function_vk_hash" varchar(66) NOT NULL,
 	"private_function_bytecode" "bytea" NOT NULL,
 	CONSTRAINT "private_function_contract_class" PRIMARY KEY("contract_class_id","private_function_selector_value")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l2_unconstrained_function" (
-	"contract_class_id" numeric(77, 0) NOT NULL,
-	"artifact_metadata_hash" numeric(77, 0) NOT NULL,
-	"private_functions_artifact_tree_root" numeric(77, 0) NOT NULL,
+	"contract_class_id" varchar(66) NOT NULL,
+	"artifact_metadata_hash" varchar(66) NOT NULL,
+	"private_functions_artifact_tree_root" varchar(66) NOT NULL,
 	"artifact_function_tree_sibling_path" jsonb NOT NULL,
 	"artifact_function_tree_leaf_index" bigint NOT NULL,
 	"unconstrained_function_selector_value" bigint NOT NULL,
-	"unconstrained_function_metadata_hash" numeric(77, 0) NOT NULL,
+	"unconstrained_function_metadata_hash" varchar(66) NOT NULL,
 	"unconstrained_function_bytecode" "bytea" NOT NULL,
 	CONSTRAINT "unconstrained_function_contract_class" PRIMARY KEY("contract_class_id","unconstrained_function_selector_value")
 );

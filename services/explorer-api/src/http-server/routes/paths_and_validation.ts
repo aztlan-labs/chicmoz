@@ -42,7 +42,7 @@ export const paths = {
   verifiedContract: `/l2/verified-contracts-instances/:${address}`,
   verifiedContracts: "/l2/verified-contract-instances",
 
-  validators: "/l2/validators",
+  feeRecipients: "/l2/fee-recipients",
 
   statsTotalTxEffects: "/l2/stats/total-tx-effects",
   statsTotalTxEffectsLast24h: "/l2/stats/tx-effects-last-24h",
@@ -50,6 +50,8 @@ export const paths = {
   statsTotalContractsLast24h: "/l2/stats/total-contracts-last-24h",
   statsAverageFees: "/l2/stats/average-fees",
   statsAverageBlockTime: "/l2/stats/average-block-time",
+
+  l1l2Validators: "/l1/l2-validators",
 };
 
 export const getBlockByHeightOrHashSchema = z.object({

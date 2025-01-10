@@ -16,7 +16,7 @@ export enum Status {
 
 export const chicmozL1L2ValidatorSchema = z.object({
   attester: ethAddressSchema,
-  stake: z.coerce.bigint().nonnegative(),
+  stake: z.coerce.bigint().nonnegative(), // TODO: this is not Fr but it might as well be. It is a uint256
   withdrawer: ethAddressSchema,
   proposer: ethAddressSchema,
   status: z.nativeEnum(Status),

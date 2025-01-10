@@ -9,6 +9,8 @@ import {
   chicmozL2UnconstrainedFunctionBroadcastedEventSchema,
   chicmozSearchResultsSchema,
   chicmozL2VerifiedContractInstanceDataSchema,
+  chicmozFeeRecipientSchema,
+  chicmozL1L2ValidatorSchema,
 } from "@chicmoz-pkg/types";
 import { generateSchema } from "@anatine/zod-openapi";
 
@@ -27,6 +29,8 @@ const getResponse = (schema: z.ZodType<any, any>) => ({
 
 export const blockResponse = getResponse(chicmozL2BlockLightSchema);
 export const blockResponseArray = getResponse(z.array(chicmozL2BlockLightSchema));
+
+export const feeRecipientResponseArray = getResponse(z.array(chicmozFeeRecipientSchema));
 
 export const txEffectResponse = getResponse(chicmozL2TxEffectDeluxeSchema);
 export const txEffectResponseArray = getResponse(z.array(chicmozL2TxEffectDeluxeSchema));
@@ -50,3 +54,5 @@ export const verifiedContractInstanceResponse = getResponse(chicmozL2VerifiedCon
 export const verifiedContractInstanceResponseArray = getResponse(z.array(chicmozL2VerifiedContractInstanceDataSchema));
 
 export const searchResultResponse = getResponse(chicmozSearchResultsSchema);
+
+export const l1L2ValidatorResponseArray = getResponse(z.array(chicmozL1L2ValidatorSchema));

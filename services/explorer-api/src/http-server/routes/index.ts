@@ -10,7 +10,9 @@ export const openApiPaths = {
   ...controller.openapi_GET_LATEST_HEIGHT,
   ...controller.openapi_GET_LATEST_BLOCK,
   ...controller.openapi_GET_BLOCK,
-  ...controller.openapi_GET_BLOCKS,
+  ...controller.openapi_GET_BLOCKS, // TODO: rename to L2_GET_BLOCKS?
+
+  ...controller.openapi_GET_L2_FEE_RECIPIENTS,
 
   ...controller.openapi_GET_L2_TX_EFFECTS_BY_BLOCK_HEIGHT,
   ...controller.openapi_GET_L2_TX_EFFECT_BY_BLOCK_HEIGHT_AND_INDEX,
@@ -37,7 +39,9 @@ export const openApiPaths = {
   ...controller.openapi_GET_L2_VERIFIED_CONTRACT_INSTANCE,
   ...controller.openapi_GET_L2_VERIFIED_CONTRACT_INSTANCES,
 
-  ...controller.openapi_SEARCH,
+  ...controller.openapi_SEARCH, // TODO: rename to L2_SEARCH?
+
+  ...controller.openapi_GET_L1_L2_VALIDATORS,
 };
 
 const otherPaths = [
@@ -90,6 +94,7 @@ export const init = ({ router }: { router: Router }) => {
   router.get(paths.latestBlock, controller.GET_LATEST_BLOCK);
   router.get(paths.block, controller.GET_BLOCK);
   router.get(paths.blocks, controller.GET_BLOCKS);
+  router.get(paths.feeRecipients, controller.GET_L2_FEE_RECIPIENTS);
 
   router.get(
     paths.txEffectsByBlockHeight,
@@ -155,7 +160,7 @@ export const init = ({ router }: { router: Router }) => {
   router.get(paths.verifiedContract, controller.GET_L2_VERIFIED_CONTRACT_INSTANCE);
   router.get(paths.verifiedContracts, controller.GET_L2_VERIFIED_CONTRACT_INSTANCES);
 
-  router.get(paths.validators, controller.GET_L2_VALIDATORS);
+  router.get(paths.l1l2Validators, controller.GET_L1_L2_VALIDATORS);
 
   router.get(paths.search, controller.L2_SEARCH);
 

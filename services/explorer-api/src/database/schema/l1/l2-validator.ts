@@ -1,9 +1,9 @@
 import { pgTable, smallint, timestamp } from "drizzle-orm/pg-core";
-import { generateEthAddressColumn, generateFrColumn } from "../utils.js";
+import { generateEthAddressColumn, generateUint256Column } from "../utils.js";
 
 export const l1L2ValidatorTable = pgTable("l1_l2_validator", {
   attester: generateEthAddressColumn("attester").primaryKey().notNull(),
-  stake: generateFrColumn("stake").notNull(),
+  stake: generateUint256Column("stake").notNull(),
   withdrawer: generateEthAddressColumn("withdrawer").notNull(),
   proposer: generateEthAddressColumn("proposer").notNull(),
   status: smallint("status").notNull(),
