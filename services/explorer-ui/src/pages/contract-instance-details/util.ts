@@ -40,13 +40,13 @@ export const getContractData = (data: ChicmozL2ContractInstanceDeluxe) => {
       label: "DEPLOYER CONTRACT 🤖",
       value:
         "This is a contract deployed by the hard-coded deployer. This message will only appear in development mode. But linking to verified contracts for good measure.",
-      link: routes.verifiedContracts.route,
+      link: routes.verifiedContractInstances.route,
     });
   }
   return displayData;
 };
 
-export const getVerifiedContractData = (data: ChicmozL2ContractInstanceDeluxe) => {
+export const getVerifiedContractInstanceData = (data: ChicmozL2ContractInstanceDeluxe) => {
   return data.verifiedInfo
     ? [
         {

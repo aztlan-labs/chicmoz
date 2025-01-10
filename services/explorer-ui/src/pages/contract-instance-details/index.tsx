@@ -4,7 +4,7 @@ import { useParams } from "@tanstack/react-router";
 import { type FC } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { useContractInstance } from "~/hooks/";
-import { getContractData, getVerifiedContractData } from "./util";
+import { getContractData, getVerifiedContractInstanceData } from "./util";
 import { routes } from "~/routes/__root";
 import { CustomTooltip } from "~/components/custom-tooltip";
 
@@ -23,7 +23,7 @@ export const ContractInstanceDetails: FC = () => {
   if (error) return <div>Error</div>;
   if (!contractInstanceDetails) return <div>No data</div>;
 
-  const verfiedContractData = getVerifiedContractData(contractInstanceDetails);
+  const verfiedData = getVerifiedContractInstanceData(contractInstanceDetails);
 
   return (
     <div className="mx-auto px-[70px] max-w-[1440px]">
@@ -42,14 +42,14 @@ export const ContractInstanceDetails: FC = () => {
             </div>
           </div>
         </div>
-        {verfiedContractData && (
+        {verfiedData && (
           <div className="mt-20">
             <div>
               <h2 className="flex items-center gap-2">
-                Verified contract data
+                Verified contract instance data
                 <div className="relative group">
-                  <Link to={routes.verifiedContracts.route}>
-                    <CustomTooltip content="Read more about verified contracts here">
+                  <Link to={routes.verifiedContractInstances.route}>
+                    <CustomTooltip content="Read more about verified contract instances here">
                       <CheckCircledIcon className="size-10 stroke-lime-700" />
                     </CustomTooltip>
                   </Link>
@@ -58,7 +58,7 @@ export const ContractInstanceDetails: FC = () => {
             </div>
             <div className="flex flex-col gap-4 mt-8">
               <div className="bg-white rounded-lg shadow-md p-4">
-                <KeyValueDisplay data={verfiedContractData} />
+                <KeyValueDisplay data={verfiedData} />
               </div>
             </div>
           </div>
