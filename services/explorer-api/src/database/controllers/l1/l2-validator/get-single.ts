@@ -3,14 +3,14 @@ import {
   EthAddress,
   chicmozL1L2ValidatorSchema,
 } from "@chicmoz-pkg/types";
-import { SQL, desc, eq, getTableColumns } from "drizzle-orm";
+import { SQL, eq, desc, getTableColumns, max, sql } from "drizzle-orm";
 import { getDb as db } from "../../../index.js";
 import {
-  l1L2ValidatorProposerTable,
+  l1L2ValidatorTable,
   l1L2ValidatorStakeTable,
   l1L2ValidatorStatusTable,
-  l1L2ValidatorTable,
   l1L2ValidatorWithdrawerTable,
+  l1L2ValidatorProposerTable,
 } from "../../../schema/l1/l2-validator.js";
 
 export async function getL1L2Validator(
@@ -29,37 +29,40 @@ async function getL1L2ValidatorDynamicWhere(
       status: l1L2ValidatorStatusTable.status,
       withdrawer: l1L2ValidatorWithdrawerTable.withdrawer,
       proposer: l1L2ValidatorProposerTable.proposer,
+      latestSeenChangeAt: max(sql`COALESCE(
+        ${l1L2ValidatorStakeTable.timestamp},
+        ${l1L2ValidatorStatusTable.timestamp},
+        ${l1L2ValidatorWithdrawerTable.timestamp},
+        ${l1L2ValidatorProposerTable.timestamp},
+        ${l1L2ValidatorTable.firstSeenAt}
+      )`),
     })
     .from(l1L2ValidatorTable)
-    .leftJoin(
+    .innerJoin(
       l1L2ValidatorStakeTable,
       eq(l1L2ValidatorTable.attester, l1L2ValidatorStakeTable.attesterAddress)
     )
-    .leftJoin(
+    .innerJoin(
       l1L2ValidatorStatusTable,
       eq(l1L2ValidatorTable.attester, l1L2ValidatorStatusTable.attesterAddress)
     )
-    .leftJoin(
+    .innerJoin(
       l1L2ValidatorWithdrawerTable,
-      eq(
-        l1L2ValidatorTable.attester,
-        l1L2ValidatorWithdrawerTable.attesterAddress
-      )
+      eq(l1L2ValidatorTable.attester, l1L2ValidatorWithdrawerTable.attesterAddress)
     )
-    .leftJoin(
+    .innerJoin(
       l1L2ValidatorProposerTable,
-      eq(
-        l1L2ValidatorTable.attester,
-        l1L2ValidatorProposerTable.attesterAddress
-      )
+      eq(l1L2ValidatorTable.attester, l1L2ValidatorProposerTable.attesterAddress)
     )
     .where(whereMatcher)
-    .orderBy(
-      desc(l1L2ValidatorStakeTable.timestamp),
-      desc(l1L2ValidatorStatusTable.timestamp),
-      desc(l1L2ValidatorWithdrawerTable.timestamp),
-      desc(l1L2ValidatorProposerTable.timestamp)
-    )
+    .groupBy(l1L2ValidatorTable.attester)
+    .orderBy(desc(sql`COALESCE(
+      ${l1L2ValidatorStakeTable.timestamp},
+      ${l1L2ValidatorStatusTable.timestamp},
+      ${l1L2ValidatorWithdrawerTable.timestamp},
+      ${l1L2ValidatorProposerTable.timestamp},
+      ${l1L2ValidatorTable.firstSeenAt}
+    )`))
     .limit(1)
     .execute();
 

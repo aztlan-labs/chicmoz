@@ -42,6 +42,8 @@ export const openApiPaths = {
   ...controller.openapi_SEARCH, // TODO: rename to L2_SEARCH?
 
   ...controller.openapi_GET_L1_L2_VALIDATORS,
+  ...controller.openapi_GET_L1_L2_VALIDATOR,
+  ...controller.openapi_GET_L1_L2_VALIDATOR_HISTORY,
 };
 
 const otherPaths = [
@@ -160,9 +162,11 @@ export const init = ({ router }: { router: Router }) => {
   router.get(paths.verifiedContract, controller.GET_L2_VERIFIED_CONTRACT_INSTANCE);
   router.get(paths.verifiedContracts, controller.GET_L2_VERIFIED_CONTRACT_INSTANCES);
 
-  router.get(paths.l1l2Validators, controller.GET_L1_L2_VALIDATORS);
-
   router.get(paths.search, controller.L2_SEARCH);
+
+  router.get(paths.l1l2Validators, controller.GET_L1_L2_VALIDATORS);
+  router.get(paths.l1l2Validator, controller.GET_L1_L2_VALIDATOR);
+  router.get(paths.l1l2ValidatorHistory, controller.GET_L1_L2_VALIDATOR_HISTORY);
 
   otherPaths.forEach(({ path, controller }) => {
     router.get(path, controller);

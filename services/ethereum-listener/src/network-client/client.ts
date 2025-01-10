@@ -207,7 +207,9 @@ export const queryStakingStateAndEmitUpdates = async () => {
   });
   logger.info(`Active attester count: ${attesterCount.toString()}`);
   if (attesterCount > 0) {
-    for (let i = 0; i < attesterCount; i++) {
+    // TODO: this should be a loop over all attesters
+    //for (let i = 0; i < attesterCount; i++) {
+    for (let i = 0; i < 2; i++) {
       const attester = await publicClient.readContract({
         address: l1Contracts.rollup.address,
         abi: RollupAbi,

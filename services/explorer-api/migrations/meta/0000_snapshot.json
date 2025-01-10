@@ -1,5 +1,5 @@
 {
-  "id": "c3b39986-80a0-4af6-a7ee-1d6d8008bf63",
+  "id": "3b24b4bd-691c-48a5-adc2-273fb29f9640",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1408,24 +1408,12 @@
       },
       "uniqueConstraints": {}
     },
-    "public.l1_l2_validator": {
-      "name": "l1_l2_validator",
+    "public.l1_l2_validator_proposer": {
+      "name": "l1_l2_validator_proposer",
       "schema": "",
       "columns": {
-        "attester": {
-          "name": "attester",
-          "type": "varchar(42)",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "stake": {
-          "name": "stake",
-          "type": "numeric(77, 0)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "withdrawer": {
-          "name": "withdrawer",
+        "attester_address": {
+          "name": "attester_address",
           "type": "varchar(42)",
           "primaryKey": false,
           "notNull": true
@@ -1436,20 +1424,134 @@
           "primaryKey": false,
           "notNull": true
         },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "l1_l2_validator_proposer_attester_address_l1_l2_validator_attester_fk": {
+          "name": "l1_l2_validator_proposer_attester_address_l1_l2_validator_attester_fk",
+          "tableFrom": "l1_l2_validator_proposer",
+          "tableTo": "l1_l2_validator",
+          "columnsFrom": ["attester_address"],
+          "columnsTo": ["attester"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "l1_l2_validator_proposer_attester_address_timestamp_pk": {
+          "name": "l1_l2_validator_proposer_attester_address_timestamp_pk",
+          "columns": ["attester_address", "timestamp"]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.l1_l2_validator_stake": {
+      "name": "l1_l2_validator_stake",
+      "schema": "",
+      "columns": {
+        "attester_address": {
+          "name": "attester_address",
+          "type": "varchar(42)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "stake": {
+          "name": "stake",
+          "type": "numeric(77, 0)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "l1_l2_validator_stake_attester_address_l1_l2_validator_attester_fk": {
+          "name": "l1_l2_validator_stake_attester_address_l1_l2_validator_attester_fk",
+          "tableFrom": "l1_l2_validator_stake",
+          "tableTo": "l1_l2_validator",
+          "columnsFrom": ["attester_address"],
+          "columnsTo": ["attester"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "l1_l2_validator_stake_attester_address_timestamp_pk": {
+          "name": "l1_l2_validator_stake_attester_address_timestamp_pk",
+          "columns": ["attester_address", "timestamp"]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.l1_l2_validator_status": {
+      "name": "l1_l2_validator_status",
+      "schema": "",
+      "columns": {
+        "attester_address": {
+          "name": "attester_address",
+          "type": "varchar(42)",
+          "primaryKey": false,
+          "notNull": true
+        },
         "status": {
           "name": "status",
           "type": "smallint",
           "primaryKey": false,
           "notNull": true
         },
-        "first_seen_at": {
-          "name": "first_seen_at",
+        "timestamp": {
+          "name": "timestamp",
           "type": "timestamp",
           "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "l1_l2_validator_status_attester_address_l1_l2_validator_attester_fk": {
+          "name": "l1_l2_validator_status_attester_address_l1_l2_validator_attester_fk",
+          "tableFrom": "l1_l2_validator_status",
+          "tableTo": "l1_l2_validator",
+          "columnsFrom": ["attester_address"],
+          "columnsTo": ["attester"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "l1_l2_validator_status_attester_address_timestamp_pk": {
+          "name": "l1_l2_validator_status_attester_address_timestamp_pk",
+          "columns": ["attester_address", "timestamp"]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.l1_l2_validator": {
+      "name": "l1_l2_validator",
+      "schema": "",
+      "columns": {
+        "attester": {
+          "name": "attester",
+          "type": "varchar(42)",
+          "primaryKey": true,
           "notNull": true
         },
-        "latest_seen_change_at": {
-          "name": "latest_seen_change_at",
+        "first_seen_at": {
+          "name": "first_seen_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true
@@ -1458,6 +1560,50 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.l1_l2_validator_withdrawer": {
+      "name": "l1_l2_validator_withdrawer",
+      "schema": "",
+      "columns": {
+        "attester_address": {
+          "name": "attester_address",
+          "type": "varchar(42)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "withdrawer": {
+          "name": "withdrawer",
+          "type": "varchar(42)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "l1_l2_validator_withdrawer_attester_address_l1_l2_validator_attester_fk": {
+          "name": "l1_l2_validator_withdrawer_attester_address_l1_l2_validator_attester_fk",
+          "tableFrom": "l1_l2_validator_withdrawer",
+          "tableTo": "l1_l2_validator",
+          "columnsFrom": ["attester_address"],
+          "columnsTo": ["attester"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "l1_l2_validator_withdrawer_attester_address_timestamp_pk": {
+          "name": "l1_l2_validator_withdrawer_attester_address_timestamp_pk",
+          "columns": ["attester_address", "timestamp"]
+        }
+      },
       "uniqueConstraints": {}
     }
   },

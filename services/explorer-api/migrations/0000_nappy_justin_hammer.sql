@@ -224,14 +224,37 @@ CREATE TABLE IF NOT EXISTS "l2_unconstrained_function" (
 	CONSTRAINT "unconstrained_function_contract_class" PRIMARY KEY("contract_class_id","unconstrained_function_selector_value")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "l1_l2_validator_proposer" (
+	"attester_address" varchar(42) NOT NULL,
+	"proposer" varchar(42) NOT NULL,
+	"timestamp" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "l1_l2_validator_proposer_attester_address_timestamp_pk" PRIMARY KEY("attester_address","timestamp")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "l1_l2_validator_stake" (
+	"attester_address" varchar(42) NOT NULL,
+	"stake" numeric(77, 0) NOT NULL,
+	"timestamp" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "l1_l2_validator_stake_attester_address_timestamp_pk" PRIMARY KEY("attester_address","timestamp")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "l1_l2_validator_status" (
+	"attester_address" varchar(42) NOT NULL,
+	"status" smallint NOT NULL,
+	"timestamp" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "l1_l2_validator_status_attester_address_timestamp_pk" PRIMARY KEY("attester_address","timestamp")
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l1_l2_validator" (
 	"attester" varchar(42) PRIMARY KEY NOT NULL,
-	"stake" numeric(77, 0) NOT NULL,
+	"first_seen_at" timestamp NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "l1_l2_validator_withdrawer" (
+	"attester_address" varchar(42) NOT NULL,
 	"withdrawer" varchar(42) NOT NULL,
-	"proposer" varchar(42) NOT NULL,
-	"status" smallint NOT NULL,
-	"first_seen_at" timestamp NOT NULL,
-	"latest_seen_change_at" timestamp NOT NULL
+	"timestamp" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "l1_l2_validator_withdrawer_attester_address_timestamp_pk" PRIMARY KEY("attester_address","timestamp")
 );
 --> statement-breakpoint
 DO $$ BEGIN
@@ -356,6 +379,30 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "l2_contract_instance_deployed" ADD CONSTRAINT "contract_class" FOREIGN KEY ("contract_class_id","version") REFERENCES "public"."l2_contract_class_registered"("contract_class_id","version") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "l1_l2_validator_proposer" ADD CONSTRAINT "l1_l2_validator_proposer_attester_address_l1_l2_validator_attester_fk" FOREIGN KEY ("attester_address") REFERENCES "public"."l1_l2_validator"("attester") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "l1_l2_validator_stake" ADD CONSTRAINT "l1_l2_validator_stake_attester_address_l1_l2_validator_attester_fk" FOREIGN KEY ("attester_address") REFERENCES "public"."l1_l2_validator"("attester") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "l1_l2_validator_status" ADD CONSTRAINT "l1_l2_validator_status_attester_address_l1_l2_validator_attester_fk" FOREIGN KEY ("attester_address") REFERENCES "public"."l1_l2_validator"("attester") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "l1_l2_validator_withdrawer" ADD CONSTRAINT "l1_l2_validator_withdrawer_attester_address_l1_l2_validator_attester_fk" FOREIGN KEY ("attester_address") REFERENCES "public"."l1_l2_validator"("attester") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

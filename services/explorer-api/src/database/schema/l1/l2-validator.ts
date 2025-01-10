@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, smallint, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, primaryKey, smallint, timestamp } from "drizzle-orm/pg-core";
 import { generateEthAddressColumn, generateUint256Column } from "../utils.js";
 
 export const l1L2ValidatorTable = pgTable("l1_l2_validator", {
@@ -7,44 +7,61 @@ export const l1L2ValidatorTable = pgTable("l1_l2_validator", {
   firstSeenAt: timestamp("first_seen_at").notNull(),
 });
 
-export const l1L2ValidatorStakeTable = pgTable("l1_l2_validator_stake", {
-  attesterAddress: generateEthAddressColumn("attester_address")
-    .primaryKey()
-    .notNull()
-    .references(() => l1L2ValidatorTable.attester, { onDelete: "cascade" }),
-  stake: generateUint256Column("stake").notNull(),
-  timestamp: timestamp("timestamp").defaultNow().notNull(),
-});
+export const l1L2ValidatorStakeTable = pgTable(
+  "l1_l2_validator_stake",
+  {
+    attesterAddress: generateEthAddressColumn("attester_address")
+      .notNull()
+      .references(() => l1L2ValidatorTable.attester, { onDelete: "cascade" }),
+    stake: generateUint256Column("stake").notNull(),
+    timestamp: timestamp("timestamp").defaultNow().notNull(),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.attesterAddress, table.timestamp] }),
+  })
+);
 
-export const l1L2ValidatorStatusTable = pgTable("l1_l2_validator_status", {
-  attesterAddress: generateEthAddressColumn("attester_address")
-    .primaryKey()
-    .notNull()
-    .references(() => l1L2ValidatorTable.attester, { onDelete: "cascade" }),
-  status: smallint("status").notNull(),
-  timestamp: timestamp("timestamp").defaultNow().notNull(),
-});
+export const l1L2ValidatorStatusTable = pgTable(
+  "l1_l2_validator_status",
+  {
+    attesterAddress: generateEthAddressColumn("attester_address")
+      .notNull()
+      .references(() => l1L2ValidatorTable.attester, { onDelete: "cascade" }),
+    status: smallint("status").notNull(),
+    timestamp: timestamp("timestamp").defaultNow().notNull(),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.attesterAddress, table.timestamp] }),
+  })
+);
 
 export const l1L2ValidatorWithdrawerTable = pgTable(
   "l1_l2_validator_withdrawer",
   {
     attesterAddress: generateEthAddressColumn("attester_address")
-      .primaryKey()
       .notNull()
       .references(() => l1L2ValidatorTable.attester, { onDelete: "cascade" }),
     withdrawer: generateEthAddressColumn("withdrawer").notNull(),
     timestamp: timestamp("timestamp").defaultNow().notNull(),
-  }
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.attesterAddress, table.timestamp] }),
+  })
 );
 
-export const l1L2ValidatorProposerTable = pgTable("l1_l2_validator_proposer", {
-  attesterAddress: generateEthAddressColumn("attester_address")
-    .primaryKey()
-    .notNull()
-    .references(() => l1L2ValidatorTable.attester, { onDelete: "cascade" }),
-  proposer: generateEthAddressColumn("proposer").notNull(),
-  timestamp: timestamp("timestamp").defaultNow().notNull(),
-});
+export const l1L2ValidatorProposerTable = pgTable(
+  "l1_l2_validator_proposer",
+  {
+    attesterAddress: generateEthAddressColumn("attester_address")
+      .notNull()
+      .references(() => l1L2ValidatorTable.attester, { onDelete: "cascade" }),
+    proposer: generateEthAddressColumn("proposer").notNull(),
+    timestamp: timestamp("timestamp").defaultNow().notNull(),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.attesterAddress, table.timestamp] }),
+  })
+);
 
 export const l1l2ValidatorRelations = relations(
   l1L2ValidatorTable,

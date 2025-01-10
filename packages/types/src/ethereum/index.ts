@@ -11,7 +11,7 @@ export enum L1L2ValidatorStatus {
   NONE,
   VALIDATING,
   LIVING,
-  EXITING
+  EXITING,
 }
 
 export const chicmozL1L2ValidatorSchema = z.object({
@@ -22,7 +22,29 @@ export const chicmozL1L2ValidatorSchema = z.object({
   status: z.nativeEnum(L1L2ValidatorStatus),
   // NOTE: we could use createdAt and updatedAt, but I want to emphasize that this is the first time we saw this validator. It can be way off from the actual creation time (on chain).
   firstSeenAt: z.date().default(() => new Date()),
-  latestSeenChangeAt: z.date().default(() => new Date())
+  latestSeenChangeAt: z.date().default(() => new Date()),
 });
 
 export type ChicmozL1L2Validator = z.infer<typeof chicmozL1L2ValidatorSchema>;
+
+const timestampSchema = z.date();
+const keyChangedSchema = z.string();
+const newValueSchema = z.string();
+
+export const chicmozL1L2ValidatorHistoryEntrySchema = z.tuple([
+  timestampSchema,
+  keyChangedSchema,
+  newValueSchema,
+]);
+
+export type ChicmozL1L2ValidatorHistoryEntry = z.infer<
+  typeof chicmozL1L2ValidatorHistoryEntrySchema
+>;
+
+export const chicmozL1L2ValidatorHistorySchema = z.array(
+  chicmozL1L2ValidatorHistoryEntrySchema
+);
+
+export type ChicmozL1L2ValidatorHistory = z.infer<
+  typeof chicmozL1L2ValidatorHistorySchema
+>;
