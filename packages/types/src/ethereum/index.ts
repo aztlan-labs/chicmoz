@@ -7,7 +7,7 @@ import { z } from "zod";
 // Living -> Not participating as validator, but have funds in setup,
 // 			 hit if slashes and going below the minimum
 // Exiting -> In the process of exiting the system
-export enum Status {
+export enum L1L2ValidatorStatus {
   NONE,
   VALIDATING,
   LIVING,
@@ -19,7 +19,7 @@ export const chicmozL1L2ValidatorSchema = z.object({
   stake: z.coerce.bigint().nonnegative(), // TODO: this is not Fr but it might as well be. It is a uint256
   withdrawer: ethAddressSchema,
   proposer: ethAddressSchema,
-  status: z.nativeEnum(Status),
+  status: z.nativeEnum(L1L2ValidatorStatus),
   // NOTE: we could use createdAt and updatedAt, but I want to emphasize that this is the first time we saw this validator. It can be way off from the actual creation time (on chain).
   firstSeenAt: z.date().default(() => new Date()),
   latestSeenChangeAt: z.date().default(() => new Date())
