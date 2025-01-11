@@ -21,7 +21,6 @@ import {
   chicmozL1L2ValidatorHistorySchema,
   chicmozL1L2ValidatorSchema,
 } from "@chicmoz-pkg/types";
-import { logger } from "../../../logger.js";
 
 const SUB_PATH = `/v1/${PUBLIC_API_KEY}`;
 
@@ -279,20 +278,28 @@ export const GET_L1_L2_VALIDATOR_STATUS_TEXT = asyncHandler(
       ["l1", "l2-validators", attesterAddress, "history"],
       () => db.l1.getL1L2ValidatorHistory(attesterAddress)
     );
-    logger.info(JSON.stringify(JSON.parse(history), null, 2));
-    const formattedHistory = chicmozL1L2ValidatorHistorySchema
+    const stringifiedHistory = chicmozL1L2ValidatorHistorySchema
       .parse(JSON.parse(history))
       .sort(
         ([timestampA], [timestampB]) =>
           timestampB.getTime() - timestampA.getTime()
       )
+      .map(([timestamp, keyChanged, newValue]) => [
+        formatTimeSince(timestamp.getTime()),
+        keyChanged,
+        newValue,
+        timestamp.toISOString(),
+      ]);
+    const formattedHistory = [
+      ["Time since", "Key changed", "New value", "Timestamp"],
+      ["", "", "", "<hr>"],
+    ]
+      .concat(stringifiedHistory)
       .map(
-        ([timestamp, keyChanged, newValue]) =>
-          `<pre>${formatTimeSince(timestamp.getTime()).padEnd(
-            20
-          )}<b>${keyChanged.padEnd(12)}</b>${newValue.padEnd(
-            50
-          )} ${timestamp.toISOString()}</pre>`
+        ([timeSince, keyChanged, newValue, timestamp]) =>
+          `<pre>${timeSince.padEnd(40)}${keyChanged.padEnd(
+            40
+          )}${newValue.padEnd(50)} ${timestamp}</pre>`
       );
 
     const validatorStatus = chicmozL1L2ValidatorSchema.parse(
@@ -308,6 +315,7 @@ export const GET_L1_L2_VALIDATOR_STATUS_TEXT = asyncHandler(
     <b>Latest change at:</b> ${validatorStatus.latestSeenChangeAt.toISOString()}
     </pre>`;
 
+    // TODO: add link to the UI once it's ready
     const html = `
     <html>
       <head>
@@ -315,8 +323,8 @@ export const GET_L1_L2_VALIDATOR_STATUS_TEXT = asyncHandler(
       </head>
       <body>
        <h1>Validator status for ${attesterAddress}</h1>
-       <pre>Avaiable statuses: ${[0, 1, 2, 3]
-         .map((status) => L1L2ValidatorStatus[status])
+       <pre>Available statuses: ${[0, 1, 2, 3]
+         .map((status) => L1L2ValidatorStatus[status].toString())
          .join(", ")}</pre>
        <h2>Current status</h2>
         ${validatorStatusText}

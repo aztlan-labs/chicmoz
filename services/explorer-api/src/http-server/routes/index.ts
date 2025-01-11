@@ -91,7 +91,7 @@ export const init = ({ router }: { router: Router }) => {
   checkDocsStatus();
   router.get("/l2/index", controller.GET_ROUTES);
   router.get("/aztec-chain-connection", controller.GET_AZTEC_CHAIN_CONNECTION);
-  router.get("/l1l2-valdidator-log/:attesterAddress", controller.GET_L1_L2_VALIDATOR_STATUS_TEXT);
+  router.get("/l1l2-valdidator-status/:attesterAddress", controller.GET_L1_L2_VALIDATOR_STATUS_TEXT);
 
   router.get(paths.latestHeight, controller.GET_LATEST_HEIGHT);
   router.get(paths.latestBlock, controller.GET_LATEST_BLOCK);
