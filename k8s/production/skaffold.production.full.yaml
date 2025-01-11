@@ -36,6 +36,13 @@ build:
       requires:
         - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
           alias: BASE
+    - image: registry.digitalocean.com/aztlan-containers/ethereum-listener
+      context: services/ethereum-listener
+      docker:
+        dockerfile: Dockerfile
+      requires:
+        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
+          alias: BASE
     - image: registry.digitalocean.com/aztlan-containers/explorer-api
       context: services/explorer-api
       docker:
@@ -62,7 +69,7 @@ manifests:
     - k8s/production/auth/deployment.yaml
     - k8s/production/auth/service.yaml
     - k8s/production/aztec-listener/deployment.yaml
-    - k8s/production/aztec-listener/service.yaml
+    - k8s/production/ethereum-listener/deployment.yaml
     - k8s/production/websocket-event-publisher/ingress.yaml
     - k8s/production/websocket-event-publisher/deployment.yaml
     - k8s/production/websocket-event-publisher/service.yaml

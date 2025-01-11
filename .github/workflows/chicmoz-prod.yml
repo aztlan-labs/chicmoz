@@ -24,9 +24,13 @@ jobs:
       - name: Print important information
         env:
           CHICMOZ_AZTEC_RPC: ${{ vars.CHICMOZ_AZTEC_RPC }}
+          CHICMOZ_ETHEREUM_RPC_HTTP: ${{ vars.CHICMOZ_ETHEREUM_RPC_HTTP }}
+          CHICMOZ_ETHEREUM_RPC_WS: ${{ vars.CHICMOZ_ETHEREUM_RPC_WS }}
         run: |
           echo "VERSION: $(git describe --tags)"
           echo "CHICMOZ_AZTEC_RPC: $CHICMOZ_AZTEC_RPC"
+          echo "CHICMOZ_ETHEREUM_RPC_HTTP: $CHICMOZ_ETHEREUM_RPC_HTTP"
+          echo "CHICMOZ_ETHEREUM_RPC_WS: $CHICMOZ_ETHEREUM_RPC_WS"
         shell: bash
 
       - name: Install Skaffold
@@ -53,11 +57,15 @@ jobs:
       - name: Deploy to cluster with Skaffold
         env:
           CHICMOZ_AZTEC_RPC: ${{ vars.CHICMOZ_AZTEC_RPC }}
+          CHICMOZ_ETHEREUM_RPC_HTTP: ${{ vars.CHICMOZ_ETHEREUM_RPC_HTTP }}
+          CHICMOZ_ETHEREUM_RPC_WS: ${{ vars.CHICMOZ_ETHEREUM_RPC_WS }}
         run: |
           MAX_RETRIES=3
           RETRY_DELAY=10
 
           kubectl create secret generic global --from-literal=CHICMOZ_AZTEC_RPC=$CHICMOZ_AZTEC_RPC -n chicmoz-prod --dry-run=client -o yaml | kubectl apply -f -
+          kubectl create secret generic global --from-literal=CHICMOZ_ETHEREUM_RPC_HTTP=$CHICMOZ_ETHEREUM_RPC_HTTP -n chicmoz-prod --dry-run=client -o yaml | kubectl apply -f -
+          kubectl create secret generic global --from-literal=CHICMOZ_ETHEREUM_RPC_WS=$CHICMOZ_ETHEREUM_RPC_WS -n chicmoz-prod --dry-run=client -o yaml | kubectl apply -f -
 
           for i in $(seq 1 $MAX_RETRIES); do
             if bash -x scripts/production/deploy.sh; then
