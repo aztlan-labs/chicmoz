@@ -1,4 +1,4 @@
-# Chicmoz - [aztecscout.xyz](https://aztecscout.xyz)
+# Chicmoz - [aztecscan.xyz](https://aztecscan.xyz)
 
 ## running locally
 

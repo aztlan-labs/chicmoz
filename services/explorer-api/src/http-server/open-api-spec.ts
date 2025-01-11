@@ -11,7 +11,7 @@ export const genereateOpenApiSpec = () => ({
   },
   servers: [
     {
-      url: "https://api.aztecscout.xyz/v1/{apiKey}",
+      url: "https://api.aztecscan.xyz/v1/{apiKey}",
       variables: {
         apiKey: {
           default: PUBLIC_API_KEY,
