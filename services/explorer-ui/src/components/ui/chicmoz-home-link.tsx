@@ -14,7 +14,7 @@ export function ChicmozHomeLink({
         <p
           className={`${textClasses} text-white ml-1 font-bold text-[24px] font-space-grotesk`}
         >
-          Aztec-Scout
+          Aztec-Scan
         </p>
       </Link>
     </div>
