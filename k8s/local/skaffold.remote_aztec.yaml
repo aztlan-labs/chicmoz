@@ -9,6 +9,7 @@ requires:
   - path: ./websocket-event-publisher/image.yaml
   - path: ./auth/image.yaml
   - path: ./aztec-listener/image.yaml
+  - path: ./ethereum-listener/image.yaml
 deploy:
   kubectl:
     flags:
@@ -28,6 +29,7 @@ manifests:
     - k8s/local/auth/deployment.yaml
     - k8s/local/auth/service.yaml
     - k8s/local/aztec-listener/remote_aztec_deployment.yaml
+    - k8s/local/ethereum-listener/remote_ethereum_deployment.yaml
   helm:
     releases:
       - name: ingress-nginx

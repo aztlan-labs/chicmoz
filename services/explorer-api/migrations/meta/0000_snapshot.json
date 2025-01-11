@@ -1,5 +1,5 @@
 {
-  "id": "e05f0e53-f351-4052-989c-309de631bad5",
+  "id": "3de67fd6-95e6-4796-b4c6-5a8190f44d3d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1404,6 +1404,204 @@
             "contract_class_id",
             "unconstrained_function_selector_value"
           ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.l1_l2_validator_proposer": {
+      "name": "l1_l2_validator_proposer",
+      "schema": "",
+      "columns": {
+        "attester_address": {
+          "name": "attester_address",
+          "type": "varchar(42)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "proposer": {
+          "name": "proposer",
+          "type": "varchar(42)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "l1_l2_validator_proposer_attester_address_l1_l2_validator_attester_fk": {
+          "name": "l1_l2_validator_proposer_attester_address_l1_l2_validator_attester_fk",
+          "tableFrom": "l1_l2_validator_proposer",
+          "tableTo": "l1_l2_validator",
+          "columnsFrom": ["attester_address"],
+          "columnsTo": ["attester"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "l1_l2_validator_proposer_attester_address_timestamp_pk": {
+          "name": "l1_l2_validator_proposer_attester_address_timestamp_pk",
+          "columns": ["attester_address", "timestamp"]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.l1_l2_validator_stake": {
+      "name": "l1_l2_validator_stake",
+      "schema": "",
+      "columns": {
+        "attester_address": {
+          "name": "attester_address",
+          "type": "varchar(42)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "stake": {
+          "name": "stake",
+          "type": "numeric(77, 0)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "l1_l2_validator_stake_attester_address_l1_l2_validator_attester_fk": {
+          "name": "l1_l2_validator_stake_attester_address_l1_l2_validator_attester_fk",
+          "tableFrom": "l1_l2_validator_stake",
+          "tableTo": "l1_l2_validator",
+          "columnsFrom": ["attester_address"],
+          "columnsTo": ["attester"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "l1_l2_validator_stake_attester_address_timestamp_pk": {
+          "name": "l1_l2_validator_stake_attester_address_timestamp_pk",
+          "columns": ["attester_address", "timestamp"]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.l1_l2_validator_status": {
+      "name": "l1_l2_validator_status",
+      "schema": "",
+      "columns": {
+        "attester_address": {
+          "name": "attester_address",
+          "type": "varchar(42)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "l1_l2_validator_status_attester_address_l1_l2_validator_attester_fk": {
+          "name": "l1_l2_validator_status_attester_address_l1_l2_validator_attester_fk",
+          "tableFrom": "l1_l2_validator_status",
+          "tableTo": "l1_l2_validator",
+          "columnsFrom": ["attester_address"],
+          "columnsTo": ["attester"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "l1_l2_validator_status_attester_address_timestamp_pk": {
+          "name": "l1_l2_validator_status_attester_address_timestamp_pk",
+          "columns": ["attester_address", "timestamp"]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.l1_l2_validator": {
+      "name": "l1_l2_validator",
+      "schema": "",
+      "columns": {
+        "attester": {
+          "name": "attester",
+          "type": "varchar(42)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "first_seen_at": {
+          "name": "first_seen_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.l1_l2_validator_withdrawer": {
+      "name": "l1_l2_validator_withdrawer",
+      "schema": "",
+      "columns": {
+        "attester_address": {
+          "name": "attester_address",
+          "type": "varchar(42)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "withdrawer": {
+          "name": "withdrawer",
+          "type": "varchar(42)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "l1_l2_validator_withdrawer_attester_address_l1_l2_validator_attester_fk": {
+          "name": "l1_l2_validator_withdrawer_attester_address_l1_l2_validator_attester_fk",
+          "tableFrom": "l1_l2_validator_withdrawer",
+          "tableTo": "l1_l2_validator",
+          "columnsFrom": ["attester_address"],
+          "columnsTo": ["attester"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "l1_l2_validator_withdrawer_attester_address_timestamp_pk": {
+          "name": "l1_l2_validator_withdrawer_attester_address_timestamp_pk",
+          "columns": ["attester_address", "timestamp"]
         }
       },
       "uniqueConstraints": {}

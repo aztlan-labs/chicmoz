@@ -11,4 +11,5 @@ deploy:
       apply: ["--force"]
 manifests:
   rawYaml:
-    - k8s/local/ethereum-listener/deployment.yaml
+    #- k8s/local/ethereum-listener/deployment.yaml
+    - k8s/local/ethereum-listener/remote_ethereum_deployment.yaml

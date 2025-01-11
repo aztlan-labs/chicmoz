@@ -2,9 +2,10 @@ import { MBOptions, MessageBus } from "@chicmoz-pkg/message-bus";
 import { backOff } from "exponential-backoff";
 import {
   ETHEREUM_MESSAGES,
-  generateEthereumTopicName,
+  generateTopicName,
 } from "@chicmoz-pkg/message-registry";
 import {
+  ETHEREUM_CHAIN_NAME,
   ETHEREUM_NETWORK_ID,
   KAFKA_CONNECTION,
   KAFKA_SASL_PASSWORD,
@@ -55,7 +56,7 @@ export const publishMessage = async <T>(
   if (!isInitialized) throw new Error("MessageBus is not initialized");
   if (isShutdown) throw new Error("MessageBus is already shutdown");
 
-  const topic = generateEthereumTopicName(ETHEREUM_NETWORK_ID.toString(), eventType);
+  const topic = generateTopicName(`${ETHEREUM_CHAIN_NAME}_${ETHEREUM_NETWORK_ID}`, eventType);
   await mb.publish<T>(topic, message);
 };
 

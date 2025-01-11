@@ -70,8 +70,7 @@ const intervals = [
 ];
 
 export const formatDuration = (durationSeconds: number, short?: boolean) => {
-  for (let i = 0; i < intervals.length; i++) {
-    const interval = intervals[i];
+  for (const interval of intervals) {
     const count = Math.floor(durationSeconds / interval.seconds);
     if (count >= 1) {
       const label = short ? interval.shortLabel : interval.label;

@@ -6,11 +6,16 @@ import {
   uuid,
   bigint,
   PgColumnBuilderBase,
+  numeric,
 } from "drizzle-orm/pg-core";
 import { ColumnBuilderBaseConfig, ColumnDataType } from "drizzle-orm";
 
+// TODO: this should be changed to be the same as generateUint256Column
 export const generateFrColumn = (name: string) => varchar(name, { length: 66 });
 
+export const generateUint256Column = (name: string) => numeric(name, { precision: 77, scale: 0 });
+
+// NOTE: remove this function and replace with generateFrColumn. Beware of summarizing operations etc!
 export const generateFrNumberColumn = (name: string) =>
   bigint(name, { mode: "number" });
 

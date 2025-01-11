@@ -5,7 +5,7 @@ import {
   getLatestHeight,
   initClient,
   initContracts,
-  queryStakingState,
+  queryStakingStateAndEmitUpdates,
   watchContractsEvents,
 } from "./client.js";
 
@@ -49,5 +49,5 @@ export const startPolling = async (
   logger.info(`ETH: start polling: ${JSON.stringify(l1ContractAddresses)}`);
   initContracts(l1ContractAddresses);
   stopContractWatching = watchContractsEvents();
-  await queryStakingState();
+  await queryStakingStateAndEmitUpdates();
 };

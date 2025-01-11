@@ -1,4 +1,4 @@
-import { chicmozSearchQuerySchema, hexStringSchema } from "@chicmoz-pkg/types";
+import { chicmozSearchQuerySchema, ethAddressSchema, hexStringSchema } from "@chicmoz-pkg/types";
 import { z } from "zod";
 
 export const heightOrHash = "heightOrHash";
@@ -42,7 +42,7 @@ export const paths = {
   verifiedContract: `/l2/verified-contracts-instances/:${address}`,
   verifiedContracts: "/l2/verified-contract-instances",
 
-  validators: "/l2/validators",
+  feeRecipients: "/l2/fee-recipients",
 
   statsTotalTxEffects: "/l2/stats/total-tx-effects",
   statsTotalTxEffectsLast24h: "/l2/stats/tx-effects-last-24h",
@@ -50,6 +50,10 @@ export const paths = {
   statsTotalContractsLast24h: "/l2/stats/total-contracts-last-24h",
   statsAverageFees: "/l2/stats/average-fees",
   statsAverageBlockTime: "/l2/stats/average-block-time",
+
+  l1l2Validators: "/l1/l2-validators",
+  l1l2Validator: "/l1/l2-validators/:attesterAddress",
+  l1l2ValidatorHistory: "/l1/l2-validators/:attesterAddress/history",
 };
 
 export const getBlockByHeightOrHashSchema = z.object({
@@ -144,4 +148,10 @@ export const getVerifiedContractInstanceSchema = getContractInstanceSchema;
 
 export const getSearchSchema = z.object({
   query: chicmozSearchQuerySchema,
+});
+
+export const getL1L2ValidatorSchema = z.object({
+  params: z.object({
+    attesterAddress: ethAddressSchema,
+  }),
 });
