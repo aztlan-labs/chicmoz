@@ -12,7 +12,6 @@ import {
   l1L2ValidatorWithdrawerTable,
   l1L2ValidatorProposerTable,
 } from "../../../schema/l1/l2-validator.js";
-import { logger } from "../../../../logger.js";
 
 export async function getL1L2Validator(
   attesterAddress: EthAddress
@@ -47,24 +46,6 @@ export async function getL1L2Validator(
       .where(eq(l1L2ValidatorProposerTable.attesterAddress, attesterAddress))
       .orderBy(desc(l1L2ValidatorProposerTable.timestamp))
       .limit(1);
-    logger.info(
-      `\n GET SINGLE ${JSON.stringify({
-        attester: validator[0]?.attester,
-        firstSeenAt: validator[0]?.firstSeenAt,
-        stake: stake[0]?.stake,
-        status: status[0]?.status,
-        withdrawer: withdrawer[0]?.withdrawer,
-        proposer: proposer[0]?.proposer,
-        latestSeenChangeAt: new Date(
-          Math.max(
-            stake[0]?.timestamp.getTime(),
-            status[0]?.timestamp.getTime(),
-            withdrawer[0]?.timestamp.getTime(),
-            proposer[0]?.timestamp.getTime()
-          )
-        ),
-      })}\n\n`
-    );
     return {
       attester: validator[0]?.attester,
       firstSeenAt: validator[0]?.firstSeenAt,

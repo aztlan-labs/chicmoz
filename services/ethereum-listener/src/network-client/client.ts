@@ -15,7 +15,6 @@ import {
 } from "@aztec/l1-artifacts";
 import { ConnectedToAztecEvent } from "@chicmoz-pkg/message-registry";
 import {
-  ChicmozL1L2Validator,
   EthAddress,
   chicmozL1L2ValidatorSchema,
 } from "@chicmoz-pkg/types";
@@ -203,58 +202,58 @@ export const watchContractsEvents = () => {
   };
 };
 
-export const emitRandomizedChangeWithinRandomizedTime = async (
-  depth: number,
-  oldValues: ChicmozL1L2Validator
-) => {
-  if (depth === 0) return;
-  const rand = Math.random();
-  const sleepTime = 30000;
-  logger.info(
-    `ATTESTER ${oldValues.attester} - DEPTH ${depth} - SLEEP ${sleepTime / 1000}s`
-  );
-  await new Promise((resolve) => setTimeout(resolve, sleepTime));
-  let newValues = oldValues;
-  if (rand < 0.25) {
-    const stake = BigInt(Math.floor(Math.random() * 100000000));
-    logger.info(`STAKE CHANGED: ${oldValues.stake} -> ${stake}`);
-    newValues = {
-      ...oldValues,
-      stake,
-      latestSeenChangeAt: new Date(),
-    };
-  } else if (rand < 0.5) {
-    const status = [0, 1, 2, 3][Math.floor(Math.random() * 4)];
-    logger.info(`STATUS CHANGED: ${oldValues.status} -> ${status}`);
-    newValues = {
-      ...oldValues,
-      status,
-      latestSeenChangeAt: new Date(),
-    };
-  } else if (rand < 0.75) {
-    const withdrawer = oldValues.withdrawer
-      .slice(0, -Math.floor(rand * 5))
-      .padEnd(42, ["A", "B", "C", "D", "E"][Math.floor(Math.random() * 5)]);
-    logger.info(`WITHDRAWER CHANGED: ${oldValues.withdrawer} -> ${withdrawer}`);
-    newValues = {
-      ...oldValues,
-      withdrawer,
-      latestSeenChangeAt: new Date(),
-    };
-  } else {
-    const proposer = oldValues.proposer
-      .slice(0, -Math.floor(rand * 5))
-      .padEnd(42, ["A", "B", "C", "D", "E"][Math.floor(Math.random() * 5)]);
-    logger.info(`PROPOSER CHANGED: ${oldValues.proposer} -> ${proposer}`);
-    newValues = {
-      ...oldValues,
-      proposer,
-      latestSeenChangeAt: new Date(),
-    };
-  }
-  await emit.l1Validator(newValues);
-  await emitRandomizedChangeWithinRandomizedTime(depth - 1, newValues);
-};
+//export const emitRandomizedChangeWithinRandomizedTime = async (
+//  depth: number,
+//  oldValues: ChicmozL1L2Validator
+//) => {
+//  if (depth === 0) return;
+//  const rand = Math.random();
+//  const sleepTime = 30000;
+//  logger.info(
+//    `ATTESTER ${oldValues.attester} - DEPTH ${depth} - SLEEP ${sleepTime / 1000}s`
+//  );
+//  await new Promise((resolve) => setTimeout(resolve, sleepTime));
+//  let newValues = oldValues;
+//  if (rand < 0.25) {
+//    const stake = BigInt(Math.floor(Math.random() * 100000000));
+//    logger.info(`STAKE CHANGED: ${oldValues.stake} -> ${stake}`);
+//    newValues = {
+//      ...oldValues,
+//      stake,
+//      latestSeenChangeAt: new Date(),
+//    };
+//  } else if (rand < 0.5) {
+//    const status = [0, 1, 2, 3][Math.floor(Math.random() * 4)];
+//    logger.info(`STATUS CHANGED: ${oldValues.status} -> ${status}`);
+//    newValues = {
+//      ...oldValues,
+//      status,
+//      latestSeenChangeAt: new Date(),
+//    };
+//  } else if (rand < 0.75) {
+//    const withdrawer = oldValues.withdrawer
+//      .slice(0, -Math.floor(rand * 5))
+//      .padEnd(42, ["A", "B", "C", "D", "E"][Math.floor(Math.random() * 5)]);
+//    logger.info(`WITHDRAWER CHANGED: ${oldValues.withdrawer} -> ${withdrawer}`);
+//    newValues = {
+//      ...oldValues,
+//      withdrawer,
+//      latestSeenChangeAt: new Date(),
+//    };
+//  } else {
+//    const proposer = oldValues.proposer
+//      .slice(0, -Math.floor(rand * 5))
+//      .padEnd(42, ["A", "B", "C", "D", "E"][Math.floor(Math.random() * 5)]);
+//    logger.info(`PROPOSER CHANGED: ${oldValues.proposer} -> ${proposer}`);
+//    newValues = {
+//      ...oldValues,
+//      proposer,
+//      latestSeenChangeAt: new Date(),
+//    };
+//  }
+//  await emit.l1Validator(newValues);
+//  await emitRandomizedChangeWithinRandomizedTime(depth - 1, newValues);
+//};
 
 export const queryStakingStateAndEmitUpdates = async () => {
   // TODO: this entire function should be replaced with a watch on the contract (and some initial state query)
@@ -267,8 +266,7 @@ export const queryStakingStateAndEmitUpdates = async () => {
   });
   logger.info(`Active attester count: ${attesterCount.toString()}`);
   if (attesterCount > 0) {
-    //for (let i = 0; i < attesterCount; i++) {
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < attesterCount; i++) {
       const attester = await publicClient.readContract({
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         address: l1Contracts.rollup.address as `0x${string}`,
@@ -290,17 +288,17 @@ export const queryStakingStateAndEmitUpdates = async () => {
           attester,
         })
       );
-      await emitRandomizedChangeWithinRandomizedTime(
-        100,
-        chicmozL1L2ValidatorSchema.parse({
-          ...attesterInfo,
-          attester,
-        })
-      ).catch((e) => {
-        logger.error(
-          `Randomized change emission failed: ${(e as Error).stack}`
-        );
-      });
+      //await emitRandomizedChangeWithinRandomizedTime(
+      //  100,
+      //  chicmozL1L2ValidatorSchema.parse({
+      //    ...attesterInfo,
+      //    attester,
+      //  })
+      //).catch((e) => {
+      //  logger.error(
+      //    `Randomized change emission failed: ${(e as Error).stack}`
+      //  );
+      //});
     }
   }
 };

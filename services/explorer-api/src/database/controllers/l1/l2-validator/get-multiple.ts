@@ -1,90 +1,19 @@
-import {
-  ChicmozL1L2Validator,
-  chicmozL1L2ValidatorSchema,
-} from "@chicmoz-pkg/types";
-import { SQL, eq, desc, getTableColumns, max, sql } from "drizzle-orm";
+import { ChicmozL1L2Validator } from "@chicmoz-pkg/types";
+import { getTableColumns } from "drizzle-orm";
 import { getDb as db } from "../../../index.js";
-import {
-  l1L2ValidatorTable,
-  l1L2ValidatorStakeTable,
-  l1L2ValidatorStatusTable,
-  l1L2ValidatorWithdrawerTable,
-  l1L2ValidatorProposerTable,
-} from "../../../schema/l1/l2-validator.js";
-import { logger } from "../../../../logger.js";
+import { l1L2ValidatorTable } from "../../../schema/l1/l2-validator.js";
+import { getL1L2Validator } from "./get-single.js";
 
-export async function getAllL1L2Validators(): Promise<ChicmozL1L2Validator[]> {
-  return getL1L2ValidatorDynamicWhere();
-}
-
-async function getL1L2ValidatorDynamicWhere(
-  whereMatcher: SQL<unknown> | undefined = undefined
-): Promise<ChicmozL1L2Validator[]> {
-  const result = await db()
-    .select({
-      ...getTableColumns(l1L2ValidatorTable),
-      stake: l1L2ValidatorStakeTable.stake,
-      status: l1L2ValidatorStatusTable.status,
-      withdrawer: l1L2ValidatorWithdrawerTable.withdrawer,
-      proposer: l1L2ValidatorProposerTable.proposer,
-      latestSeenChangeAt: max(sql`COALESCE(
-        ${l1L2ValidatorStakeTable.timestamp},
-        ${l1L2ValidatorStatusTable.timestamp},
-        ${l1L2ValidatorWithdrawerTable.timestamp},
-        ${l1L2ValidatorProposerTable.timestamp}
-      )`),
-    })
+export async function getAllL1L2Validators(): Promise<
+  ChicmozL1L2Validator[] | null
+> {
+  const res = await db()
+    .select(getTableColumns(l1L2ValidatorTable))
     .from(l1L2ValidatorTable)
-    .innerJoin(
-      l1L2ValidatorStakeTable,
-      eq(l1L2ValidatorTable.attester, l1L2ValidatorStakeTable.attesterAddress)
-    )
-    .innerJoin(
-      l1L2ValidatorStatusTable,
-      eq(l1L2ValidatorTable.attester, l1L2ValidatorStatusTable.attesterAddress)
-    )
-    .innerJoin(
-      l1L2ValidatorWithdrawerTable,
-      eq(
-        l1L2ValidatorTable.attester,
-        l1L2ValidatorWithdrawerTable.attesterAddress
-      )
-    )
-    .innerJoin(
-      l1L2ValidatorProposerTable,
-      eq(
-        l1L2ValidatorTable.attester,
-        l1L2ValidatorProposerTable.attesterAddress
-      )
-    )
-    .where(whereMatcher)
-    .groupBy(
-      l1L2ValidatorTable.attester,
-      l1L2ValidatorStakeTable.stake,
-      l1L2ValidatorStakeTable.timestamp,
-      l1L2ValidatorStatusTable.status,
-      l1L2ValidatorStatusTable.timestamp,
-      l1L2ValidatorWithdrawerTable.withdrawer,
-      l1L2ValidatorWithdrawerTable.timestamp,
-      l1L2ValidatorProposerTable.proposer,
-      l1L2ValidatorProposerTable.timestamp,
-      ...Object.values(getTableColumns(l1L2ValidatorTable))
-    )
-    .orderBy(desc(l1L2ValidatorStakeTable.stake))
     .execute();
-
-  return result.map((row) => {
-    logger.info(`row: ${JSON.stringify(row)}`);
-    if (!row.latestSeenChangeAt) {
-      throw new Error(
-        "FATAL: getting multiple l1l2 validators with missing latestSeenChangeAt"
-      );
-    }
-
-    return chicmozL1L2ValidatorSchema.parse({
-      ...row,
-      latestSeenChangeAt: new Date(row.latestSeenChangeAt),
-      stake: row.stake ? BigInt(row.stake) : BigInt(0),
-    });
-  });
+  if (!res.length) return null;
+  const dbSingles = await Promise.all(
+    res.map((validator) => getL1L2Validator(validator.attester))
+  );
+  return dbSingles.filter((v) => v !== null) as ChicmozL1L2Validator[];
 }
