@@ -21,6 +21,8 @@ const frToHexString = (val: unknown) => {
   else return val;
 };
 
+// TODO: frSchema should be replaced with
+//      z.coerce.bigint().nonnegative()
 export const frSchema = z.preprocess(
   frToHexString,
   z
@@ -44,12 +46,12 @@ const frPointToObj = (val: unknown) => {
 
 export const frPointSchema = z.preprocess(
   frPointToObj,
-z.object({
-  x: frSchema,
-  y: frSchema,
-  isInfinite: z.boolean(),
-  kind: z.enum(["point"]),
-})
+  z.object({
+    x: frSchema,
+    y: frSchema,
+    isInfinite: z.boolean(),
+    kind: z.enum(["point"]),
+  })
 );
 
 export const frNumberSchema = z.preprocess((val) => {

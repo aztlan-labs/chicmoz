@@ -1,17 +1,18 @@
 import * as cache from "./cache/index.js";
 import * as db from "./database/index.js";
-import {
-  blockHandler,
-  catchupHandler,
-  connectedToAztecHandler,
-  pendingTxHandler,
-} from "./event-handler/index.js";
+import { subscribeHandlers } from "./event-handler/index.js";
 import { setComponentInitializing, setComponentUp } from "./health.js";
 import * as httpServer from "./http-server/index.js";
 import * as mb from "./message-bus/index.js";
 import { registerShutdownCallback } from "./stop.js";
 
-const initialize = async ({ ID, init }: { ID: string; init: () => Promise<{ shutdownCb: () => Promise<void> }> }) => {
+const initialize = async ({
+  ID,
+  init,
+}: {
+  ID: string;
+  init: () => Promise<{ shutdownCb: () => Promise<void> }>;
+}) => {
   setComponentInitializing(ID);
   const { shutdownCb } = await init();
   registerShutdownCallback({
@@ -19,7 +20,7 @@ const initialize = async ({ ID, init }: { ID: string; init: () => Promise<{ shut
     shutdownCb,
   });
   setComponentUp(ID);
-}
+};
 
 export const start = async () => {
   await initialize({
@@ -40,9 +41,6 @@ export const start = async () => {
   });
   // TODO: clear pending txs DB
   setComponentInitializing("SUBSCRIPTIONS");
-  await mb.startSubscribe(blockHandler);
-  await mb.startSubscribe(catchupHandler);
-  await mb.startSubscribe(pendingTxHandler);
-  await mb.startSubscribe(connectedToAztecHandler);
+  await subscribeHandlers();
   setComponentUp("SUBSCRIPTIONS");
 };
