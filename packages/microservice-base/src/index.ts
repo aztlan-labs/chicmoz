@@ -1,25 +1,48 @@
-// Here is what an inialization of a microservice should include:
-// -1. register a graceful shutdown using only console.log
-// 0. Initialize the logger (and have it exposed)
-// 1. Log the service name together with all the configs
-// 2. initialize the microservices services like...
-//      - DB
-//      - Message Bus
-//      - Cache
-//      - http server
-//      - websocket server
-//      - other... (init aztec connection here)
-// 3. start whatever is needed like...
-//     - polling aztec
-//     - subscribe to message bus-events
+import { conf, setConfig } from "config.js";
+import { init } from "init.js";
+import { logger } from "logger.js";
+import { start } from "start.js";
+import { stop } from "stop.js";
+import { MicroserviceConfig } from "types.js";
 
-// after init and start the microservice-base should expose services healths
-import { Logger } from "@chicmoz-pkg/logger-server";
+export { logger, type MicroserviceConfig };
 
-export const logger: Logger = new Logger("microservice-base");
+export const shutdownMicroservice = async () => {
+  await stop().catch((e) => {
+    logger.error(
+      `❗ unhandled error during shutdown of ${conf.serviceName}: ${
+        (e as Error).stack ?? e
+      }`
+    );
+    process.exit(1);
+  });
+};
 
-export const doIt = () => {
-  logger.info("Microservice Base hello world");
-}
+export const startMicroservice = (config: MicroserviceConfig) => {
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  process.on("SIGINT", () => shutdownMicroservice());
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  process.on("SIGTERM", () => shutdownMicroservice());
+  setConfig(config);
+  init()
+    .catch((e) => {
+      logger.error(
+        `❓ unhandled error during initialization (${conf.serviceName}):\n${
+          (e as Error).stack ?? e
+        }`
+      );
+      process.exit(1);
+    })
+    .then(start)
+    .catch((e) => {
+      logger.error(
+        `❓❓ unhandled error during startup (${conf.serviceName}):\n${
+          (e as Error).stack ?? e
+        }`
+      );
+      process.exit(1);
+    });
+};
 
+export const isHealthy = () => conf?.services.every((svc) => svc.health());
 
