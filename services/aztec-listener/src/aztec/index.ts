@@ -28,7 +28,6 @@ let nodeInfo: NodeInfo;
 
 export const init = async () => {
   nodeInfo = await initNetworkClient();
-  logger.info(`AZTEC: initialized: ${JSON.stringify(nodeInfo)}`);
 
   const latestProcessedHeight = (await getLatestProcessedHeight()) ?? 0;
   const chainHeight = await getLatestHeight();
