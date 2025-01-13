@@ -2,8 +2,10 @@ import { SERVICE_NAME } from "./constants.js";
 import { logger } from "./logger.js";
 import { start } from "./start.js";
 import { gracefulShutdown } from "./stop.js";
+import { doIt } from "@chicmoz-pkg/microservice-base";
 
 const main = async () => {
+  doIt();
   logger.info(`🚀 ${SERVICE_NAME} starting...`);
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   process.on("SIGINT", gracefulShutdown());
