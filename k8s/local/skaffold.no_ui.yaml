@@ -9,6 +9,7 @@ requires:
   - path: ./auth/image.yaml
   - path: ./event-cannon/image.yaml
   - path: ./aztec-listener/image.yaml
+  - path: ./ethereum-listener/image.yaml
 deploy:
   kubectl:
     flags:
@@ -26,6 +27,7 @@ manifests:
     - k8s/local/auth/service.yaml
     - k8s/local/event-cannon/deployment.yaml
     - k8s/local/aztec-listener/deployment.yaml
+    - k8s/local/ethereum-listener/deployment.yaml
     - k8s/local/aztec-sandbox-node/ingress.yaml
     - k8s/local/aztec-sandbox-node/deployment.yaml
     - k8s/local/aztec-sandbox-node/service.yaml

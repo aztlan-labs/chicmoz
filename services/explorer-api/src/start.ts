@@ -1,4 +1,5 @@
 import * as cache from "./cache/index.js";
+import {deleteAllTxs} from "./database/controllers/l2Tx/delete-all-txs.js";
 import * as db from "./database/index.js";
 import { subscribeHandlers } from "./event-handler/index.js";
 import { setComponentInitializing, setComponentUp } from "./health.js";
@@ -39,7 +40,7 @@ export const start = async () => {
     ID: mb.ID,
     init: mb.init,
   });
-  // TODO: clear pending txs DB
+  await deleteAllTxs(); // TODO: perhaps a more specific deleteAllTxs should be created, also some logs could be good.
   setComponentInitializing("SUBSCRIPTIONS");
   await subscribeHandlers();
   setComponentUp("SUBSCRIPTIONS");
