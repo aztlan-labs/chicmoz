@@ -1,6 +1,6 @@
 import { conf, setConfig } from "config.js";
 import { init } from "init.js";
-import { logger } from "logger.js";
+import { initLogger, logger } from "logger.js";
 import { start } from "start.js";
 import { stop } from "stop.js";
 import { MicroserviceConfig } from "types.js";
@@ -23,6 +23,7 @@ export const startMicroservice = (config: MicroserviceConfig) => {
   process.on("SIGINT", () => shutdownMicroservice());
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   process.on("SIGTERM", () => shutdownMicroservice());
+  initLogger(conf.serviceName);
   setConfig(config);
   init()
     .catch((e) => {

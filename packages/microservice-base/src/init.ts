@@ -1,11 +1,11 @@
 import { conf } from "config.js";
-import { initLogger, logger } from "logger.js";
+import { logger } from "logger.js";
 
 export const init = async () => {
-  initLogger(conf.serviceName);
-  logger.info(
-    `🏗 ${conf.serviceName} initializing services, with config:\n${conf.formattedConfig}\n`
-  );
+  if (conf.services.length === 0) {
+    logger.warn("No services to initialize.");
+    return;
+  }
   for (const svc of conf.services) {
     logger.info(`🔧 Initializing ${svc.serviceId}...`);
     await svc.init();

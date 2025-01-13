@@ -1,22 +1,26 @@
-import { SERVICE_NAME } from "./constants.js";
-import { logger } from "./logger.js";
+import { INSTANCE_NAME, logFriendlyConfig } from "./constants.js";
+import { startMicroservice, type MicroserviceConfig } from "@chicmoz-pkg/microservice-base";
 import { start } from "./start.js";
-import { gracefulShutdown } from "./stop.js";
-import { doIt } from "@chicmoz-pkg/microservice-base";
 
-const main = async () => {
-  doIt();
-  logger.info(`🚀 ${SERVICE_NAME} starting...`);
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  process.on("SIGINT", gracefulShutdown());
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  process.on("SIGTERM", gracefulShutdown());
-  await start();
-  logger.info(`🥳 ${SERVICE_NAME} started!`);
+// 1. make a nice formatted config-log
+// 2. use init microservice base
+// 3. evaluate if DB-package could be extracted to a separate package
+// 4. evaluate if MB-package could be extracted to a separate package
+// 5. merge and look into another service
+
+const formatConfigLog = () => {
+  // TODO
+  return JSON.stringify(logFriendlyConfig, null, 2);
+}
+
+const main = () => {
+  const config: MicroserviceConfig = {
+    instanceName: INSTANCE_NAME,
+    logConfig: formatConfigLog(),
+    services: [],
+    startCallback: start,
+  };
+  startMicroservice(config);
 };
 
-main().catch((e) => {
-  logger.error(`during startup of ${SERVICE_NAME}: ${(e as Error).stack ?? e}`);
-  process.exit(1);
-});
-
+main();
