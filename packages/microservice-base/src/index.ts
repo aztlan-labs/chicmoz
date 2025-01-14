@@ -1,9 +1,9 @@
 import { type Logger } from "@chicmoz-pkg/logger-server";
-import { conf, setConfig } from "config.js";
-import { init } from "init.js";
-import { start } from "start.js";
-import { stop } from "stop.js";
-import { type MicroserviceConfig, type MicroserviceBaseSvc } from "types.js";
+import { conf, setConfig } from "./config.js";
+import { init } from "./init.js";
+import { start } from "./start.js";
+import { stop } from "./stop.js";
+import { type MicroserviceConfig, type MicroserviceBaseSvc } from "./types.js";
 
 export { type MicroserviceConfig, type MicroserviceBaseSvc };
 

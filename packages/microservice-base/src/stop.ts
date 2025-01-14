@@ -1,5 +1,5 @@
 import { type Logger } from "@chicmoz-pkg/logger-server";
-import { conf } from "config.js";
+import { conf } from "./config.js";
 
 export const stop = async (logger: Logger) => {
   logger.warn("👼 Trying to shutdown gracefully...");

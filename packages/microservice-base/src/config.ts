@@ -1,6 +1,6 @@
 import { type Logger } from "@chicmoz-pkg/logger-server";
-import { INSTANCE_NAME } from "environment.js";
-import { MicroserviceConfig } from "types.js";
+import { INSTANCE_NAME } from "./environment.js";
+import { MicroserviceConfig } from "./types.js";
 
 export let conf: MicroserviceConfig;
 

@@ -63,10 +63,10 @@ const callNodeFunction = async <K extends keyof AztecNode>(
 export const init = async () => {
   logger.info(`Initializing Aztec node client with ${AZTEC_RPC_URL}`);
   aztecNode = createAztecNodeClient(AZTEC_RPC_URL);
-  return getNodeInfo();
+  return getFreshNodeInfo();
 };
 
-export const getNodeInfo = async (): Promise<NodeInfo> => {
+export const getFreshNodeInfo = async (): Promise<NodeInfo> => {
   const nodeVersion = await callNodeFunction("getNodeVersion");
   logger.info(`🧋 Aztec node version: ${nodeVersion}`);
   const protocolVersion = await callNodeFunction("getVersion");

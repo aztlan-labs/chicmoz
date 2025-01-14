@@ -1,4 +1,4 @@
-import { INSTANCE_NAME, logFriendlyConfig } from "./constants.js";
+import { logFriendlyConfig } from "./constants.js";
 import {
   startMicroservice,
   type MicroserviceConfig,
@@ -13,9 +13,9 @@ const formatConfigLog = () => {
 
 const main = () => {
   const config: MicroserviceConfig = {
-    instanceName: INSTANCE_NAME,
+    serviceName: "AZTEC LISTENER",
     logger,
-    logConfig: formatConfigLog(),
+    formattedConfig: formatConfigLog(),
     services,
     startCallback: start,
   };

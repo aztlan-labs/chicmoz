@@ -1,5 +1,5 @@
 import { type Logger } from "@chicmoz-pkg/logger-server";
-import { conf } from "config.js";
+import { conf } from "./config.js";
 
 export const init = async (logger: Logger) => {
   if (conf.services.length === 0) {

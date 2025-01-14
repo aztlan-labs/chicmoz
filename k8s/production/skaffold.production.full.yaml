@@ -80,8 +80,7 @@ manifests:
   helm:
     releases:
       - name: cert-manager
-        remoteChart: cert-manager
-        repo: https://charts.bitnami.com/bitnami
+        remoteChart: oci://registry-1.docker.io/bitnamicharts/cert-manager
         version: 1.3.18
         namespace: cert-manager
         createNamespace: false
@@ -113,8 +112,7 @@ manifests:
           controller.service.annotations.service\.beta\.kubernetes\.io/do-loadbalancer-enable-proxy-protocol: "true"
       - name: postgresql
         version: 12.10.0
-        remoteChart: postgresql
-        repo: https://charts.bitnami.com/bitnami
+        remoteChart: oci://registry-1.docker.io/bitnamicharts/postgresql
         valuesFiles:
           - k8s/production/postgres/values.yaml
         setValues:
@@ -130,8 +128,7 @@ manifests:
         wait: false
       - name: redis
         version: 18.17.1
-        remoteChart: redis
-        repo: https://charts.bitnami.com/bitnami
+        remoteChart: oci://registry-1.docker.io/bitnamicharts/redis
         namespace: chicmoz-prod
         createNamespace: false
         recreatePods: false
@@ -151,8 +148,7 @@ manifests:
           persistence.enabled: false
       - name: kafka
         version: 26.4.2
-        remoteChart: kafka
-        repo: https://charts.bitnami.com/bitnami
+        remoteChart: oci://registry-1.docker.io/bitnamicharts/kafka
         namespace: chicmoz-prod
         setValues:
           sasl.enabledMechanisms: plain
