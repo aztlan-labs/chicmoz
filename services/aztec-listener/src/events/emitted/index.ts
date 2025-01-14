@@ -5,7 +5,7 @@ import {
 } from "@chicmoz-pkg/message-registry";
 import { logger } from "../../logger.js";
 import { publishMessage } from "../../svcs/message-bus/index.js";
-import { getNodeInfo } from "../../svcs/aztec/index.js";
+import { getNodeInfo } from "../../svcs/poller/index.js";
 
 export const onBlock = async (block: L2Block) => {
   const height = Number(block.header.globalVariables.blockNumber);

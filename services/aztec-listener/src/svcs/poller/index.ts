@@ -48,13 +48,13 @@ export const init = async () => {
 };
 
 export const startPoller = async () => {
-  logger.info(`🤡 AZTEC: starting poller`);
+  logger.info(`🤡 POLLER: starting...`);
   const { latestProcessedHeight, chainHeight } = await getHeights();
   if (AZTEC_LISTEN_FOR_PENDING_TXS) startPollingPendingTxs();
   const isOffSync = chainHeight < latestProcessedHeight;
   if (isOffSync) {
     logger.warn(
-      `🤡 AZTEC: chain height is ${chainHeight} but we've processed up to ${latestProcessedHeight}`
+      `🤡 POLLER: chain height is ${chainHeight} but we've processed up to ${latestProcessedHeight}`
     );
     await storeHeight(0);
   }
@@ -70,8 +70,8 @@ export const startPoller = async () => {
 
 export const getNodeInfo = () => nodeInfo;
 
-export const aztecService: MicroserviceBaseSvc = {
-  serviceId: "AZTEC",
+export const pollerService: MicroserviceBaseSvc = {
+  serviceId: "POLLER",
   init,
   // TODO: improve health check
   health: () => nodeInfo !== undefined,
