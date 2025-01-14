@@ -19,8 +19,7 @@ manifests:
     releases:
       - name: postgresql
         version: 12.10.0
-        remoteChart: postgresql
-        repo: https://charts.bitnami.com/bitnami
+        remoteChart: oci://registry-1.docker.io/bitnamicharts/postgresql
         valuesFiles:
           - k8s/local/postgres/values.yaml
         setValues:
@@ -36,8 +35,7 @@ manifests:
         wait: false
       - name: kafka
         version: 26.4.2
-        remoteChart: kafka
-        repo: https://charts.bitnami.com/bitnami
+        remoteChart: oci://registry-1.docker.io/bitnamicharts/kafka
         namespace: chicmoz
         setValues:
           sasl.enabledMechanisms: plain
