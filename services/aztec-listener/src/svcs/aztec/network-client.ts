@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { createAztecNodeClient, AztecNode, NodeInfo } from "@aztec/aztec.js";
-import { AZTEC_RPC_URL, MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS, NODE_ENV } from "../constants.js";
-import { logger } from "../logger.js";
+import { AZTEC_RPC_URL, MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS, NODE_ENV } from "../../constants.js";
+import { logger } from "../../logger.js";
 import { IBackOffOptions, backOff } from "exponential-backoff";
 
 let aztecNode: AztecNode;

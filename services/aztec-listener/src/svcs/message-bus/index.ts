@@ -54,7 +54,7 @@ export const publishMessage = async <T>(
   await mb.publish<T>(topic, message);
 };
 
-export const service: MicroserviceBaseSvc = {
+export const messageBusService: MicroserviceBaseSvc = {
   serviceId: "MB",
   init,
   health: () => isInitialized && !isShutdown,

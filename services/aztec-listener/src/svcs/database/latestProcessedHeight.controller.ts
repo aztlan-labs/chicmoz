@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { NETWORK_ID } from "../constants.js";
+import { NETWORK_ID } from "../../constants.js";
 import { getDb as db } from "../database/index.js";
 import { latestProcessedHeight } from "./schema.js";
 

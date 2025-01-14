@@ -6,8 +6,8 @@ export const init = async (logger: Logger) => {
     logger.warn("No services to initialize.");
     return;
   }
-  for (const svc of conf.services) {
-    logger.info(`🔧 Initializing ${svc.serviceId}...`);
+  for (const [index, svc] of conf.services.entries()) {
+    logger.info(`🔧 [${index + 1} of ${conf.services.length}] Initializing ${svc.serviceId}...`);
     await svc.init();
     logger.info(`👍 ${svc.serviceId} initialized!`);
   }
