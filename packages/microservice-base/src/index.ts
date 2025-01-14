@@ -1,5 +1,5 @@
 import { type Logger } from "@chicmoz-pkg/logger-server";
-import { getMicroserviceState, getSvcState, setSvcState } from "./health.js";
+import { getMicroserviceState, getSvcState, setLogger, setSvcState } from "./health.js";
 import { conf, setConfig } from "./config.js";
 import { INSTANCE_NAME, NODE_ENV } from "./environment.js";
 import { init } from "./init.js";
@@ -41,6 +41,7 @@ export const startMicroservice = (config: MicroserviceConfig) => {
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   process.on("SIGTERM", () => shutdownMicroservice());
   logger = config.logger;
+  setLogger(logger);
   setConfig(config, logger);
   init(logger)
     .catch((e) => {
