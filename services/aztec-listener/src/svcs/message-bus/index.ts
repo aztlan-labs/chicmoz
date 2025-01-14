@@ -57,6 +57,7 @@ export const publishMessage = async <T>(
 export const messageBusService: MicroserviceBaseSvc = {
   serviceId: "MB",
   init,
+  getConfigStr: messageBusConfigStr,
   health: () => isInitialized && !isShutdown,
   shutdown: async () => {
     isShutdown = true;

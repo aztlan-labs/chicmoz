@@ -72,6 +72,7 @@ export const getNodeInfo = () => nodeInfo;
 
 export const pollerService: MicroserviceBaseSvc = {
   serviceId: "POLLER",
+  getConfigStr: () => "TODO conf str!",
   init,
   // TODO: improve health check
   health: () => nodeInfo !== undefined,

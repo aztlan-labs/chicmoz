@@ -1,13 +1,16 @@
+import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import { eq } from "drizzle-orm";
 import { NETWORK_ID } from "../../constants.js";
-import { getDb as db } from "../database/index.js";
 import { latestProcessedHeight } from "./schema.js";
 
 export async function storeHeight(height: number) {
   await db()
     .insert(latestProcessedHeight)
     .values({ networkId: NETWORK_ID, height })
-    .onConflictDoUpdate({ target: latestProcessedHeight.networkId, set: { height } });
+    .onConflictDoUpdate({
+      target: latestProcessedHeight.networkId,
+      set: { height },
+    });
 }
 
 export async function getHeight(): Promise<number | null> {
