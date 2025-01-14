@@ -1,30 +1,31 @@
+import { MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
 import { NodeInfo, transformNodeInfo } from "@chicmoz-pkg/types";
 import {
   AZTEC_GENESIS_CATCHUP,
   AZTEC_LISTEN_FOR_BLOCKS,
   AZTEC_LISTEN_FOR_PENDING_TXS,
   AZTEC_RPC_URL,
-} from "../../constants.js";
+  getConfigStr,
+} from "../../environment.js";
+import { onConnectedToAztec } from "../../events/emitted/index.js";
+import { logger } from "../../logger.js";
 import {
   getHeight as getLatestProcessedHeight,
   storeHeight,
 } from "../database/latestProcessedHeight.controller.js";
-import { logger } from "../../logger.js";
+import {
+  startPolling as startPollingBlocks,
+  stopPolling as stopPollingBlocks,
+} from "./block_poller.js";
+import { startCatchup } from "./genesis-catchup.js";
 import {
   getLatestHeight,
   init as initNetworkClient,
 } from "./network-client.js";
 import {
-  startPolling as startPollingBlocks,
-  stopPolling as stopPollingBlocks,
-} from "./block_poller.js";
-import {
   startPolling as startPollingPendingTxs,
   stopPolling as stopPollingPendingTxs,
 } from "./txs_poller.js";
-import { startCatchup } from "./genesis-catchup.js";
-import { MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
-import { onConnectedToAztec } from "../../events/emitted/index.js";
 
 let nodeInfo: NodeInfo;
 
@@ -65,14 +66,13 @@ export const startPoller = async () => {
       : chainHeight;
   if (AZTEC_LISTEN_FOR_BLOCKS)
     startPollingBlocks({ fromHeight: pollFromHeight });
-}
-
+};
 
 export const getNodeInfo = () => nodeInfo;
 
 export const pollerService: MicroserviceBaseSvc = {
   serviceId: "POLLER",
-  getConfigStr: () => "TODO conf str!",
+  getConfigStr,
   init,
   // TODO: improve health check
   health: () => nodeInfo !== undefined,

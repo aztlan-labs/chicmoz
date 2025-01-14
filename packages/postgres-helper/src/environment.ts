@@ -14,7 +14,7 @@ export const dbCredentials = {
 };
 
 export const getConfigStr = () => {
-  return `POSTGRES ${JSON.stringify({
+  return `POSTGRES\n${JSON.stringify({
     POSTGRES_IP,
     POSTGRES_PORT,
     POSTGRES_DB_NAME,

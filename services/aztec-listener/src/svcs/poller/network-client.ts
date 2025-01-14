@@ -1,8 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { createAztecNodeClient, AztecNode, NodeInfo } from "@aztec/aztec.js";
-import { AZTEC_RPC_URL, MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS, NODE_ENV } from "../../constants.js";
+import {
+  AZTEC_RPC_URL,
+  MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS,
+} from "../../environment.js";
 import { logger } from "../../logger.js";
 import { IBackOffOptions, backOff } from "exponential-backoff";
+import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
 
 let aztecNode: AztecNode;
 
@@ -76,9 +80,17 @@ export const getFreshNodeInfo = async (): Promise<NodeInfo> => {
   const enr = await callNodeFunction("getEncodedEnr");
   logger.info(`🧋 Aztec enr: ${enr}`);
   const contractAddresses = await callNodeFunction("getL1ContractAddresses");
-  logger.info(`🧋 Aztec contract addresses: ${JSON.stringify(contractAddresses)}`);
-  const protocolContractAddresses = await callNodeFunction("getProtocolContractAddresses");
-  logger.info(`🧋 Aztec protocol contract addresses: ${JSON.stringify(protocolContractAddresses)}`);
+  logger.info(
+    `🧋 Aztec contract addresses: ${JSON.stringify(contractAddresses)}`
+  );
+  const protocolContractAddresses = await callNodeFunction(
+    "getProtocolContractAddresses"
+  );
+  logger.info(
+    `🧋 Aztec protocol contract addresses: ${JSON.stringify(
+      protocolContractAddresses
+    )}`
+  );
   const nodeInfo: NodeInfo = {
     nodeVersion,
     l1ChainId: chainId,
@@ -95,7 +107,8 @@ export const getBlock = async (height: number) =>
   callNodeFunction("getBlock", [height]);
 
 export const getBlocks = async (fromHeight: number, toHeight: number) => {
-  if (toHeight - fromHeight > MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS) throw new Error("Too many blocks to fetch");
+  if (toHeight - fromHeight > MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS)
+    throw new Error("Too many blocks to fetch");
   const blocks = [];
   for (let i = fromHeight; i < toHeight; i++) {
     if (NODE_ENV === "development")
@@ -115,7 +128,9 @@ export const getLatestHeight = async () => {
   ]);
   // TODO: if provenBn is constantly behind, we should start storing and displaying it in the UI
   if (bn - provenBn > 0)
-    logger.warn(`🃏 Difference between block and proven block: ${bn - provenBn}`);
+    {logger.warn(
+      `🃏 Difference between block and proven block: ${bn - provenBn}`
+    );}
 
   return bn;
 };

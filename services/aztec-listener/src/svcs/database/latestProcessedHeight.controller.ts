@@ -1,6 +1,6 @@
 import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import { eq } from "drizzle-orm";
-import { NETWORK_ID } from "../../constants.js";
+import { NETWORK_ID } from "../../environment.js";
 import { latestProcessedHeight } from "./schema.js";
 
 export async function storeHeight(height: number) {

@@ -1,4 +1,4 @@
-import { NODE_ENV } from "../../constants.js";
+import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
 import { onCatchupBlock } from "../../events/emitted/index.js";
 import { logger } from "../../logger.js";
 import { getBlock } from "./network-client.js";

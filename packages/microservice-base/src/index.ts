@@ -1,11 +1,17 @@
 import { type Logger } from "@chicmoz-pkg/logger-server";
+import { INSTANCE_NAME, NODE_ENV } from "./environment.js";
 import { conf, setConfig } from "./config.js";
 import { init } from "./init.js";
 import { start } from "./start.js";
 import { stop } from "./stop.js";
-import { type MicroserviceConfig, type MicroserviceBaseSvc } from "./types.js";
+import { type MicroserviceBaseSvc, type MicroserviceConfig } from "./types.js";
 
-export { type MicroserviceConfig, type MicroserviceBaseSvc };
+export {
+  INSTANCE_NAME,
+  NODE_ENV,
+  type MicroserviceBaseSvc,
+  type MicroserviceConfig,
+};
 
 let logger: Logger;
 

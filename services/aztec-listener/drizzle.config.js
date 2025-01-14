@@ -1,5 +1,5 @@
 import { defineConfig } from "drizzle-kit";
-import { dbCredentials } from "./build/src/constants.js";
+import { dbCredentials } from "@chicmoz-pkg/postgres-helper";
 
 // NOTE: this file is only used by the `drizzle-kit` CLI
 
