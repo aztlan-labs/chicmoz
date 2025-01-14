@@ -1,7 +1,7 @@
+import { type Logger } from "@chicmoz-pkg/logger-server";
 import { conf } from "config.js";
-import { logger } from "logger.js";
 
-export const init = async () => {
+export const init = async (logger: Logger) => {
   if (conf.services.length === 0) {
     logger.warn("No services to initialize.");
     return;

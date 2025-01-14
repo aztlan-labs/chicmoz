@@ -1,10 +1,10 @@
+import { type Logger } from "@chicmoz-pkg/logger-server";
 import { INSTANCE_NAME } from "environment.js";
-import { logger } from "logger.js";
 import { MicroserviceConfig } from "types.js";
 
 export let conf: MicroserviceConfig;
 
-export const setConfig = (config: MicroserviceConfig) => {
+export const setConfig = (config: MicroserviceConfig, logger: Logger) => {
   conf = config;
   logger.info(
     `🏗 service: ${conf.serviceName}

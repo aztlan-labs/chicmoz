@@ -1,4 +1,5 @@
 import { MBOptions, MessageBus } from "@chicmoz-pkg/message-bus";
+import { type MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
 import {
   AZTEC_MESSAGES,
   generateAztecTopicName,
@@ -8,42 +9,37 @@ import {
   KAFKA_SASL_PASSWORD,
   KAFKA_SASL_USERNAME,
   NETWORK_ID,
-  SERVICE_NAME,
-} from "../constants.js";
-import { logger } from "../logger.js";
+  INSTANCE_NAME,
+} from "../../constants.js";
+import { logger } from "../../logger.js";
 
 let mb: MessageBus;
 let isInitialized = false;
 let isShutdown = false;
 
+const getConfig: () => MBOptions = () => ({
+  logger,
+  clientId: INSTANCE_NAME,
+  connection: KAFKA_CONNECTION,
+  saslConfig: {
+    mechanism: "plain",
+    username: KAFKA_SASL_USERNAME,
+    password: KAFKA_SASL_PASSWORD,
+  },
+});
+
+
+export const messageBusConfigStr = () => {
+  const conf = getConfig();
+  return `Kafka initalizing with
+clientId: ${conf.clientId}
+connection: ${conf.connection}`;
+};
+
 // eslint-disable-next-line @typescript-eslint/require-await
 export const init = async () => {
-  logger.info(`Initializing Kafka client...`);
-
-  const mbConfig = {
-    logger,
-    clientId: SERVICE_NAME,
-    connection: KAFKA_CONNECTION,
-    saslConfig: {
-      mechanism: "plain",
-      username: KAFKA_SASL_USERNAME,
-      password: KAFKA_SASL_PASSWORD,
-    },
-  } as MBOptions;
-
-  const gracefulShutdown = async () => {
-    logger.info(`Shutting down Kafka client...`);
-    isShutdown = true;
-    await mb.disconnect();
-  };
-
-  mb = new MessageBus(mbConfig);
+  mb = new MessageBus(getConfig());
   isInitialized = true;
-
-  return {
-    id: "MB",
-    shutdownCb: gracefulShutdown,
-  };
 };
 
 export const publishMessage = async <T>(
@@ -56,4 +52,14 @@ export const publishMessage = async <T>(
   const topic = generateAztecTopicName(NETWORK_ID, eventType);
   logger.info(`Publishing message to topic ${topic}`);
   await mb.publish<T>(topic, message);
+};
+
+export const service: MicroserviceBaseSvc = {
+  serviceId: "MB",
+  init,
+  health: () => isInitialized && !isShutdown,
+  shutdown: async () => {
+    isShutdown = true;
+    await mb.disconnect();
+  }
 };

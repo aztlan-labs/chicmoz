@@ -1,6 +1,12 @@
 import { INSTANCE_NAME, logFriendlyConfig } from "./constants.js";
-import { startMicroservice, type MicroserviceConfig } from "@chicmoz-pkg/microservice-base";
+import {
+  startMicroservice,
+  type MicroserviceConfig,
+} from "@chicmoz-pkg/microservice-base";
 import { start } from "./start.js";
+import { logger } from "./logger.js";
+import { services } from "./svcs/index.js";
+import {messageBusConfigStr} from "./svcs/message-bus/index.js";
 
 // 1. make a nice formatted config-log
 // 2. use init microservice base
@@ -9,15 +15,16 @@ import { start } from "./start.js";
 // 5. merge and look into another service
 
 const formatConfigLog = () => {
-  // TODO
-  return JSON.stringify(logFriendlyConfig, null, 2);
-}
+  const mbStr = messageBusConfigStr();
+  return JSON.stringify(logFriendlyConfig, null, 2) + mbStr;
+};
 
 const main = () => {
   const config: MicroserviceConfig = {
     instanceName: INSTANCE_NAME,
+    logger,
     logConfig: formatConfigLog(),
-    services: [],
+    services,
     startCallback: start,
   };
   startMicroservice(config);
