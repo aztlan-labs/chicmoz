@@ -42,7 +42,6 @@ export function setup(
   router.get(
     "/health",
     asyncHandler((_req, res) => {
-      // TODO: improve with response-body
       res.status(isHealthy() ? 200 : 500).send({});
     })
   );

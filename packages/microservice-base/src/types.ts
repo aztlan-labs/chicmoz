@@ -1,5 +1,11 @@
 import { type Logger } from "@chicmoz-pkg/logger-server";
 
+export enum MicroserviceBaseSvcState {
+  INITIALIZING,
+  UP,
+  DOWN,
+  SHUTTING_DOWN,
+}
 export type MicroserviceBaseSvc = {
   serviceId: string;
   getConfigStr: () => string;

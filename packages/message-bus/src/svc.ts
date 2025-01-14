@@ -1,5 +1,5 @@
 import { Logger } from "@chicmoz-pkg/logger-server";
-import { type MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
+import { MicroserviceBaseSvcState, type MicroserviceBaseSvc, getSvcState } from "@chicmoz-pkg/microservice-base";
 import { MessageBus } from "./class.js";
 import {
   KAFKA_CONNECTION,
@@ -9,8 +9,7 @@ import {
 } from "./environment.js";
 
 let mb: MessageBus;
-let isInitialized = false;
-let isShutdown = false;
+const serviceId = "MB";
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export const init = async (instanceName: string, logger: Logger) => {
@@ -24,12 +23,18 @@ export const init = async (instanceName: string, logger: Logger) => {
       password: KAFKA_SASL_PASSWORD,
     },
   });
-  isInitialized = true;
 };
 
+const checkReady = () => {
+  const state = getSvcState(serviceId);
+  if (state === MicroserviceBaseSvcState.SHUTTING_DOWN) throw new Error("MessageBus is shutting down");
+  if (state === MicroserviceBaseSvcState.DOWN) throw new Error("MessageBus is down");
+  if (state === MicroserviceBaseSvcState.INITIALIZING) throw new Error("MessageBus is initializing");
+  return state;
+}
+
 export const publishMessage = async <T>(topic: string, message: T) => {
-  if (!isInitialized) throw new Error("MessageBus is not initialized");
-  if (isShutdown) throw new Error("MessageBus is already shutdown");
+  checkReady();
   await mb.publish<T>(topic, message);
 };
 
@@ -38,8 +43,7 @@ export const startSubscribe = async (
   topic: string,
   cb: (message: unknown) => Promise<void>
 ) => {
-  if (!isInitialized) throw new Error("MessageBus is not initialized");
-  if (isShutdown) throw new Error("MessageBus is already shutdown");
+  checkReady();
   await mb.subscribe(groupId, topic, cb);
   await mb.runConsumer(groupId);
 }
@@ -48,12 +52,11 @@ export const generateSvc: (
   instanceName: string,
   logger: Logger
 ) => MicroserviceBaseSvc = (instanceName, logger) => ({
-  serviceId: "MB",
+  serviceId,
   init: () => init(instanceName, logger),
   getConfigStr,
-  health: () => isInitialized && !isShutdown,
+  health: () => getSvcState(serviceId) === MicroserviceBaseSvcState.UP,
   shutdown: async () => {
-    isShutdown = true;
     await mb.disconnect();
   },
 });
