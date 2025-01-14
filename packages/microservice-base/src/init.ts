@@ -18,6 +18,7 @@ export const init = async (logger: Logger) => {
       }] initializing with config:\n${svc.getConfigStr()}`
     );
     await svc.init();
+    setSvcState(svc.serviceId, MicroserviceBaseSvcState.UP);
   }
   logger.info(`🍾 ${conf.serviceName} initalized!`);
 };
