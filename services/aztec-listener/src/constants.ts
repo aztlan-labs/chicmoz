@@ -12,10 +12,6 @@ export const AZTEC_RPC_URL = process.env.AZTEC_RPC_URL ?? "http://localhost:8080
 export const CHAIN_NAME = process.env.CHAIN_NAME ?? "";
 export const NETWORK_NAME = process.env.NETWORK_NAME ?? "";
 
-export const KAFKA_CONNECTION = process.env.KAFKA_CONNECTION ?? "kafka:9092";
-export const KAFKA_SASL_USERNAME = process.env.KAFKA_SASL_USERNAME ?? "controller_user";
-export const KAFKA_SASL_PASSWORD = process.env.KAFKA_SASL_PASSWORD ?? "test";
-
 export const SERVICE_NAME = process.env.SERVICE_NAME ?? "aztec-listener";
 export const INSTANCE_NAME = process.env.INSTANCE_NAME ?? "default";
 
@@ -35,8 +31,6 @@ export const logFriendlyConfig = {
   AZTEC_RPC_URL,
   CHAIN_NAME,
   NETWORK_NAME,
-  KAFKA_CONNECTION,
-  KAFKA_SASL_USERNAME,
   SERVICE_NAME,
   INSTANCE_NAME,
   IGNORE_PROCESSED_HEIGHT,
