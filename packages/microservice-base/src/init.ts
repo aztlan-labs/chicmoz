@@ -12,5 +12,5 @@ export const init = async (logger: Logger) => {
     logger.info(`👍 ${svc.serviceId} initialized!`);
   }
   await conf.startCallback();
-  logger.info(`🥳 ${conf.serviceName} started!`);
+  logger.info(`🍾 ${conf.serviceName} initalized!`);
 };

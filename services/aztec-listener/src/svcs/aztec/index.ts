@@ -28,17 +28,28 @@ import { onConnectedToAztec } from "../../events/emitted/index.js";
 
 let nodeInfo: NodeInfo;
 
-export const init = async () => {
-  nodeInfo = await initNetworkClient();
-
+const getHeights = async () => {
   const latestProcessedHeight = (await getLatestProcessedHeight()) ?? 0;
   const chainHeight = await getLatestHeight();
-  await onConnectedToAztec({
+  return { latestProcessedHeight, chainHeight };
+};
+
+export const init = async () => {
+  nodeInfo = await initNetworkClient();
+  const { latestProcessedHeight, chainHeight } = await getHeights();
+  const connectedEvent = {
     nodeInfo: transformNodeInfo(nodeInfo),
     rpcUrl: AZTEC_RPC_URL,
     chainHeight,
     latestProcessedHeight,
-  });
+  };
+  logger.info(`Aztec connected event: ${JSON.stringify(connectedEvent)}`);
+  await onConnectedToAztec(connectedEvent);
+};
+
+export const startPoller = async () => {
+  logger.info(`🤡 AZTEC: starting poller`);
+  const { latestProcessedHeight, chainHeight } = await getHeights();
   if (AZTEC_LISTEN_FOR_PENDING_TXS) startPollingPendingTxs();
   const isOffSync = chainHeight < latestProcessedHeight;
   if (isOffSync) {
@@ -54,7 +65,8 @@ export const init = async () => {
       : chainHeight;
   if (AZTEC_LISTEN_FOR_BLOCKS)
     startPollingBlocks({ fromHeight: pollFromHeight });
-};
+}
+
 
 export const getNodeInfo = () => nodeInfo;
 
