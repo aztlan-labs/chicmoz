@@ -2,6 +2,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import { dbCredentials } from "../environment.js";
 import * as schema from "./schema/index.js";
+import {DrizzleConfig} from "drizzle-orm";
 
 let db: ReturnType<typeof drizzle>;
 let isInitialized = false;
@@ -12,7 +13,10 @@ export const ID = "DB";
 export const init = async () => {
   const client = new pg.Client(dbCredentials);
 
-  db = drizzle(client, { schema });
+  const config: DrizzleConfig<typeof schema> = {
+    schema
+  };
+  db = drizzle(client, config);
 
   await client.connect();
   isInitialized = true;

@@ -2,6 +2,7 @@ import { type Logger } from "@chicmoz-pkg/logger-server";
 
 export type MicroserviceBaseSvc = {
   serviceId: string;
+  getConfigStr: () => string;
   init: () => Promise<void>;
   health: () => boolean;
   shutdown: () => Promise<void>;

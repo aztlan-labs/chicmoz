@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
-import { dbCredentials } from "../src/constants.js";
-import { runMigrations } from "@chicmoz-pkg/backend-utils";
+import { runMigrations } from "@chicmoz-pkg/postgres-helper";
 
-runMigrations(dbCredentials).catch(console.error);
+runMigrations().catch(console.error);
 
