@@ -1,4 +1,3 @@
-import { logFriendlyConfig } from "./constants.js";
 import {
   startMicroservice,
   type MicroserviceConfig,
@@ -8,7 +7,7 @@ import { logger } from "./logger.js";
 import { services } from "./svcs/index.js";
 
 const formatConfigLog = () => {
-  return JSON.stringify(logFriendlyConfig, null, 2);
+  return `TODO: is this needed if each service logs?`;
 };
 
 const main = () => {

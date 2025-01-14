@@ -3,7 +3,7 @@ import {
   BLOCK_POLL_INTERVAL_MS,
   IGNORE_PROCESSED_HEIGHT,
   MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS,
-} from "../../constants.js";
+} from "../../environment.js";
 import { onBlock } from "../../events/emitted/index.js";
 import { logger } from "../../logger.js";
 import { storeHeight } from "../database/latestProcessedHeight.controller.js";

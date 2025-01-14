@@ -3,8 +3,11 @@ import {
   AZTEC_MESSAGES,
   generateAztecTopicName,
 } from "@chicmoz-pkg/message-registry";
-import { type MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
-import { INSTANCE_NAME, NETWORK_ID } from "../../constants.js";
+import {
+  INSTANCE_NAME,
+  type MicroserviceBaseSvc,
+} from "@chicmoz-pkg/microservice-base";
+import { NETWORK_ID } from "../../environment.js";
 import { logger } from "../../logger.js";
 
 export const publishMessage = async <T>(
