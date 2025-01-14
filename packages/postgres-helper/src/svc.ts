@@ -2,7 +2,7 @@ import { MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
 import { DrizzleConfig } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
-import { dbCredentials, getEnvironmentString } from "./environment.js";
+import { dbCredentials, getConfigStr } from "./environment.js";
 
 let client: pg.Client;
 let db: ReturnType<typeof drizzle>;
@@ -23,12 +23,12 @@ export const getDb = () => {
   return db;
 };
 
-export const generateSvc:(
+export const generateSvc: (
   drizzleConf: DrizzleConfig<Record<string, unknown>>
 ) => MicroserviceBaseSvc = (drizzleConf) => ({
   serviceId: "DB",
   init: () => init(drizzleConf),
-  getConfigStr: getEnvironmentString,
+  getConfigStr,
   health: () => isInitialized && !isShutDown,
   shutdown: async () => {
     isShutDown = true;
