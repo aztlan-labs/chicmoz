@@ -1,8 +1,8 @@
 import { Tx } from "@aztec/aztec.js";
-import { TX_POLL_INTERVAL_MS } from "../constants.js";
+import { TX_POLL_INTERVAL_MS } from "../../constants.js";
+import { onPendingTxs } from "../../events/emitted/index.js";
+import { logger } from "../../logger.js";
 import { getPendingTxs } from "./network-client.js";
-import { onPendingTxs } from "../event-handler/index.js";
-import { logger } from "../logger.js";
 
 let pollInterval: NodeJS.Timeout;
 

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { createAztecNodeClient, AztecNode, NodeInfo } from "@aztec/aztec.js";
-import { AZTEC_RPC_URL, MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS, NODE_ENV } from "../constants.js";
-import { logger } from "../logger.js";
+import { AZTEC_RPC_URL, MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS, NODE_ENV } from "../../constants.js";
+import { logger } from "../../logger.js";
 import { IBackOffOptions, backOff } from "exponential-backoff";
 
 let aztecNode: AztecNode;
@@ -63,10 +63,10 @@ const callNodeFunction = async <K extends keyof AztecNode>(
 export const init = async () => {
   logger.info(`Initializing Aztec node client with ${AZTEC_RPC_URL}`);
   aztecNode = createAztecNodeClient(AZTEC_RPC_URL);
-  return getNodeInfo();
+  return getFreshNodeInfo();
 };
 
-export const getNodeInfo = async (): Promise<NodeInfo> => {
+export const getFreshNodeInfo = async (): Promise<NodeInfo> => {
   const nodeVersion = await callNodeFunction("getNodeVersion");
   logger.info(`🧋 Aztec node version: ${nodeVersion}`);
   const protocolVersion = await callNodeFunction("getVersion");

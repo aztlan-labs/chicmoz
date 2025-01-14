@@ -31,3 +31,4 @@
 !packages/types
 !packages/error-middleware
 !packages/auth0-middleware
+!packages/microservice-base

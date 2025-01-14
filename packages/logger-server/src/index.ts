@@ -13,6 +13,11 @@ export class Logger {
     });
   }
 
+  debug(...data: unknown[]) {
+    // TODO: we need to disable debug logs in production
+    this.#logger.debug(data);
+  }
+
   info(...data: unknown[]) {
     this.#logger.info(data);
   }

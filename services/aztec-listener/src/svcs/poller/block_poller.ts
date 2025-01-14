@@ -3,14 +3,16 @@ import {
   BLOCK_POLL_INTERVAL_MS,
   IGNORE_PROCESSED_HEIGHT,
   MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS,
-} from "../constants.js";
-import { logger } from "../logger.js";
+} from "../../constants.js";
+import { onBlock } from "../../events/emitted/index.js";
+import { logger } from "../../logger.js";
 import { storeHeight } from "../database/latestProcessedHeight.controller.js";
 import { getBlock, getBlocks, getLatestHeight } from "./network-client.js";
-import { onBlock } from "../event-handler/index.js";
 
 let pollInterval: NodeJS.Timeout;
 let latestProcessedHeight = -1;
+
+export const getLatestProcessedHeight = () => latestProcessedHeight;
 
 export const startPolling = ({ fromHeight }: { fromHeight: number }) => {
   latestProcessedHeight = fromHeight - 1;

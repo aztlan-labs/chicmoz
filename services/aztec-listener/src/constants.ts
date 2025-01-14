@@ -23,6 +23,7 @@ export const POSTGRES_ADMIN = process.env.POSTGRES_ADMIN ?? "admin";
 export const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD ?? "secret-local-password";
 
 export const SERVICE_NAME = process.env.SERVICE_NAME ?? "aztec-listener";
+export const INSTANCE_NAME = process.env.INSTANCE_NAME ?? "default";
 
 export const IGNORE_PROCESSED_HEIGHT = process.env.IGNORE_PROCESSED_HEIGHT === "true";
 
@@ -34,4 +35,28 @@ export const dbCredentials = {
   user: POSTGRES_ADMIN,
   password: POSTGRES_PASSWORD,
   database: POSTGRES_DB_NAME,
+};
+
+export const logFriendlyConfig = {
+  BLOCK_POLL_INTERVAL_MS,
+  TX_POLL_INTERVAL_MS,
+  MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS,
+  AZTEC_LISTEN_FOR_BLOCKS,
+  AZTEC_LISTEN_FOR_PENDING_TXS,
+  AZTEC_GENESIS_CATCHUP,
+  AZTEC_DISABLED,
+  NODE_ENV,
+  AZTEC_RPC_URL,
+  CHAIN_NAME,
+  NETWORK_NAME,
+  KAFKA_CONNECTION,
+  KAFKA_SASL_USERNAME,
+  POSTGRES_IP,
+  POSTGRES_PORT,
+  POSTGRES_DB_NAME,
+  POSTGRES_ADMIN,
+  SERVICE_NAME,
+  INSTANCE_NAME,
+  IGNORE_PROCESSED_HEIGHT,
+  NETWORK_ID,
 };

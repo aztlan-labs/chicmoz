@@ -1,3 +1,4 @@
+// TODO: perhaps move this file to chicmoz-types?
 import { L2Block } from "@aztec/aztec.js";
 import { ChicmozL2Block, chicmozL2BlockSchema } from "@chicmoz-pkg/types";
 

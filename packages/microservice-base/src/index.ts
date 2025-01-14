@@ -1,0 +1,50 @@
+import { type Logger } from "@chicmoz-pkg/logger-server";
+import { conf, setConfig } from "./config.js";
+import { init } from "./init.js";
+import { start } from "./start.js";
+import { stop } from "./stop.js";
+import { type MicroserviceConfig, type MicroserviceBaseSvc } from "./types.js";
+
+export { type MicroserviceConfig, type MicroserviceBaseSvc };
+
+let logger: Logger;
+
+export const shutdownMicroservice = async () => {
+  await stop(logger).catch((e) => {
+    logger.error(
+      `❗ unhandled error during shutdown of ${conf.serviceName}: ${
+        (e as Error).stack ?? e
+      }`
+    );
+    process.exit(1);
+  });
+};
+
+export const startMicroservice = (config: MicroserviceConfig) => {
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  process.on("SIGINT", () => shutdownMicroservice());
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  process.on("SIGTERM", () => shutdownMicroservice());
+  logger = config.logger;
+  setConfig(config, logger);
+  init(logger)
+    .catch((e) => {
+      logger.error(
+        `❓ unhandled error during initialization (${conf.serviceName}):\n${
+          (e as Error).stack ?? e
+        }`
+      );
+      process.exit(1);
+    })
+    .then(() => start(logger))
+    .catch((e) => {
+      logger.error(
+        `❓❓ unhandled error during startup (${conf.serviceName}):\n${
+          (e as Error).stack ?? e
+        }`
+      );
+      process.exit(1);
+    });
+};
+
+export const isHealthy = () => conf?.services.every((svc) => svc.health());

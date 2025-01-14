@@ -45,6 +45,8 @@ spec:
           env:
             - name: NODE_ENV
               value: "development"
+            - name: INSTANCE_NAME
+              value: "local_default_aztec_listener"
             - name: BLOCK_POLL_INTERVAL_MS
               value: "5000"
             - name: CHAIN_NAME
