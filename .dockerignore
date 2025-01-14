@@ -32,4 +32,4 @@
 !packages/error-middleware
 !packages/auth0-middleware
 !packages/microservice-base
-!package/postgres-helper
+!packages/postgres-helper

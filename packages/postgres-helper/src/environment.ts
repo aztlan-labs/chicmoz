@@ -18,6 +18,6 @@ export const getEnvironmentString = () => {
     POSTGRES_PORT,
     POSTGRES_DB_NAME,
     POSTGRES_ADMIN,
-    POSTGRES_PASSWORD: "REDACTED",
+    POSTGRES_PASSWORD: POSTGRES_PASSWORD ? "❌❌❌❌❌" : "⚠️ No password provided ⚠️",
   });
 }

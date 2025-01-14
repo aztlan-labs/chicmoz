@@ -7,8 +7,7 @@ export const init = async (logger: Logger) => {
     return;
   }
   for (const [index, svc] of conf.services.entries()) {
-    logger.info(`[${index + 1} of ${conf.services.length}]`);
-    logger.info(`🔧 ${svc.serviceId} initializing...`);
+    logger.info(`🔧 ${svc.serviceId} [${index + 1} of ${conf.services.length}] initializing with config:\n${svc.getConfigStr()}`);
     await svc.init();
     logger.info(`👍 ${svc.serviceId} initialized!`);
   }
