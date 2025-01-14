@@ -33,6 +33,17 @@ export const publishMessage = async <T>(topic: string, message: T) => {
   await mb.publish<T>(topic, message);
 };
 
+export const startSubscribe = async (
+  groupId: string,
+  topic: string,
+  cb: (message: unknown) => Promise<void>
+) => {
+  if (!isInitialized) throw new Error("MessageBus is not initialized");
+  if (isShutdown) throw new Error("MessageBus is already shutdown");
+  await mb.subscribe(groupId, topic, cb);
+  await mb.runConsumer(groupId);
+}
+
 export const generateSvc: (
   instanceName: string,
   logger: Logger
