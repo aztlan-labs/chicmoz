@@ -19,10 +19,10 @@ manifests:
     - k8s/local/common/namespace.yaml
     - k8s/local/common/postgres-config.yaml
     - k8s/local/explorer-ui/ingress.yaml
-    - k8s/local/explorer-ui/deployment.yaml
+    - k8s/local/explorer-ui/deployment.yaml # TODO
     - k8s/local/explorer-ui/service.yaml
     - k8s/local/explorer-api/ingress.yaml
-    - k8s/local/explorer-api/deployment.yaml
+    - k8s/local/explorer-api/remote_sp_testnet_deployment.yaml
     - k8s/local/explorer-api/service.yaml
     - k8s/local/explorer-api/postgres-config.yaml
     - k8s/local/websocket-event-publisher/ingress.yaml
