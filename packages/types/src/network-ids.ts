@@ -45,23 +45,10 @@ export const getL2NetworkId = (networkId: L1NetworkId): L2NetworkId => {
       return "PUBLIC_TESTNET";
   }
 };
-export const getEthereumNetworkIdentifier = (
+export const getEthereumNetworkNumber = (
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   networkId: L1NetworkId
 ): number => {
-  switch (networkId) {
-    case "ETH_MAINNET":
-      return 1;
-    case "ANVIL_LOCAL":
-      return 31337;
-    case "ANVIL_DEVNET":
-      return 1337;
-    case "ANVIL_SP_TESTNET":
-      return 1337;
-    case "ETH_SEPOLIA":
-      // eslint-disable-next-line no-console
-      console.log(`================
-      trying to get identifier for ETH_SEPOLIA returning 42 but not sure if this is correct
-================`);
-      return 42;
-  }
+  // TODO
+  return 1337;
 };

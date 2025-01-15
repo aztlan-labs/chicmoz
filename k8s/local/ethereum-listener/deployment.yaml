@@ -24,10 +24,10 @@ spec:
               cpu: 100m
           name: ethereum-listener
           env:
-            - name: NODE_ENV
-              value: "development"
-            - name: BLOCK_POLL_INTERVAL_MS
-              value: "5000"
+            - name: INSTANCE_NAME
+              value: "local_ethereum_anvil_listener"
+            - name: L2_NETWORK_ID
+              value: "SANDBOX"
             - name: LISTENER_DISABLED
               value: "false"
             - name: GENESIS_CATCHUP

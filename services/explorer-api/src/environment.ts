@@ -1,10 +1,5 @@
 import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
-import {
-  type L1NetworkId,
-  type L2NetworkId,
-  l1NetworkIdSchema,
-  l2NetworkIdSchema,
-} from "@chicmoz-pkg/types";
+import { l2NetworkIdSchema, type L2NetworkId } from "@chicmoz-pkg/types";
 import {
   DEFAULT_VERIFIED_CONTRACT_INSTANCES_DEV,
   DEFAULT_VERIFIED_CONTRACT_INSTANCES_PROD,
@@ -35,9 +30,6 @@ export const DB_MAX_BLOCKS = 20;
 export const DB_MAX_TX_EFFECTS = 20;
 export const DB_MAX_CONTRACTS = 20;
 
-export const L1_NETWORK_ID: L1NetworkId = l1NetworkIdSchema.parse(
-  process.env.L1_NETWORK_ID
-);
 export const L2_NETWORK_ID: L2NetworkId = l2NetworkIdSchema.parse(
   process.env.L2_NETWORK_ID
 );

@@ -24,8 +24,10 @@ spec:
               cpu: 100m
           name: ethereum-listener
           env:
-            - name: NODE_ENV
-              value: "development"
+            - name: INSTANCE_NAME
+              value: "remote_ethereum_anvil_listener"
+            - name: L2_NETWORK_ID
+              value: "DEVNET"
             - name: BLOCK_POLL_INTERVAL_MS
               value: "5000"
             - name: LISTENER_DISABLED

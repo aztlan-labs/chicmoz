@@ -10,13 +10,14 @@ import { ConnectedToL2Event } from "@chicmoz-pkg/message-registry";
 import {
   EthAddress,
   chicmozL1L2ValidatorSchema,
-  getEthereumNetworkIdentifier,
+  getEthereumNetworkNumber,
+  getL1NetworkId,
 } from "@chicmoz-pkg/types";
 import { Log, PublicClient, createPublicClient, defineChain, http } from "viem";
 import {
   ETHEREUM_HTTP_RPC_URL,
   ETHEREUM_WS_RPC_URL,
-  L1_NETWORK_ID,
+  L2_NETWORK_ID,
 } from "../environment.js";
 import { emit } from "../events/index.js";
 import { logger } from "../logger.js";
@@ -58,25 +59,24 @@ let l1Contracts:
     }
   | undefined = undefined;
 
-const chain = defineChain({
-  id: getEthereumNetworkIdentifier(L1_NETWORK_ID),
-  name: L1_NETWORK_ID,
-  nativeCurrency: {
-    decimals: 18,
-    name: "Ether",
-    symbol: "ETH",
-  },
-  rpcUrls: {
-    default: {
-      http: [ETHEREUM_HTTP_RPC_URL],
-      webSocket: [ETHEREUM_WS_RPC_URL],
-    },
-  },
-});
-
 let publicClient: PublicClient;
 
 export const initClient = () => {
+  const chain = defineChain({
+    id: getEthereumNetworkNumber(getL1NetworkId(L2_NETWORK_ID)),
+    name: getL1NetworkId(L2_NETWORK_ID),
+    nativeCurrency: {
+      decimals: 18,
+      name: "Ether",
+      symbol: "ETH",
+    },
+    rpcUrls: {
+      default: {
+        http: [ETHEREUM_HTTP_RPC_URL],
+        webSocket: [ETHEREUM_WS_RPC_URL],
+      },
+    },
+  });
   publicClient = createPublicClient({
     chain,
     transport: http(),

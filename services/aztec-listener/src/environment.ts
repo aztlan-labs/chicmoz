@@ -1,7 +1,5 @@
 import {
-  type L1NetworkId,
   type L2NetworkId,
-  l1NetworkIdSchema,
   l2NetworkIdSchema,
 } from "@chicmoz-pkg/types";
 
@@ -17,9 +15,6 @@ export const AZTEC_RPC_URL = process.env.AZTEC_RPC_URL ?? "http://localhost:8080
 
 export const IGNORE_PROCESSED_HEIGHT = process.env.IGNORE_PROCESSED_HEIGHT === "true";
 
-export const L1_NETWORK_ID: L1NetworkId = l1NetworkIdSchema.parse(
-  process.env.L1_NETWORK_ID
-);
 export const L2_NETWORK_ID: L2NetworkId = l2NetworkIdSchema.parse(
   process.env.L2_NETWORK_ID
 );
@@ -34,6 +29,5 @@ export const getConfigStr = () => `POLLER\n${JSON.stringify({
   AZTEC_DISABLED,
   AZTEC_RPC_URL,
   IGNORE_PROCESSED_HEIGHT,
-  L1_NETWORK_ID,
   L2_NETWORK_ID,
 })}`;

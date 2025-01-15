@@ -21,8 +21,6 @@ spec:
           image: aztec-listener:latest
           command: ["yarn", run, "migrate"]
           env:
-            - name: NODE_ENV
-              value: "development"
             - name: POSTGRES_IP
               value: "postgresql"
             - name: POSTGRES_PORT
@@ -41,14 +39,12 @@ spec:
               cpu: 250m
           name: aztec-listener
           env:
-            - name: NODE_ENV
-              value: "development"
+            - name: INSTANCE_NAME
+              value: "remote_aztec_devnet_listener"
             - name: BLOCK_POLL_INTERVAL_MS
               value: "5000"
-            - name: CHAIN_NAME
-              value: "AZTEC"
-            - name: NETWORK_NAME
-              value: "SANDBOX"
+            - name: L2_NETWORK_ID
+              value: "DEVNET"
             - name: MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS
               value: "50"
             - name: POSTGRES_IP

@@ -21,8 +21,6 @@ spec:
           image: explorer-api:latest
           command: ["yarn", run, "migrate"]
           env:
-            - name: NODE_ENV
-              value: "development"
             - name: POSTGRES_IP
               value: "postgresql"
             - name: POSTGRES_PORT
@@ -47,11 +45,9 @@ spec:
               protocol: TCP
           name: explorer-api
           env:
-            - name: NODE_ENV
-              value: "development"
             - name: PORT
               value: "80"
-            - name: NETWORK_NAME
+            - name: L2_NETWORK_ID
               value: "SANDBOX"
             - name: POSTGRES_IP
               value: "postgresql"

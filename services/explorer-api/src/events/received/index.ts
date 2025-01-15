@@ -1,12 +1,13 @@
 import {
+  generateL1TopicName,
+  generateL2TopicName,
   type ChicmozMessageBusPayload,
   type ChicmozMessageBusTopic,
   type NewBlockEvent,
   type PendingTxsEvent,
-  generateL1TopicName,
-  generateL2TopicName,
 } from "@chicmoz-pkg/message-registry";
-import { L1_NETWORK_ID, L2_NETWORK_ID } from "../../environment.js";
+import { getL1NetworkId } from "@chicmoz-pkg/types";
+import { L2_NETWORK_ID } from "../../environment.js";
 import { logger } from "../../logger.js";
 import { startSubscribe } from "../../svcs/message-bus/index.js";
 import { onAztecConnectionEvent } from "./on-aztec-connection-event.js";
@@ -55,7 +56,7 @@ export const l1L2ValidatorHandler: EventHandler = {
   cb: onL1L2Validator as (arg0: unknown) => Promise<void>,
   topic: generateL1TopicName(
     L2_NETWORK_ID,
-    L1_NETWORK_ID,
+    getL1NetworkId(L2_NETWORK_ID),
     "L1_L2_VALIDATOR_EVENT"
   ),
 };

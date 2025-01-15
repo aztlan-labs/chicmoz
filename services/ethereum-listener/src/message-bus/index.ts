@@ -4,12 +4,12 @@ import {
   L1_MESSAGES,
   generateL1TopicName,
 } from "@chicmoz-pkg/message-registry";
+import { getL1NetworkId } from "@chicmoz-pkg/types";
 import { backOff } from "exponential-backoff";
 import {
   KAFKA_CONNECTION,
   KAFKA_SASL_PASSWORD,
   KAFKA_SASL_USERNAME,
-  L1_NETWORK_ID,
   L2_NETWORK_ID,
   SERVICE_NAME,
 } from "../environment.js";
@@ -57,7 +57,11 @@ export const publishMessage = async (
   if (!isInitialized) throw new Error("MessageBus is not initialized");
   if (isShutdown) throw new Error("MessageBus is already shutdown");
 
-  const topic = generateL1TopicName(L2_NETWORK_ID, L1_NETWORK_ID, eventType);
+  const topic = generateL1TopicName(
+    L2_NETWORK_ID,
+    getL1NetworkId(L2_NETWORK_ID),
+    eventType
+  );
   await mb.publish(topic, message);
 };
 
