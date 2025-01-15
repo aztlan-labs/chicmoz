@@ -25,9 +25,9 @@ spec:
           name: ethereum-listener
           env:
             - name: INSTANCE_NAME
-              value: "devnet_ethereum-listener"
+              value: "sp_testnet_ethereum-listener"
             - name: L2_NETWORK_ID
-              value: "DEVNET"
+              value: "SP_TESTNET"
             - name: BLOCK_POLL_INTERVAL_MS
               value: "5000"
             - name: GENESIS_CATCHUP
@@ -38,10 +38,10 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: global
-                  key: DEVNET_AZTEC_L1_HTTP
+                  key: SP_TESTNET_AZTEC_L1_HTTP
             - name: ETHEREUM_WS_RPC_URL
               valueFrom:
                 secretKeyRef:
                   name: global
-                  key: DEVNET_AZTEC_L1_WS
+                  key: SP_TESTNET_AZTEC_L1_WS
 status: {}

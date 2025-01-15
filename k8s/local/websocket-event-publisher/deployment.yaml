@@ -27,4 +27,4 @@ spec:
             - name: PORT
               value: "3000"
             - name: L2_NETWORK_ID
-              value: "SANDBOX"
+              value: "SP_TESTNET"

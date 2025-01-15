@@ -40,11 +40,11 @@ spec:
           name: aztec-listener
           env:
             - name: INSTANCE_NAME
-              value: "remote_devnet_aztec-listener"
+              value: "remote_sp_testnet_aztec-listener"
             - name: BLOCK_POLL_INTERVAL_MS
               value: "5000"
             - name: L2_NETWORK_ID
-              value: "DEVNET"
+              value: "SP_TESTNET"
             - name: POSTGRES_IP
               value: "postgresql"
             - name: POSTGRES_PORT
@@ -65,5 +65,5 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: global
-                  key: DEVNET_AZTEC_L2_BOOTNODE_RPC
+                  key: SP_TESTNET_AZTEC_L2_BOOTNODE_RPC
 status: {}

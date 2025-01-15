@@ -48,7 +48,7 @@ spec:
             - name: PORT
               value: "80"
             - name: L2_NETWORK_ID
-              value: "SANDBOX"
+              value: "SP_TESTNET" # TODO: different yaml-files?
             - name: POSTGRES_IP
               value: "postgresql"
             - name: POSTGRES_PORT
