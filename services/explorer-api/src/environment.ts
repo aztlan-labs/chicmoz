@@ -21,7 +21,7 @@ export const CACHE_LATEST_TTL_SECONDS =
 export const REDIS_HOST = process.env.REDIS_HOST ?? "redis-master";
 export const REDIS_PORT = Number(process.env.REDIS_PORT) || 6379;
 
-export const PORT = Number(process.env.PORT) || 5000;
+export const PORT = Number(process.env.PORT) || 80;
 export const BODY_LIMIT = process.env.BODY_LIMIT ?? "64kb";
 export const ARTIFACT_BODY_LIMIT = process.env.ARTIFACT_BODY_LIMIT ?? "10mb";
 export const PARAMETER_LIMIT = Number(process.env.PARAMETER_LIMIT) || 100;

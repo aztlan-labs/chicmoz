@@ -20,17 +20,11 @@ spec:
         - name: run-migrations
           image: aztec-listener:latest
           command: ["yarn", run, "migrate"]
-          env:
-            - name: POSTGRES_IP
-              value: "postgresql"
-            - name: POSTGRES_PORT
-              value: "5432"
-            - name: POSTGRES_DB_NAME
-              value: "aztec_listener"
-            - name: POSTGRES_ADMIN
-              value: "admin"
-            - name: POSTGRES_PASSWORD
-              value: "secret-local-password"
+          envFrom:
+            - configMapRef:
+                name: postgres-config-global
+            - configMapRef:
+                name: postgres-config-aztec-listener
       containers:
         - image: aztec-listener:latest
           resources:
@@ -38,6 +32,11 @@ spec:
               memory: 750Mi
               cpu: 250m
           name: aztec-listener
+          envFrom:
+            - configMapRef:
+                name: postgres-config-global
+            - configMapRef:
+                name: postgres-config-aztec-listener
           env:
             - name: INSTANCE_NAME
               value: "remote_devnet_aztec-listener"
@@ -45,16 +44,6 @@ spec:
               value: "5000"
             - name: L2_NETWORK_ID
               value: "DEVNET"
-            - name: POSTGRES_IP
-              value: "postgresql"
-            - name: POSTGRES_PORT
-              value: "5432"
-            - name: POSTGRES_DB_NAME
-              value: "aztec_listener"
-            - name: POSTGRES_ADMIN
-              value: "admin"
-            - name: POSTGRES_PASSWORD
-              value: "secret-local-password"
             - name: AZTEC_GENESIS_CATCHUP
               value: "true"
             - name: AZTEC_LISTEN_FOR_BLOCKS
