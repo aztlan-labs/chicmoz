@@ -34,14 +34,14 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: global
-                  key: CHICMOZ_AZTEC_API_KEY
+                  key: DEVNET_AZTEC_API_KEY
             - name: DEBUG
               value: "aztec:*"
             - name: ETHEREUM_HOST
               valueFrom:
                 secretKeyRef:
                   name: global
-                  key: CHICMOZ_AZTEC_ETHEREUM_HOST
+                  key: DEVNET_AZTEC_L1_HTTP
             - name: L1_CHAIN_ID
               value: "677692"
             - name: ARCHIVER_POLLING_INTERVAL_MS
@@ -64,30 +64,30 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: global
-                  key: CHICMOZ_AZTEC_FAUCET_ENDPOINT
+                  key: DEVNET_AZTEC_FAUCET_ENDPOINT
             - name: PRIVATE_KEY
               valueFrom:
                 secretKeyRef:
                   name: global
-                  key: CHICMOZ_AZTEC_PRIVATE_KEY
+                  key: DEVNET_PRIVATE_KEY
             - name: ETH_ADDRESS
               valueFrom:
                 secretKeyRef:
                   name: global
-                  key: CHICMOZ_AZTEC_ETH_ADDRESS
+                  key: DEVNET_ETH_ADDRESS
             - name: L1_DEV_COIN
               valueFrom:
                 secretKeyRef:
                   name: global
-                  key: CHICMOZ_AZTEC_L1_DEV_COIN
+                  key: DEVNET_L1_DEV_COIN
             - name: DEV_COIN_PORTAL
               valueFrom:
                 secretKeyRef:
                   name: global
-                  key: CHICMOZ_AZTEC_DEV_COIN_PORTAL
+                  key: DEVNET_DEV_COIN_PORTAL
             - name: L1_FEE_JUICE
               valueFrom:
                 secretKeyRef:
                   name: global
-                  key: CHICMOZ_AZTEC_L1_FEE_JUICE
+                  key: DEVNET_L1_FEE_JUICE
 status: {}

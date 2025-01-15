@@ -40,7 +40,7 @@ spec:
           name: aztec-listener
           env:
             - name: INSTANCE_NAME
-              value: "remote_aztec_devnet_listener"
+              value: "remote_devnet_aztec-listener"
             - name: BLOCK_POLL_INTERVAL_MS
               value: "5000"
             - name: L2_NETWORK_ID
@@ -71,5 +71,5 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: global
-                  key: CHICMOZ_AZTEC_RPC
+                  key: DEVNET_AZTEC_L2_BOOTNODE_RPC
 status: {}

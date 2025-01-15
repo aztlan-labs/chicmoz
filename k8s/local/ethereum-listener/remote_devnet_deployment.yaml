@@ -25,7 +25,7 @@ spec:
           name: ethereum-listener
           env:
             - name: INSTANCE_NAME
-              value: "remote_ethereum_anvil_listener"
+              value: "devnet_ethereum-listener"
             - name: L2_NETWORK_ID
               value: "DEVNET"
             - name: BLOCK_POLL_INTERVAL_MS
@@ -40,10 +40,10 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: global
-                  key: CHICMOZ_ETHEREUM_RPC_HTTP
+                  key: DEVNET_AZTEC_L1_HTTP
             - name: ETHEREUM_WS_RPC_URL
               valueFrom:
                 secretKeyRef:
                   name: global
-                  key: CHICMOZ_ETHEREUM_RPC_WS
+                  key: DEVNET_AZTEC_L1_WS
 status: {}

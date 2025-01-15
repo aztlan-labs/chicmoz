@@ -40,7 +40,7 @@ spec:
           name: aztec-listener
           env:
             - name: INSTANCE_NAME
-              value: "local_aztec_devnet_listener"
+              value: "local_devnet_aztec-listener"
             - name: L2_NETWORK_ID
               value: "DEVNET"
             - name: MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS
