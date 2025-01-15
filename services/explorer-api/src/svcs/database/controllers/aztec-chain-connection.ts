@@ -1,5 +1,5 @@
 import { desc, eq, getTableColumns, sql } from "drizzle-orm";
-import { ConnectedToAztecEvent } from "@chicmoz-pkg/message-registry";
+import { ConnectedToL2Event } from "@chicmoz-pkg/message-registry";
 import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import { aztecChainConnection } from "../schema/aztec-chain-connection.js";
 import { createHash } from "crypto";
@@ -9,7 +9,7 @@ const hashString = (str: string) => {
   return createHash("sha256").update(str).digest("hex");
 };
 
-const generateStoreObject = (connectionInfo: ConnectedToAztecEvent) => {
+const generateStoreObject = (connectionInfo: ConnectedToL2Event) => {
   const jsonString = JSON.stringify({
     ...connectionInfo.nodeInfo,
     rpcUrl: connectionInfo.rpcUrl,
@@ -23,7 +23,7 @@ const generateStoreObject = (connectionInfo: ConnectedToAztecEvent) => {
   };
 };
 
-export const store = async (connectionInfo: ConnectedToAztecEvent) => {
+export const store = async (connectionInfo: ConnectedToL2Event) => {
   const storeObject = generateStoreObject(connectionInfo);
   return await db().transaction(async (dbTx) => {
     await dbTx

@@ -20,19 +20,12 @@ spec:
         - name: run-migrations
           image: explorer-api:latest
           command: ["yarn", run, "migrate"]
+          envFrom:
+            - configMapRef:
+                name: postgres-config-global
+            - configMapRef:
+                name: postgres-config-explorer-api
           env:
-            - name: NODE_ENV
-              value: "development"
-            - name: POSTGRES_IP
-              value: "postgresql"
-            - name: POSTGRES_PORT
-              value: "5432"
-            - name: POSTGRES_DB_NAME
-              value: "explorer_api"
-            - name: POSTGRES_ADMIN
-              value: "admin"
-            - name: POSTGRES_PASSWORD
-              value: "secret-local-password"
             - name: TOTAL_DB_RESET
               value: "false"
       containers:
@@ -46,25 +39,14 @@ spec:
               containerPort: 80
               protocol: TCP
           name: explorer-api
+          envFrom:
+            - configMapRef:
+                name: postgres-config-global
+            - configMapRef:
+                name: postgres-config-explorer-api
           env:
-            - name: NODE_ENV
-              value: "development"
-            - name: PORT
-              value: "80"
-            - name: NETWORK_NAME
-              value: "SANDBOX"
-            - name: POSTGRES_IP
-              value: "postgresql"
-            - name: POSTGRES_PORT
-              value: "5432"
-            - name: POSTGRES_DB_NAME
-              value: "explorer_api"
-            - name: POSTGRES_ADMIN
-              value: "admin"
-            - name: POSTGRES_PASSWORD
-              value: "secret-local-password"
-            - name: CACHE_TTL
-              value: "2"
+            - name: L2_NETWORK_ID
+              value: "SP_TESTNET" # TODO: different yaml-files?
           readinessProbe:
             httpGet:
               path: /health

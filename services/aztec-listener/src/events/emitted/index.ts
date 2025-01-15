@@ -1,11 +1,10 @@
 import { L2Block, Tx } from "@aztec/aztec.js";
 import {
-  ConnectedToAztecEvent,
+  ConnectedToL2Event,
   PendingTxsEvent,
 } from "@chicmoz-pkg/message-registry";
 import { logger } from "../../logger.js";
 import { publishMessage } from "../../svcs/message-bus/index.js";
-import { getNodeInfo } from "../../svcs/poller/index.js";
 
 export const onBlock = async (block: L2Block) => {
   const height = Number(block.header.globalVariables.blockNumber);
@@ -14,7 +13,6 @@ export const onBlock = async (block: L2Block) => {
   await publishMessage("NEW_BLOCK_EVENT", {
     block: blockStr,
     blockNumber: height,
-    nodeInfo: getNodeInfo(),
   });
 };
 
@@ -23,7 +21,6 @@ export const onCatchupBlock = async (block: L2Block) => {
   await publishMessage("CATCHUP_BLOCK_EVENT", {
     block: blockStr,
     blockNumber: Number(block.header.globalVariables.blockNumber),
-    nodeInfo: getNodeInfo(),
   });
 };
 // TODO: onCatchupRequestFromExplorerApi
@@ -61,6 +58,6 @@ export const onPendingTxs = async (txs: Tx[]) => {
   } as PendingTxsEvent);
 };
 
-export const onConnectedToAztec = async (event: ConnectedToAztecEvent) => {
-  await publishMessage("CONNECTED_TO_AZTEC_EVENT", event);
+export const onConnectedToAztec = async (event: ConnectedToL2Event) => {
+  await publishMessage("CONNECTED_TO_L2_EVENT", event);
 };

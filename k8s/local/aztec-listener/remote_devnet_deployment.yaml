@@ -25,10 +25,6 @@ spec:
                 name: postgres-config-global
             - configMapRef:
                 name: postgres-config-aztec-listener
-
-          env:
-            - name: TOTAL_DB_RESET
-              value: "false"
       containers:
         - image: aztec-listener:latest
           resources:
@@ -43,15 +39,11 @@ spec:
                 name: postgres-config-aztec-listener
           env:
             - name: INSTANCE_NAME
-              value: "local_aztec_sandbox_listener"
+              value: "remote_devnet_aztec-listener"
+            - name: BLOCK_POLL_INTERVAL_MS
+              value: "5000"
             - name: L2_NETWORK_ID
-              value: "SANDBOX"
-            - name: MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS
-              value: "50"
-            - name: IGNORE_PROCESSED_HEIGHT
-              value: "false"
-            - name: AZTEC_DISABLED
-              value: "false"
+              value: "DEVNET"
             - name: AZTEC_GENESIS_CATCHUP
               value: "true"
             - name: AZTEC_LISTEN_FOR_BLOCKS
@@ -59,5 +51,8 @@ spec:
             - name: AZTEC_LISTEN_FOR_PENDING_TXS
               value: "true"
             - name: AZTEC_RPC_URL
-              value: "http://aztec-sandbox-node:8081"
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: DEVNET_AZTEC_L2_BOOTNODE_RPC
 status: {}

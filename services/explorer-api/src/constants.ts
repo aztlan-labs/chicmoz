@@ -1,9 +1,6 @@
 import { ChicmozL2VerifiedContractInctanceData } from "@chicmoz-pkg/types";
 
-export const CHAIN_NAME = "AZTEC";
 export const SERVICE_NAME = "explorer-api";
-export const ETHEREUM_CHAIN_NAME = "HARDCODED_ETHEREUM";
-export const ETHEREUM_NETWORK_ID = 99999;
 
 export const DEFAULT_VERIFIED_CONTRACT_INSTANCES_DEV: ChicmozL2VerifiedContractInctanceData[] =
   [

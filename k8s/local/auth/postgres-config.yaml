@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config-auth
+  namespace: chicmoz
+data:
+  POSTGRES_DB_NAME: "auth"
+  POSTGRES_PASSWORD: "secret-local-password"

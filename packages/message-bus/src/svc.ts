@@ -1,5 +1,13 @@
 import { Logger } from "@chicmoz-pkg/logger-server";
-import { MicroserviceBaseSvcState, type MicroserviceBaseSvc, getSvcState } from "@chicmoz-pkg/microservice-base";
+import {
+  type ChicmozMessageBusPayload,
+  type ChicmozMessageBusTopic,
+} from "@chicmoz-pkg/message-registry";
+import {
+  MicroserviceBaseSvcState,
+  getSvcState,
+  type MicroserviceBaseSvc,
+} from "@chicmoz-pkg/microservice-base";
 import { MessageBus } from "./class.js";
 import {
   KAFKA_CONNECTION,
@@ -27,26 +35,32 @@ export const init = async (instanceName: string, logger: Logger) => {
 
 const checkReady = () => {
   const state = getSvcState(serviceId);
-  if (state === MicroserviceBaseSvcState.SHUTTING_DOWN) throw new Error("MessageBus is shutting down");
-  if (state === MicroserviceBaseSvcState.DOWN) throw new Error("MessageBus is down");
-  if (state === MicroserviceBaseSvcState.INITIALIZING) throw new Error("MessageBus is initializing");
+  if (state === MicroserviceBaseSvcState.SHUTTING_DOWN)
+    throw new Error("MessageBus is shutting down");
+  if (state === MicroserviceBaseSvcState.DOWN)
+    throw new Error("MessageBus is down");
+  if (state === MicroserviceBaseSvcState.INITIALIZING)
+    throw new Error("MessageBus is initializing");
   return state;
-}
+};
 
-export const publishMessage = async <T>(topic: string, message: T) => {
+export const publishMessage = async (
+  topic: ChicmozMessageBusTopic,
+  payload: ChicmozMessageBusPayload
+) => {
   checkReady();
-  await mb.publish<T>(topic, message);
+  await mb.publish<ChicmozMessageBusPayload>(topic, payload);
 };
 
 export const startSubscribe = async (
   groupId: string,
-  topic: string,
-  cb: (message: unknown) => Promise<void>
+  topic: ChicmozMessageBusTopic,
+  cb: (message: ChicmozMessageBusPayload) => Promise<void>
 ) => {
   checkReady();
   await mb.subscribe(groupId, topic, cb);
   await mb.runConsumer(groupId);
-}
+};
 
 export const generateSvc: (
   instanceName: string,

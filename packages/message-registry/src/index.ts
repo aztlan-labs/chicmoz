@@ -1,14 +1,10 @@
-import { AZTEC_MESSAGES } from "./aztec.js";
-import { ETHEREUM_MESSAGES } from "./ethereum.js";
+import { L2Payload, L2Topic } from "./aztec.js";
+import { L1Payload, L1Topic } from "./ethereum.js";
 
 export * from "./aztec.js";
 export * from "./ethereum.js";
-export * from "./metric.js";
-export * from "./subscription.js";
+export * from "./metric.js"; // TODO (legacy)
+export * from "./subscription.js"; // TODO (legacy)
 
-export const generateTopicName = (
-  networkId: string,
-  topic: keyof AZTEC_MESSAGES | keyof ETHEREUM_MESSAGES
-): string => {
-  return `${networkId}_${topic}`;
-};
+export type ChicmozMessageBusTopic = L2Topic | L1Topic;
+export type ChicmozMessageBusPayload = L2Payload | L1Payload;

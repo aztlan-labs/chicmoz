@@ -13,7 +13,9 @@ deploy:
 manifests:
   rawYaml:
     - k8s/local/common/namespace.yaml
+    - k8s/local/common/postgres-config.yaml
     - k8s/local/aztec-listener/deployment.yaml
+    - k8s/local/aztec-listener/postgres-config.yaml
     - k8s/local/ethereum-listener/deployment.yaml
   helm:
     releases:

@@ -27,19 +27,14 @@ spec:
               containerPort: 80
               protocol: TCP
           name: auth
+          envFrom:
+            - configMapRef:
+                name: postgres-config-global
+            - configMapRef:
+                name: postgres-config-auth
           env:
             - name: PORT
               value: "80"
-            - name: POSTGRES_IP
-              value: "postgresql"
-            - name: POSTGRES_PORT
-              value: "5432"
-            - name: POSTGRES_DB_NAME
-              value: "auth"
-            - name: POSTGRES_ADMIN
-              value: "admin"
-            - name: POSTGRES_PASSWORD
-              value: "secret-local-password"
             - name: REDIS_HOST
               value: "redis-master"
             - name: REDIS_PORT

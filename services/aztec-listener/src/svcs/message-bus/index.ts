@@ -1,22 +1,23 @@
 import { generateSvc, publishMessage as pub } from "@chicmoz-pkg/message-bus";
 import {
-  AZTEC_MESSAGES,
-  generateAztecTopicName,
+  L2_MESSAGES,
+  generateL2TopicName,
+  type ChicmozMessageBusPayload,
 } from "@chicmoz-pkg/message-registry";
 import {
   INSTANCE_NAME,
   type MicroserviceBaseSvc,
 } from "@chicmoz-pkg/microservice-base";
-import { NETWORK_ID } from "../../environment.js";
+import { L2_NETWORK_ID } from "../../environment.js";
 import { logger } from "../../logger.js";
 
-export const publishMessage = async <T>(
-  eventType: keyof AZTEC_MESSAGES,
-  message: T
+export const publishMessage = async (
+  eventType: keyof L2_MESSAGES,
+  message: ChicmozMessageBusPayload
 ) => {
-  const topic = generateAztecTopicName(NETWORK_ID, eventType);
+  const topic = generateL2TopicName(L2_NETWORK_ID, eventType);
   logger.info(`Publishing message to topic ${topic}`);
-  await pub<T>(topic, message);
+  await pub(topic, message);
 };
 
 export const messageBusService: MicroserviceBaseSvc = generateSvc(

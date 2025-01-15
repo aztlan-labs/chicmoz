@@ -1,19 +1,20 @@
 import { MBOptions, MessageBus } from "@chicmoz-pkg/message-bus";
+import {
+  L1Payload,
+  L1_MESSAGES,
+  generateL1TopicName,
+} from "@chicmoz-pkg/message-registry";
+import { getL1NetworkId } from "@chicmoz-pkg/types";
 import { backOff } from "exponential-backoff";
 import {
-  ETHEREUM_MESSAGES,
-  generateTopicName,
-} from "@chicmoz-pkg/message-registry";
-import {
-  ETHEREUM_CHAIN_NAME,
-  ETHEREUM_NETWORK_ID,
   KAFKA_CONNECTION,
   KAFKA_SASL_PASSWORD,
   KAFKA_SASL_USERNAME,
+  L2_NETWORK_ID,
   SERVICE_NAME,
 } from "../environment.js";
-import { logger } from "../logger.js";
 import { EventHandler } from "../events/index.js";
+import { logger } from "../logger.js";
 
 let mb: MessageBus;
 let isInitialized = false;
@@ -49,15 +50,19 @@ export const init = async () => {
   };
 };
 
-export const publishMessage = async <T>(
-  eventType: keyof ETHEREUM_MESSAGES,
-  message: T
+export const publishMessage = async (
+  eventType: keyof L1_MESSAGES,
+  message: L1Payload
 ) => {
   if (!isInitialized) throw new Error("MessageBus is not initialized");
   if (isShutdown) throw new Error("MessageBus is already shutdown");
 
-  const topic = generateTopicName(`${ETHEREUM_CHAIN_NAME}_${ETHEREUM_NETWORK_ID}`, eventType);
-  await mb.publish<T>(topic, message);
+  const topic = generateL1TopicName(
+    L2_NETWORK_ID,
+    getL1NetworkId(L2_NETWORK_ID),
+    eventType
+  );
+  await mb.publish(topic, message);
 };
 
 const tryStartSubscribe = async ({

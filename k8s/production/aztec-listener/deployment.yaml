@@ -47,9 +47,9 @@ spec:
           env:
             - name: NODE_ENV
               value: "production"
-            - name: CHAIN_NAME
+            - name: CHAIN_NAME # TODO
               value: "AZTEC"
-            - name: NETWORK_NAME
+            - name: NETWORK_NAME # TODO
               value: "SANDBOX"
             - name: MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS
               value: "50"
