@@ -45,10 +45,3 @@ export const getL2NetworkId = (networkId: L1NetworkId): L2NetworkId => {
       return "PUBLIC_TESTNET";
   }
 };
-export const getEthereumNetworkNumber = (
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  networkId: L1NetworkId
-): number => {
-  // TODO
-  return 1337;
-};

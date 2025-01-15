@@ -10,10 +10,10 @@ import { ConnectedToL2Event } from "@chicmoz-pkg/message-registry";
 import {
   EthAddress,
   chicmozL1L2ValidatorSchema,
-  getEthereumNetworkNumber,
   getL1NetworkId,
 } from "@chicmoz-pkg/types";
 import { Log, PublicClient, createPublicClient, defineChain, http } from "viem";
+import { foundry, mainnet, sepolia } from "viem/chains";
 import {
   ETHEREUM_HTTP_RPC_URL,
   ETHEREUM_WS_RPC_URL,
@@ -62,14 +62,19 @@ let l1Contracts:
 let publicClient: PublicClient;
 
 export const initClient = () => {
+  let chainConf;
+  switch (getL1NetworkId(L2_NETWORK_ID)) {
+    case "ETH_MAINNET":
+      chainConf = mainnet;
+      break;
+    case "ETH_SEPOLIA":
+      chainConf = sepolia;
+      break;
+    default:
+      chainConf = foundry;
+  }
   const chain = defineChain({
-    id: getEthereumNetworkNumber(getL1NetworkId(L2_NETWORK_ID)),
-    name: getL1NetworkId(L2_NETWORK_ID),
-    nativeCurrency: {
-      decimals: 18,
-      name: "Ether",
-      symbol: "ETH",
-    },
+    ...chainConf,
     rpcUrls: {
       default: {
         http: [ETHEREUM_HTTP_RPC_URL],
