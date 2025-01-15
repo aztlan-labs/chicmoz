@@ -1,15 +1,15 @@
 import { MBOptions, MessageBus } from "@chicmoz-pkg/message-bus";
-import { generateAztecTopicName } from "@chicmoz-pkg/message-registry";
+import { generateL2TopicName } from "@chicmoz-pkg/message-registry";
 import { backOff } from "exponential-backoff";
 import { SERVICE_NAME } from "../constants.js";
 import {
   KAFKA_CONNECTION_URL,
   KAFKA_SASL_PASSWORD,
   KAFKA_SASL_USERNAME,
-  NETWORK_ID,
+  L2_NETWORK_ID,
 } from "../environment.js";
-import { logger } from "../logger.js";
 import { EventHandler } from "../event-handler/index.js";
+import { logger } from "../logger.js";
 
 let mb: MessageBus;
 let isInitialized = false;
@@ -52,7 +52,7 @@ const tryStartSubscribe = async ({
   if (!isInitialized) throw new Error("MessageBus is not initialized");
   if (isShutdown) throw new Error("MessageBus is already shutdown");
 
-  const topic = generateAztecTopicName(NETWORK_ID, topicBase);
+  const topic = generateL2TopicName(L2_NETWORK_ID, topicBase);
   const groupId = `${SERVICE_NAME}-${consumerGroup}`;
   logger.info(`Subscribing to topic ${topic}...`);
   await mb.subscribe(groupId, topic, cb);

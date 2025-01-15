@@ -835,6 +835,7 @@ __metadata:
   resolution: "@chicmoz-pkg/message-bus@workspace:packages/message-bus"
   dependencies:
     "@chicmoz-pkg/logger-server": "workspace:^"
+    "@chicmoz-pkg/message-registry": "workspace:^"
     "@chicmoz-pkg/microservice-base": "workspace:^"
     "@types/auto-bind": "npm:2.1.0"
     "@types/node": "npm:20.5.0"

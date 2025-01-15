@@ -1,11 +1,15 @@
-import { AZTEC_MESSAGES, PendingTxsEvent } from "@chicmoz-pkg/message-registry";
+import {
+  type ChicmozMessageBusPayload,
+  L2_MESSAGES,
+  type PendingTxsEvent,
+} from "@chicmoz-pkg/message-registry";
 import { onBlock } from "./on-block.js";
 import { onPendingTxs } from "./on-pending-txs.js";
 
 export type EventHandler = {
   consumerGroup: string;
-  cb: (event: unknown) => Promise<void>;
-  topicBase: keyof AZTEC_MESSAGES;
+  cb: (event: ChicmozMessageBusPayload) => Promise<void>;
+  topicBase: keyof L2_MESSAGES;
 };
 
 export const blockHandler: EventHandler = {

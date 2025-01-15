@@ -30,7 +30,7 @@ manifests:
     - k8s/local/auth/service.yaml
     - k8s/local/event-cannon/deployment.yaml
     - k8s/local/aztec-listener/deployment.yaml
-    # - k8s/local/ethereum-listener/deployment.yaml # NOTE: eth-listener is WIP!
+    # - k8s/local/ethereum-listener/deployment.yaml
     - k8s/local/aztec-sandbox-node/ingress.yaml
     - k8s/local/aztec-sandbox-node/deployment.yaml
     - k8s/local/aztec-sandbox-node/service.yaml

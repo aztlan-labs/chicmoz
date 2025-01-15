@@ -1,6 +1,10 @@
-import { ChicmozL2PendingTx, StringifiedNodeInfo } from "@chicmoz-pkg/types";
+import {
+  L2NetworkId,
+  ChicmozL2PendingTx,
+  StringifiedNodeInfo,
+} from "@chicmoz-pkg/types";
 
-export type ConnectedToAztecEvent = {
+export type ConnectedToL2Event = {
   nodeInfo: StringifiedNodeInfo;
   rpcUrl: string;
   chainHeight: number;
@@ -18,16 +22,20 @@ export type PendingTxsEvent = {
 
 export type CatchupBlockEvent = NewBlockEvent;
 
-export function generateAztecTopicName(
-  networkId: string,
-  topic: keyof AZTEC_MESSAGES
-): string {
-  return `${networkId}_${topic}`;
+export type L2Topic = `${L2NetworkId}__${keyof L2_MESSAGES}`;
+
+export function generateL2TopicName(
+  networkId: L2NetworkId,
+  topic: keyof L2_MESSAGES
+): L2Topic {
+  return `${networkId}__${topic}`;
 }
 
-export type AZTEC_MESSAGES = {
-  CONNECTED_TO_AZTEC_EVENT: ConnectedToAztecEvent;
+export type L2_MESSAGES = {
+  CONNECTED_TO_L2_EVENT: ConnectedToL2Event;
   NEW_BLOCK_EVENT: NewBlockEvent;
   CATCHUP_BLOCK_EVENT: CatchupBlockEvent;
   PENDING_TXS_EVENT: PendingTxsEvent;
 };
+
+export type L2Payload = L2_MESSAGES[keyof L2_MESSAGES];

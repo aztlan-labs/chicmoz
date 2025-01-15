@@ -1,25 +1,25 @@
-import { defineChain, createPublicClient, http, PublicClient, Log } from "viem";
 import {
-  ETHEREUM_CHAIN_NAME,
-  ETHEREUM_HTTP_RPC_URL,
-  ETHEREUM_NETWORK_ID,
-  ETHEREUM_WS_RPC_URL,
-} from "../environment.js";
-import {
-  RollupAbi,
-  RegistryAbi,
-  InboxAbi,
-  OutboxAbi,
   //FeeJuiceAbi,
   FeeJuicePortalAbi,
+  InboxAbi,
+  OutboxAbi,
+  RegistryAbi,
+  RollupAbi,
 } from "@aztec/l1-artifacts";
-import { ConnectedToAztecEvent } from "@chicmoz-pkg/message-registry";
+import { ConnectedToL2Event } from "@chicmoz-pkg/message-registry";
 import {
   EthAddress,
   chicmozL1L2ValidatorSchema,
+  getEthereumNetworkIdentifier,
 } from "@chicmoz-pkg/types";
-import { logger } from "../logger.js";
+import { Log, PublicClient, createPublicClient, defineChain, http } from "viem";
+import {
+  ETHEREUM_HTTP_RPC_URL,
+  ETHEREUM_WS_RPC_URL,
+  L1_NETWORK_ID,
+} from "../environment.js";
 import { emit } from "../events/index.js";
+import { logger } from "../logger.js";
 
 type AztecAbi =
   | typeof RollupAbi
@@ -59,8 +59,8 @@ let l1Contracts:
   | undefined = undefined;
 
 const chain = defineChain({
-  id: ETHEREUM_NETWORK_ID,
-  name: ETHEREUM_CHAIN_NAME,
+  id: getEthereumNetworkIdentifier(L1_NETWORK_ID),
+  name: L1_NETWORK_ID,
   nativeCurrency: {
     decimals: 18,
     name: "Ether",
@@ -84,7 +84,7 @@ export const initClient = () => {
 };
 
 export const initContracts = (
-  l1ContractAddresses: ConnectedToAztecEvent["nodeInfo"]["l1ContractAddresses"]
+  l1ContractAddresses: ConnectedToL2Event["nodeInfo"]["l1ContractAddresses"]
 ) => {
   // TODO: should use watch instead of "poller"
   //publicClient.watchContractEvent

@@ -31,7 +31,7 @@ manifests:
     - k8s/local/auth/service.yaml
     - k8s/local/event-cannon/deployment.yaml
     - k8s/local/aztec-listener/deployment.yaml
-    - k8s/local/ethereum-listener/deployment.yaml # NOTE: eth-listener is WIP!
+    - k8s/local/ethereum-listener/deployment.yaml
     - k8s/local/kafka-ui/configmap.yaml
     - k8s/local/kafka-ui/configmap-env.yaml
     - k8s/local/kafka-ui/ingress.yaml
