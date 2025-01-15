@@ -213,8 +213,7 @@ export const publicDeployAccounts = async (
   await batch.send().wait();
 };
 
-const testGetContractClassFromArtifact = (obj: object) => {
-  const stringifiedArtifactJson = JSON.stringify(obj);
+const testGetContractClassFromArtifact = (stringifiedArtifactJson: string) => {
   try {
     const parsed = JSON.parse(
       stringifiedArtifactJson
@@ -242,9 +241,10 @@ export const registerContractClassArtifact = async (
     .default
     ? (artifactObj as { default: NoirCompiledContract }).default
     : artifactObj;
-  testGetContractClassFromArtifact(artifactJson);
+  const stringifiedArtifactJson = JSON.stringify(artifactJson);
+  testGetContractClassFromArtifact(stringifiedArtifactJson);
   const postData = JSON.stringify({
-    stringifiedArtifactJson: JSON.stringify(artifactJson),
+    stringifiedArtifactJson,
   });
 
   const sizeInMB = Buffer.byteLength(postData) / 1000 ** 2;
