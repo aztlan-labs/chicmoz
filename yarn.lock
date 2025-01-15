@@ -1081,6 +1081,8 @@ __metadata:
     "@chicmoz-pkg/logger-server": "workspace:^"
     "@chicmoz-pkg/message-bus": "workspace:^"
     "@chicmoz-pkg/message-registry": "workspace:^"
+    "@chicmoz-pkg/microservice-base": "workspace:^"
+    "@chicmoz-pkg/postgres-helper": "workspace:^"
     "@chicmoz-pkg/types": "workspace:^"
     "@jest/globals": "npm:29.7.0"
     "@types/auto-bind": "npm:2.1.0"

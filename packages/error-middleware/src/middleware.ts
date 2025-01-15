@@ -1,6 +1,5 @@
 import { Logger } from "@chicmoz-pkg/logger-server";
 import { ErrorRequestHandler } from "express";
-import "express-async-errors";
 import {
   InsufficientScopeError,
   UnauthorizedError,
@@ -10,15 +9,19 @@ import { CHICMOZ_ERRORS } from "./errors.js";
 
 export const createErrorMiddleware = (logger: Logger): ErrorRequestHandler => {
   return (err, _req, res, _next) => {
-    if (err instanceof Error) {
-      logger.error(`Error-handler: name: ${err.name}, message: ${err.message}`);
-      if (err.stack) logger.error(`Error-handler: stack: ${err.stack}`);
-      else logger.error(err);
+    if ((err as Error).name === "PayloadTooLargeError") {
+      res
+        .status(413)
+        .send({ name: (err as Error).name, message: (err as Error).message });
+      return;
     }
 
-    if ((err as Error).message === "PayloadTooLargeError") {
-      res.status(413).send({ message: "Payload too large" });
-      return;
+    if (err instanceof Error) {
+      logger.error(
+        `Error-handler: name: ${err.name}, message: ${err.message} (for route: ${_req.originalUrl})`
+      );
+      if (err.stack) logger.error(`Error-handler: stack: ${err.stack}`);
+      else logger.error(err);
     }
 
     if (

@@ -1,4 +1,4 @@
-import { MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
+import { getSvcState, MicroserviceBaseSvcState, type MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
 import { DrizzleConfig } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
@@ -7,19 +7,19 @@ import { dbCredentials, getConfigStr } from "./environment.js";
 let client: pg.Client;
 let db: ReturnType<typeof drizzle>;
 
-let isInitialized = false;
-let isShutDown = false;
+const serviceId = "DB";
 
 const init = async (drizzleConfig: DrizzleConfig<Record<string, unknown>>) => {
   client = new pg.Client(dbCredentials);
   db = drizzle(client, drizzleConfig);
   await client.connect();
-  isInitialized = true;
 };
 
 export const getDb = () => {
-  if (!isInitialized) throw new Error("Database not initialized");
-  if (isShutDown) throw new Error("Database has been shut down");
+  const state = getSvcState(serviceId);
+  if (state === MicroserviceBaseSvcState.SHUTTING_DOWN) throw new Error("Database is shutting down");
+  if (state === MicroserviceBaseSvcState.DOWN) throw new Error("Database is down");
+  if (state === MicroserviceBaseSvcState.INITIALIZING) throw new Error("Database is initializing");
   return db;
 };
 
@@ -29,9 +29,8 @@ export const generateSvc: (
   serviceId: "DB",
   init: () => init(drizzleConf),
   getConfigStr,
-  health: () => isInitialized && !isShutDown,
+  health: () => getSvcState(serviceId) === MicroserviceBaseSvcState.UP,
   shutdown: async () => {
-    isShutDown = true;
     await client.end();
   },
 });
