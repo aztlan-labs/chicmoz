@@ -9,11 +9,25 @@ import morgan from "morgan";
 import { logger } from "../../logger.js";
 import { genereateOpenApiSpec } from "./open-api-spec.js";
 import { init as initApiRoutes } from "./routes/index.js";
+import { paths } from "./routes/paths_and_validation.js";
 
 type ExpressOptions = {
   BODY_LIMIT: string;
   PARAMETER_LIMIT: number;
   NODE_ENV: string;
+};
+
+const splitCCPath = paths.contractClass.split("/");
+
+const isContractClassArtifactUpdate = (path: string, method: string) => {
+  const splitPath = path.split("/");
+  return (
+    method === "POST" &&
+    splitPath.length === splitCCPath.length &&
+    splitPath[1] === splitCCPath[1] &&
+    splitPath[2] === splitCCPath[2] &&
+    splitPath[4] === splitCCPath[4]
+  );
 };
 
 export function setup(
@@ -24,18 +38,21 @@ export function setup(
   app.use(cors({ credentials: true }));
 
   // NOTE: body parser should be configured AFTER proxy configuration https://www.npmjs.com/package/express-http-proxy#middleware-mixing
-  app.use(
+  app.use((req, res, next) => {
+    if (isContractClassArtifactUpdate(req.path, req.method)) return next();
     bodyParser.json({
       limit: options.BODY_LIMIT,
-    })
-  );
-  app.use(
+    })(req, res, next);
+  });
+
+  app.use((req, res, next) => {
+    if (isContractClassArtifactUpdate(req.path, req.method)) return next();
     bodyParser.urlencoded({
       extended: true,
       limit: options.BODY_LIMIT,
       parameterLimit: options.PARAMETER_LIMIT,
-    })
-  );
+    })(req, res, next);
+  });
   app.use(morgan("common"));
 
   const router = express.Router();

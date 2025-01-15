@@ -13,6 +13,8 @@ import {
   PXE,
   SentTx,
   Wallet,
+  getContractClassFromArtifact,
+  loadContractArtifact,
 } from "@aztec/aztec.js";
 import {
   broadcastPrivateFunction,
@@ -211,9 +213,24 @@ export const publicDeployAccounts = async (
   await batch.send().wait();
 };
 
+const testGetContractClassFromArtifact = (obj: object) => {
+  const stringifiedArtifactJson = JSON.stringify(obj);
+  try {
+    const parsed = JSON.parse(
+      stringifiedArtifactJson
+    ) as unknown as NoirCompiledContract;
+    const loaded = loadContractArtifact(parsed);
+    getContractClassFromArtifact(loaded);
+  } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    logger.error(`🚨 Error parsing artifact: ${(e as Error).stack ?? e}`);
+    throw new Error("Error parsing artifact before sending to explorer-api");
+  }
+};
+
 export const registerContractClassArtifact = async (
   contractLoggingName: string,
-  artifactJson: object,
+  artifactObj: { default: NoirCompiledContract } | NoirCompiledContract,
   contractClassId: string,
   version: number,
   skipSleep = false
@@ -221,11 +238,13 @@ export const registerContractClassArtifact = async (
   const url = new URL(
     `${EXPLORER_API_URL}/l2/contract-classes/${contractClassId}/versions/${version}`
   );
-
+  const artifactJson = (artifactObj as { default: NoirCompiledContract })
+    .default
+    ? (artifactObj as { default: NoirCompiledContract }).default
+    : artifactObj;
+  testGetContractClassFromArtifact(artifactJson);
   const postData = JSON.stringify({
-    stringifiedArtifactJson: JSON.stringify(
-      artifactJson as unknown as NoirCompiledContract
-    ),
+    stringifiedArtifactJson: JSON.stringify(artifactJson),
   });
 
   const sizeInMB = Buffer.byteLength(postData) / 1000 ** 2;
@@ -240,7 +259,11 @@ export const registerContractClassArtifact = async (
   );
   if (!skipSleep) await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  await new Promise((resolve, reject) => {
+  const res: {
+    statusCode: number | undefined;
+    statusMessage: string | undefined;
+    data: string;
+  } = await new Promise((resolve, reject) => {
     const req = request(
       url,
       {
@@ -256,8 +279,13 @@ export const registerContractClassArtifact = async (
           data += chunk;
         });
         res.on("end", () => {
-          resolve(JSON.parse(data));
+          resolve({
+            statusCode: res.statusCode,
+            statusMessage: res.statusMessage,
+            data,
+          });
         });
+        // get the status code
       }
     );
     req.on("error", (error) => {
@@ -273,7 +301,24 @@ export const registerContractClassArtifact = async (
     req.write(postData);
     req.end(); // This actually sends the request
   });
-  logger.info(
-    `📜✅ ${contractLoggingName} Artifact registered in explorer-api.`
-  );
+  if (res.statusCode === 200) {
+    logger.info(
+      `📜✅ ${contractLoggingName} Artifact registered in explorer-api. ${JSON.stringify(
+        {
+          statusCode: res.statusCode,
+          statusMessage: res.statusMessage,
+        }
+      )}`
+    );
+  } else {
+    logger.error(
+      `📜🚨 ${contractLoggingName} Artifact registration failed. ${JSON.stringify(
+        {
+          statusCode: res.statusCode,
+          statusMessage: res.statusMessage,
+          data: res.data,
+        }
+      )}`
+    );
+  }
 };

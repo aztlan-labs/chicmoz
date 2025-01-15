@@ -21,7 +21,7 @@ export const init = async () => {
     NODE_ENV,
   });
 
-  const server = http.createServer(app);
+  server = http.createServer(app);
 
   server.listen(PORT, "0.0.0.0", () => {
     logger.info(`Service listening on port ${PORT} [${NODE_ENV} mode]`);

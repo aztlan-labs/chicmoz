@@ -1,4 +1,8 @@
-import { DeploySentTx, waitForPXE } from "@aztec/aztec.js";
+import {
+  type DeploySentTx,
+  type NoirCompiledContract,
+  waitForPXE,
+} from "@aztec/aztec.js";
 import { SimpleLoggingContract } from "../../artifacts/SimpleLogging.js";
 import artifactJson from "../../contract-projects/SimpleLogging/target/simple_logging-SimpleLogging.json" assert { type: "json" };
 import { logger } from "../../logger.js";
@@ -28,7 +32,7 @@ export async function run() {
 
   registerContractClassArtifact(
     contractLoggingName,
-    artifactJson,
+    artifactJson as unknown as NoirCompiledContract,
     contract.instance.contractClassId.toString(),
     contract.instance.version
   ).catch((err) => {
