@@ -3,12 +3,13 @@ kind: Config
 metadata:
   name: chicmoz
 requires:
+  - path: ./common/skaffold.manifests.yaml
   - path: ./explorer-ui/image.yaml
   - path: ./websocket-event-publisher/image.yaml
   - path: ./auth/image.yaml
   - path: ./aztec-listener/image.yaml
   - path: ./ethereum-listener/image.yaml
-  - path: ./explorer-api/sp_testnet.yaml
+  - path: ./explorer-api/skaffold.sp_testnet.yaml
 deploy:
   kubectl:
     flags:

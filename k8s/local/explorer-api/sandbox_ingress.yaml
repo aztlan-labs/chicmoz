@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-explorer-api
+  name: ingress-explorer-api-sandbox
   namespace: chicmoz
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
@@ -11,6 +11,16 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
+    - host: sandbox.explorer-api.localhost
+      http:
+        paths:
+          - path: /v1/([^/]+)/(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: explorer-api-sandbox-label
+                port:
+                  name: http-app
     - host: explorer-api.localhost
       http:
         paths:
@@ -18,7 +28,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: explorer-api
+                name: explorer-api-sandbox-label
                 port:
                   name: http-app
 status:

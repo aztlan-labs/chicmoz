@@ -2,19 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: explorer-api
-  name: explorer-api
+    app: explorer-api-sp-testnet-label
+  name: explorer-api-sp-testnet-deployment
   namespace: chicmoz
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: explorer-api
-  strategy: {}
+      app: explorer-api-sp-testnet-label
   template:
     metadata:
       labels:
-        app: explorer-api
+        app: explorer-api-sp-testnet-label
     spec:
       initContainers:
         - name: run-migrations
@@ -46,7 +45,7 @@ spec:
                 name: postgres-config-explorer-api
           env:
             - name: INSTANCE_NAME
-              value: "remote_sp_testnet_explorer-api"
+              value: "sp_testnet_explorer-api"
             - name: L2_NETWORK_ID
               value: "SP_TESTNET"
           readinessProbe:
