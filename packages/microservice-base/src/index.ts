@@ -24,8 +24,8 @@ export {
 
 let logger: Logger;
 
-export const shutdownMicroservice = async () => {
-  await stop(logger).catch((e) => {
+export const shutdownMicroservice = async (reason: string) => {
+  await stop(logger, reason).catch((e) => {
     logger.error(
       `❗ unhandled error during shutdown of ${conf.serviceName}: ${
         (e as Error).stack ?? e
@@ -37,9 +37,9 @@ export const shutdownMicroservice = async () => {
 
 export const startMicroservice = (config: MicroserviceConfig) => {
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  process.on("SIGINT", () => shutdownMicroservice());
+  process.on("SIGINT", () => shutdownMicroservice("SIGINT"));
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  process.on("SIGTERM", () => shutdownMicroservice());
+  process.on("SIGTERM", () => shutdownMicroservice("SIGTERM"));
   logger = config.logger;
   setLogger(logger);
   setConfig(config, logger);

@@ -1,0 +1,11 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+metadata:
+  name: websocket-event-publisher-sandbox
+requires:
+  - path: ./common/skaffold.base.yaml
+manifests:
+  rawYaml:
+    - common/service.yaml
+    - sandbox_deployment.yaml
+    - sandbox_ingress.yaml

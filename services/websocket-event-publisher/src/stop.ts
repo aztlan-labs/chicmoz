@@ -23,8 +23,8 @@ const _gracefulShutdown = async () => {
   }
 };
 
-export const gracefulShutdown = () => async () => {
-  logger.info("Starting graceful shutdown...");
+export const gracefulShutdown = (reason?: string) => async () => {
+  logger.info(`Starting graceful shutdown... (reason: ${reason})`);
   await _gracefulShutdown();
   logger.info("Graceful shutdown complete.");
 };

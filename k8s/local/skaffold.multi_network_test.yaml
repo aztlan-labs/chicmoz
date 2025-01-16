@@ -5,11 +5,11 @@ metadata:
 requires:
   - path: ./common/skaffold.manifests.yaml
   - path: ./explorer-ui/image.yaml # TODO
-  - path: ./websocket-event-publisher/image.yaml # TODO
   - path: ./auth/image.yaml
   - path: ./ethereum-listener/skaffold.sp_testnet.yaml
   - path: ./aztec-listener/skaffold.sp_testnet.yaml
   - path: ./explorer-api/skaffold.sp_testnet.yaml
+  - path: ./websocket-event-publisher/skaffold.sp_testnet.yaml
 deploy:
   kubectl:
     flags:
@@ -21,9 +21,6 @@ manifests:
     - k8s/local/explorer-ui/ingress.yaml
     - k8s/local/explorer-ui/deployment.yaml # TODO
     - k8s/local/explorer-ui/service.yaml
-    - k8s/local/websocket-event-publisher/ingress.yaml
-    - k8s/local/websocket-event-publisher/deployment.yaml
-    - k8s/local/websocket-event-publisher/service.yaml
     - k8s/local/auth/deployment.yaml
     - k8s/local/auth/service.yaml
     - k8s/local/auth/postgres-config.yaml

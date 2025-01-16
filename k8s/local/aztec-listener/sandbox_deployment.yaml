@@ -10,7 +10,6 @@ spec:
   selector:
     matchLabels:
       app: aztec-listener-sandbox-label
-  strategy: {}
   template:
     metadata:
       labels:
