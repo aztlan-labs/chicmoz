@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: aztec-listener
-  name: aztec-listener
+    app: aztec-listener-sp-testnet-label
+  name: aztec-listener-remote-sp-testnet-deployment
   namespace: chicmoz
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: aztec-listener
+      app: aztec-listener-sp-testnet-label
   strategy: {}
   template:
     metadata:
       labels:
-        app: aztec-listener
+        app: aztec-listener-sp-testnet-label
     spec:
       initContainers:
         - name: run-migrations
@@ -55,4 +55,6 @@ spec:
                 secretKeyRef:
                   name: global
                   key: SP_TESTNET_OBSCURA_L2_RPC_1
+                  #key: SP_TESTNET_OBSCURA_L2_RPC_2
+                  #key: SP_TESTNET_AZTEC_L2_BOOTNODE_RPC
 status: {}

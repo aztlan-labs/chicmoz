@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: aztec-listener
-  name: aztec-listener
+    app: aztec-listener-sandbox-label
+  name: aztec-listener-sandbox-deployment
   namespace: chicmoz
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: aztec-listener
+      app: aztec-listener-sandbox-label
   strategy: {}
   template:
     metadata:
       labels:
-        app: aztec-listener
+        app: aztec-listene-sandbox-label
     spec:
       initContainers:
         - name: run-migrations
@@ -25,10 +25,6 @@ spec:
                 name: postgres-config-global
             - configMapRef:
                 name: postgres-config-aztec-listener
-
-          env:
-            - name: TOTAL_DB_RESET
-              value: "false"
       containers:
         - image: aztec-listener:latest
           resources:
@@ -43,15 +39,11 @@ spec:
                 name: postgres-config-aztec-listener
           env:
             - name: INSTANCE_NAME
-              value: "local_aztec_sandbox_listener"
+              value: "sandbox-aztec-aztec-listener"
+            - name: BLOCK_POLL_INTERVAL_MS
+              value: "5000"
             - name: L2_NETWORK_ID
               value: "SANDBOX"
-            - name: MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS
-              value: "50"
-            - name: IGNORE_PROCESSED_HEIGHT
-              value: "false"
-            - name: AZTEC_DISABLED
-              value: "false"
             - name: AZTEC_GENESIS_CATCHUP
               value: "true"
             - name: AZTEC_LISTEN_FOR_BLOCKS

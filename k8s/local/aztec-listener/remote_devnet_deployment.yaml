@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: aztec-listener
-  name: aztec-listener
+    app: aztec-listener-devnet-label
+  name: aztec-listener-remote-devnet-deployment
   namespace: chicmoz
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: aztec-listener
+      app: aztec-listener-devnet-label
   strategy: {}
   template:
     metadata:
       labels:
-        app: aztec-listener
+        app: aztec-listene-devnet-label
     spec:
       initContainers:
         - name: run-migrations

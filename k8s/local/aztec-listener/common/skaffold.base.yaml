@@ -1,13 +1,20 @@
 apiVersion: skaffold/v4beta6
 kind: Config
 requires:
-  - path: ../chicmoz-base-image.yaml
+  - path: ../../chicmoz-base-image.yaml
 build:
   artifacts:
     - image: aztec-listener
-      context: ../../../services/aztec-listener
+      context: ../../../../services/aztec-listener
       docker:
         dockerfile: Dockerfile
       requires:
         - image: chicmoz-base
           alias: BASE
+deploy:
+  kubectl:
+    flags:
+      apply: ["--force"]
+manifests:
+  rawYaml:
+    - ./postgres-config.yaml

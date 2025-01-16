@@ -4,11 +4,11 @@ metadata:
   name: chicmoz
 requires:
   - path: ./common/skaffold.manifests.yaml
-  - path: ./explorer-ui/image.yaml
-  - path: ./websocket-event-publisher/image.yaml
+  - path: ./explorer-ui/image.yaml # TODO
+  - path: ./websocket-event-publisher/image.yaml # TODO
   - path: ./auth/image.yaml
-  - path: ./aztec-listener/image.yaml
-  - path: ./ethereum-listener/image.yaml
+  - path: ./ethereum-listener/image.yaml # TODO
+  - path: ./aztec-listener/skaffold.sp_testnet.yaml
   - path: ./explorer-api/skaffold.sp_testnet.yaml
 deploy:
   kubectl:
@@ -27,82 +27,4 @@ manifests:
     - k8s/local/auth/deployment.yaml
     - k8s/local/auth/service.yaml
     - k8s/local/auth/postgres-config.yaml
-    - k8s/local/aztec-listener/remote_sp_testnet_deployment.yaml
-    - k8s/local/aztec-listener/postgres-config.yaml
     - k8s/local/ethereum-listener/remote_sp_testnet_deployment.yaml
-  helm:
-    releases:
-      - name: ingress-nginx
-        remoteChart: ingress-nginx
-        repo: https://kubernetes.github.io/ingress-nginx
-        namespace: chicmoz
-        createNamespace: false
-        recreatePods: false
-        skipBuildDependencies: false
-        useHelmSecrets: false
-        wait: false
-        setValues:
-          controller.replicaCount: 1
-          defaultBackend.enabled: false
-      - name: postgresql
-        version: 12.10.0
-        remoteChart: oci://registry-1.docker.io/bitnamicharts/postgresql
-        valuesFiles:
-          - k8s/local/postgres/values.yaml
-        setValues:
-          global.postgresql.auth.postgresPassword: "secret-local-password"
-          global.postgresql.auth.username: "admin"
-          global.postgresql.auth.password: "secret-local-password"
-          image.debug: true
-          primary.replicaCount: 1
-        namespace: chicmoz
-        createNamespace: false
-        recreatePods: false
-        skipBuildDependencies: false
-        useHelmSecrets: false
-        wait: false
-      - name: redis
-        version: 18.17.1
-        remoteChart: oci://registry-1.docker.io/bitnamicharts/redis
-        namespace: chicmoz
-        createNamespace: false
-        recreatePods: false
-        skipBuildDependencies: false
-        useHelmSecrets: false
-        wait: false
-        setValues:
-          architecture: standalone
-          replica.replicaCount: 0
-          auth.enabled: false
-          master.configuration: |
-            maxmemory 100mb
-            maxmemory-policy volatile-ttl
-            lazyfree-lazy-eviction yes
-          replica.configuration: |
-            maxmemory 100mb
-            maxmemory-policy volatile-ttl
-            lazyfree-lazy-eviction yes
-          persistence.enabled: false
-      - name: kafka
-        version: 26.4.2
-        remoteChart: oci://registry-1.docker.io/bitnamicharts/kafka
-        namespace: chicmoz
-        setValues:
-          sasl.enabledMechanisms: plain
-          sasl.controllerMechanism: plain
-          sasl.interBrokerMechanism: plain
-          sasl.controller.user: controller_user
-          sasl.controller.password: test
-          sasl.interbroker.user: inter_broker_user
-          sasl.interbroker.password: test
-          sasl.client.users:
-            - controller_user
-          sasl.client.passwords:
-            - test
-          extraConfig: |
-            message.max.bytes=10000000
-        createNamespace: false
-        recreatePods: true
-        skipBuildDependencies: false
-        useHelmSecrets: false
-        wait: false
