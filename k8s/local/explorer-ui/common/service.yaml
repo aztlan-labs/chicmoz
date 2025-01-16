@@ -5,7 +5,7 @@ metadata:
   namespace: chicmoz
 spec:
   selector:
-    app: explorer-ui
+    component: explorer-ui
   ports:
     - name: http-app
       protocol: TCP

@@ -10,8 +10,8 @@ build:
         dockerfile: Dockerfile
         buildArgs:
           NODE_ENV: "development"
-          VITE_API_URL: "http://explorer-api.localhost:80/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4"
-          VITE_WS_URL: "ws://ws.localhost:80" # TODO: use API_KEY
+          VITE_API_URL: "http://sandbox.explorer-api.localhost:80/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4"
+          VITE_WS_URL: "ws://sandbox.ws.localhost:80"
           VITE_DISCORD_URL: "https://discord.gg/obscura-network"
           VITE_X_URL: "https://x.com/Obscura_Network"
           VITE_GITHUB_URL: "https://github.com/aztlan-labs/chicmoz"
@@ -19,3 +19,12 @@ build:
       requires:
         - image: chicmoz-base
           alias: BASE
+deploy:
+  kubectl:
+    flags:
+      apply: ["--force"]
+manifests:
+  rawYaml:
+    - ./common/service.yaml
+    - ./sandbox_ingress.yaml
+    - ./sandbox_deployment.yaml
