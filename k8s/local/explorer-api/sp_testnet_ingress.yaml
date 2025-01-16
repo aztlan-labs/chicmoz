@@ -18,7 +18,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: explorer-api-sp-testnet-label
+                name: explorer-api-sp-testnet-service
                 port:
                   name: http-app
 status:

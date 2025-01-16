@@ -43,6 +43,4 @@ FROM nginx:1.21-alpine as runner
 RUN sed -i '/location \//a try_files $uri $uri/ /index.html;' /etc/nginx/conf.d/default.conf
 COPY --from=build /usr/main/services/explorer-ui/dist /usr/share/nginx/html
 
-EXPOSE 3000
-
 CMD ["nginx", "-g", "daemon off;"]

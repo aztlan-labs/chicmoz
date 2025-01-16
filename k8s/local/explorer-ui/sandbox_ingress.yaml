@@ -11,7 +11,7 @@ spec:
         paths:
           - backend:
               service:
-                name: explorer-ui-sandbox-label
+                name: explorer-ui-sandbox-service
                 port:
                   name: http-app
             path: /
@@ -21,7 +21,7 @@ spec:
         paths:
           - backend:
               service:
-                name: explorer-ui-sandbox-label
+                name: explorer-ui-sandbox-service
                 port:
                   name: http-app
             path: /

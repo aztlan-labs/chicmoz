@@ -4,8 +4,12 @@ metadata:
   name: websocket-event-publisher-sandbox
 requires:
   - path: ./common/skaffold.base.yaml
+deploy:
+  kubectl:
+    flags:
+      apply: ["--force"]
 manifests:
   rawYaml:
-    - common/service.yaml
-    - sandbox_deployment.yaml
-    - sandbox_ingress.yaml
+    - ./sandbox_service.yaml
+    - ./sandbox_deployment.yaml
+    - ./sandbox_ingress.yaml

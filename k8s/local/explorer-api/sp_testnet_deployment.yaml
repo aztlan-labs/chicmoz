@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   labels:
     app: explorer-api-sp-testnet-label
-    component: explorer-api
   name: explorer-api-sp-testnet-deployment
   namespace: chicmoz
 spec:
@@ -11,12 +10,10 @@ spec:
   selector:
     matchLabels:
       app: explorer-api-sp-testnet-label
-      component: explorer-api
   template:
     metadata:
       labels:
         app: explorer-api-sp-testnet-label
-        component: explorer-api
     spec:
       initContainers:
         - name: run-migrations
@@ -37,7 +34,7 @@ spec:
               memory: 2048Mi
               cpu: 250m
           ports:
-            - name: http-app
+            - name: http-app-port
               containerPort: 80
               protocol: TCP
           name: explorer-api

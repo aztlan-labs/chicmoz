@@ -8,5 +8,6 @@ deploy:
       apply: ["--force"]
 manifests:
   rawYaml:
+    - ./sp_testnet_service.yaml
     - ./sp_testnet_ingress.yaml
     - ./sp_testnet_deployment.yaml

@@ -8,5 +8,6 @@ deploy:
       apply: ["--force"]
 manifests:
   rawYaml:
-    - ./ingress.yaml
-    - ./deployment.yaml
+    - ./sandbox_service.yaml
+    - ./sandbox_deployment.yaml
+    - ./sandbox_ingress.yaml

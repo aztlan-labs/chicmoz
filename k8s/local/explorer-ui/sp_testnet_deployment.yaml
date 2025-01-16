@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   labels:
     app: explorer-ui-sp-testnet-label
-    component: explorer-ui
   name: explorer-ui-sp-testnet-deployment
   namespace: chicmoz
 spec:
@@ -24,6 +23,6 @@ spec:
               memory: 500Mi
               cpu: 200m
           ports:
-            - name: http-app
-              containerPort: 3000
+            - name: http-app-port
+              containerPort: 80
               protocol: TCP

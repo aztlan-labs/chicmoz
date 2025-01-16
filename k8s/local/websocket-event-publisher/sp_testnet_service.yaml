@@ -5,7 +5,7 @@ metadata:
   namespace: chicmoz
 spec:
   selector:
-    component: websocket-event-publisher
+    app: websocket-event-publisher-sp-testnet-label
   ports:
     - name: websocket
       protocol: TCP

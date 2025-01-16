@@ -18,4 +18,3 @@ deploy:
 manifests:
   rawYaml:
     - ./postgres-config.yaml
-    - ./service.yaml

@@ -11,7 +11,7 @@ spec:
         paths:
           - backend:
               service:
-                name: explorer-ui-sp-testnet-label
+                name: explorer-ui-sp-testnet-service
                 port:
                   name: http-app
             path: /

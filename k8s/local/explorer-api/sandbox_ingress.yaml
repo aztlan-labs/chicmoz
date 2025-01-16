@@ -18,7 +18,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: explorer-api-sandbox-label
+                name: explorer-api-sandbox-service
                 port:
                   name: http-app
     - host: explorer-api.localhost
@@ -28,7 +28,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: explorer-api-sandbox-label
+                name: explorer-api-sandbox-service
                 port:
                   name: http-app
 status:

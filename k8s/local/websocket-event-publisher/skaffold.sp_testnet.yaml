@@ -1,5 +1,7 @@
 apiVersion: skaffold/v4beta6
 kind: Config
+metadata:
+  name: websocket-event-publisher-sp-testnet
 requires:
   - path: ./common/skaffold.base.yaml
 deploy:
@@ -8,5 +10,6 @@ deploy:
       apply: ["--force"]
 manifests:
   rawYaml:
-    - ./sp_testnet_ingress.yaml
+    - ./sp_testnet_service.yaml
     - ./sp_testnet_deployment.yaml
+    - ./sp_testnet_ingress.yaml

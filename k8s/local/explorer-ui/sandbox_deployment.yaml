@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   labels:
     app: explorer-ui-sandbox-label
-    component: explorer-ui
   name: explorer-ui-sandbox-deployment
   namespace: chicmoz
 spec:
@@ -24,6 +23,6 @@ spec:
               memory: 500Mi
               cpu: 200m
           ports:
-            - name: http-app
+            - name: http-app-port
               containerPort: 3000
               protocol: TCP
