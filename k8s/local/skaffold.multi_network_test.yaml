@@ -4,6 +4,7 @@ metadata:
   name: chicmoz
 requires:
   - path: ./common/skaffold.manifests.yaml
+  - path: ./common/skaffold.aztec_sanbox_nodes.yaml
   - path: ./auth/image.yaml
   - path: ./explorer-ui/skaffold.sp_testnet.yaml
   - path: ./ethereum-listener/skaffold.sp_testnet.yaml
