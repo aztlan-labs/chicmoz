@@ -54,5 +54,5 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: global
-                  key: SP_TESTNET_AZTEC_L2_BOOTNODE_RPC
+                  key: SP_TESTNET_OBSCURA_L2_RPC_1
 status: {}

@@ -3,13 +3,12 @@ kind: Config
 metadata:
   name: chicmoz
 requires:
-  - path: ./chicmoz-base-image.yaml
   - path: ./explorer-ui/image.yaml
-  - path: ./explorer-api/image.yaml
   - path: ./websocket-event-publisher/image.yaml
   - path: ./auth/image.yaml
   - path: ./aztec-listener/image.yaml
   - path: ./ethereum-listener/image.yaml
+  - path: ./explorer-api/sp_testnet.yaml
 deploy:
   kubectl:
     flags:
@@ -21,10 +20,6 @@ manifests:
     - k8s/local/explorer-ui/ingress.yaml
     - k8s/local/explorer-ui/deployment.yaml # TODO
     - k8s/local/explorer-ui/service.yaml
-    - k8s/local/explorer-api/ingress.yaml
-    - k8s/local/explorer-api/sp_testnet_deployment.yaml
-    - k8s/local/explorer-api/service.yaml
-    - k8s/local/explorer-api/postgres-config.yaml
     - k8s/local/websocket-event-publisher/ingress.yaml
     - k8s/local/websocket-event-publisher/deployment.yaml
     - k8s/local/websocket-event-publisher/service.yaml

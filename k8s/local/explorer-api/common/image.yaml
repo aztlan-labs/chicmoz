@@ -1,11 +1,11 @@
 apiVersion: skaffold/v4beta6
 kind: Config
 requires:
-  - path: ../chicmoz-base-image.yaml
+  - path: ../../chicmoz-base-image.yaml
 build:
   artifacts:
     - image: explorer-api
-      context: ../../../services/explorer-api
+      context: ../../../../services/explorer-api
       docker:
         dockerfile: Dockerfile
       requires:
