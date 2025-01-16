@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: websocket-event-publisher
+    component: websocket-event-publisher
   name: websocket-event-publisher
   namespace: chicmoz
 spec:
@@ -10,10 +11,12 @@ spec:
   selector:
     matchLabels:
       app: websocket-event-publisher
+      component: websocket-event-publisher
   template:
     metadata:
       labels:
         app: websocket-event-publisher
+        component: websocket-event-publisher
     spec:
       containers:
         - name: websocket-event-publisher

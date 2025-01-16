@@ -6,6 +6,7 @@ metadata:
 spec:
   selector:
     app: websocket-event-publisher
+    component: websocket-event-publisher
   ports:
     - name: websocket
       protocol: TCP

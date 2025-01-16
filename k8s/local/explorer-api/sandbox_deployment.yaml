@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: explorer-api-sandbox-label
+    component: explorer-api
   name: explorer-api-sandbox-deployment
   namespace: chicmoz
 spec:
@@ -10,10 +11,12 @@ spec:
   selector:
     matchLabels:
       app: explorer-api-sandbox-label
+      component: explorer-api
   template:
     metadata:
       labels:
         app: explorer-api-sandbox-label
+        component: explorer-api
     spec:
       initContainers:
         - name: run-migrations
