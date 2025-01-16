@@ -1,14 +1,15 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-websocket-event-publisher
+  name: ingress-websocket-event-publisher-sandbox
   namespace: chicmoz
   annotations:
+    kubernetes.io/ingress.class: "nginx" # might work
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
     nginx.ingress.kubernetes.io/websocket-services: "websocket-event-publisher"
 spec:
-  ingressClassName: nginx
+  # ingressClassName: nginx < replaced by above
   rules:
     - host: ws.localhost
       http:
@@ -17,7 +18,17 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: websocket-event-publisher
+                name: websocket-event-publisher-sandbox-label
+                port:
+                  name: websocket-port
+    - host: ws.sandbox.localhost
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: websocket-event-publisher-sandbox-label
                 port:
                   name: websocket-port
 status:

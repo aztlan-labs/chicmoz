@@ -6,9 +6,9 @@ import { gracefulShutdown } from "./stop.js";
 const main = async () => {
   logger.info(`🚀 ${SERVICE_NAME} starting...`);
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  process.on("SIGINT", gracefulShutdown());
+  process.on("SIGINT", gracefulShutdown("SIGINT"));
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  process.on("SIGTERM", gracefulShutdown());
+  process.on("SIGTERM", gracefulShutdown("SIGTERM"));
   await start();
   logger.info(`🥳 ${SERVICE_NAME} started!`);
 };

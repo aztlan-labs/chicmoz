@@ -1,0 +1,13 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+requires:
+  - path: ./common/skaffold.base.yaml
+deploy:
+  kubectl:
+    flags:
+      apply: ["--force"]
+manifests:
+  rawYaml:
+    - ./sandbox_service.yaml
+    - ./sandbox_deployment.yaml
+    - ./sandbox_ingress.yaml

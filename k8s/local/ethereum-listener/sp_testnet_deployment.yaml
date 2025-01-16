@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: ethereum-listener
-  name: ethereum-listener
+    app: ethereum-listener-sp-testnet-label
+  name: ethereum-listener-sp-testnet-deployment
   namespace: chicmoz
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ethereum-listener
+      app: ethereum-listener-sp-testnet-label
   strategy: {}
   template:
     metadata:
       labels:
-        app: ethereum-listener
+        app: ethereum-listener-sp-testnet-label
     spec:
       containers:
         - image: ethereum-listener:latest
@@ -25,17 +25,23 @@ spec:
           name: ethereum-listener
           env:
             - name: INSTANCE_NAME
-              value: "local_ethereum_anvil_listener"
+              value: "sp_testnet_ethereum-listener"
             - name: L2_NETWORK_ID
-              value: "SANDBOX"
-            - name: LISTENER_DISABLED
-              value: "false"
+              value: "SP_TESTNET"
+            - name: BLOCK_POLL_INTERVAL_MS
+              value: "5000"
             - name: GENESIS_CATCHUP
               value: "true"
             - name: LISTEN_FOR_BLOCKS
               value: "true"
             - name: ETHEREUM_HTTP_RPC_URL
-              value: "http://anvil-ethereum-node:8545"
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: SP_TESTNET_AZTEC_L1_HTTP
             - name: ETHEREUM_WS_RPC_URL
-              value: "ws://anvil-ethereum-node:8545"
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: SP_TESTNET_AZTEC_L1_WS
 status: {}

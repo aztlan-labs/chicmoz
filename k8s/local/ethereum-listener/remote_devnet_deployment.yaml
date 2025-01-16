@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: ethereum-listener
-  name: ethereum-listener
+    app: ethereum-listener-remote-devnet-label
+  name: ethereum-listener-remote-devnet-deployment
   namespace: chicmoz
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ethereum-listener
+      app: ethereum-listener-remote-devnet-label
   strategy: {}
   template:
     metadata:
       labels:
-        app: ethereum-listener
+        app: ethereum-listener-remote-devnet-label
     spec:
       containers:
         - image: ethereum-listener:latest
@@ -25,7 +25,7 @@ spec:
           name: ethereum-listener
           env:
             - name: INSTANCE_NAME
-              value: "devnet_ethereum-listener"
+              value: "remote_devnet_ethereum-listener"
             - name: L2_NETWORK_ID
               value: "DEVNET"
             - name: BLOCK_POLL_INTERVAL_MS
