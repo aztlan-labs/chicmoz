@@ -9,5 +9,5 @@ deploy:
 manifests:
   rawYaml:
     - ./sandbox_service.yaml
-    - ./sandbox_deployment.yaml
     - ./sandbox_ingress.yaml
+    - ./sandbox_deployment.yaml

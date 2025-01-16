@@ -16,13 +16,13 @@ spec:
         app: explorer-ui-sandbox-label
     spec:
       containers:
-        - image: explorer-ui:latest
-          name: explorer-ui
+        - image: explorer-ui-sandbox:latest
+          name: explorer-ui-sandbox
           resources:
             limits:
               memory: 500Mi
               cpu: 200m
           ports:
             - name: http-app-port
-              containerPort: 3000
+              containerPort: 80
               protocol: TCP

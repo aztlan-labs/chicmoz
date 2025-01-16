@@ -16,8 +16,8 @@ spec:
         app: explorer-ui-sp-testnet-label
     spec:
       containers:
-        - image: explorer-ui:latest
-          name: explorer-ui
+        - image: explorer-ui-sp-testnet:latest
+          name: explorer-ui-sp-testnet
           resources:
             limits:
               memory: 500Mi
