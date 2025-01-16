@@ -7,7 +7,7 @@ requires:
   - path: ./explorer-ui/image.yaml # TODO
   - path: ./websocket-event-publisher/image.yaml # TODO
   - path: ./auth/image.yaml
-  - path: ./ethereum-listener/image.yaml # TODO
+  - path: ./ethereum-listener/skaffold.sp_testnet.yaml
   - path: ./aztec-listener/skaffold.sp_testnet.yaml
   - path: ./explorer-api/skaffold.sp_testnet.yaml
 deploy:
@@ -27,4 +27,3 @@ manifests:
     - k8s/local/auth/deployment.yaml
     - k8s/local/auth/service.yaml
     - k8s/local/auth/postgres-config.yaml
-    - k8s/local/ethereum-listener/remote_sp_testnet_deployment.yaml
