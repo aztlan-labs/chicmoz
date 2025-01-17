@@ -6,16 +6,6 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: explorer-ui.localhost
-      http:
-        paths:
-          - backend:
-              service:
-                name: explorer-ui-sandbox-service
-                port:
-                  name: http-app
-            path: /
-            pathType: Prefix
     - host: sandbox.explorer-ui.localhost
       http:
         paths:

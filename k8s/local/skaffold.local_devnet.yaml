@@ -32,7 +32,7 @@ manifests:
     - k8s/local/auth/service.yaml
     - k8s/local/auth/postgres-config.yaml
     - k8s/local/event-cannon/deployment.yaml
-    - k8s/local/aztec-listener/local_devnet_deployment.yaml
+    - k8s/local/aztec-listener/local_devnet/deployment.yaml
     - k8s/local/aztec-listener/postgres-config.yaml
   helm:
     releases:

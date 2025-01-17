@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: postgres-config-explorer-api
-  namespace: chicmoz
-data:
-  POSTGRES_DB_NAME: "explorer_api"
-  POSTGRES_PASSWORD: "secret-local-password"

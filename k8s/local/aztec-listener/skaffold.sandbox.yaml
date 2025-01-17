@@ -8,4 +8,5 @@ deploy:
       apply: ["--force"]
 manifests:
   rawYaml:
-    - ./sandbox_deployment.yaml
+    - ./sandbox/postgres-config.yaml
+    - ./sandbox/deployment.yaml

@@ -8,4 +8,5 @@ deploy:
       apply: ["--force"]
 manifests:
   rawYaml:
-    - ./local_devnet_deployment.yaml
+    - ./local_devnet/postgres-config.yaml
+    - ./local_devnet/deployment.yaml

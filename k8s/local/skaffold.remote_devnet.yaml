@@ -31,9 +31,9 @@ manifests:
     - k8s/local/auth/deployment.yaml
     - k8s/local/auth/service.yaml
     - k8s/local/auth/postgres-config.yaml
-    - k8s/local/aztec-listener/remote_devnet_deployment.yaml
+    - k8s/local/aztec-listener/remote_devnet/deployment.yaml
     - k8s/local/aztec-listener/postgres-config.yaml
-    - k8s/local/ethereum-listener/remote_devnet_deployment.yaml
+    - k8s/local/ethereum-listener/remote_devnet/deployment.yaml
   helm:
     releases:
       - name: ingress-nginx

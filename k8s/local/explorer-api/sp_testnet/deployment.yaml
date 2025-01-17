@@ -2,18 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: explorer-api-sandbox-label
-  name: explorer-api-sandbox-deployment
+    app: explorer-api-sp-testnet-label
+  name: explorer-api-sp-testnet-deployment
   namespace: chicmoz
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: explorer-api-sandbox-label
+      app: explorer-api-sp-testnet-label
   template:
     metadata:
       labels:
-        app: explorer-api-sandbox-label
+        app: explorer-api-sp-testnet-label
     spec:
       initContainers:
         - name: run-migrations
@@ -23,7 +23,7 @@ spec:
             - configMapRef:
                 name: postgres-config-global
             - configMapRef:
-                name: postgres-config-explorer-api
+                name: postgres-config-explorer-api-sp-testnet
           env:
             - name: TOTAL_DB_RESET
               value: "false"
@@ -42,12 +42,12 @@ spec:
             - configMapRef:
                 name: postgres-config-global
             - configMapRef:
-                name: postgres-config-explorer-api
+                name: postgres-config-explorer-api-sp-testnet
           env:
             - name: INSTANCE_NAME
-              value: "sandbox_explorer-api"
+              value: "sp_testnet_explorer-api"
             - name: L2_NETWORK_ID
-              value: "SANDBOX"
+              value: "SP_TESTNET"
           readinessProbe:
             httpGet:
               path: /health

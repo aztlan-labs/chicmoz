@@ -2,19 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: aztec-listener-sp-testnet-label
-  name: aztec-listener-remote-sp-testnet-deployment
+    app: aztec-listener-sandbox-label
+  name: aztec-listener-sandbox-deployment
   namespace: chicmoz
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: aztec-listener-sp-testnet-label
-  strategy: {}
+      app: aztec-listener-sandbox-label
   template:
     metadata:
       labels:
-        app: aztec-listener-sp-testnet-label
+        app: aztec-listener-sandbox-label
     spec:
       initContainers:
         - name: run-migrations
@@ -24,7 +23,7 @@ spec:
             - configMapRef:
                 name: postgres-config-global
             - configMapRef:
-                name: postgres-config-aztec-listener
+                name: postgres-config-aztec-listener-sandbox
       containers:
         - image: aztec-listener:latest
           resources:
@@ -36,14 +35,14 @@ spec:
             - configMapRef:
                 name: postgres-config-global
             - configMapRef:
-                name: postgres-config-aztec-listener
+                name: postgres-config-aztec-listener-sandbox
           env:
             - name: INSTANCE_NAME
-              value: "remote_sp_testnet_aztec-listener"
+              value: "sandbox-aztec-aztec-listener"
             - name: BLOCK_POLL_INTERVAL_MS
               value: "5000"
             - name: L2_NETWORK_ID
-              value: "SP_TESTNET"
+              value: "SANDBOX"
             - name: AZTEC_GENESIS_CATCHUP
               value: "true"
             - name: AZTEC_LISTEN_FOR_BLOCKS
@@ -51,10 +50,5 @@ spec:
             - name: AZTEC_LISTEN_FOR_PENDING_TXS
               value: "true"
             - name: AZTEC_RPC_URL
-              valueFrom:
-                secretKeyRef:
-                  name: global
-                  key: SP_TESTNET_OBSCURA_L2_RPC_1
-                  #key: SP_TESTNET_OBSCURA_L2_RPC_2
-                  #key: SP_TESTNET_AZTEC_L2_BOOTNODE_RPC
+              value: "http://aztec-sandbox-node:8081"
 status: {}

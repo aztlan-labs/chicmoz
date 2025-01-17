@@ -8,4 +8,4 @@ deploy:
       apply: ["--force"]
 manifests:
   rawYaml:
-    - ./sandbox_deployment.yaml
+    - ./sandbox/deployment.yaml

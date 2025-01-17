@@ -8,6 +8,7 @@ deploy:
       apply: ["--force"]
 manifests:
   rawYaml:
-    - ./sandbox_service.yaml
-    - ./sandbox_ingress.yaml
-    - ./sandbox_deployment.yaml
+    - ./sandbox/postgres-config.yaml
+    - ./sandbox/service.yaml
+    - ./sandbox/ingress.yaml
+    - ./sandbox/deployment.yaml

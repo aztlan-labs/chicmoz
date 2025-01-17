@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: aztec-listener-devnet-label
-  name: aztec-listener-remote-devnet-deployment
+    app: aztec-listener-sp-testnet-label
+  name: aztec-listener-sp-testnet-deployment
   namespace: chicmoz
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: aztec-listener-devnet-label
+      app: aztec-listener-sp-testnet-label
   strategy: {}
   template:
     metadata:
       labels:
-        app: aztec-listene-devnet-label
+        app: aztec-listener-sp-testnet-label
     spec:
       initContainers:
         - name: run-migrations
@@ -24,7 +24,7 @@ spec:
             - configMapRef:
                 name: postgres-config-global
             - configMapRef:
-                name: postgres-config-aztec-listener
+                name: postgres-config-aztec-listener-sp-testnet
       containers:
         - image: aztec-listener:latest
           resources:
@@ -36,14 +36,14 @@ spec:
             - configMapRef:
                 name: postgres-config-global
             - configMapRef:
-                name: postgres-config-aztec-listener
+                name: postgres-config-aztec-listener-sp-testnet
           env:
             - name: INSTANCE_NAME
-              value: "remote_devnet_aztec-listener"
+              value: "sp_testnet_aztec-listener"
             - name: BLOCK_POLL_INTERVAL_MS
               value: "5000"
             - name: L2_NETWORK_ID
-              value: "DEVNET"
+              value: "SP_TESTNET"
             - name: AZTEC_GENESIS_CATCHUP
               value: "true"
             - name: AZTEC_LISTEN_FOR_BLOCKS
@@ -54,5 +54,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: global
-                  key: DEVNET_AZTEC_L2_BOOTNODE_RPC
+                  key: SP_TESTNET_OBSCURA_L2_RPC_1
+                  #key: SP_TESTNET_OBSCURA_L2_RPC_2
+                  #key: SP_TESTNET_AZTEC_L2_BOOTNODE_RPC
 status: {}

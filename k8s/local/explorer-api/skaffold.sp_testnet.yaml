@@ -8,6 +8,7 @@ deploy:
       apply: ["--force"]
 manifests:
   rawYaml:
-    - ./sp_testnet_service.yaml
-    - ./sp_testnet_ingress.yaml
-    - ./sp_testnet_deployment.yaml
+    - ./sp_testnet/postgres-config.yaml
+    - ./sp_testnet/service.yaml
+    - ./sp_testnet/ingress.yaml
+    - ./sp_testnet/deployment.yaml

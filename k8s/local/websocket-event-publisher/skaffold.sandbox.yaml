@@ -10,6 +10,6 @@ deploy:
       apply: ["--force"]
 manifests:
   rawYaml:
-    - ./sandbox_service.yaml
-    - ./sandbox_deployment.yaml
-    - ./sandbox_ingress.yaml
+    - ./sandbox/service.yaml
+    - ./sandbox/deployment.yaml
+    - ./sandbox/ingress.yaml

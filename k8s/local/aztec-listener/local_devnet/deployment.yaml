@@ -24,7 +24,7 @@ spec:
             - configMapRef:
                 name: postgres-config-global
             - configMapRef:
-                name: postgres-config-aztec-listener
+                name: postgres-config-aztec-listener-local-devnet
       containers:
         - image: aztec-listener:latest
           resources:
@@ -36,7 +36,7 @@ spec:
             - configMapRef:
                 name: postgres-config-global
             - configMapRef:
-                name: postgres-config-aztec-listener
+                name: postgres-config-aztec-listener-local-devnet
           env:
             - name: INSTANCE_NAME
               value: "local_devnet_aztec-listener"
