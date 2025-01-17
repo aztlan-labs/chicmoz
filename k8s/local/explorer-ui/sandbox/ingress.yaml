@@ -1,12 +1,22 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-explorer-ui
+  name: ingress-explorer-ui-sandbox
   namespace: chicmoz
 spec:
   ingressClassName: nginx
   rules:
     - host: sandbox.explorer-ui.localhost
+      http:
+        paths:
+          - backend:
+              service:
+                name: explorer-ui-sandbox-service
+                port:
+                  name: http-app
+            path: /
+            pathType: Prefix
+    - host: explorer-ui.localhost
       http:
         paths:
           - backend:

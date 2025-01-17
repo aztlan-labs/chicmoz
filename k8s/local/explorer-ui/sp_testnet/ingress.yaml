@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-explorer-ui
+  name: ingress-explorer-ui-sp-testnet
   namespace: chicmoz
 spec:
   ingressClassName: nginx
