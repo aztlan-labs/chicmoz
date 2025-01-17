@@ -1,5 +1,7 @@
 apiVersion: skaffold/v4beta6
 kind: Config
+metadata:
+  name: full
 requires:
   - path: ./skaffold.default.yaml
   - path: ./common/skaffold.extras.yaml

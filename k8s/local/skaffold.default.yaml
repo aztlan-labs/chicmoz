@@ -1,5 +1,7 @@
 apiVersion: skaffold/v4beta6
 kind: Config
+metadata:
+  name: default-chicmoz
 requires:
   - path: ./skaffold.no_ui.yaml
   - path: ./explorer-ui/skaffold.sandbox.yaml
