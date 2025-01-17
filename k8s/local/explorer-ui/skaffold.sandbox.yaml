@@ -10,6 +10,7 @@ build:
         dockerfile: Dockerfile
         buildArgs:
           NODE_ENV: "development"
+          VITE_L2_NETWORK_ID: "SANDBOX"
           VITE_API_URL: "http://sandbox.explorer-api.localhost:80/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4"
           VITE_WS_URL: "ws://sandbox.ws.localhost:80"
           VITE_DISCORD_URL: "https://discord.gg/obscura-network"

@@ -99,6 +99,10 @@ export const routes = {
       },
     },
   },
+  dev: {
+    route: "/dev",
+    title: "Dev",
+  },
   aboutUs: {
     route: "/about-us",
     title: "About us",
