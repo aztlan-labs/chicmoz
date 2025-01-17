@@ -17,15 +17,15 @@ export const init = async () => {
   isInitialized = true;
 };
 
-export const getCache = () => {
+const getCache = () => {
   if (!isInitialized) throw new Error("Cache not initialized");
   if (isShutDown) throw new Error("Cache has been shut down");
   return cache;
 };
 
 export const setEntry = async (
-  keys: string[],
-  value: string,
+  keys: (string | number | undefined)[],
+  value: string | number,
   secondsTtl: number
 ) => {
   return await getCache().set(
@@ -35,7 +35,7 @@ export const setEntry = async (
   );
 };
 
-export const getEntry = async (keys: string[]) => {
+export const getEntry = async (keys: (string | number | undefined)[]) => {
   return await getCache().get([L2_NETWORK_ID, ...keys].join("-"));
 };
 

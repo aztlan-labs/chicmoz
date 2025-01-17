@@ -1,25 +1,23 @@
-import { getCache as c } from "../../../../cache/index.js";
-import { controllers as db } from "../../../../database/index.js";
-import { dbParseErrorCallback } from "../../../../database/controllers/utils.js";
-import { logger } from "../../../../../logger.js";
+import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
 import {
   CACHE_LATEST_TTL_SECONDS,
   CACHE_TTL_SECONDS,
 } from "../../../../../environment.js";
-import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
+import { logger } from "../../../../../logger.js";
+import { getEntry, setEntry } from "../../../../cache/index.js";
+import { dbParseErrorCallback } from "../../../../database/controllers/utils.js";
+import { controllers as db } from "../../../../database/index.js";
 
 const LATEST_HEIGHT = "latestHeight";
 
 export const getLatestHeight = async () => {
-  const cachedVal = await c().get(LATEST_HEIGHT);
+  const cachedVal = await getEntry([LATEST_HEIGHT]);
   const isCached = cachedVal !== null && cachedVal !== undefined;
   if (isCached) return cachedVal;
 
   const dbVal = await db.l2Block.getLatestHeight().catch(dbParseErrorCallback);
   if (dbVal) {
-    await c().set(LATEST_HEIGHT, dbVal, {
-      EX: CACHE_LATEST_TTL_SECONDS,
-    });
+    await setEntry([LATEST_HEIGHT], dbVal, CACHE_LATEST_TTL_SECONDS);
     return dbVal;
   }
   throw new Error("CACHE_ERROR: latest height not found");
@@ -49,21 +47,19 @@ export const get = async (
   dbFn: () => Promise<unknown>,
   ttl = CACHE_TTL_SECONDS
 ): Promise<string> => {
-  const cacheKey = keys.join("-");
-  const cachedVal = await c().get(cacheKey);
+  const cachedVal = await getEntry(keys);
   const isCached = cachedVal !== null && cachedVal !== undefined;
   if (isCached) {
-    if (NODE_ENV === "development") logger.info(`CACHE_HIT: ${cacheKey}`);
+    if (NODE_ENV === "development")
+      logger.info(`CACHE_HIT: ${JSON.stringify(keys)}`);
     return cachedVal;
   }
 
   const dbRes = await dbFn().catch(dbParseErrorCallback);
   if (dbRes !== null && dbRes !== undefined) {
     const dbResString = jsonStringify(dbRes);
-    await c().set(cacheKey, dbResString, {
-      EX: ttl,
-    });
+    await setEntry(keys, dbResString, ttl);
     return dbResString;
   }
-  throw new Error(`${cacheKey} not found`);
+  throw new Error(`${JSON.stringify(keys)} not found`);
 };
