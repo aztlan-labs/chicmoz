@@ -44,13 +44,3 @@ spec:
               value: "3000"
             - name: L2_NETWORK_ID
               value: "SP_TESTNET"
-            - name: KAFKA_BROKERS
-              value: "kafka-headless:9092"
-            - name: KAFKA_CLIENT_ID
-              value: "websocket-event-publisher"
-            - name: KAFKA_GROUP_ID
-              value: "websocket-event-publisher-group"
-            - name: KAFKA_TOPIC
-              value: "aztec-events"
-            - name: ENVIRONMENT
-              value: "sp_testnet"

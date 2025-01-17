@@ -7,7 +7,7 @@ spec:
   selector:
     app: aztec-sandbox-node
   ports:
-    - name: pxe-port
+    - name: pxe
       protocol: TCP
       port: 8081
-      targetPort: 8081
+      targetPort: pxe-port

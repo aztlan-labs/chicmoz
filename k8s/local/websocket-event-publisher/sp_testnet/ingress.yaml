@@ -10,7 +10,7 @@ metadata:
     nginx.ingress.kubernetes.io/websocket-services: "websocket-event-publisher"
 spec:
   rules:
-    - host: ws.sp-testnet.localhost
+    - host: sp-testnet.ws.localhost
       http:
         paths:
           - path: /

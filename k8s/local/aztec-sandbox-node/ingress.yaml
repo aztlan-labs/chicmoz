@@ -15,7 +15,7 @@ spec:
               service:
                 name: aztec-sandbox-node
                 port:
-                  name: pxe-port
+                  name: pxe
             path: /
             pathType: Prefix
 status:

@@ -10,7 +10,7 @@ metadata:
     nginx.ingress.kubernetes.io/websocket-services: "websocket-event-publisher"
 spec:
   rules:
-    - host: ws.localhost
+    - host: sandbox.ws.localhost
       http:
         paths:
           - path: /
@@ -20,7 +20,7 @@ spec:
                 name: websocket-event-publisher-sandbox-service
                 port:
                   name: websocket-port
-    - host: ws.sandbox.localhost
+    - host: ws.localhost
       http:
         paths:
           - path: /

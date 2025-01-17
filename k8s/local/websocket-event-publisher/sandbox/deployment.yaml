@@ -2,18 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: websocket-event-publisher
-  name: websocket-event-publisher
+    app: websocket-event-publisher-sandbox-label
+  name: websocket-event-publisher-sandbox-deployment
   namespace: chicmoz
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: websocket-event-publisher
+      app: websocket-event-publisher-sandbox-label
   template:
     metadata:
       labels:
-        app: websocket-event-publisher
+        app: websocket-event-publisher-sandbox-label
     spec:
       containers:
         - name: websocket-event-publisher
@@ -44,13 +44,3 @@ spec:
               value: "3000"
             - name: L2_NETWORK_ID
               value: "SANDBOX"
-            - name: KAFKA_BROKERS
-              value: "kafka-headless:9092"
-            - name: KAFKA_CLIENT_ID
-              value: "websocket-event-publisher"
-            - name: KAFKA_GROUP_ID
-              value: "websocket-event-publisher-group"
-            - name: KAFKA_TOPIC
-              value: "aztec-events"
-            - name: ENVIRONMENT
-              value: "sandbox"

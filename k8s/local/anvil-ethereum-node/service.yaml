@@ -7,7 +7,7 @@ spec:
   selector:
     app: anvil-ethereum-node
   ports:
-    - name: anvil-port
+    - name: anvil
       protocol: TCP
       port: 8545
-      targetPort: 8545
+      targetPort: anvil-port
