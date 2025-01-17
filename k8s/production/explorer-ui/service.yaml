@@ -10,4 +10,4 @@ spec:
     - name: http-app
       protocol: TCP
       port: 80
-      targetPort: 80 # TODO
+      targetPort: 80
