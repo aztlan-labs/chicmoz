@@ -31,5 +31,5 @@ spec:
             - name: ETHEREUM_RPC_URL
               value: "http://anvil-ethereum-node:8545"
             - name: EXPLORER_API_URL
-              value: "http://explorer-api:80"
+              value: "http://explorer-api-sandbox-service:80"
 status: {}
