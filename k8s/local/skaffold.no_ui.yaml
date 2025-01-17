@@ -1,14 +1,11 @@
 apiVersion: skaffold/v4beta6
 kind: Config
-metadata:
-  name: chicmoz
 requires:
   - path: ./common/skaffold.manifests.yaml
   - path: ./common/skaffold.aztec_sanbox_nodes.yaml
   - path: ./auth/image.yaml
   - path: ./event-cannon/image.yaml
   - path: ./aztec-listener/skaffold.sandbox.yaml
-  - path: ./explorer-ui/skaffold.sandbox.yaml
   - path: ./ethereum-listener/skaffold.sandbox.yaml
   - path: ./explorer-api/skaffold.sandbox.yaml
   - path: ./websocket-event-publisher/skaffold.sandbox.yaml
@@ -18,7 +15,7 @@ deploy:
       apply: ["--force"]
 manifests:
   rawYaml:
-    - k8s/local/auth/deployment.yaml
-    - k8s/local/auth/service.yaml
-    - k8s/local/auth/postgres-config.yaml
-    - k8s/local/event-cannon/deployment.yaml
+    - ./auth/deployment.yaml
+    - ./auth/service.yaml
+    - ./auth/postgres-config.yaml
+    - ./event-cannon/deployment.yaml
