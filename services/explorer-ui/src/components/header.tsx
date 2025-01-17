@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { SearchInput } from "~/components/ui/input";
-import { routes } from "~/routes/__root.tsx";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { SearchInput } from "~/components/ui/input";
 import { useSearch } from "~/hooks/search";
+import { routes } from "~/routes/__root.tsx";
+import { L2_NETWORK_ID } from "~/service/constants";
 import { Button } from "./ui";
 import { ChicmozHomeLink } from "./ui/chicmoz-home-link";
 
@@ -71,7 +72,15 @@ export const Header = () => {
           <div className="w-full mx-auto">
             {/* Desktop Navigation */}
             <div className="hidden md:flex md:w-full md:items-center md:justify-between ">
-              <ChicmozHomeLink textClasses="hidden md:block" />
+              <div className="flex items-center">
+                <ChicmozHomeLink textClasses="hidden md:block" />
+                <Link
+                  to={routes.dev.route}
+                  className="text-secondary hover:text-white transition-colors mt-1 ml-4"
+                >
+                  {L2_NETWORK_ID}
+                </Link>
+              </div>
               <div className="flex  justify-center items-center w-1/2 sm:w-1/3 ">
                 <SearchInput
                   placeholder="Search"
@@ -98,7 +107,13 @@ export const Header = () => {
 
             {/* Mobile Navigation Header */}
             <div className=" flex items-center justify-between w-full px-4 md:hidden">
-              <ChicmozHomeLink textClasses="block md:hidden" />
+              <ChicmozHomeLink textClasses="hidden md:block" />
+              <Link
+                to={routes.dev.route}
+                className="text-secondary hover:text-white transition-colors"
+              >
+                {L2_NETWORK_ID}
+              </Link>
               <div className="flex items-center justify-between space-x-4">
                 <Button
                   variant="ghost"

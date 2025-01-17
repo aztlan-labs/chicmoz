@@ -7,3 +7,4 @@ data:
   POSTGRES_IP: "postgresql"
   POSTGRES_PORT: "5432"
   POSTGRES_ADMIN: "admin"
+  POSTGRES_PASSWORD: "secret-local-password"

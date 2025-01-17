@@ -1,3 +1,5 @@
+import {l2NetworkIdSchema} from "@chicmoz-pkg/types";
+
 export const aztecExplorer = {
   getL2LatestHeight: "l2/latest-height",
   getL2LatestBlock: "l2/blocks/latest",
@@ -48,6 +50,7 @@ export const aztecExplorer = {
   getL2SearchResult: "/l2/search",
 };
 
+export const L2_NETWORK_ID = l2NetworkIdSchema.parse(import.meta.env.VITE_L2_NETWORK_ID);
 export const API_URL =
   typeof import.meta.env.VITE_API_URL === "string"
     ? import.meta.env.VITE_API_URL

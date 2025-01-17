@@ -301,7 +301,7 @@ export const registerContractClassArtifact = async (
     req.write(postData);
     req.end(); // This actually sends the request
   });
-  if (res.statusCode === 200) {
+  if (res.statusCode === 200 || res.statusCode === 201) {
     logger.info(
       `📜✅ ${contractLoggingName} Artifact registered in explorer-api. ${JSON.stringify(
         {

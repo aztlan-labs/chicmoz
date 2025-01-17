@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ethereum-listener-sp-testnet-label
+  name: ethereum-listener-sp-testnet-deployment
+  namespace: chicmoz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ethereum-listener-sp-testnet-label
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: ethereum-listener-sp-testnet-label
+    spec:
+      containers:
+        - image: ethereum-listener:latest
+          resources:
+            limits:
+              memory: 250Mi
+              cpu: 100m
+          name: ethereum-listener
+          env:
+            - name: INSTANCE_NAME
+              value: "sp_testnet_ethereum-listener"
+            - name: L2_NETWORK_ID
+              value: "SP_TESTNET"
+            - name: BLOCK_POLL_INTERVAL_MS
+              value: "5000"
+            - name: GENESIS_CATCHUP
+              value: "true"
+            - name: LISTEN_FOR_BLOCKS
+              value: "true"
+            - name: ETHEREUM_HTTP_RPC_URL
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: SP_TESTNET_AZTEC_L1_HTTP
+            - name: ETHEREUM_WS_RPC_URL
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: SP_TESTNET_AZTEC_L1_WS
+status: {}

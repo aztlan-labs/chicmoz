@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ethereum-listener-remote-devnet-label
+  name: ethereum-listener-remote-devnet-deployment
+  namespace: chicmoz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ethereum-listener-remote-devnet-label
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: ethereum-listener-remote-devnet-label
+    spec:
+      containers:
+        - image: ethereum-listener:latest
+          resources:
+            limits:
+              memory: 250Mi
+              cpu: 100m
+          name: ethereum-listener
+          env:
+            - name: INSTANCE_NAME
+              value: "remote_devnet_ethereum-listener"
+            - name: L2_NETWORK_ID
+              value: "DEVNET"
+            - name: BLOCK_POLL_INTERVAL_MS
+              value: "5000"
+            - name: GENESIS_CATCHUP
+              value: "true"
+            - name: LISTEN_FOR_BLOCKS
+              value: "true"
+            - name: ETHEREUM_HTTP_RPC_URL
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: DEVNET_AZTEC_L1_HTTP
+            - name: ETHEREUM_WS_RPC_URL
+              valueFrom:
+                secretKeyRef:
+                  name: global
+                  key: DEVNET_AZTEC_L1_WS
+status: {}

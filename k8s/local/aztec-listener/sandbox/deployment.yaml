@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: aztec-listener-sandbox-label
+  name: aztec-listener-sandbox-deployment
+  namespace: chicmoz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aztec-listener-sandbox-label
+  template:
+    metadata:
+      labels:
+        app: aztec-listener-sandbox-label
+    spec:
+      initContainers:
+        - name: run-migrations
+          image: aztec-listener:latest
+          command: ["yarn", run, "migrate"]
+          envFrom:
+            - configMapRef:
+                name: postgres-config-global
+            - configMapRef:
+                name: postgres-config-aztec-listener-sandbox
+      containers:
+        - image: aztec-listener:latest
+          resources:
+            limits:
+              memory: 750Mi
+              cpu: 250m
+          name: aztec-listener
+          envFrom:
+            - configMapRef:
+                name: postgres-config-global
+            - configMapRef:
+                name: postgres-config-aztec-listener-sandbox
+          env:
+            - name: INSTANCE_NAME
+              value: "sandbox-aztec-aztec-listener"
+            - name: BLOCK_POLL_INTERVAL_MS
+              value: "5000"
+            - name: L2_NETWORK_ID
+              value: "SANDBOX"
+            - name: AZTEC_GENESIS_CATCHUP
+              value: "true"
+            - name: AZTEC_LISTEN_FOR_BLOCKS
+              value: "true"
+            - name: AZTEC_LISTEN_FOR_PENDING_TXS
+              value: "true"
+            - name: AZTEC_RPC_URL
+              value: "http://aztec-sandbox-node:8081"
+status: {}

@@ -19,17 +19,15 @@ minikube start --kubernetes-version=v1.25.3 --cpus max --memory max && skaffold 
 
 ⚠️ _will ask for your password in order to port forward_
 
-⚠️ _Make sure you have .chicmoz-local.env file in the root_
-
 ```sh
 # It will end with keeping the terminal open for the tunnel.
 ./scripts/miscellaneous.sh
 ```
 
-Now you can access the explorer at http://explorer-ui.localhost and also...
+Now you can access the explorer at http://sandbox.explorer-ui.localhost and also...
 
-- API: http://explorer-api.localhost
-- index of API: http://explorer-api.localhost/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4/l2/index
+- API: http://sandbox.explorer-api.localhost
+- index of API: http://sandbox.explorer-api.localhost/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4/l2/index
 
 ### Different Aztec-setups
 
@@ -39,27 +37,20 @@ Default settings is to set up a sandbox in the local cluster.
 
 #### Option 1 - connect to your already running sandbox or to public devnet
 
-Update the `CHICMOZ_AZTEC_RPC` in the `.chicmoz-local.env` to desired endpoint and then run
+⚠️ _Make sure you have .chicmoz-local.env file in the root_
 
-```sh
-skaffold run -f k8s/local/skaffold.remote_aztec.yaml
-```
+TODO
 
 ## Pro tip
 
 ### 1
 
-after the first time you have deployed the app you can run the following command to have faster deployments:
-
-```sh
-skaffold run -f k8s/local/skaffold.default_dev.yaml
-```
-
-### 2
-
 if you run the explorer with `skaffold run -f k8s/local/skaffold.no_ui.yaml` you can run the explorer-ui locally for even faster frontend development:
 
 ```
-cd services/exporer-ui/
+yarn build:packages
+cd /services/explorer-ui
+yarn
+yarn build
 yarn dev
 ```

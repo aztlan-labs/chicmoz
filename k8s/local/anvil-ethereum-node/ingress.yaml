@@ -13,7 +13,7 @@ spec:
               service:
                 name: anvil-ethereum-node
                 port:
-                  name: anvil-port
+                  name: anvil
             path: /
             pathType: Prefix
 status:

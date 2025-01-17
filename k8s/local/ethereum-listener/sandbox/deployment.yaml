@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ethereum-listener-sandbox-label
+  name: ethereum-listener-sandbox-deployment
+  namespace: chicmoz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ethereum-listener-sandbox-label
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: ethereum-listener-sandbox-label
+    spec:
+      containers:
+        - image: ethereum-listener:latest
+          resources:
+            limits:
+              memory: 250Mi
+              cpu: 100m
+          name: ethereum-listener
+          env:
+            - name: INSTANCE_NAME
+              value: "sandbox_ethereum_listener"
+            - name: L2_NETWORK_ID
+              value: "SANDBOX"
+            - name: LISTENER_DISABLED
+              value: "false"
+            - name: GENESIS_CATCHUP
+              value: "true"
+            - name: LISTEN_FOR_BLOCKS
+              value: "true"
+            - name: ETHEREUM_HTTP_RPC_URL
+              value: "http://anvil-ethereum-node:8545"
+            - name: ETHEREUM_WS_RPC_URL
+              value: "ws://anvil-ethereum-node:8545"
+status: {}

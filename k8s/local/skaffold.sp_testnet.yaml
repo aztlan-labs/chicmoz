@@ -1,0 +1,22 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+metadata:
+  name: sp_testnet
+requires:
+  - path: ./common/skaffold.manifests.yaml
+  - path: ./common/skaffold.aztec_sanbox_nodes.yaml
+  - path: ./auth/image.yaml
+  - path: ./aztec-listener/skaffold.sp_testnet.yaml
+  - path: ./explorer-ui/skaffold.sp_testnet.yaml
+  - path: ./ethereum-listener/skaffold.sp_testnet.yaml
+  - path: ./explorer-api/skaffold.sp_testnet.yaml
+  - path: ./websocket-event-publisher/skaffold.sp_testnet.yaml
+deploy:
+  kubectl:
+    flags:
+      apply: ["--force"]
+manifests:
+  rawYaml:
+    - ./auth/deployment.yaml
+    - ./auth/service.yaml
+    - ./auth/postgres-config.yaml
