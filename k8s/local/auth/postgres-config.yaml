@@ -5,4 +5,3 @@ metadata:
   namespace: chicmoz
 data:
   POSTGRES_DB_NAME: "auth"
-  POSTGRES_PASSWORD: "secret-local-password"

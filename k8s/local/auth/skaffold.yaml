@@ -11,3 +11,13 @@ build:
       requires:
         - image: chicmoz-base
           alias: BASE
+deploy:
+  kubectl:
+    flags:
+      apply: ["--force"]
+manifests:
+  rawYaml:
+    - ./postgres-config.yaml
+    - ./service.yaml
+    - ./ingress.yaml
+    - ./deployment.yaml

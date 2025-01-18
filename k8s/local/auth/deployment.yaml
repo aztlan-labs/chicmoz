@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: auth
-  name: auth
+    app: auth-label
+  name: auth-deployment
   namespace: chicmoz
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth
+      app: auth-label
   strategy: {}
   template:
     metadata:
       labels:
-        app: auth
+        app: auth-label
     spec:
       containers:
         - image: auth:latest
@@ -23,7 +23,7 @@ spec:
               memory: 500Mi
               cpu: 50m
           ports:
-            - name: http-app
+            - name: http-app-port
               containerPort: 80
               protocol: TCP
           name: auth
