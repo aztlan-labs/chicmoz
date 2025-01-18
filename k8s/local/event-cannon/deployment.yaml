@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: event-cannon
-  name: event-cannon
+    app: event-cannon-label
+  name: event-cannon-deployment
   namespace: chicmoz
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: event-cannon
+      app: event-cannon-label
   strategy: {}
   template:
     metadata:
       labels:
-        app: event-cannon
+        app: event-cannon-label
     spec:
       containers:
         - image: event-cannon:latest
@@ -24,8 +24,6 @@ spec:
               cpu: 250m
           name: event-cannon
           env:
-            - name: NODE_ENV
-              value: "development"
             - name: AZTEC_RPC_URL
               value: "http://aztec-sandbox-node:8081"
             - name: ETHEREUM_RPC_URL

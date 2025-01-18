@@ -4,10 +4,17 @@ requires:
   - path: ../chicmoz-base-image.yaml
 build:
   artifacts:
-    - image: auth
-      context: ../../../services/auth
+    - image: event-cannon
+      context: ../../../services/event-cannon
       docker:
         dockerfile: Dockerfile
       requires:
         - image: chicmoz-base
           alias: BASE
+deploy:
+  kubectl:
+    flags:
+      apply: ["--force"]
+manifests:
+  rawYaml:
+    - ./deployment.yaml
