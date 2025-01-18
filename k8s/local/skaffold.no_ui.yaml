@@ -5,7 +5,6 @@ metadata:
 requires:
   - path: ./common/skaffold.manifests.yaml
   - path: ./common/skaffold.aztec_sanbox_nodes.yaml
-  - path: ./event-cannon/image.yaml
   - path: ./aztec-listener/skaffold.sandbox.yaml
   - path: ./ethereum-listener/skaffold.sandbox.yaml
   - path: ./explorer-api/skaffold.sandbox.yaml

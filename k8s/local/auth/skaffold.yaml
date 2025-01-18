@@ -19,5 +19,4 @@ manifests:
   rawYaml:
     - ./postgres-config.yaml
     - ./service.yaml
-    - ./ingress.yaml
     - ./deployment.yaml
