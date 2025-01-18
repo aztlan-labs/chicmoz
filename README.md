@@ -37,7 +37,7 @@ Default settings is to set up a sandbox in the local cluster.
 
 #### Option 1 - connect to your already running sandbox or to public devnet
 
-⚠️ _Make sure you have .chicmoz-local.env file in the root_
+⚠️ _Make sure you have .chicmoz.env file in the root_
 
 TODO
 
