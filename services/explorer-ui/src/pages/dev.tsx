@@ -11,7 +11,7 @@ export const DevPage: FC = () => {
     <div className="flex flex-col items-center">
       <h1>Dev Page</h1>
       <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
-        <p>Aztec.js version : 0.69.1</p>
+        <p>Aztec.js version : 0.71.0</p>
         <hr />
         <p>Explorer version: {VERSION_STRING}</p>
         <hr />
