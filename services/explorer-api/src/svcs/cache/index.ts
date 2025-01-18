@@ -1,6 +1,6 @@
+import { MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
 import { createClient } from "redis";
-import { REDIS_HOST, REDIS_PORT } from "../../environment.js";
-import {MicroserviceBaseSvc} from "@chicmoz-pkg/microservice-base";
+import { L2_NETWORK_ID, REDIS_HOST, REDIS_PORT } from "../../environment.js";
 
 let cache: ReturnType<typeof createClient>;
 let isInitialized = false;
@@ -17,10 +17,26 @@ export const init = async () => {
   isInitialized = true;
 };
 
-export const getCache = () => {
+const getCache = () => {
   if (!isInitialized) throw new Error("Cache not initialized");
   if (isShutDown) throw new Error("Cache has been shut down");
   return cache;
+};
+
+export const setEntry = async (
+  keys: (string | number | undefined)[],
+  value: string | number,
+  secondsTtl: number
+) => {
+  return await getCache().set(
+    [L2_NETWORK_ID, ...keys].join("-"),
+    value,
+    { EX: secondsTtl }
+  );
+};
+
+export const getEntry = async (keys: (string | number | undefined)[]) => {
+  return await getCache().get([L2_NETWORK_ID, ...keys].join("-"));
 };
 
 export const cacheService: MicroserviceBaseSvc = {

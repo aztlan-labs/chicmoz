@@ -1,32 +1,32 @@
-import asyncHandler from "express-async-handler";
-import { controllers as db } from "../../../database/index.js";
-import {
-  address,
-  blockHash,
-  blockHeight,
-  heightOrHash,
-  paths,
-  txEffectIndex,
-  txEffectHash,
-  classId,
-  version,
-  functionSelector,
-  getL1L2ValidatorSchema,
-} from "../paths_and_validation.js";
-import { PUBLIC_API_KEY } from "../../../../environment.js";
-import { getCache } from "../../../cache/index.js";
-import { dbWrapper } from "./utils/index.js";
+import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
 import {
   L1L2ValidatorStatus,
   chicmozL1L2ValidatorHistorySchema,
   chicmozL1L2ValidatorSchema,
 } from "@chicmoz-pkg/types";
-import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
+import asyncHandler from "express-async-handler";
+import { PUBLIC_API_KEY } from "../../../../environment.js";
+import { getEntry, setEntry } from "../../../cache/index.js";
+import { controllers as db } from "../../../database/index.js";
+import {
+  address,
+  blockHash,
+  blockHeight,
+  classId,
+  functionSelector,
+  getL1L2ValidatorSchema,
+  heightOrHash,
+  paths,
+  txEffectHash,
+  txEffectIndex,
+  version,
+} from "../paths_and_validation.js";
+import { dbWrapper } from "./utils/index.js";
 
 const SUB_PATH = `/v1/${PUBLIC_API_KEY}`;
 
 export const GET_ROUTES = asyncHandler(async (_req, res) => {
-  const cachedHtml = await getCache().get("GET_ROUTES");
+  const cachedHtml = await getEntry(["GET_ROUTES"]);
   if (cachedHtml) {
     res.send(cachedHtml);
     return;
@@ -225,9 +225,7 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
     </body>
   </html>
   `;
-  await getCache().set("GET_ROUTES", html, {
-    EX: NODE_ENV === "production" ? 60 : 2,
-  });
+  await setEntry(["GET_ROUTES"], html, NODE_ENV === "production" ? 60 : 2);
   res.send(html);
 });
 
