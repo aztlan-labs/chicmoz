@@ -10,11 +10,5 @@ requires:
   - path: ./ethereum-listener/skaffold.sandbox.yaml
   - path: ./explorer-api/skaffold.sandbox.yaml
   - path: ./auth/skaffold.yaml
+  - path: ./event-cannon/skaffold.yaml
   - path: ./websocket-event-publisher/skaffold.sandbox.yaml
-deploy:
-  kubectl:
-    flags:
-      apply: ["--force"]
-manifests:
-  rawYaml:
-    - ./event-cannon/deployment.yaml
