@@ -2,5 +2,5 @@ apiVersion: skaffold/v4beta6
 kind: Config
 manifests:
   rawYaml:
-    - ./common/namespace.yaml
-    - ./common/postgres-config.yaml
+    - ./namespace.yaml
+    - ./postgres-config.yaml
