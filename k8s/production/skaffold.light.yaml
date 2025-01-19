@@ -2,7 +2,6 @@ apiVersion: skaffold/v4beta6
 kind: Config
 metadata:
   name: chicmoz-prod-light
-  namespace: chicmoz-prod
 requires:
   - path: ./common/skaffold.manifests.yaml
   - path: ./explorer-api/skaffold.sp_testnet.yaml

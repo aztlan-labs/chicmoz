@@ -1,11 +1,11 @@
 apiVersion: skaffold/v4beta6
 kind: Config
 requires:
-  - path: ../../common/chicmoz-base-image.yaml
+  - path: ../../common/skaffold.chicmoz-base-image.yaml
 build:
   artifacts:
     - image: registry.digitalocean.com/aztlan-containers/websocket-event-publisher
-      context: services/websocket-event-publisher
+      context: ../../../../services/websocket-event-publisher
       docker:
         dockerfile: Dockerfile
       requires:

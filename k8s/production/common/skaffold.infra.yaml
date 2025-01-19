@@ -38,11 +38,11 @@ manifests:
         version: 12.10.0
         remoteChart: oci://registry-1.docker.io/bitnamicharts/postgresql
         valuesFiles:
-          - k8s/production/postgres/values.yaml
+          - ../postgres/values.yaml
         setValues:
-          global.postgresql.auth.postgresPassword: "secret-local-password" # TODO: change to env-var
+          global.postgresql.auth.postgresPassword: "secret-local-password"
           global.postgresql.auth.username: "admin"
-          global.postgresql.auth.password: "secret-local-password" # TODO: change to env-var
+          global.postgresql.auth.password: "secret-local-password"
           image.debug: true
         namespace: chicmoz-prod
         createNamespace: false
