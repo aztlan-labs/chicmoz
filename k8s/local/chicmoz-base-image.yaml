@@ -1,8 +1,0 @@
-apiVersion: skaffold/v4beta6
-kind: Config
-build:
-  artifacts:
-    - image: chicmoz-base
-      context: ../../
-      docker:
-        dockerfile: Dockerfile

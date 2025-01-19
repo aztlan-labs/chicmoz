@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth
-  namespace: chicmoz-prod
+  name: explorer-api-devnet-service
+  namespace: chicmoz
 spec:
   selector:
-    app: auth
+    app: explorer-api-devnet-label
   ports:
     - name: http-app
       protocol: TCP

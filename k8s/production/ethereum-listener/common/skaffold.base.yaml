@@ -4,10 +4,10 @@ requires:
   - path: ../../common/chicmoz-base-image.yaml
 build:
   artifacts:
-    - image: ethereum-listener
+    - image: registry.digitalocean.com/aztlan-containers/ethereum-listener
       context: ../../../../services/ethereum-listener
       docker:
         dockerfile: Dockerfile
       requires:
-        - image: chicmoz-base
+        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
           alias: BASE

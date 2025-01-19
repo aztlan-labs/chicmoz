@@ -4,12 +4,12 @@ requires:
   - path: ../common/chicmoz-base-image.yaml
 build:
   artifacts:
-    - image: auth
+    - image: registry.digitalocean.com/aztlan-containers/auth
       context: ../../../services/auth
       docker:
         dockerfile: Dockerfile
       requires:
-        - image: chicmoz-base
+        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
           alias: BASE
 deploy:
   kubectl:
