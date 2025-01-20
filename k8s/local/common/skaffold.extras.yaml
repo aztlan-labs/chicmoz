@@ -5,8 +5,6 @@ deploy:
     flags:
       apply: ["--force"]
 manifests:
-  rawYaml:
-    - ./skaffold.manifests.yaml
   helm:
     releases:
       - name: kafka-ui
