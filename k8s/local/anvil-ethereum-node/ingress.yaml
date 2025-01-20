@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: anvil-ethereum-node.localhost
+    - host: eth.sandbox.chicmoz.localhost
       http:
         paths:
           - backend:
