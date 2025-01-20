@@ -20,7 +20,16 @@ export const genereateOpenApiSpec = () => ({
       },
     },
     {
-      url: "http://explorer-api.localhost/v1/{apiKey}",
+      url: "http://api.sandbox.chicmoz.localhost/v1/{apiKey}",
+      variables: {
+        apiKey: {
+          default: PUBLIC_API_KEY,
+          description: "The project ID",
+        },
+      },
+    },
+    {
+      url: "http://api.sp.chicmoz.localhost/v1/{apiKey}",
       variables: {
         apiKey: {
           default: PUBLIC_API_KEY,

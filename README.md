@@ -24,10 +24,10 @@ minikube start --kubernetes-version=v1.25.3 --cpus max --memory max && skaffold 
 ./scripts/miscellaneous.sh
 ```
 
-Now you can access the explorer at http://sandbox.explorer-ui.localhost and also...
+Now you can access the explorer at http://sandbox.chicmoz.localhost and also...
 
-- API: http://sandbox.explorer-api.localhost
-- index of API: http://sandbox.explorer-api.localhost/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4/l2/index
+- API: http://api.sandbox.chicmoz.localhost
+- index of API: http://api.sandbox.chicmoz.localhost/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4/l2/index
 
 ### Different Aztec-setups
 
@@ -37,7 +37,7 @@ Default settings is to set up a sandbox in the local cluster.
 
 #### Option 1 - connect to your already running sandbox or to public devnet
 
-⚠️ _Make sure you have .chicmoz-local.env file in the root_
+⚠️ _Make sure you have .chicmoz.env file in the root_
 
 TODO
 

@@ -7,11 +7,11 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /$2
-    nginx.ingress.kubernetes.io/auth-url: http://auth.chicmoz.svc.cluster.local
+    nginx.ingress.kubernetes.io/auth-url: http://auth-service.chicmoz.svc.cluster.local
     nginx.ingress.kubernetes.io/auth-response-headers: x-api-key
 spec:
   rules:
-    - host: sp.explorer-api.localhost
+    - host: api.sp.chicmoz.localhost
       http:
         paths:
           - path: /v1/([^/]+)/(.*)

@@ -3,7 +3,7 @@ kind: Config
 metadata:
   name: sp_testnet
 requires:
-  - path: ./common/skaffold.manifests.yaml
+  - path: ./common/skaffold.infra.yaml
   - path: ./common/skaffold.aztec_sanbox_nodes.yaml
   - path: ./aztec-listener/skaffold.sp_testnet.yaml
   - path: ./explorer-ui/skaffold.sp_testnet.yaml

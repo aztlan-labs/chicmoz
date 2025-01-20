@@ -2,10 +2,18 @@ primary:
   initdb:
     scripts:
       init.sql: |
-        SELECT 'CREATE DATABASE aztec_listener'
-        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'aztec_listener')\gexec
-        SELECT 'CREATE DATABASE explorer_api'
-        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'explorer_api')\gexec
+        SELECT 'CREATE DATABASE aztec_listener_devnet'
+        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'aztec_listener_devnet')\gexec
+        SELECT 'CREATE DATABASE aztec_listener_sp_testnet'
+        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'aztec_listener_sp_testnet')\gexec
+        select 'CREATE DATABASE aztec_listener_local_devnet'
+        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'aztec_listener_local_devnet')\gexec
+        select 'CREATE DATABASE aztec_listener_remote_devnet'
+        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'aztec_listener_remote_devnet')\gexec
+        SELECT 'CREATE DATABASE explorer_api_devnet'
+        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'explorer_api_devnet')\gexec
+        SELECT 'CREATE DATABASE explorer_api_sp_testnet'
+        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'explorer_api_sp_testnet')\gexec
         SELECT 'CREATE DATABASE auth'
         WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'auth')\gexec
         \c auth
@@ -66,6 +74,3 @@ primary:
         ALTER TABLE ONLY public."api-key_api-keys"
             ADD CONSTRAINT "api-key_api-keys_pkey" PRIMARY KEY (id);
         CREATE UNIQUE INDEX "api-key_api-keys_api_key" ON public."api-key_api-keys" USING btree ("apiKey");
-
-        SELECT 'CREATE DATABASE metrics'
-        WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'metrics')\gexec

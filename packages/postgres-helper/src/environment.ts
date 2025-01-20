@@ -1,6 +1,6 @@
 const POSTGRES_IP = process.env.POSTGRES_IP ?? "localhost";
 const POSTGRES_PORT = Number(process.env.POSTGRES_PORT) || 5432;
-const POSTGRES_DB_NAME = process.env.POSTGRES_DB_NAME ?? "aztec_listener";
+const POSTGRES_DB_NAME = process.env.POSTGRES_DB_NAME;
 const POSTGRES_ADMIN = process.env.POSTGRES_ADMIN ?? "admin";
 const POSTGRES_PASSWORD =
   process.env.POSTGRES_PASSWORD ?? "secret-local-password";
@@ -14,6 +14,7 @@ export const dbCredentials = {
 };
 
 export const getConfigStr = () => {
+  if (!POSTGRES_DB_NAME) throw new Error("POSTGRES_DB_NAME is not set");
   return `POSTGRES\n${JSON.stringify({
     POSTGRES_IP,
     POSTGRES_PORT,

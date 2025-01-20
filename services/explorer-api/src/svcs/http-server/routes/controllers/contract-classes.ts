@@ -5,10 +5,10 @@ import {
 } from "@aztec/aztec.js";
 import { chicmozL2ContractClassRegisteredEventSchema } from "@chicmoz-pkg/types";
 import asyncHandler from "express-async-handler";
-import { getCache } from "../../../cache/index.js";
-import { controllers as db } from "../../../database/index.js";
 import { CACHE_TTL_SECONDS } from "../../../../environment.js";
 import { logger } from "../../../../logger.js";
+import { setEntry } from "../../../cache/index.js";
+import { controllers as db } from "../../../database/index.js";
 import {
   getContractClassesByClassIdSchema,
   getContractClassSchema,
@@ -183,17 +183,14 @@ export const POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT = asyncHandler(
       ...contractClass,
       artifactJson: stringifiedArtifactJson,
     };
-    getCache()
-      .set(
-        ["l2", "contract-classes", classId, version].join("-"),
-        JSON.stringify(completeContractClass),
-        {
-          EX: CACHE_TTL_SECONDS,
-        }
-      )
-      .catch((err) => {
-        logger.warn(`Failed to cache contract class: ${err}`);
-      });
+
+    setEntry(
+      ["l2", "contract-classes", classId, version.toString()],
+      JSON.stringify(completeContractClass),
+      CACHE_TTL_SECONDS
+    ).catch((err) => {
+      logger.warn(`Failed to cache contract class: ${err}`);
+    });
     await db.l2Contract.addArtifactJson(
       contractClass.contractClassId,
       contractClass.version,

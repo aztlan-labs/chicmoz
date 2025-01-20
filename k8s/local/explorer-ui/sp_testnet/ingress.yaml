@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: sp.explorer-ui.localhost
+    - host: sp.chicmoz.localhost
       http:
         paths:
           - backend:

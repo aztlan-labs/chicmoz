@@ -1,7 +1,7 @@
 apiVersion: skaffold/v4beta6
 kind: Config
 requires:
-  - path: ../chicmoz-base-image.yaml
+  - path: ../common/skaffold.chicmoz-base-image.yaml
 build:
   artifacts:
     - image: explorer-ui-sandbox
@@ -11,8 +11,8 @@ build:
         buildArgs:
           NODE_ENV: "development"
           VITE_L2_NETWORK_ID: "SANDBOX"
-          VITE_API_URL: "http://sandbox.explorer-api.localhost:80/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4"
-          VITE_WS_URL: "ws://sandbox.ws.localhost:80"
+          VITE_API_URL: "http://api.sandbox.chicmoz.localhost:80/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4"
+          VITE_WS_URL: "ws://ws.sandbox.chicmoz.localhost:80"
           VITE_DISCORD_URL: "https://discord.gg/obscura-network"
           VITE_X_URL: "https://x.com/Obscura_Network"
           VITE_GITHUB_URL: "https://github.com/aztlan-labs/chicmoz"

@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: auth
+    app: auth-label
   name: auth
   namespace: chicmoz-prod
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth
+      app: auth-label
   strategy: {}
   template:
     metadata:
       labels:
-        app: auth
+        app: auth-label
     spec:
       imagePullSecrets:
         - name: registry-aztlan-containers
@@ -25,23 +25,18 @@ spec:
               memory: 500Mi
               cpu: 50m
           ports:
-            - name: http-app
+            - name: http-app-port
               containerPort: 80
               protocol: TCP
           name: auth
+          envFrom:
+            - configMapRef:
+                name: postgres-config-global
           env:
             - name: PORT
               value: "80"
-            - name: POSTGRES_IP
-              value: "postgresql"
-            - name: POSTGRES_PORT
-              value: "5432"
             - name: POSTGRES_DB_NAME
               value: "auth"
-            - name: POSTGRES_ADMIN
-              value: "admin"
-            - name: POSTGRES_PASSWORD
-              value: "secret-local-password" # TODO: change to env-var
             - name: REDIS_HOST
               value: "redis-master"
             - name: REDIS_PORT

@@ -1,0 +1,30 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+requires:
+  - path: ../common/skaffold.chicmoz-base-image.yaml
+build:
+  artifacts:
+    - image: registry.digitalocean.com/aztlan-containers/explorer-ui-sp-testnet
+      context: ../../../services/explorer-ui
+      docker:
+        dockerfile: Dockerfile
+        buildArgs:
+          NODE_ENV: "production"
+          VITE_API_URL: "https://api.sp.aztecscan.xyz/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4"
+          VITE_WS_URL: "wss://ws.sp.aztecscan.xyz"
+          VITE_DISCORD_URL: "https://discord.gg/obscura-network"
+          VITE_X_URL: "https://x.com/Obscura_Network"
+          VITE_GITHUB_URL: "https://github.com/aztlan-labs/chicmoz"
+          VITE_VERSION_STRING: "{{.VERSION_STRING}}"
+      requires:
+        - image: registry.digitalocean.com/aztlan-containers/chicmoz-base
+          alias: BASE
+deploy:
+  kubectl:
+    flags:
+      apply: ["--force"]
+manifests:
+  rawYaml:
+    - ./sp_testnet/service.yaml
+    - ./sp_testnet/ingress.yaml
+    - ./sp_testnet/deployment.yaml
