@@ -3,10 +3,13 @@ import { InfoBadge } from "~/components/info-badge";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { useLatestBlocks } from "~/hooks";
 import { useTotalTxEffects, useTotalTxEffectsLast24h } from "~/hooks/stats";
+import { useSubTitle } from "~/hooks/sub-title";
 import { useGetTxEffectsByBlockHeightRange } from "~/hooks/tx-effect";
+import { routes } from "~/routes/__root";
 import { parseTxEffectsData } from "../landing/util";
 
 export const TxEffects: FC = () => {
+  useSubTitle(routes.txEffects.children.index.title);
   const { data: latestBlocks, isLoading, error } = useLatestBlocks();
   const {
     data: totalTxEffects,

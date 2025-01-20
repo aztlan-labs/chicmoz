@@ -1,12 +1,15 @@
-import { FC } from "react";
+import { type FC } from "react";
+import { ContractClassesTable } from "~/components/contracts/classes/table";
+import { ContractInstancesTable } from "~/components/contracts/instances/table";
 import { InfoBadge } from "~/components/info-badge";
 import { useLatestContractClasses, useLatestContractInstances } from "~/hooks";
 import { useTotalContracts, useTotalContractsLast24h } from "~/hooks/stats";
+import { useSubTitle } from "~/hooks/sub-title";
+import { routes } from "~/routes/__root";
 import { mapContractClasses, mapContractInstances } from "./util";
-import { ContractInstancesTable } from "~/components/contracts/instances/table";
-import { ContractClassesTable } from "~/components/contracts/classes/table";
 
 export const Contracts: FC = () => {
+  useSubTitle(routes.contracts.children.index.title);
   const {
     data: classesData,
     isLoading: isLoadingClasses,

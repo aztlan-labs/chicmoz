@@ -7,11 +7,13 @@ import { useContractInstance } from "~/hooks/";
 import { getContractData, getVerifiedContractInstanceData } from "./util";
 import { routes } from "~/routes/__root";
 import { CustomTooltip } from "~/components/custom-tooltip";
+import {useSubTitle} from "~/hooks/sub-title";
 
 export const ContractInstanceDetails: FC = () => {
   const { address } = useParams({
     from: "/contracts/instances/$address",
   });
+  useSubTitle(`Ctrct inst ${address}`);
   const {
     data: contractInstanceDetails,
     isLoading,
