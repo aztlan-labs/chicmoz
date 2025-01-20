@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-websocket-event-publisher-sp-testnet
+  namespace: chicmoz-prod
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    cert-manager.io/cluster-issuer: "aztecscan-issuer-production"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - ws.sp.aztecscan.xyz
+      secretName: chicmoz-ws-tls-sp-testnet
+  rules:
+    - host: ws.sp.aztecscan.xyz
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: websocket-event-publisher-sp-testnet
+                port:
+                  name: websocket-port
+status:
+  loadBalancer: {}
