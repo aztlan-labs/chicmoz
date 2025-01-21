@@ -1,8 +1,8 @@
 # TODO
 
 1. update types `./packages/types`
-   - [ ] change NodeInfo to SequencerInfo
-   - [ ] add ChainInfo
+   - [ ] change NodeInfo to ChicmozSequencerInfo and ChicmozNodeInfo
+   - [ ] add ChicmozChainInfo
 1. update `./packages/message-registry`
    - [ ] add new messages
 1. update `./services/aztec-listener`
@@ -85,4 +85,5 @@
 - [ ] L2NetworkId (primary key)
 - [ ] l1ChainId
 - [ ] l1ContractAddresses
+- [ ] protocolContractAddresses
 - [ ] protocolVersion

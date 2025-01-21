@@ -14,7 +14,10 @@
     "lint-base": "yarn run g:lint"
   },
   "dependencies": {
-    "zod": "3.22.4"
+    "@aztec/aztec.js": "0.71.0",
+    "@aztec/circuits.js": "0.71.0",
+    "@aztec/ethereum": "0.71.0",
+    "zod": "3.23.8"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "6.11.0",
