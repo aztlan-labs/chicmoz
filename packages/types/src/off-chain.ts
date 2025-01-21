@@ -10,13 +10,14 @@ export const chicmozNodeInfoSchema = z.object({
 
 export const chicmozSequencerInfoSchema = z.object({
   enr: z.string(),
-  nodeId: z.string(),
+  nodeId: z.string().optional(),
+  rpcUrl: z.string(),
   l2NetworkId: l2NetworkIdSchema,
   protocolVersion: z.number(),
   nodeVersion: z.string(),
   l1ChainId: z.number(),
-  lastSeenAt: z.date(),
-  createdAt: z.date(),
+  lastSeenAt: z.date().optional(),
+  createdAt: z.date().optional(),
 });
 
 export const chicmozNodeErrorSchema = z.object({
@@ -35,18 +36,14 @@ export const getSequencerInfo = (
   l2NetworkId: L2NetworkId,
   nodeInfo: AztecNodeInfo,
   enr: string,
-  nodeId: string,
-  lastSeenAt: Date,
-  createdAt: Date
+  rpcUrl: string
 ): ChicmozSequencerInfo => {
   return {
     enr,
-    nodeId,
+    rpcUrl,
     l2NetworkId,
     protocolVersion: nodeInfo.protocolVersion,
     nodeVersion: nodeInfo.nodeVersion,
     l1ChainId: nodeInfo.l1ChainId,
-    lastSeenAt,
-    createdAt,
   };
 };

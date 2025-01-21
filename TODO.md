@@ -1,10 +1,10 @@
 # TODO
 
 1. update types `./packages/types`
-   - [ ] change NodeInfo to ChicmozSequencerInfo and ChicmozNodeInfo
-   - [ ] add ChicmozChainInfo
+   - [x] change NodeInfo to ChicmozSequencerInfo and ChicmozNodeInfo
+   - [x] add ChicmozChainInfo
 1. update `./packages/message-registry`
-   - [ ] add new messages
+   - [x] add new messages
 1. update `./services/aztec-listener`
    - [ ] update the poller to emit events in current poll-structure
 1. update `./services/explorer-api`
@@ -13,6 +13,7 @@
    - [ ] create API endpoints
 1. update poll structure in `./services/aztec-listener`
    - [ ] add new poll-structure
+1. remove old NodeInfo type from `./packages/types`
 
 # Plan
 
@@ -31,7 +32,7 @@
 ### emitted events
 
 - [ ] emitSequencerAlive (on successful poll-response)
-- [ ] emitSequencerError (on failed poll-response or timeout)
+- [ ] emitNodeError (on failed poll-response or timeout)
 - [ ] emitL2ChainInfo (re-occuring every X minutes)
 - [ ] emitSequencerInfo (re-occuring every Y minutes)
 

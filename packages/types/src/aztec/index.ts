@@ -10,6 +10,7 @@ export * from "./special.js";
 export * from "./general.js";
 export { frNumberSchema } from "./utils.js";
 
+// TODO: remove below legacy code
 export const transformNodeInfo = (nodeInfo: NodeInfo): StringifiedNodeInfo => {
   const l1ContractAddresses = Object.entries(
     nodeInfo.l1ContractAddresses
