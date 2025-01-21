@@ -44,8 +44,8 @@
 - [ ] `/sequencer/:enr` (agregated value `hasError` = `sequencer.lastSeenAt < sequencerError.lastSeenAt`)
 - [ ] `/sequencer/:enr/errors`
       NOTE: the two above can be bruteforced. At least add a TODO in the request-handler to rate-limit this endpoint.
-- [ ] `/l2/chain/info`
-- [ ] `/l2/chain/errors` (this EP should be used if latest block is not seen within a reasonable time from frontend)
+- [ ] `/l2/info`
+- [ ] `/l2/errors` (this EP should be used if latest block is not seen within a reasonable time from frontend)
 
 ### DB
 
@@ -61,17 +61,19 @@
 
 - [ ] enr (primary key)
 - [ ] nodeId (foreign key) 1:1
+- [ ] L2NetworkId
 - [ ] protocolVersion (separate timestamped table)
 - [ ] nodeVersion (separate timestamped table)
+- [ ] l1ChainId (separate timestamped table)
 - [ ] lastSeenAt
 - [ ] createdAt
-- [ ] l1ChainId (separate timestamped table)
-- [ ] L2NetworkId
 
 ##### nodeError
 
-- [ ] error string (primary key)
+- [ ] message (primary key)
 - [ ] nodeId (foreign key)
+- [ ] stack
+- [ ] data
 - [ ] error count
 - [ ] lastSeenAt
 - [ ] firstSeenAt
