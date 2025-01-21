@@ -18,9 +18,9 @@ export const start = async () => {
   logger.info("Starting Cannon...");
   const scenariosToRun = [
     //scenarios.deploySimpleDefaultAccount,
-    scenarios.deployAndInteractTokenContract,
+    //scenarios.deployAndInteractTokenContract,
     //scenarios.deployAndInteractFunctionsVote,
-    //scenarios.deploySimpleContract,
+    scenarios.deploySimpleContract,
     //scenarios.deploySimpleLog,
     //scenarios.l1L2PublicMessaging,
     //scenarios.l1L2PrivateMessaging,

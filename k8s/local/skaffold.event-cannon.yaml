@@ -1,0 +1,8 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+metadata:
+  name: no_ui
+requires:
+  - path: ./common/skaffold.base.yaml
+  - path: ./common/skaffold.aztec_sanbox_nodes.yaml
+  - path: ./event-cannon/skaffold.yaml
