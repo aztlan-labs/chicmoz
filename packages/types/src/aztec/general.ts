@@ -11,7 +11,7 @@ import { z } from "zod";
 import { L2NetworkId, l2NetworkIdSchema } from "../network-ids.js";
 
 export const chicmozChainInfoSchema = z.object({
-  L2NetworkId: l2NetworkIdSchema,
+  l2NetworkId: l2NetworkIdSchema,
   l1ChainId: z.number(),
   protocolVersion: z.number(),
   l1ContractAddresses: L1ContractAddressesSchema,
@@ -73,6 +73,7 @@ export const chicmozL2RpcNodeSchema = z.object({
   rpcUrl: z.string(),
   id: z.string().optional(),
   createdAt: z.date(),
+  lastSeenAt: z.date()
 });
 
 export const chicmozL2RpcNodeErrorSchema = z.object({

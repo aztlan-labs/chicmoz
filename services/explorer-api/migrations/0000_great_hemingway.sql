@@ -281,7 +281,8 @@ CREATE TABLE IF NOT EXISTS "l2_rpc_node_error" (
 CREATE TABLE IF NOT EXISTS "l2_rpc_node" (
 	"rpc_url" varchar PRIMARY KEY NOT NULL,
 	"id" uuid DEFAULT gen_random_uuid() NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"last_seen_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l2_sequencer" (

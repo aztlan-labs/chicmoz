@@ -10,8 +10,10 @@
 1. update `./services/explorer-api`
    - [x] add event-listeners for new events
    - [x] create new DB schemas
-   - [ ] restructure controllers accordingly
+   - [x] create new DB-controllers with store functions
+   - [ ] update handlers with new DB-controllers store
    - [ ] create API endpoints
+   - [ ] update DB-controllers with appropriate fetch functions
 1. make UI at least build with new types
 1. update `./services/ethereum-listener`
 1. update poll structure in `./services/aztec-listener`
@@ -57,39 +59,40 @@
 
 #### node (sequencer)
 
-##### node
+##### node (l2RpcNodeTable)
 
-- [ ] id (primary key)
-- [ ] rpcUrl
-- [ ] createdAt
+- [x] rpcUrl (primary key)
+- [x] id
+- [x] createdAt
 
-##### sequencer
+##### sequencer (l2SequencerTable)
 
-- [ ] enr (primary key)
-- [ ] nodeId (foreign key) 1:1
-- [ ] L2NetworkId
-- [ ] protocolVersion (separate timestamped table)
-- [ ] nodeVersion (separate timestamped table)
-- [ ] l1ChainId (separate timestamped table)
-- [ ] lastSeenAt
-- [ ] createdAt
+- [x] enr (primary key)
+- [x] rpcUrl (foreign key to l2RpcNodeTable)
+- [x] L2NetworkId
+- [x] protocolVersion
+- [x] nodeVersion
+- [x] l1ChainId
+- [x] lastSeenAt
+- [x] createdAt
 
-##### nodeError
+##### nodeError (l2RpcNodeErrorTable)
 
-- [ ] message (primary key)
-- [ ] nodeId (foreign key)
-- [ ] stack
-- [ ] data
-- [ ] error count
-- [ ] lastSeenAt
-- [ ] firstSeenAt
+- [x] name (primary key)
+- [x] rpcUrl (foreign key to l2RpcNodeTable)
+- [x] cause
+- [x] message
+- [x] stack
+- [x] data
+- [x] count
+- [x] createdAt
 
-#### l2-chain-info
+#### l2-chain-info (l2ChainInfoTable)
 
-##### l2-chain-info
-
-- [ ] L2NetworkId (primary key)
-- [ ] l1ChainId
-- [ ] l1ContractAddresses
-- [ ] protocolContractAddresses
-- [ ] protocolVersion
+- [x] L2NetworkId (primary key)
+- [x] l1ChainId
+- [x] l1ContractAddresses
+- [x] protocolContractAddresses
+- [x] protocolVersion
+- [x] createdAt
+- [x] updatedAt

@@ -6,7 +6,8 @@ import { l2SequencerTable } from "./sequencer.js";
 export const l2RpcNodeTable = pgTable("l2_rpc_node", {
   rpcUrl: varchar("rpc_url").primaryKey().notNull(),
   id: uuid("id").defaultRandom().notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  lastSeenAt: timestamp("last_seen_at").defaultNow().notNull(),
 });
 
 export const l2RpcNodeRelations = relations(

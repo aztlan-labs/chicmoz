@@ -19,6 +19,7 @@ export const l2RpcNodeErrorTable = pgTable("l2_rpc_node_error", {
   data: jsonb("data").notNull(),
   count: integer("count").notNull().default(1),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+  lastSeenAt: timestamp("last_seen_at").notNull().defaultNow(),
 });
 
 export const l2RpcNodeErrorRelations = relations(
