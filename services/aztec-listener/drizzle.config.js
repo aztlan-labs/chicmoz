@@ -5,7 +5,7 @@ import { dbCredentials } from "@chicmoz-pkg/postgres-helper";
 
 // eslint-disable-next-line import/no-default-export
 export default defineConfig({
-  schema: "./build/src/database/schema.js",
+  schema: "./build/src/svcs/database/schema.js",
   out: "./migrations",
   dbCredentials,
   dialect: "postgresql",
