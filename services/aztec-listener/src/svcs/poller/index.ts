@@ -48,7 +48,7 @@ export const init = async () => {
   const l2Sequencer = getSequencerInfo(
     L2_NETWORK_ID,
     initResult.rpcUrl,
-    initResult.nodeInfo
+    initResult.nodeInfo,
   );
   logger.info(`Aztec sequencer info: ${JSON.stringify(l2Sequencer)}`);
   await onL2SequencerInfo(l2Sequencer);

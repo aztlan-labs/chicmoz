@@ -1,13 +1,19 @@
 import { type NodeInfo as AztecNodeInfo, type NodeInfo } from "@aztec/aztec.js";
-import { ProtocolContractAddressesSchema } from "@aztec/circuits.js";
-import { L1ContractAddressesSchema } from "@aztec/ethereum";
+import {
+  ProtocolContractAddresses,
+  ProtocolContractAddressesSchema,
+} from "@aztec/circuits.js";
+import {
+  L1ContractAddresses,
+  L1ContractAddressesSchema,
+} from "@aztec/ethereum";
 import { z } from "zod";
 import { L2NetworkId, l2NetworkIdSchema } from "../network-ids.js";
 
 export const chicmozChainInfoSchema = z.object({
   L2NetworkId: l2NetworkIdSchema,
   l1ChainId: z.number(),
-  protocolVersion: z.string(),
+  protocolVersion: z.number(),
   l1ContractAddresses: L1ContractAddressesSchema,
   protocolContractAddresses: ProtocolContractAddressesSchema,
 });
@@ -18,9 +24,46 @@ export const getChicmozChainInfo = (
   L2NetworkId: L2NetworkId,
   nodeInfo: NodeInfo
 ): ChicmozChainInfo => {
+  const l1ContractAddresses: L1ContractAddresses = nodeInfo.l1ContractAddresses;
+  // NOTE: this workaround is needed because the zod schema says they should be strings. But we're getting EthAddress (object) from the aztec.js node-call.
+  //   e.g.:   {
+  // "code": "invalid_type",
+  // "expected": "string",
+  // "received": "object",
+  // "path": [
+  //   "l1ContractAddresses",
+  //   "rollupAddress"
+  // ],
+  // "message": "Expected string, received object"
+  const actualCompatibleL1ContractAddresses: L1ContractAddresses =
+    Object.fromEntries(
+      Object.entries(l1ContractAddresses).map(([key, value]) => [
+        key,
+        value.toString(),
+      ])
+    ) as unknown as L1ContractAddresses;
+  // NOTE: this workaround is needed because the zod schema says they should be strings. But we're getting EthAddress (object) from the aztec.js node-call.
+  //   e.g.:   {
+  //  "code": "invalid_type",
+  //  "expected": "string",
+  //  "received": "object",
+  //  "path": [
+  //    "protocolContractAddresses",
+  //    "multiCallEntrypoint"
+  //  ],
+  //  "message": "Expected string, received object"
+
+  const actualCompatibleProtocolContractAddresses = Object.fromEntries(
+    Object.entries(nodeInfo.protocolContractAddresses).map(([key, value]) => [
+      key,
+      value.toString(),
+    ])
+  ) as unknown as ProtocolContractAddresses;
   return chicmozChainInfoSchema.parse({
     L2NetworkId,
     ...nodeInfo,
+    l1ContractAddresses: actualCompatibleL1ContractAddresses,
+    protocolContractAddresses: actualCompatibleProtocolContractAddresses,
   });
 };
 
@@ -36,7 +79,7 @@ export const chicmozL2RpcNodeErrorSchema = z.object({
   cause: z.string(),
   message: z.string(),
   stack: z.string(),
-  data: z.string(),
+  data: z.unknown(),
   createdAt: z.date().default(() => new Date()),
 });
 

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { AztecNode, NodeInfo, createAztecNodeClient } from "@aztec/aztec.js";
 import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
-import { chicmozL2RpcNodeErrorSchema } from "@chicmoz-pkg/types";
 import { IBackOffOptions, backOff } from "exponential-backoff";
 import {
   AZTEC_RPC_URL,
@@ -58,20 +57,19 @@ const callNodeFunction = async <K extends keyof AztecNode>(
         args
       )) as Promise<ReturnType<AztecNode[K]>>;
     }, backOffOptions);
-    await onL2RpcNodeAlive(AZTEC_RPC_URL);
+    onL2RpcNodeAlive(AZTEC_RPC_URL);
     return res;
   } catch (e) {
     logger.warn(`Aztec failed to call ${fnName}`);
-    await onL2RpcNodeError(
-      chicmozL2RpcNodeErrorSchema.parse({
-        rpcUrl: AZTEC_RPC_URL,
-        name: (e as Error).name ?? "UnknownName",
-        message: (e as Error).message ?? "UnknownMessage",
-        cause: (e as Error).cause ?? "UnknownCause",
-        stack: (e as Error).stack ?? "UnknownStack",
-        data: { fnName, args, error: e },
-      })
-    );
+    onL2RpcNodeError({
+      rpcUrl: AZTEC_RPC_URL,
+      name: (e as Error).name ?? "UnknownName",
+      message: (e as Error).message ?? "UnknownMessage",
+      cause: JSON.stringify((e as Error).cause) ?? "UnknownCause",
+      stack: (e as Error).stack ?? "UnknownStack",
+      data: { fnName, args, error: e },
+      createdAt: new Date()
+    });
     if ((e as Error).cause) {
       logger.warn(
         `Aztec failed to fetch: ${JSON.stringify((e as Error).cause)}`
@@ -112,7 +110,7 @@ export const getFreshNodeInfo = async () => {
     nodeVersion,
     l1ChainId: chainId,
     protocolVersion,
-    enr,
+    enr: enr ?? "UNKNOWN",
     l1ContractAddresses: contractAddresses,
     protocolContractAddresses: protocolContractAddresses,
   };

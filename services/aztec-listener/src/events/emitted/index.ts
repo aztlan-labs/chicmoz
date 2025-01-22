@@ -5,9 +5,13 @@ import {
   ChicmozL2RpcNode,
   ChicmozL2RpcNodeError,
   ChicmozL2SequencerInfo,
+  chicmozL2RpcNodeErrorSchema,
 } from "@chicmoz-pkg/types";
 import { logger } from "../../logger.js";
-import { publishMessage } from "../../svcs/message-bus/index.js";
+import {
+  publishMessage,
+  publishMessageSync,
+} from "../../svcs/message-bus/index.js";
 
 export const onBlock = async (block: L2Block) => {
   const height = Number(block.header.globalVariables.blockNumber);
@@ -63,6 +67,7 @@ export const onPendingTxs = async (txs: Tx[]) => {
 
 export const onChainInfo = async (chainInfo: ChicmozChainInfo) => {
   const event = { chainInfo };
+  logger.info(`🦊 publishing CHAIN_INFO_EVENT...`);
   await publishMessage("CHAIN_INFO_EVENT", event);
 };
 
@@ -70,15 +75,30 @@ export const onL2SequencerInfo = async (
   sequencerInfo: ChicmozL2SequencerInfo
 ) => {
   const event = { sequencerInfo };
+  logger.info(`🦊 publishing SEQUENCER_INFO_EVENT...`);
   await publishMessage("SEQUENCER_INFO_EVENT", event);
 };
 
-export const onL2RpcNodeError = async (rpcNodeError: ChicmozL2RpcNodeError) => {
-  const event = { nodeError: rpcNodeError };
-  await publishMessage("L2_RPC_NODE_ERROR_EVENT", event);
+export const onL2RpcNodeError = (rpcNodeError: ChicmozL2RpcNodeError) => {
+  let event;
+  try {
+    event = { nodeError: chicmozL2RpcNodeErrorSchema.parse(rpcNodeError) };
+  } catch (e) {
+    logger.warn(`🦊 onL2RpcNodeError on parse error: ${(e as Error).message}`);
+    return;
+  }
+  logger.info(`🦊 publishing L2_RPC_NODE_ERROR_EVENT...`);
+  publishMessageSync("L2_RPC_NODE_ERROR_EVENT", event);
 };
 
-export const onL2RpcNodeAlive = async (rpcUrl: ChicmozL2RpcNode["rpcUrl"]) => {
-  const event = { rpcUrl, timestamp: new Date().getTime() };
-  await publishMessage("L2_RPC_NODE_ALIVE_EVENT", event);
+export const onL2RpcNodeAlive = (rpcUrl: ChicmozL2RpcNode["rpcUrl"]) => {
+  let event;
+  try {
+    event = { rpcUrl, timestamp: new Date().getTime() };
+  } catch (e) {
+    logger.warn(`🦊 onL2RpcNodeAlive on parse error: ${(e as Error).message}`);
+    return;
+  }
+  logger.info(`🦊 publishing L2_RPC_NODE_ALIVE_EVENT...`);
+  publishMessageSync("L2_RPC_NODE_ALIVE_EVENT", event);
 };

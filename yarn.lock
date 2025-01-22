@@ -765,7 +765,7 @@ __metadata:
     prettier-plugin-organize-imports: "npm:3.2.4"
     prettier-plugin-sort-json: "npm:3.1.0"
     typescript: "npm:5.2.2"
-    zod: "npm:3.23.8"
+    zod: "npm:^3.23.8"
   languageName: unknown
   linkType: soft
 
@@ -809,7 +809,7 @@ __metadata:
     prettier-plugin-organize-imports: "npm:3.2.4"
     prettier-plugin-sort-json: "npm:3.1.0"
     typescript: "npm:5.2.2"
-    zod: "npm:3.23.8"
+    zod: "npm:^3.23.8"
   languageName: unknown
   linkType: soft
 
@@ -928,7 +928,7 @@ __metadata:
     prettier-plugin-organize-imports: "npm:3.2.4"
     prettier-plugin-sort-json: "npm:3.1.0"
     typescript: "npm:5.2.2"
-    zod: "npm:3.23.8"
+    zod: "npm:^3.23.8"
   languageName: unknown
   linkType: soft
 
@@ -969,7 +969,7 @@ __metadata:
     sequelize: "npm:6.33.0"
     typescript: "npm:5.2.2"
     vitest: "npm:0.34.6"
-    zod: "npm:3.23.8"
+    zod: "npm:^3.23.8"
   languageName: unknown
   linkType: soft
 
@@ -1126,7 +1126,7 @@ __metadata:
     ts-jest: "npm:29.1.1"
     typescript: "npm:5.2.2"
     uuid: "npm:10.0.0"
-    zod: "npm:3.23.8"
+    zod: "npm:^3.23.8"
   languageName: unknown
   linkType: soft
 
@@ -1194,7 +1194,7 @@ __metadata:
     vaul: "npm:0.9.1"
     vite: "npm:5.3.4"
     vite-plugin-svgr: "npm:4.2.0"
-    zod: "npm:3.23.8"
+    zod: "npm:^3.23.8"
   languageName: unknown
   linkType: soft
 
@@ -14097,7 +14097,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:3.23.8, zod@npm:^3.22.4, zod@npm:^3.23.8":
+"zod@npm:^3.22.4, zod@npm:^3.23.8":
   version: 3.23.8
   resolution: "zod@npm:3.23.8"
   checksum: 8f14c87d6b1b53c944c25ce7a28616896319d95bc46a9660fe441adc0ed0a81253b02b5abdaeffedbeb23bdd25a0bf1c29d2c12dd919aef6447652dd295e3e69
