@@ -1,5 +1,5 @@
 {
-  "id": "b47bcb49-b27e-433f-866b-0bf561269477",
+  "id": "0498185c-30f1-46d4-bddd-0529a06a2dc0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1612,7 +1612,8 @@
       "columns": {
         "l2_network_id": {
           "name": "l2_network_id",
-          "type": "varchar",
+          "type": "l2_network_id",
+          "typeSchema": "public",
           "primaryKey": true,
           "notNull": true
         },
@@ -1778,7 +1779,8 @@
         },
         "l2_network_id": {
           "name": "l2_network_id",
-          "type": "varchar",
+          "type": "l2_network_id",
+          "typeSchema": "public",
           "primaryKey": true,
           "notNull": true
         },
