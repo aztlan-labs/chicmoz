@@ -57,6 +57,7 @@ const callNodeFunction = async <K extends keyof AztecNode>(
         args
       )) as Promise<ReturnType<AztecNode[K]>>;
     }, backOffOptions);
+    logger.info(`Aztec successfully called ${fnName}`);
     onL2RpcNodeAlive(AZTEC_RPC_URL);
     return res;
   } catch (e) {
