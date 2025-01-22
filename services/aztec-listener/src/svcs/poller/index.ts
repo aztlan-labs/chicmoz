@@ -1,13 +1,17 @@
 import { MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
-import { NodeInfo, transformNodeInfo } from "@chicmoz-pkg/types";
+import {
+  NodeInfo,
+  getChicmozChainInfo,
+  getSequencerInfo,
+} from "@chicmoz-pkg/types";
 import {
   AZTEC_GENESIS_CATCHUP,
   AZTEC_LISTEN_FOR_BLOCKS,
   AZTEC_LISTEN_FOR_PENDING_TXS,
-  AZTEC_RPC_URL,
+  L2_NETWORK_ID,
   getConfigStr,
 } from "../../environment.js";
-import { onConnectedToAztec } from "../../events/emitted/index.js";
+import { onChainInfo, onL2SequencerInfo } from "../../events/emitted/index.js";
 import { logger } from "../../logger.js";
 import {
   getHeight as getLatestProcessedHeight,
@@ -36,16 +40,18 @@ const getHeights = async () => {
 };
 
 export const init = async () => {
-  nodeInfo = await initNetworkClient();
-  const { latestProcessedHeight, chainHeight } = await getHeights();
-  const connectedEvent = {
-    nodeInfo: transformNodeInfo(nodeInfo),
-    rpcUrl: AZTEC_RPC_URL,
-    chainHeight,
-    latestProcessedHeight,
-  };
-  logger.info(`Aztec connected event: ${JSON.stringify(connectedEvent)}`);
-  await onConnectedToAztec(connectedEvent);
+  const initResult = await initNetworkClient();
+  //const { latestProcessedHeight, chainHeight } = await getHeights();
+  const chainInfo = getChicmozChainInfo(L2_NETWORK_ID, initResult.nodeInfo);
+  logger.info(`Aztec chain info: ${JSON.stringify(chainInfo)}`);
+  await onChainInfo(chainInfo);
+  const l2Sequencer = getSequencerInfo(
+    L2_NETWORK_ID,
+    initResult.rpcUrl,
+    initResult.nodeInfo
+  );
+  logger.info(`Aztec sequencer info: ${JSON.stringify(l2Sequencer)}`);
+  await onL2SequencerInfo(l2Sequencer);
 };
 
 export const startPoller = async () => {

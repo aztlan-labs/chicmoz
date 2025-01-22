@@ -917,6 +917,7 @@ __metadata:
   resolution: "@chicmoz-pkg/types@workspace:packages/types"
   dependencies:
     "@aztec/aztec.js": "npm:0.71.0"
+    "@aztec/circuits.js": "npm:0.71.0"
     "@aztec/ethereum": "npm:0.71.0"
     "@typescript-eslint/eslint-plugin": "npm:6.11.0"
     "@typescript-eslint/parser": "npm:6.11.0"

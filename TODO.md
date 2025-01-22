@@ -6,7 +6,7 @@
 1. update `./packages/message-registry`
    - [x] add new messages
 1. update `./services/aztec-listener`
-   - [ ] update the poller to emit events in current poll-structure
+   - [x] update the poller to emit events in current poll-structure
 1. update `./services/explorer-api`
    - [ ] add event-listeners for new events
    - [ ] restructure DB schemas/controllers accordingly

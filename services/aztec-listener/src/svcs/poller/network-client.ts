@@ -1,12 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { createAztecNodeClient, AztecNode, NodeInfo } from "@aztec/aztec.js";
+import { AztecNode, NodeInfo, createAztecNodeClient } from "@aztec/aztec.js";
+import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
+import { chicmozL2RpcNodeErrorSchema } from "@chicmoz-pkg/types";
+import { IBackOffOptions, backOff } from "exponential-backoff";
 import {
   AZTEC_RPC_URL,
   MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS,
 } from "../../environment.js";
+import {
+  onL2RpcNodeAlive,
+  onL2RpcNodeError,
+} from "../../events/emitted/index.js";
 import { logger } from "../../logger.js";
-import { IBackOffOptions, backOff } from "exponential-backoff";
-import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
 
 let aztecNode: AztecNode;
 
@@ -46,15 +51,27 @@ const callNodeFunction = async <K extends keyof AztecNode>(
   args?: Parameters<AztecNode[K]>
 ): Promise<ReturnType<AztecNode[K]>> => {
   try {
-    return await backOff(async () => {
+    const res = await backOff(async () => {
       // eslint-disable-next-line @typescript-eslint/ban-types
       return (await (node()[fnName] as Function).apply(
         node(),
         args
       )) as Promise<ReturnType<AztecNode[K]>>;
     }, backOffOptions);
+    await onL2RpcNodeAlive(AZTEC_RPC_URL);
+    return res;
   } catch (e) {
     logger.warn(`Aztec failed to call ${fnName}`);
+    await onL2RpcNodeError(
+      chicmozL2RpcNodeErrorSchema.parse({
+        rpcUrl: AZTEC_RPC_URL,
+        name: (e as Error).name ?? "UnknownName",
+        message: (e as Error).message ?? "UnknownMessage",
+        cause: (e as Error).cause ?? "UnknownCause",
+        stack: (e as Error).stack ?? "UnknownStack",
+        data: { fnName, args, error: e },
+      })
+    );
     if ((e as Error).cause) {
       logger.warn(
         `Aztec failed to fetch: ${JSON.stringify((e as Error).cause)}`
@@ -70,7 +87,7 @@ export const init = async () => {
   return getFreshNodeInfo();
 };
 
-export const getFreshNodeInfo = async (): Promise<NodeInfo> => {
+export const getFreshNodeInfo = async () => {
   const nodeVersion = await callNodeFunction("getNodeVersion");
   logger.info(`🧋 Aztec node version: ${nodeVersion}`);
   const protocolVersion = await callNodeFunction("getVersion");
@@ -100,7 +117,10 @@ export const getFreshNodeInfo = async (): Promise<NodeInfo> => {
     protocolContractAddresses: protocolContractAddresses,
   };
 
-  return nodeInfo;
+  return {
+    nodeInfo,
+    rpcUrl: AZTEC_RPC_URL,
+  };
 };
 
 export const getBlock = async (height: number) =>
@@ -127,11 +147,11 @@ export const getLatestHeight = async () => {
     callNodeFunction("getProvenBlockNumber"),
   ]);
   // TODO: if provenBn is constantly behind, we should start storing and displaying it in the UI
-  if (bn - provenBn > 0)
-    {logger.warn(
+  if (bn - provenBn > 0) {
+    logger.warn(
       `🃏 Difference between block and proven block: ${bn - provenBn}`
-    );}
-
+    );
+  }
   return bn;
 };
 

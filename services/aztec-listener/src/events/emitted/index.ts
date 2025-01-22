@@ -1,8 +1,11 @@
 import { L2Block, Tx } from "@aztec/aztec.js";
+import { PendingTxsEvent } from "@chicmoz-pkg/message-registry";
 import {
-  ConnectedToL2Event,
-  PendingTxsEvent,
-} from "@chicmoz-pkg/message-registry";
+  ChicmozChainInfo,
+  ChicmozL2RpcNode,
+  ChicmozL2RpcNodeError,
+  ChicmozL2SequencerInfo,
+} from "@chicmoz-pkg/types";
 import { logger } from "../../logger.js";
 import { publishMessage } from "../../svcs/message-bus/index.js";
 
@@ -58,6 +61,29 @@ export const onPendingTxs = async (txs: Tx[]) => {
   } as PendingTxsEvent);
 };
 
-export const onConnectedToAztec = async (event: ConnectedToL2Event) => {
-  await publishMessage("CONNECTED_TO_L2_EVENT", event);
+export const onChainInfo = async (chainInfo: ChicmozChainInfo) => {
+  const event = { chainInfo };
+  await publishMessage("CHAIN_INFO_EVENT", event);
+};
+
+export const onL2SequencerInfo = async (
+  sequencerInfo: ChicmozL2SequencerInfo
+) => {
+  const event = { sequencerInfo };
+  await publishMessage("SEQUENCER_INFO_EVENT", event);
+};
+
+export const onL2RpcNodeInfo = async (rpcNodeInfo: ChicmozL2RpcNode) => {
+  const event = { nodeInfo: rpcNodeInfo };
+  await publishMessage("L2_RPC_NODE_INFO_EVENT", event);
+};
+
+export const onL2RpcNodeError = async (rpcNodeError: ChicmozL2RpcNodeError) => {
+  const event = { nodeError: rpcNodeError };
+  await publishMessage("L2_RPC_NODE_ERROR_EVENT", event);
+};
+
+export const onL2RpcNodeAlive = async (rpcUrl: ChicmozL2RpcNode["rpcUrl"]) => {
+  const event = { rpcUrl, timestamp: new Date().getTime() };
+  await publishMessage("L2_RPC_NODE_ALIVE_EVENT", event);
 };
