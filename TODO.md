@@ -9,7 +9,8 @@
    - [x] update the poller to emit events in current poll-structure
 1. update `./services/explorer-api`
    - [x] add event-listeners for new events
-   - [ ] restructure DB schemas/controllers accordingly
+   - [x] create new DB schemas
+   - [ ] restructure controllers accordingly
    - [ ] create API endpoints
 1. make UI at least build with new types
 1. update `./services/ethereum-listener`
