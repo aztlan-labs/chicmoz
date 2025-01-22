@@ -1,4 +1,4 @@
-import { type NodeInfo as AztecNodeInfo, type NodeInfo } from "@aztec/aztec.js";
+import { type NodeInfo } from "@aztec/aztec.js";
 import {
   ProtocolContractAddresses,
   ProtocolContractAddressesSchema,
@@ -106,7 +106,7 @@ export type ChicmozL2Sequencer = z.infer<
 export const getSequencer = (
   l2NetworkId: L2NetworkId,
   rpcUrl: string,
-  nodeInfo: AztecNodeInfo
+  nodeInfo: NodeInfo
 ): ChicmozL2Sequencer => {
   return chicmozL2SequencerSchema.parse({
     l2NetworkId,

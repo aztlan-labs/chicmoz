@@ -1,9 +1,6 @@
+import { NodeInfo } from "@aztec/aztec.js";
 import { MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
-import {
-  NodeInfo,
-  getChicmozChainInfo,
-  getSequencer,
-} from "@chicmoz-pkg/types";
+import { getChicmozChainInfo, getSequencer } from "@chicmoz-pkg/types";
 import {
   AZTEC_GENESIS_CATCHUP,
   AZTEC_LISTEN_FOR_BLOCKS,
@@ -48,7 +45,7 @@ export const init = async () => {
   const l2Sequencer = getSequencer(
     L2_NETWORK_ID,
     initResult.rpcUrl,
-    initResult.nodeInfo,
+    initResult.nodeInfo
   );
   logger.info(`Aztec sequencer info: ${JSON.stringify(l2Sequencer)}`);
   await onL2SequencerInfo(l2Sequencer);
