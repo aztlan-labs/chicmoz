@@ -19,10 +19,6 @@ export type PendingTxsEvent = {
 
 export type CatchupBlockEvent = NewBlockEvent;
 
-export type ChicmozL2RpcNodeInfoEvent = {
-  nodeInfo: ChicmozL2RpcNode;
-};
-
 export type ChicmozL2RpcNodeAliveEvent = {
   rpcUrl: ChicmozL2RpcNode["rpcUrl"];
   timestamp: number;
@@ -52,7 +48,6 @@ export type L2_MESSAGES = {
   CATCHUP_BLOCK_EVENT: CatchupBlockEvent;
   PENDING_TXS_EVENT: PendingTxsEvent;
   CONNECTED_TO_L2_EVENT: ConnectedToL2Event;
-  L2_RPC_NODE_INFO_EVENT: ChicmozL2RpcNodeInfoEvent;
   L2_RPC_NODE_ERROR_EVENT: ChicmozL2RpcNodeErrorEvent;
   L2_RPC_NODE_ALIVE_EVENT: ChicmozL2RpcNodeAliveEvent;
   SEQUENCER_INFO_EVENT: ChicmozSequencerInfoEvent;

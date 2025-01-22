@@ -73,11 +73,6 @@ export const onL2SequencerInfo = async (
   await publishMessage("SEQUENCER_INFO_EVENT", event);
 };
 
-export const onL2RpcNodeInfo = async (rpcNodeInfo: ChicmozL2RpcNode) => {
-  const event = { nodeInfo: rpcNodeInfo };
-  await publishMessage("L2_RPC_NODE_INFO_EVENT", event);
-};
-
 export const onL2RpcNodeError = async (rpcNodeError: ChicmozL2RpcNodeError) => {
   const event = { nodeError: rpcNodeError };
   await publishMessage("L2_RPC_NODE_ERROR_EVENT", event);
