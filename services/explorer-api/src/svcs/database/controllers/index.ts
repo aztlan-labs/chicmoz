@@ -1,4 +1,3 @@
-export * as aztecChainConnection from "./aztec-chain-connection.js";
 export * as l2 from "./l2/index.js";
 export * as l1 from "./l1/index.js";
 export * as l2Tx from "./l2Tx/index.js";

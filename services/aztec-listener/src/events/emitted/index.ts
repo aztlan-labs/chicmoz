@@ -3,7 +3,7 @@ import { PendingTxsEvent } from "@chicmoz-pkg/message-registry";
 import {
   ChicmozChainInfo,
   ChicmozL2RpcNodeError,
-  ChicmozL2SequencerInfo,
+  ChicmozL2Sequencer,
   chicmozL2RpcNodeErrorSchema,
 } from "@chicmoz-pkg/types";
 import { logger } from "../../logger.js";
@@ -72,7 +72,7 @@ export const onChainInfo = async (chainInfo: ChicmozChainInfo) => {
 };
 
 export const onL2SequencerInfo = async (
-  sequencerInfo: ChicmozL2SequencerInfo
+  sequencerInfo: ChicmozL2Sequencer
 ) => {
   const event = { sequencerInfo };
   logger.info(`🔍 publishing SEQUENCER_INFO_EVENT...`);

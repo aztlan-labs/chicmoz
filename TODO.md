@@ -1,7 +1,7 @@
 # TODO
 
 1. update types `./packages/types`
-   - [x] change NodeInfo to ChicmozSequencerInfo and ChicmozNodeInfo
+   - [x] change Node to ChicmozSequencer and ChicmozNode
    - [x] add ChicmozChainInfo
 1. update `./packages/message-registry`
    - [x] add new messages
@@ -18,7 +18,7 @@
    - [ ] separate the network-client from the pollers
    - [ ] create separate pollers (`MicroserviceBaseSvc`) for each poll-structure
    - [ ] add new poll-structure
-1. remove old NodeInfo type from `./packages/types`
+1. remove old Node type from `./packages/types`
 
 # Plan
 
@@ -39,7 +39,7 @@
 - [ ] emitSequencerAlive (on successful poll-response)
 - [ ] emitNodeError (on failed poll-response or timeout)
 - [ ] emitL2ChainInfo (re-occuring every X minutes)
-- [ ] emitSequencerInfo (re-occuring every Y minutes)
+- [ ] emitSequencer (re-occuring every Y minutes)
 
 ## explorer-api
 

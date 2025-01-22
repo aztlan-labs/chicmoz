@@ -82,11 +82,11 @@ export const chicmozL2RpcNodeErrorSchema = z.object({
   message: z.string(),
   stack: z.string(),
   data: z.unknown(),
-  count: z.number().default(1),
-  createdAt: z.date().default(() => new Date()),
+  count: z.number(),
+  createdAt: z.date(),
 });
 
-export const chicmozL2SequencerInfoSchema = z.object({
+export const chicmozL2SequencerSchema = z.object({
   enr: z.string(),
   rpcUrl: z.string(),
   l2NetworkId: l2NetworkIdSchema,
@@ -99,16 +99,16 @@ export const chicmozL2SequencerInfoSchema = z.object({
 
 export type ChicmozL2RpcNode = z.infer<typeof chicmozL2RpcNodeSchema>;
 export type ChicmozL2RpcNodeError = z.infer<typeof chicmozL2RpcNodeErrorSchema>;
-export type ChicmozL2SequencerInfo = z.infer<
-  typeof chicmozL2SequencerInfoSchema
+export type ChicmozL2Sequencer = z.infer<
+  typeof chicmozL2SequencerSchema
 >;
 
-export const getSequencerInfo = (
+export const getSequencer = (
   l2NetworkId: L2NetworkId,
   rpcUrl: string,
   nodeInfo: AztecNodeInfo
-): ChicmozL2SequencerInfo => {
-  return chicmozL2SequencerInfoSchema.parse({
+): ChicmozL2Sequencer => {
+  return chicmozL2SequencerSchema.parse({
     l2NetworkId,
     rpcUrl,
     ...nodeInfo,

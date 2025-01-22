@@ -2,7 +2,7 @@ import { MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
 import {
   NodeInfo,
   getChicmozChainInfo,
-  getSequencerInfo,
+  getSequencer,
 } from "@chicmoz-pkg/types";
 import {
   AZTEC_GENESIS_CATCHUP,
@@ -45,7 +45,7 @@ export const init = async () => {
   const chainInfo = getChicmozChainInfo(L2_NETWORK_ID, initResult.nodeInfo);
   logger.info(`Aztec chain info: ${JSON.stringify(chainInfo)}`);
   await onChainInfo(chainInfo);
-  const l2Sequencer = getSequencerInfo(
+  const l2Sequencer = getSequencer(
     L2_NETWORK_ID,
     initResult.rpcUrl,
     initResult.nodeInfo,

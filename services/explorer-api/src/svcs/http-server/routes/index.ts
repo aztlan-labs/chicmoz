@@ -90,7 +90,6 @@ const checkDocsStatus = () => {
 export const init = ({ router }: { router: Router }) => {
   checkDocsStatus();
   router.get("/l2/index", controller.GET_ROUTES);
-  router.get("/aztec-chain-connection", controller.GET_AZTEC_CHAIN_CONNECTION);
   router.get(
     "/l1/l2-validator-status/:attesterAddress",
     controller.GET_L1_L2_VALIDATOR_STATUS_TEXT

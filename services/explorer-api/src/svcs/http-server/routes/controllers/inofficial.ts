@@ -229,16 +229,6 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
   res.send(html);
 });
 
-export const GET_AZTEC_CHAIN_CONNECTION = asyncHandler(async (_req, res) => {
-  const chainConnection =
-    await db.aztecChainConnection.getLatestWithRedactedRpc();
-  if (!chainConnection) {
-    res.status(404).send("No chain connection found");
-    return;
-  }
-  res.json(chainConnection);
-});
-
 const intervals = [
   { label: "day", seconds: 86400, shortLabel: "day" },
   { label: "hour", seconds: 3600, shortLabel: "hr" },

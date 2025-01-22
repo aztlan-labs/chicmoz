@@ -69,6 +69,7 @@ const callNodeFunction = async <K extends keyof AztecNode>(
       cause: JSON.stringify((e as Error).cause) ?? "UnknownCause",
       stack: (e as Error).stack ?? "UnknownStack",
       data: { fnName, args, error: e },
+      count: 1,
       createdAt: new Date()
     });
     if ((e as Error).cause) {
