@@ -12,6 +12,7 @@
    - [ ] restructure DB schemas/controllers accordingly
    - [ ] create API endpoints
 1. make UI at least build with new types
+1. update `./services/ethereum-listener`
 1. update poll structure in `./services/aztec-listener`
    - [ ] separate the network-client from the pollers
    - [ ] create separate pollers (`MicroserviceBaseSvc`) for each poll-structure

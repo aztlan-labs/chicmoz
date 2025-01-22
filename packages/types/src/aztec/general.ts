@@ -16,6 +16,8 @@ export const chicmozChainInfoSchema = z.object({
   protocolVersion: z.number(),
   l1ContractAddresses: L1ContractAddressesSchema,
   protocolContractAddresses: ProtocolContractAddressesSchema,
+  createdAt: z.date().optional(),
+  latestUpdateAt: z.date().optional(),
 });
 
 export type ChicmozChainInfo = z.infer<typeof chicmozChainInfoSchema>;
@@ -80,6 +82,7 @@ export const chicmozL2RpcNodeErrorSchema = z.object({
   message: z.string(),
   stack: z.string(),
   data: z.unknown(),
+  count: z.number().default(1),
   createdAt: z.date().default(() => new Date()),
 });
 

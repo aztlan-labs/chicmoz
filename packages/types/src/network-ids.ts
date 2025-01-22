@@ -8,6 +8,7 @@ export const l2NetworkIdSchema = z.enum([
   "PUBLIC_TESTNET",
 ]);
 export type L2NetworkId = z.infer<typeof l2NetworkIdSchema>;
+
 export const l1NetworkIdSchema = z.enum([
   "ETH_MAINNET",
   "ANVIL_LOCAL",
