@@ -12,6 +12,8 @@
    - [ ] restructure DB schemas/controllers accordingly
    - [ ] create API endpoints
 1. update poll structure in `./services/aztec-listener`
+   - [ ] separate the network-client from the pollers
+   - [ ] create separate pollers (`MicroserviceBaseSvc`) for each poll-structure
    - [ ] add new poll-structure
 1. remove old NodeInfo type from `./packages/types`
 

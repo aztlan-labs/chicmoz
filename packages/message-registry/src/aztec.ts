@@ -1,8 +1,9 @@
 import {
   ChicmozChainInfo,
   ChicmozL2PendingTx,
-  ChicmozNodeError,
-  ChicmozSequencerInfo,
+  ChicmozL2RpcNodeInfo,
+  ChicmozL2RpcNodeError,
+  ChicmozL2SequencerInfo,
   L2NetworkId,
   StringifiedNodeInfo,
 } from "@chicmoz-pkg/types";
@@ -18,17 +19,16 @@ export type PendingTxsEvent = {
 
 export type CatchupBlockEvent = NewBlockEvent;
 
-export type ChicmozSequencerInfoEvent = {
-  sequencerInfo: ChicmozSequencerInfo;
+export type ChicmozNodeInfoEvent = {
+  nodeInfo: ChicmozL2RpcNodeInfo;
 };
 
 export type ChicmozNodeErrorEvent = {
-  nodeError: ChicmozNodeError;
+  nodeError: ChicmozL2RpcNodeError;
 };
 
-export type ChicmozSequencerAliveEvent = {
-  enr: ChicmozSequencerInfo["enr"];
-  lastSeenAt: Date;
+export type ChicmozSequencerInfoEvent = {
+  sequencerInfo: ChicmozL2SequencerInfo;
 };
 
 export type ChicmozChainInfoEvent = {
@@ -46,9 +46,10 @@ export type L2_MESSAGES = {
   NEW_BLOCK_EVENT: NewBlockEvent;
   CATCHUP_BLOCK_EVENT: CatchupBlockEvent;
   PENDING_TXS_EVENT: PendingTxsEvent;
+  CONNECTED_TO_L2_EVENT: ConnectedToL2Event;
+  RPC_NODE_INFO_EVENT: ChicmozNodeInfoEvent;
+  RPC_NODE_ERROR_EVENT: ChicmozNodeErrorEvent;
   SEQUENCER_INFO_EVENT: ChicmozSequencerInfoEvent;
-  NODE_ERROR_EVENT: ChicmozNodeErrorEvent;
-  SEQUENCER_ALIVE_EVENT: ChicmozSequencerAliveEvent;
   CHAIN_INFO_EVENT: ChicmozChainInfoEvent;
 };
 
