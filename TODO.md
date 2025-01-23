@@ -19,7 +19,7 @@
 1. update `./services/explorer-ui`
    - [x] separate aztec.js from types
    - [x] can be built
-   - [ ] some data on dev-page
+   - [x] some data on dev-page
 1. update poll structure in `./services/aztec-listener`
    - [ ] separate the network-client from the pollers
    - [ ] create separate pollers (`MicroserviceBaseSvc`) for each poll-structure

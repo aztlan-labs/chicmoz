@@ -31,8 +31,8 @@ export const chicmozChainInfoSchema = z.object({
   protocolVersion: z.number(),
   l1ContractAddresses: L1ContractAddressesSchema,
   protocolContractAddresses: ProtocolContractAddressesSchema,
-  createdAt: z.date().optional(),
-  latestUpdateAt: z.date().optional(),
+  createdAt: z.coerce.date().optional(),
+  latestUpdateAt: z.coerce.date().optional(),
 });
 
 export type L1ContractAddresses = z.infer<typeof L1ContractAddressesSchema>;
@@ -53,8 +53,8 @@ export const nodeInfoSchema = z.object({
 export const chicmozL2RpcNodeSchema = z.object({
   rpcUrl: z.string(),
   id: z.string().optional(),
-  createdAt: z.date(),
-  lastSeenAt: z.date().optional(),
+  createdAt: z.coerce.date(),
+  lastSeenAt: z.coerce.date().optional(),
 });
 
 export const chicmozL2RpcNodeErrorSchema = z.object({
@@ -66,8 +66,8 @@ export const chicmozL2RpcNodeErrorSchema = z.object({
   stack: z.string(),
   data: z.unknown(),
   count: z.number(),
-  createdAt: z.date(),
-  lastSeenAt: z.date(),
+  createdAt: z.coerce.date(),
+  lastSeenAt: z.coerce.date(),
 });
 
 export const chicmozL2SequencerSchema = z.object({
@@ -78,8 +78,8 @@ export const chicmozL2SequencerSchema = z.object({
   protocolVersion: z.number(),
   nodeVersion: z.string(),
   l1ChainId: z.number(),
-  lastSeenAt: z.date(),
-  createdAt: z.date(),
+  lastSeenAt: z.coerce.date(),
+  createdAt: z.coerce.date(),
 });
 
 export type ChicmozL2RpcNode = z.infer<typeof chicmozL2RpcNodeSchema>;
