@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { AztecNode, NodeInfo, createAztecNodeClient } from "@aztec/aztec.js";
 import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
+import { l2NetworkIdSchema } from "@chicmoz-pkg/types";
 import { IBackOffOptions, backOff } from "exponential-backoff";
 import {
   AZTEC_RPC_URL,
+  L2_NETWORK_ID,
   MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS,
 } from "../../environment.js";
 import {
@@ -69,7 +71,7 @@ const callNodeFunction = async <K extends keyof AztecNode>(
       stack: (e as Error).stack ?? "UnknownStack",
       data: { fnName, args, error: e },
       count: 1,
-      createdAt: new Date()
+      createdAt: new Date(),
     });
     if ((e as Error).cause) {
       logger.warn(
@@ -111,7 +113,10 @@ export const getFreshNodeInfo = async () => {
     nodeVersion,
     l1ChainId: chainId,
     protocolVersion,
-    enr: enr ?? `UNKNOWN_ENR_(rpcUrl=${AZTEC_RPC_URL})`,
+    enr:
+      enr ?? L2_NETWORK_ID === l2NetworkIdSchema.enum.SANDBOX
+        ? L2_NETWORK_ID
+        : undefined,
     l1ContractAddresses: contractAddresses,
     protocolContractAddresses: protocolContractAddresses,
   };

@@ -26,13 +26,11 @@
 
 ## concepts
 
-- Validator is the _concept of_ someone holding stake. They have their state in the staking-contract on L1. They are also the recipient of fees (`L2Block.globalVariables.coinbase`). Validator is identified by `attesterAddress`.
+- L1L2Validator is the _concept of_ someone holding stake. They have their state in the staking-contract on L1. They are also the recipient of fees (`L2Block.globalVariables.coinbase`). Validator is identified by `attesterAddress`.
 
-- Node is a server that receives txns to add to txnPool, gossips and listen to the P2P network and runs sequencer software. Node is identified by RPC-URL, generally, and ENR more specifically.\*
+- L2RpcNode is an endpoint that provides access to the L2 network. It is identified by `rpcUrl`.
 
-- Sequencer is the software that runs all of this stuff: https://docs.aztec.network/aztec/network/sequencer . Sequencer has a 1:1 with Node.
-
-* Up until the moment a node has replied with their ENR the RPC-URL is the only thing that identifies it.
+- L2Sequencer is an L2RpcNode that is also participating in the network as a sequencer. It is identified by its' `enr`.
 
 ## aztec-listener
 
@@ -48,12 +46,12 @@
 ### API
 
 - [ ] `/sequencer`
-      NOTE: if we allow `/sequencer` that means we're going to have an endpoint which publicly exposes all the sequencer' ENRs (which is just the RPC URL but encoded in a specific format). This can be a problem. At least add a TODO in the request-handler.
-- [ ] `/sequencer/:enr` (agregated value `hasError` = `sequencer.lastSeenAt < sequencerError.lastSeenAt`)
+      NOTE: if we allow `/sequencer` that means we're going to have an endpoint which publicly exposes all the sequencer' ENRs (which is just the RPC URL but encoded). This can be a problem. At least add a TODO in the request-handler.
+- [ ] `/sequencer/:enr` (agregated value: `hasError` = `sequencer.lastSeenAt < sequencerError.lastSeenAt`)
 - [ ] `/sequencer/:enr/errors`
-      NOTE: the two above can be bruteforced. At least add a TODO in the request-handler to rate-limit this endpoint.
+      NOTE: the two above can be bruteforced on testing with multiple `:enr`. At least add a TODO in the request-handler to rate-limit this endpoint.
 - [ ] `/l2/info`
-- [ ] `/l2/errors` (this EP should be used if latest block is not seen within a reasonable time from frontend)
+- [ ] `/l2/errors` (this EP should be used if latest block is not seen within a reasonable time from frontend, and should check rpcNodeErrors)
 
 ### DB
 
