@@ -10,6 +10,7 @@ import {
   chicmozL2PendingTxSchema,
   chicmozL2PrivateFunctionBroadcastedEventSchema,
   chicmozL2RpcNodeErrorSchema,
+  chicmozL2SequencerDeluxeSchema,
   chicmozL2SequencerSchema,
   chicmozL2TxEffectDeluxeSchema,
   chicmozL2UnconstrainedFunctionBroadcastedEventSchema,
@@ -151,7 +152,7 @@ export const l1L2ValidatorHistoryResponse = getResponse(
 );
 
 export const sequencerResponse = getResponse(
-  chicmozL2SequencerSchema,
+  chicmozL2SequencerDeluxeSchema,
   "l2Sequencer"
 );
 export const sequencerResponseArray = getResponse(

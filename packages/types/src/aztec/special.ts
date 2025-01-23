@@ -5,6 +5,7 @@ import {
   chicmozL2ContractInstanceDeployedEventSchema,
 } from "./l2Contract.js";
 import { chicmozL2TxEffectSchema } from "./l2TxEffect.js";
+import {chicmozL2RpcNodeErrorSchema, chicmozL2SequencerSchema} from "./general.js";
 
 export const chicmozL2VerifiedContractInstanceDataSchema = z.object({
   address: z.lazy(() => chicmozL2ContractInstanceDeployedEventSchema.shape.address),
@@ -53,3 +54,12 @@ export const chicmozL2BlockLightSchema = z.object({
 });
 
 export type ChicmozL2BlockLight = z.infer<typeof chicmozL2BlockLightSchema>;
+
+export const chicmozL2SequencerDeluxeSchema = z.object({
+  ...chicmozL2SequencerSchema.shape,
+  errors: z.array(chicmozL2RpcNodeErrorSchema),
+});
+
+export type ChicmozL2SequencerDeluxe = z.infer<
+  typeof chicmozL2SequencerDeluxeSchema
+>;

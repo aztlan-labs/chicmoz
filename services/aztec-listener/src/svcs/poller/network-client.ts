@@ -64,14 +64,11 @@ const callNodeFunction = async <K extends keyof AztecNode>(
   } catch (e) {
     logger.warn(`Aztec failed to call ${fnName}`);
     onL2RpcNodeError({
-      rpcUrl: AZTEC_RPC_URL,
       name: (e as Error).name ?? "UnknownName",
       message: (e as Error).message ?? "UnknownMessage",
       cause: JSON.stringify((e as Error).cause) ?? "UnknownCause",
       stack: (e as Error).stack ?? "UnknownStack",
       data: { fnName, args, error: e },
-      count: 1,
-      createdAt: new Date(),
     });
     if ((e as Error).cause) {
       logger.warn(
@@ -96,14 +93,11 @@ export const init = async () => {
   } catch (e) {
     logger.error(`Aztec failed to parse chain info: ${(e as Error).message}`);
     onL2RpcNodeError({
-      rpcUrl: AZTEC_RPC_URL,
       name: (e as Error).name ?? "UnknownName",
       message: (e as Error).message ?? "UnknownMessage",
       cause: JSON.stringify((e as Error).cause) ?? "UnknownCause",
       stack: (e as Error).stack ?? "UnknownStack",
       data: {},
-      count: 1,
-      createdAt: new Date(),
     });
     throw e;
   }

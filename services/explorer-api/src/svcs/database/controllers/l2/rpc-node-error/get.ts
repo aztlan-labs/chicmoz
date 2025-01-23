@@ -1,13 +1,11 @@
-import {getDb as db} from "@chicmoz-pkg/postgres-helper";
+import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import {
   ChicmozL2RpcNodeError,
-  chicmozL2RpcNodeErrorSchema
+  chicmozL2RpcNodeErrorSchema,
 } from "@chicmoz-pkg/types";
-import {l2RpcNodeErrorTable} from "../../../schema/l2/rpc-node-error.js";
-//import { l2ChainInfoTable } from "../../../schema/l2/chain-info.js";
+import { l2RpcNodeErrorTable } from "../../../schema/l2/rpc-node-error.js";
 
-export async function getL2RpcNodeErrors(
-): Promise<ChicmozL2RpcNodeError[]> {
+export async function getL2RpcNodeErrors(): Promise<ChicmozL2RpcNodeError[]> {
   const result = await db()
     .select({
       name: l2RpcNodeErrorTable.name,
@@ -23,7 +21,5 @@ export async function getL2RpcNodeErrors(
     .from(l2RpcNodeErrorTable)
     .execute();
 
-  return result.map((error) =>
-    chicmozL2RpcNodeErrorSchema.parse(error)
-  );
+  return result.map((error) => chicmozL2RpcNodeErrorSchema.parse(error));
 }

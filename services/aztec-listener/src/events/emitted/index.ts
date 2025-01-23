@@ -6,6 +6,7 @@ import {
   ChicmozL2Sequencer,
   chicmozL2RpcNodeErrorSchema,
 } from "@chicmoz-pkg/types";
+import { AZTEC_RPC_URL } from "../../environment.js";
 import { logger } from "../../logger.js";
 import {
   publishMessage,
@@ -71,18 +72,29 @@ export const onChainInfo = async (chainInfo: ChicmozChainInfo) => {
   await publishMessage("CHAIN_INFO_EVENT", event);
 };
 
-export const onL2SequencerInfo = async (
-  sequencer: ChicmozL2Sequencer
-) => {
+export const onL2SequencerInfo = async (sequencer: ChicmozL2Sequencer) => {
   const event = { sequencer };
   logger.info(`🔍 publishing SEQUENCER_INFO_EVENT...`);
   await publishMessage("SEQUENCER_INFO_EVENT", event);
 };
 
-export const onL2RpcNodeError = (rpcNodeError: ChicmozL2RpcNodeError) => {
+export const onL2RpcNodeError = (
+  rpcNodeError: Omit<
+    ChicmozL2RpcNodeError,
+    "rpcUrl" | "count" | "createdAt" | "lastSeenAt"
+  >
+) => {
   let event;
   try {
-    event = { nodeError: chicmozL2RpcNodeErrorSchema.parse(rpcNodeError) };
+    event = {
+      nodeError: chicmozL2RpcNodeErrorSchema.parse({
+        ...rpcNodeError,
+        rpcUrl: AZTEC_RPC_URL,
+        count: 1,
+        createdAt: new Date(),
+        lastSeenAt: new Date(),
+      }),
+    };
   } catch (e) {
     logger.warn(`❌ onL2RpcNodeError on parse error: ${(e as Error).message}`);
     return;

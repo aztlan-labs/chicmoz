@@ -5,7 +5,6 @@ import {
   AZTEC_GENESIS_CATCHUP,
   AZTEC_LISTEN_FOR_BLOCKS,
   AZTEC_LISTEN_FOR_PENDING_TXS,
-  AZTEC_RPC_URL,
   L2_NETWORK_ID,
   getConfigStr,
 } from "../../environment.js";
@@ -44,14 +43,11 @@ const getHeights = async () => {
 export const init = async () => {
   if (NODE_ENV === "development") {
     onL2RpcNodeError({
-      rpcUrl: AZTEC_RPC_URL,
       name: "Mocked Node Error",
       message: "Lorem ipsum dolor sit amet",
       cause: "UnknownCause",
       stack: new Error().stack?.toString() ?? "UnknownStack",
       data: {},
-      count: 1,
-      createdAt: new Date(),
     });
   }
   const initResult = await initNetworkClient();

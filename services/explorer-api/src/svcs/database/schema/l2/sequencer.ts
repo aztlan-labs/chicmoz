@@ -12,7 +12,6 @@ export const l2SequencerTable = pgTable("l2_sequencer", {
   protocolVersion: integer("protocol_version").notNull(),
   nodeVersion: varchar("node_version").notNull(),
   l1ChainId: integer("l1_chain_id").notNull(),
-  lastSeenAt: timestamp("last_seen_at").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
 });
 

@@ -294,7 +294,6 @@ CREATE TABLE IF NOT EXISTS "l2_sequencer" (
 	"protocol_version" integer NOT NULL,
 	"node_version" varchar NOT NULL,
 	"l1_chain_id" integer NOT NULL,
-	"last_seen_at" timestamp DEFAULT now(),
 	"created_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint

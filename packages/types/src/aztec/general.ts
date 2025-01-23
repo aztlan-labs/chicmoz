@@ -51,11 +51,13 @@ export const chicmozL2RpcNodeErrorSchema = z.object({
   data: z.unknown(),
   count: z.number(),
   createdAt: z.date(),
+  lastSeenAt: z.date(),
 });
 
 export const chicmozL2SequencerSchema = z.object({
   enr: z.string(),
-  rpcUrl: z.string(),
+  rpcNodeId: z.string().optional(),
+  rpcUrl: z.string().optional(),
   l2NetworkId: l2NetworkIdSchema,
   protocolVersion: z.number(),
   nodeVersion: z.string(),
