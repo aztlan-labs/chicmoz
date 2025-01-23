@@ -14,8 +14,10 @@
    - [x] update handlers with new DB-controllers store
    - [x] create API endpoints
    - [x] update DB-controllers with appropriate fetch functions
-1. make UI at least build with new types
+1. update `./services/explorer-ui`
+   - [ ] can be built
 1. update `./services/ethereum-listener`
+   - [ ] can be built
 1. update poll structure in `./services/aztec-listener`
    - [ ] separate the network-client from the pollers
    - [ ] create separate pollers (`MicroserviceBaseSvc`) for each poll-structure
