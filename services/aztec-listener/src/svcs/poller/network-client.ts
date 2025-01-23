@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { AztecNode, NodeInfo, createAztecNodeClient } from "@aztec/aztec.js";
 import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
-import { l2NetworkIdSchema } from "@chicmoz-pkg/types";
+import { getChicmozChainInfo, l2NetworkIdSchema } from "@chicmoz-pkg/types";
 import { IBackOffOptions, backOff } from "exponential-backoff";
 import {
   AZTEC_RPC_URL,
@@ -85,7 +85,28 @@ const callNodeFunction = async <K extends keyof AztecNode>(
 export const init = async () => {
   logger.info(`Initializing Aztec node client with ${AZTEC_RPC_URL}`);
   aztecNode = createAztecNodeClient(AZTEC_RPC_URL);
-  return getFreshNodeInfo();
+  const nInf = await getFreshNodeInfo();
+  try {
+    const chainInfo = getChicmozChainInfo(L2_NETWORK_ID, nInf.nodeInfo);
+    return {
+      chainInfo,
+      nodeInfo: nInf.nodeInfo,
+      rpcUrl: AZTEC_RPC_URL,
+    };
+  } catch (e) {
+    logger.error(`Aztec failed to parse chain info: ${(e as Error).message}`);
+    onL2RpcNodeError({
+      rpcUrl: AZTEC_RPC_URL,
+      name: (e as Error).name ?? "UnknownName",
+      message: (e as Error).message ?? "UnknownMessage",
+      cause: JSON.stringify((e as Error).cause) ?? "UnknownCause",
+      stack: (e as Error).stack ?? "UnknownStack",
+      data: {},
+      count: 1,
+      createdAt: new Date(),
+    });
+    throw e;
+  }
 };
 
 export const getFreshNodeInfo = async () => {

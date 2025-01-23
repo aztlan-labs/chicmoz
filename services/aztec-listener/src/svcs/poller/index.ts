@@ -1,6 +1,6 @@
 import { NodeInfo } from "@aztec/aztec.js";
 import { MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
-import { getChicmozChainInfo, getSequencer } from "@chicmoz-pkg/types";
+import { getSequencer } from "@chicmoz-pkg/types";
 import {
   AZTEC_GENESIS_CATCHUP,
   AZTEC_LISTEN_FOR_BLOCKS,
@@ -39,9 +39,8 @@ const getHeights = async () => {
 export const init = async () => {
   const initResult = await initNetworkClient();
   //const { latestProcessedHeight, chainHeight } = await getHeights();
-  const chainInfo = getChicmozChainInfo(L2_NETWORK_ID, initResult.nodeInfo);
-  logger.info(`Aztec chain info: ${JSON.stringify(chainInfo)}`);
-  await onChainInfo(chainInfo);
+  logger.info(`Aztec chain info: ${JSON.stringify(initResult.chainInfo)}`);
+  await onChainInfo(initResult.chainInfo);
   const l2Sequencer = getSequencer(
     L2_NETWORK_ID,
     initResult.rpcUrl,
