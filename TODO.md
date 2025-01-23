@@ -11,7 +11,7 @@
    - [x] add event-listeners for new events
    - [x] create new DB schemas
    - [x] create new DB-controllers with store functions
-   - [ ] update handlers with new DB-controllers store
+   - [x] update handlers with new DB-controllers store
    - [ ] create API endpoints
    - [ ] update DB-controllers with appropriate fetch functions
 1. make UI at least build with new types
