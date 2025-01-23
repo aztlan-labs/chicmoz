@@ -17,8 +17,9 @@
 1. update `./services/ethereum-listener`
    - [x] can be built
 1. update `./services/explorer-ui`
-   - [ ] separate aztec.js from types
-   - [ ] can be built
+   - [x] separate aztec.js from types
+   - [x] can be built
+   - [ ] some data on dev-page
 1. update poll structure in `./services/aztec-listener`
    - [ ] separate the network-client from the pollers
    - [ ] create separate pollers (`MicroserviceBaseSvc`) for each poll-structure

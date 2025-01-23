@@ -1,6 +1,5 @@
 import { NodeInfo } from "@aztec/aztec.js";
 import { MicroserviceBaseSvc, NODE_ENV } from "@chicmoz-pkg/microservice-base";
-import { getSequencerFromNodeInfo } from "@chicmoz-pkg/types";
 import {
   AZTEC_GENESIS_CATCHUP,
   AZTEC_LISTEN_FOR_BLOCKS,
@@ -31,6 +30,7 @@ import {
   startPolling as startPollingPendingTxs,
   stopPolling as stopPollingPendingTxs,
 } from "./txs_poller.js";
+import { getSequencerFromNodeInfo } from "./utils.js";
 
 let nodeInfo: NodeInfo;
 
