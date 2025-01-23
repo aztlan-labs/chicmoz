@@ -8,7 +8,7 @@ export const l2SequencerTable = pgTable("l2_sequencer", {
   rpcUrl: varchar("rpc_url")
     .notNull()
     .references(() => l2RpcNodeTable.rpcUrl, { onDelete: "cascade" }),
-  l2NetworkId: l2NetworkIdDbEnum.notNull(),
+  l2NetworkId: l2NetworkIdDbEnum("l2_network_id").notNull(),
   protocolVersion: integer("protocol_version").notNull(),
   nodeVersion: varchar("node_version").notNull(),
   l1ChainId: integer("l1_chain_id").notNull(),

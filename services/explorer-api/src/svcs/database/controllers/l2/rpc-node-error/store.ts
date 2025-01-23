@@ -3,7 +3,7 @@ import { ChicmozL2RpcNodeError } from "@chicmoz-pkg/types";
 import { sql } from "drizzle-orm";
 import { l2RpcNodeErrorTable } from "../../../schema/l2/rpc-node-error.js";
 
-export async function storeRpcNodeError(
+export async function storeL2RpcNodeError(
   rpcNodeError: ChicmozL2RpcNodeError
 ): Promise<void> {
   const { name, rpcUrl, cause, message, stack, data } = rpcNodeError;

@@ -2,7 +2,7 @@ import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import { ChicmozL2Sequencer } from "@chicmoz-pkg/types";
 import { l2SequencerTable } from "../../../schema/l2/sequencer.js";
 
-export async function storeSequencer(
+export async function storeL2Sequencer(
   sequencer: ChicmozL2Sequencer
 ): Promise<void> {
   const {

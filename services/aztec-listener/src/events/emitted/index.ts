@@ -72,9 +72,9 @@ export const onChainInfo = async (chainInfo: ChicmozChainInfo) => {
 };
 
 export const onL2SequencerInfo = async (
-  sequencerInfo: ChicmozL2Sequencer
+  sequencer: ChicmozL2Sequencer
 ) => {
-  const event = { sequencerInfo };
+  const event = { sequencer };
   logger.info(`🔍 publishing SEQUENCER_INFO_EVENT...`);
   await publishMessage("SEQUENCER_INFO_EVENT", event);
 };

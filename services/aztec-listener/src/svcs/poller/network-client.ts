@@ -57,7 +57,6 @@ const callNodeFunction = async <K extends keyof AztecNode>(
         args
       )) as Promise<ReturnType<AztecNode[K]>>;
     }, backOffOptions);
-    logger.info(`Aztec successfully called ${fnName}`);
     onL2RpcNodeAlive(AZTEC_RPC_URL);
     return res;
   } catch (e) {
@@ -112,7 +111,7 @@ export const getFreshNodeInfo = async () => {
     nodeVersion,
     l1ChainId: chainId,
     protocolVersion,
-    enr: enr ?? "UNKNOWN",
+    enr: enr ?? `UNKNOWN_ENR_(rpcUrl=${AZTEC_RPC_URL})`,
     l1ContractAddresses: contractAddresses,
     protocolContractAddresses: protocolContractAddresses,
   };

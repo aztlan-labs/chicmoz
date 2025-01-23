@@ -28,7 +28,7 @@ export type ChicmozL2RpcNodeErrorEvent = {
 };
 
 export type ChicmozSequencerEvent = {
-  sequencerInfo: ChicmozL2Sequencer;
+  sequencer: ChicmozL2Sequencer;
 };
 
 export type ChicmozChainInfoEvent = {

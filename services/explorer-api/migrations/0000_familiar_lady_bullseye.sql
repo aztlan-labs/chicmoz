@@ -258,7 +258,7 @@ CREATE TABLE IF NOT EXISTS "l1_l2_validator_withdrawer" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l2_chain_info" (
-	"l2_network_id" "l2_network_id" PRIMARY KEY NOT NULL,
+	"l2_network_id" varchar PRIMARY KEY NOT NULL,
 	"l1_chain_id" integer NOT NULL,
 	"protocol_version" integer NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
@@ -275,7 +275,8 @@ CREATE TABLE IF NOT EXISTS "l2_rpc_node_error" (
 	"stack" varchar NOT NULL,
 	"data" jsonb NOT NULL,
 	"count" integer DEFAULT 1 NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"last_seen_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l2_rpc_node" (
@@ -288,7 +289,7 @@ CREATE TABLE IF NOT EXISTS "l2_rpc_node" (
 CREATE TABLE IF NOT EXISTS "l2_sequencer" (
 	"enr" varchar PRIMARY KEY NOT NULL,
 	"rpc_url" varchar NOT NULL,
-	"l2_network_id" "l2_network_id" PRIMARY KEY NOT NULL,
+	"l2_network_id" varchar NOT NULL,
 	"protocol_version" integer NOT NULL,
 	"node_version" varchar NOT NULL,
 	"l1_chain_id" integer NOT NULL,

@@ -1,5 +1,5 @@
 {
-  "id": "4d4002cb-9910-4b66-9312-07296c739b54",
+  "id": "67f85abe-e5ee-4186-958b-0d9566dfbca4",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1612,8 +1612,7 @@
       "columns": {
         "l2_network_id": {
           "name": "l2_network_id",
-          "type": "l2_network_id",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": true,
           "notNull": true
         },
@@ -1714,6 +1713,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "last_seen_at": {
+          "name": "last_seen_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -1786,9 +1792,8 @@
         },
         "l2_network_id": {
           "name": "l2_network_id",
-          "type": "l2_network_id",
-          "typeSchema": "public",
-          "primaryKey": true,
+          "type": "varchar",
+          "primaryKey": false,
           "notNull": true
         },
         "protocol_version": {

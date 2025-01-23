@@ -1,14 +1,12 @@
 import { z } from "zod";
 
-export const l2NetworkIdValues = [
+export const l2NetworkIdSchema = z.enum([
   "MAINNET",
   "SANDBOX",
   "DEVNET",
   "SP_TESTNET",
   "PUBLIC_TESTNET",
-] as const;
-
-export const l2NetworkIdSchema = z.enum(l2NetworkIdValues);
+]);
 export type L2NetworkId = z.infer<typeof l2NetworkIdSchema>;
 export const l1NetworkIdSchema = z.enum([
   "ETH_MAINNET",

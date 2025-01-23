@@ -1,12 +1,6 @@
 import { type NodeInfo } from "@aztec/aztec.js";
-import {
-  ProtocolContractAddresses,
-  ProtocolContractAddressesSchema,
-} from "@aztec/circuits.js";
-import {
-  L1ContractAddresses,
-  L1ContractAddressesSchema,
-} from "@aztec/ethereum";
+import { ProtocolContractsNames } from "@aztec/circuits.js";
+import { L1ContractsNames } from "@aztec/ethereum";
 import { z } from "zod";
 import { L2NetworkId, l2NetworkIdSchema } from "../network-ids.js";
 
@@ -14,8 +8,16 @@ export const chicmozChainInfoSchema = z.object({
   l2NetworkId: l2NetworkIdSchema,
   l1ChainId: z.number(),
   protocolVersion: z.number(),
-  l1ContractAddresses: L1ContractAddressesSchema,
-  protocolContractAddresses: ProtocolContractAddressesSchema,
+  //l1ContractAddresses: L1ContractAddressesSchema,
+  l1ContractAddresses: z.object({
+    ...Object.fromEntries(L1ContractsNames.map((name) => [name, z.string()])),
+  }),
+  //protocolContractAddresses: ProtocolContractAddressesSchema,
+  protocolContractAddresses: z.object({
+    ...Object.fromEntries(
+      ProtocolContractsNames.map((name) => [name, z.string()])
+    ),
+  }),
   createdAt: z.date().optional(),
   latestUpdateAt: z.date().optional(),
 });
@@ -23,49 +25,12 @@ export const chicmozChainInfoSchema = z.object({
 export type ChicmozChainInfo = z.infer<typeof chicmozChainInfoSchema>;
 
 export const getChicmozChainInfo = (
-  L2NetworkId: L2NetworkId,
+  l2NetworkId: L2NetworkId,
   nodeInfo: NodeInfo
 ): ChicmozChainInfo => {
-  const l1ContractAddresses: L1ContractAddresses = nodeInfo.l1ContractAddresses;
-  // NOTE: this workaround is needed because the zod schema says they should be strings. But we're getting EthAddress (object) from the aztec.js node-call.
-  //   e.g.:   {
-  // "code": "invalid_type",
-  // "expected": "string",
-  // "received": "object",
-  // "path": [
-  //   "l1ContractAddresses",
-  //   "rollupAddress"
-  // ],
-  // "message": "Expected string, received object"
-  const actualCompatibleL1ContractAddresses: L1ContractAddresses =
-    Object.fromEntries(
-      Object.entries(l1ContractAddresses).map(([key, value]) => [
-        key,
-        value.toString(),
-      ])
-    ) as unknown as L1ContractAddresses;
-  // NOTE: this workaround is needed because the zod schema says they should be strings. But we're getting EthAddress (object) from the aztec.js node-call.
-  //   e.g.:   {
-  //  "code": "invalid_type",
-  //  "expected": "string",
-  //  "received": "object",
-  //  "path": [
-  //    "protocolContractAddresses",
-  //    "multiCallEntrypoint"
-  //  ],
-  //  "message": "Expected string, received object"
-
-  const actualCompatibleProtocolContractAddresses = Object.fromEntries(
-    Object.entries(nodeInfo.protocolContractAddresses).map(([key, value]) => [
-      key,
-      value.toString(),
-    ])
-  ) as unknown as ProtocolContractAddresses;
   return chicmozChainInfoSchema.parse({
-    L2NetworkId,
-    ...nodeInfo,
-    l1ContractAddresses: actualCompatibleL1ContractAddresses,
-    protocolContractAddresses: actualCompatibleProtocolContractAddresses,
+    l2NetworkId,
+    ...JSON.parse(JSON.stringify(nodeInfo)),
   });
 };
 
@@ -73,7 +38,7 @@ export const chicmozL2RpcNodeSchema = z.object({
   rpcUrl: z.string(),
   id: z.string().optional(),
   createdAt: z.date(),
-  lastSeenAt: z.date()
+  lastSeenAt: z.date(),
 });
 
 export const chicmozL2RpcNodeErrorSchema = z.object({
@@ -100,9 +65,7 @@ export const chicmozL2SequencerSchema = z.object({
 
 export type ChicmozL2RpcNode = z.infer<typeof chicmozL2RpcNodeSchema>;
 export type ChicmozL2RpcNodeError = z.infer<typeof chicmozL2RpcNodeErrorSchema>;
-export type ChicmozL2Sequencer = z.infer<
-  typeof chicmozL2SequencerSchema
->;
+export type ChicmozL2Sequencer = z.infer<typeof chicmozL2SequencerSchema>;
 
 export const getSequencer = (
   l2NetworkId: L2NetworkId,
@@ -112,6 +75,6 @@ export const getSequencer = (
   return chicmozL2SequencerSchema.parse({
     l2NetworkId,
     rpcUrl,
-    ...nodeInfo,
+    ...JSON.parse(JSON.stringify(nodeInfo)),
   });
 };

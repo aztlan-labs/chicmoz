@@ -1,4 +1,4 @@
-import { l2NetworkIdValues } from "@chicmoz-pkg/types";
+import { L2NetworkId } from "@chicmoz-pkg/types";
 import { ColumnBuilderBaseConfig, ColumnDataType } from "drizzle-orm";
 import {
   PgColumnBuilderBase,
@@ -6,7 +6,6 @@ import {
   customType,
   integer,
   numeric,
-  pgEnum,
   pgTable,
   uuid,
   varchar,
@@ -51,7 +50,4 @@ export const bufferType = customType<{
   },
 });
 
-export const l2NetworkIdDbEnum = pgEnum(
-  "l2_network_id",
-  l2NetworkIdValues
-)("l2_network_id");
+export const l2NetworkIdDbEnum = (name: string) => varchar(name).$type<L2NetworkId>();
