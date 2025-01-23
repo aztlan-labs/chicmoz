@@ -7,7 +7,7 @@ requires:
   - path: ./common/skaffold.aztec_sanbox_nodes.yaml
   - path: ./auth/skaffold.yaml
   - path: ./explorer-api/skaffold.sandbox.yaml
-  #- path: ./ethereum-listener/skaffold.sandbox.yaml TODO
+  - path: ./ethereum-listener/skaffold.sandbox.yaml
   - path: ./aztec-listener/skaffold.sandbox.yaml
   - path: ./websocket-event-publisher/skaffold.sandbox.yaml
   - path: ./event-cannon/skaffold.yaml
