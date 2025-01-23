@@ -4,10 +4,10 @@ import { l2RpcNodeErrorTable } from "./rpc-node-error.js";
 import { l2SequencerTable } from "./sequencer.js";
 
 export const l2RpcNodeTable = pgTable("l2_rpc_node", {
-  rpcUrl: varchar("rpc_url").primaryKey().notNull(),
-  id: uuid("id").defaultRandom().notNull(),
+  id: uuid("id").defaultRandom().primaryKey().notNull(),
+  rpcUrl: varchar("rpc_url").notNull().unique(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  lastSeenAt: timestamp("last_seen_at").defaultNow().notNull(),
+  lastSeenAt: timestamp("last_seen_at").defaultNow()
 });
 
 export const l2RpcNodeRelations = relations(

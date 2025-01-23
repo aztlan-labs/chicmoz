@@ -1,5 +1,5 @@
 {
-  "id": "67f85abe-e5ee-4186-958b-0d9566dfbca4",
+  "id": "b2ff7e1c-0cdd-4f4d-ae00-1fff27b266b1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1670,9 +1670,9 @@
           "primaryKey": true,
           "notNull": true
         },
-        "rpc_url": {
-          "name": "rpc_url",
-          "type": "varchar",
+        "rpc_node_id": {
+          "name": "rpc_node_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -1724,12 +1724,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "l2_rpc_node_error_rpc_url_l2_rpc_node_rpc_url_fk": {
-          "name": "l2_rpc_node_error_rpc_url_l2_rpc_node_rpc_url_fk",
+        "l2_rpc_node_error_rpc_node_id_l2_rpc_node_id_fk": {
+          "name": "l2_rpc_node_error_rpc_node_id_l2_rpc_node_id_fk",
           "tableFrom": "l2_rpc_node_error",
           "tableTo": "l2_rpc_node",
-          "columnsFrom": ["rpc_url"],
-          "columnsTo": ["rpc_url"],
+          "columnsFrom": ["rpc_node_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1741,18 +1741,18 @@
       "name": "l2_rpc_node",
       "schema": "",
       "columns": {
-        "rpc_url": {
-          "name": "rpc_url",
-          "type": "varchar",
-          "primaryKey": true,
-          "notNull": true
-        },
         "id": {
           "name": "id",
           "type": "uuid",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
+        },
+        "rpc_url": {
+          "name": "rpc_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
@@ -1765,14 +1765,20 @@
           "name": "last_seen_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "l2_rpc_node_rpc_url_unique": {
+          "name": "l2_rpc_node_rpc_url_unique",
+          "nullsNotDistinct": false,
+          "columns": ["rpc_url"]
+        }
+      }
     },
     "public.l2_sequencer": {
       "name": "l2_sequencer",
@@ -1784,9 +1790,9 @@
           "primaryKey": true,
           "notNull": true
         },
-        "rpc_url": {
-          "name": "rpc_url",
-          "type": "varchar",
+        "rpc_node_id": {
+          "name": "rpc_node_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -1831,12 +1837,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "l2_sequencer_rpc_url_l2_rpc_node_rpc_url_fk": {
-          "name": "l2_sequencer_rpc_url_l2_rpc_node_rpc_url_fk",
+        "l2_sequencer_rpc_node_id_l2_rpc_node_id_fk": {
+          "name": "l2_sequencer_rpc_node_id_l2_rpc_node_id_fk",
           "tableFrom": "l2_sequencer",
           "tableTo": "l2_rpc_node",
-          "columnsFrom": ["rpc_url"],
-          "columnsTo": ["rpc_url"],
+          "columnsFrom": ["rpc_node_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }

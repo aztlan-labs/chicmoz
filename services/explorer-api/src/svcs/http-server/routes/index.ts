@@ -44,6 +44,12 @@ export const openApiPaths = {
   ...controller.openapi_GET_L1_L2_VALIDATORS,
   ...controller.openapi_GET_L1_L2_VALIDATOR,
   ...controller.openapi_GET_L1_L2_VALIDATOR_HISTORY,
+
+  ...controller.openapi_GET_CHAIN_INFO,
+  ...controller.openapi_GET_CHAIN_ERRORS,
+
+  ...controller.openapi_GET_L2_SEQUENCER,
+  ...controller.openapi_GET_L2_SEQUENCERS,
 };
 
 const otherPaths = [
@@ -179,6 +185,12 @@ export const init = ({ router }: { router: Router }) => {
     paths.l1l2ValidatorHistory,
     controller.GET_L1_L2_VALIDATOR_HISTORY
   );
+
+  router.get(paths.chainInfo, controller.GET_CHAIN_INFO);
+  router.get(paths.chainErrors, controller.GET_CHAIN_ERRORS);
+
+  router.get(paths.sequencer, controller.GET_L2_SEQUENCER);
+  router.get(paths.sequencers, controller.GET_L2_SEQUENCERS);
 
   otherPaths.forEach(({ path, controller }) => {
     router.get(path, controller);

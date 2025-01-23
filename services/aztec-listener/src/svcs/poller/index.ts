@@ -1,14 +1,19 @@
 import { NodeInfo } from "@aztec/aztec.js";
-import { MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
-import { getSequencer } from "@chicmoz-pkg/types";
+import { MicroserviceBaseSvc, NODE_ENV } from "@chicmoz-pkg/microservice-base";
+import { getSequencerFromNodeInfo } from "@chicmoz-pkg/types";
 import {
   AZTEC_GENESIS_CATCHUP,
   AZTEC_LISTEN_FOR_BLOCKS,
   AZTEC_LISTEN_FOR_PENDING_TXS,
+  AZTEC_RPC_URL,
   L2_NETWORK_ID,
   getConfigStr,
 } from "../../environment.js";
-import { onChainInfo, onL2SequencerInfo } from "../../events/emitted/index.js";
+import {
+  onChainInfo,
+  onL2RpcNodeError,
+  onL2SequencerInfo,
+} from "../../events/emitted/index.js";
 import { logger } from "../../logger.js";
 import {
   getHeight as getLatestProcessedHeight,
@@ -37,11 +42,23 @@ const getHeights = async () => {
 };
 
 export const init = async () => {
+  if (NODE_ENV === "development") {
+    onL2RpcNodeError({
+      rpcUrl: AZTEC_RPC_URL,
+      name: "Mocked Node Error",
+      message: "Lorem ipsum dolor sit amet",
+      cause: "UnknownCause",
+      stack: new Error().stack?.toString() ?? "UnknownStack",
+      data: {},
+      count: 1,
+      createdAt: new Date(),
+    });
+  }
   const initResult = await initNetworkClient();
   //const { latestProcessedHeight, chainHeight } = await getHeights();
   logger.info(`Aztec chain info: ${JSON.stringify(initResult.chainInfo)}`);
   await onChainInfo(initResult.chainInfo);
-  const l2Sequencer = getSequencer(
+  const l2Sequencer = getSequencerFromNodeInfo(
     L2_NETWORK_ID,
     initResult.rpcUrl,
     initResult.nodeInfo

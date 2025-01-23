@@ -1,9 +1,4 @@
-import { generateSchema } from "@anatine/zod-openapi";
-import {
-  ethAddressSchema,
-} from "@chicmoz-pkg/types";
 import asyncHandler from "express-async-handler";
-import { z } from "zod";
 import { controllers as db } from "../../../database/index.js";
 import { getL1L2ValidatorSchema } from "../paths_and_validation.js";
 import {
@@ -51,13 +46,7 @@ export const openapi_GET_L1_L2_VALIDATOR = {
   },
 };
 
-const tempTest = () => {
-  generateSchema(ethAddressSchema);
-  generateSchema(z.bigint().nonnegative());
-};
-
 export const GET_L1_L2_VALIDATOR = asyncHandler(async (req, res) => {
-  tempTest();
   const { attesterAddress } = getL1L2ValidatorSchema.parse(req).params;
   const validator = await dbWrapper.get(
     ["l1", "l2-validators", attesterAddress],

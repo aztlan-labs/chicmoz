@@ -24,7 +24,7 @@ export const chicmozChainInfoSchema = z.object({
 
 export type ChicmozChainInfo = z.infer<typeof chicmozChainInfoSchema>;
 
-export const getChicmozChainInfo = (
+export const getChicmozChainInfoFromNodeInfo = (
   l2NetworkId: L2NetworkId,
   nodeInfo: NodeInfo
 ): ChicmozChainInfo => {
@@ -38,11 +38,12 @@ export const chicmozL2RpcNodeSchema = z.object({
   rpcUrl: z.string(),
   id: z.string().optional(),
   createdAt: z.date(),
-  lastSeenAt: z.date(),
+  lastSeenAt: z.date().optional(),
 });
 
 export const chicmozL2RpcNodeErrorSchema = z.object({
-  rpcUrl: chicmozL2RpcNodeSchema.shape.rpcUrl,
+  rpcNodeId: z.string().optional(),
+  rpcUrl: chicmozL2RpcNodeSchema.shape.rpcUrl.optional(),
   name: z.string(),
   cause: z.string(),
   message: z.string(),
@@ -59,15 +60,15 @@ export const chicmozL2SequencerSchema = z.object({
   protocolVersion: z.number(),
   nodeVersion: z.string(),
   l1ChainId: z.number(),
-  lastSeenAt: z.date().optional(),
-  createdAt: z.date().optional(),
+  lastSeenAt: z.date(),
+  createdAt: z.date(),
 });
 
 export type ChicmozL2RpcNode = z.infer<typeof chicmozL2RpcNodeSchema>;
 export type ChicmozL2RpcNodeError = z.infer<typeof chicmozL2RpcNodeErrorSchema>;
 export type ChicmozL2Sequencer = z.infer<typeof chicmozL2SequencerSchema>;
 
-export const getSequencer = (
+export const getSequencerFromNodeInfo = (
   l2NetworkId: L2NetworkId,
   rpcUrl: string,
   nodeInfo: NodeInfo
@@ -75,6 +76,8 @@ export const getSequencer = (
   return chicmozL2SequencerSchema.parse({
     l2NetworkId,
     rpcUrl,
+    lastSeenAt: new Date(),
+    createdAt: new Date(),
     ...JSON.parse(JSON.stringify(nodeInfo)),
   });
 };

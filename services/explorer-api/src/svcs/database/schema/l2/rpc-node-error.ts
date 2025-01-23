@@ -4,15 +4,16 @@ import {
   jsonb,
   pgTable,
   timestamp,
+  uuid,
   varchar,
 } from "drizzle-orm/pg-core";
 import { l2RpcNodeTable } from "./rpc-node.js";
 
 export const l2RpcNodeErrorTable = pgTable("l2_rpc_node_error", {
   name: varchar("name").primaryKey().notNull(),
-  rpcUrl: varchar("rpc_url")
-    .notNull()
-    .references(() => l2RpcNodeTable.rpcUrl, { onDelete: "cascade" }),
+  rpcNodeId: uuid("rpc_node_id").notNull().references(() => l2RpcNodeTable.id, {
+    onDelete: "cascade",
+  }),
   cause: varchar("cause").notNull(),
   message: varchar("message").notNull(),
   stack: varchar("stack").notNull(),

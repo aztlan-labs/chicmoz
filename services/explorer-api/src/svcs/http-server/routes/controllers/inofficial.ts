@@ -167,6 +167,9 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
     r.push(paths.contractClassUnconstrainedFunctions + "NOT FOUND");
   }
 
+  r.push(paths.chainInfo);
+  r.push(paths.chainErrors);
+
   const statsRoutes = [
     paths.statsTotalTxEffects,
     paths.statsTotalTxEffectsLast24h,

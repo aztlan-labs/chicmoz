@@ -1,5 +1,6 @@
 import { generateSchema } from "@anatine/zod-openapi";
 import {
+  chicmozChainInfoSchema,
   chicmozFeeRecipientSchema,
   chicmozL1L2ValidatorHistorySchema,
   chicmozL1L2ValidatorSchema,
@@ -8,6 +9,8 @@ import {
   chicmozL2ContractInstanceDeluxeSchema,
   chicmozL2PendingTxSchema,
   chicmozL2PrivateFunctionBroadcastedEventSchema,
+  chicmozL2RpcNodeErrorSchema,
+  chicmozL2SequencerSchema,
   chicmozL2TxEffectDeluxeSchema,
   chicmozL2UnconstrainedFunctionBroadcastedEventSchema,
   chicmozL2VerifiedContractInstanceDataSchema,
@@ -146,3 +149,22 @@ export const l1L2ValidatorHistoryResponse = getResponse(
   chicmozL1L2ValidatorHistorySchema,
   "l1L2ValidatorHistory"
 );
+
+export const sequencerResponse = getResponse(
+  chicmozL2SequencerSchema,
+  "l2Sequencer"
+);
+export const sequencerResponseArray = getResponse(
+  z.array(chicmozL2SequencerSchema),
+  "l2SequencerArray"
+);
+export const sequencerErrorResponseArray = getResponse(
+  z.array(chicmozL2RpcNodeErrorSchema),
+  "l2SequencerErrorArray"
+);
+
+export const chainInfoResponse = getResponse(
+  chicmozChainInfoSchema,
+  "chainInfo"
+);
+export const chainErrorsResponse = sequencerErrorResponseArray;

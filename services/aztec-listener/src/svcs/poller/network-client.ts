@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { AztecNode, NodeInfo, createAztecNodeClient } from "@aztec/aztec.js";
 import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
-import { getChicmozChainInfo, l2NetworkIdSchema } from "@chicmoz-pkg/types";
+import { getChicmozChainInfoFromNodeInfo, l2NetworkIdSchema } from "@chicmoz-pkg/types";
 import { IBackOffOptions, backOff } from "exponential-backoff";
 import {
   AZTEC_RPC_URL,
@@ -87,7 +87,7 @@ export const init = async () => {
   aztecNode = createAztecNodeClient(AZTEC_RPC_URL);
   const nInf = await getFreshNodeInfo();
   try {
-    const chainInfo = getChicmozChainInfo(L2_NETWORK_ID, nInf.nodeInfo);
+    const chainInfo = getChicmozChainInfoFromNodeInfo(L2_NETWORK_ID, nInf.nodeInfo);
     return {
       chainInfo,
       nodeInfo: nInf.nodeInfo,
