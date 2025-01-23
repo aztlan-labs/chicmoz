@@ -4,33 +4,22 @@ import {
   AZTEC_GENESIS_CATCHUP,
   AZTEC_LISTEN_FOR_BLOCKS,
   AZTEC_LISTEN_FOR_PENDING_TXS,
-  L2_NETWORK_ID,
   getConfigStr,
 } from "../../environment.js";
-import {
-  onChainInfo,
-  onL2RpcNodeError,
-  onL2SequencerInfo,
-} from "../../events/emitted/index.js";
+import { onL2RpcNodeError } from "../../events/emitted/index.js";
 import { logger } from "../../logger.js";
 import {
   getHeight as getLatestProcessedHeight,
   storeHeight,
 } from "../database/latestProcessedHeight.controller.js";
-import {
-  startPolling as startPollingBlocks,
-  stopPolling as stopPollingBlocks,
-} from "./block_poller.js";
+import * as blockPoller from "./block_poller.js";
+import * as chainInfoPoller from "./chain-info-poller.js";
 import { startCatchup } from "./genesis-catchup.js";
 import {
   getLatestHeight,
   init as initNetworkClient,
 } from "./network-client.js";
-import {
-  startPolling as startPollingPendingTxs,
-  stopPolling as stopPollingPendingTxs,
-} from "./txs_poller.js";
-import { getSequencerFromNodeInfo } from "./utils.js";
+import * as pendingTxsPoller from "./txs_poller.js";
 
 let nodeInfo: NodeInfo;
 
@@ -51,22 +40,14 @@ export const init = async () => {
     });
   }
   const initResult = await initNetworkClient();
-  //const { latestProcessedHeight, chainHeight } = await getHeights();
   logger.info(`Aztec chain info: ${JSON.stringify(initResult.chainInfo)}`);
-  await onChainInfo(initResult.chainInfo);
-  const l2Sequencer = getSequencerFromNodeInfo(
-    L2_NETWORK_ID,
-    initResult.rpcUrl,
-    initResult.nodeInfo
-  );
-  logger.info(`Aztec sequencer info: ${JSON.stringify(l2Sequencer)}`);
-  await onL2SequencerInfo(l2Sequencer);
+  logger.info(`Aztec sequencer info: ${JSON.stringify(initResult.sequencer)}`);
 };
 
 export const startPoller = async () => {
   logger.info(`🤡 POLLER: starting...`);
   const { latestProcessedHeight, chainHeight } = await getHeights();
-  if (AZTEC_LISTEN_FOR_PENDING_TXS) startPollingPendingTxs();
+  if (AZTEC_LISTEN_FOR_PENDING_TXS) pendingTxsPoller.startPolling();
   const isOffSync = chainHeight < latestProcessedHeight;
   if (isOffSync) {
     logger.warn(
@@ -80,7 +61,8 @@ export const startPoller = async () => {
       ? latestProcessedHeight + 1
       : chainHeight;
   if (AZTEC_LISTEN_FOR_BLOCKS)
-    startPollingBlocks({ fromHeight: pollFromHeight });
+    blockPoller.startPolling({ fromHeight: pollFromHeight });
+  chainInfoPoller.startPolling();
 };
 
 export const getNodeInfo = () => nodeInfo;
@@ -93,7 +75,8 @@ export const pollerService: MicroserviceBaseSvc = {
   health: () => nodeInfo !== undefined,
   // eslint-disable-next-line @typescript-eslint/require-await
   shutdown: async () => {
-    stopPollingBlocks();
-    stopPollingPendingTxs();
+    pendingTxsPoller.stopPolling();
+    blockPoller.stopPolling();
+    chainInfoPoller.stopPolling();
   },
 };

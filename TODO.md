@@ -21,9 +21,9 @@
    - [x] can be built
    - [x] some data on dev-page
 1. update poll structure in `./services/aztec-listener`
-   - [ ] separate the network-client from the pollers
-   - [ ] create separate pollers (`MicroserviceBaseSvc`) for each poll-structure
-   - [ ] add new poll-structure
+   - [x] separate the network-client from the pollers
+   - [x] create separate pollers (`MicroserviceBaseSvc`) for each poll-structure
+   - [x] add new poll-structure
 1. remove old Node type from `./packages/types`
 
 # Plan
@@ -40,10 +40,10 @@
 
 ### emitted events
 
-- [ ] emitSequencerAlive (on successful poll-response)
-- [ ] emitNodeError (on failed poll-response or timeout)
-- [ ] emitL2ChainInfo (re-occuring every X minutes)
-- [ ] emitSequencer (re-occuring every Y minutes)
+- [x] emitRpcNodeAlive (on successful poll-response)
+- [x] emitRpcNodeError (on failed poll-response)
+- [x] emitL2ChainInfo (re-occuring every X minutes)
+- [x] emitSequencer (re-occuring every Y minutes)
 
 ## explorer-api
 

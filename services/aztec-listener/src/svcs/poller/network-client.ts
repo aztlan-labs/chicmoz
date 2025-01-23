@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { AztecNode, NodeInfo, createAztecNodeClient } from "@aztec/aztec.js";
 import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
-import { l2NetworkIdSchema } from "@chicmoz-pkg/types";
+import {
+  ChicmozChainInfo,
+  ChicmozL2Sequencer,
+  l2NetworkIdSchema,
+} from "@chicmoz-pkg/types";
 import { IBackOffOptions, backOff } from "exponential-backoff";
 import {
   AZTEC_RPC_URL,
@@ -9,11 +13,16 @@ import {
   MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS,
 } from "../../environment.js";
 import {
+  onChainInfo,
   onL2RpcNodeAlive,
   onL2RpcNodeError,
+  onL2SequencerInfo,
 } from "../../events/emitted/index.js";
 import { logger } from "../../logger.js";
-import { getChicmozChainInfoFromNodeInfo } from "./utils.js";
+import {
+  getChicmozChainInfoFromNodeInfo,
+  getSequencerFromNodeInfo,
+} from "./utils.js";
 
 let aztecNode: AztecNode;
 
@@ -83,31 +92,13 @@ const callNodeFunction = async <K extends keyof AztecNode>(
 export const init = async () => {
   logger.info(`Initializing Aztec node client with ${AZTEC_RPC_URL}`);
   aztecNode = createAztecNodeClient(AZTEC_RPC_URL);
-  const nInf = await getFreshNodeInfo();
-  try {
-    const chainInfo = getChicmozChainInfoFromNodeInfo(
-      L2_NETWORK_ID,
-      nInf.nodeInfo
-    );
-    return {
-      chainInfo,
-      nodeInfo: nInf.nodeInfo,
-      rpcUrl: AZTEC_RPC_URL,
-    };
-  } catch (e) {
-    logger.error(`Aztec failed to parse chain info: ${(e as Error).message}`);
-    onL2RpcNodeError({
-      name: (e as Error).name ?? "UnknownName",
-      message: (e as Error).message ?? "UnknownMessage",
-      cause: JSON.stringify((e as Error).cause) ?? "UnknownCause",
-      stack: (e as Error).stack ?? "UnknownStack",
-      data: {},
-    });
-    throw e;
-  }
+  return getFreshInfo();
 };
 
-export const getFreshNodeInfo = async () => {
+export const getFreshInfo = async (): Promise<{
+  chainInfo: ChicmozChainInfo;
+  sequencer: ChicmozL2Sequencer;
+}> => {
   const nodeVersion = await callNodeFunction("getNodeVersion");
   logger.info(`🧋 Aztec node version: ${nodeVersion}`);
   const protocolVersion = await callNodeFunction("getVersion");
@@ -139,10 +130,33 @@ export const getFreshNodeInfo = async () => {
     l1ContractAddresses: contractAddresses,
     protocolContractAddresses: protocolContractAddresses,
   };
+  try {
+    await callNodeFunction("getNodeInfo");
+    logger.info(
+      `!!!! Aztec node info fetched successfully, perhaps switch back to this?`
+    );
+  } catch (e) {
+    // expected to fail sometimes
+  }
+
+  const chainInfo = getChicmozChainInfoFromNodeInfo(L2_NETWORK_ID, nodeInfo);
+  onChainInfo(chainInfo).catch((e) => {
+    logger.error(`Aztec failed to publish chain info: ${(e as Error).message}`);
+  });
+  const sequencer = getSequencerFromNodeInfo(
+    L2_NETWORK_ID,
+    AZTEC_RPC_URL,
+    nodeInfo
+  );
+  onL2SequencerInfo(sequencer).catch((e) => {
+    logger.error(
+      `Aztec failed to publish sequencer info: ${(e as Error).message}`
+    );
+  });
 
   return {
-    nodeInfo,
-    rpcUrl: AZTEC_RPC_URL,
+    chainInfo,
+    sequencer,
   };
 };
 
