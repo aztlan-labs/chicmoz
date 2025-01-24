@@ -29,23 +29,23 @@ const evaluateHealth = ({
   lastSuccessfulRequest: { date: Date; path: string } | null;
   lastError: {
     date: Date;
-    error: { type: "API" | "Schema"; message: string };
+    error: { type: "API" | "Schema"; status: number; message: string };
   } | null;
   chainErrors: ChicmozL2RpcNodeError[] | undefined;
 }): EvaluatedHealth => {
   const reasonableTimeStamp = Date.now() - REASONABLE_API_LIVENESS_TIME;
 
-  if (!lastSuccessfulRequest) {
+  if (!lastSuccessfulRequest && lastError) {
     return {
       health: SystemHealthStatus.DOWN,
-      reason: "No successful API requests has been made",
+      reason: `${lastError?.error.status} - ${lastError?.error.message}`,
     };
   }
 
-  if (lastError?.error.message === "No response received from server") {
+  if (!lastSuccessfulRequest) {
     return {
       health: SystemHealthStatus.DOWN,
-      reason: "No response received from server",
+      reason: "No successful requests have been made",
     };
   }
 

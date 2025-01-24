@@ -18,6 +18,7 @@ export class ApiError extends Error {
   ) {
     super(message);
     this.name = "ApiError";
+    this.status = status;
   }
 }
 
@@ -34,9 +35,18 @@ client.interceptors.response.use(
   },
   (error: AxiosError) => {
     if (error.response) {
+      let errorString = error.response.statusText;
+      try {
+        errorString =
+          typeof error.response.data === "string"
+            ? error.response.data
+            : JSON.stringify(error.response.data);
+      } catch {
+        // ignore
+      }
       lastError = {
         date: new Date(),
-        error: new ApiError(error.response.status, "An error occurred", "API"),
+        error: new ApiError(error.response.status, errorString, "API"),
       };
     } else if (error.request) {
       lastError = {
