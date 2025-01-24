@@ -1,8 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { type FC } from "react";
-import { useChainErrors, useChainInfo } from "~/hooks/chain-info";
-import { useSequencers } from "~/hooks/sequencer";
-import { useSubTitle } from "~/hooks/sub-title";
+import {
+  useChainErrors,
+  useChainInfo,
+  useSequencers,
+  useSubTitle,
+} from "~/hooks";
 import { formatTimeSince } from "~/lib/utils";
 import { routes } from "~/routes/__root";
 import {

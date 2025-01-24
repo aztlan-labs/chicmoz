@@ -2,7 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SearchInput } from "~/components/ui/input";
-import { useSearch } from "~/hooks/search";
+import { useSearch } from "~/hooks";
 import { routes } from "~/routes/__root.tsx";
 import { L2_NETWORK_ID } from "~/service/constants";
 import { Button } from "./ui";

@@ -1,10 +1,13 @@
 import { type FC } from "react";
 import { InfoBadge } from "~/components/info-badge";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
-import { useLatestBlocks } from "~/hooks";
-import { useTotalTxEffects, useTotalTxEffectsLast24h } from "~/hooks/stats";
-import { useSubTitle } from "~/hooks/sub-title";
-import { useGetTxEffectsByBlockHeightRange } from "~/hooks/tx-effect";
+import {
+  useGetTxEffectsByBlockHeightRange,
+  useLatestBlocks,
+  useSubTitle,
+  useTotalTxEffects,
+  useTotalTxEffectsLast24h,
+} from "~/hooks";
 import { routes } from "~/routes/__root";
 import { parseTxEffectsData } from "../landing/util";
 

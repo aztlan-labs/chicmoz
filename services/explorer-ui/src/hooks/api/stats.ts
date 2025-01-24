@@ -1,6 +1,6 @@
-import { type UseQueryResult, useQuery } from "@tanstack/react-query";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { statsL2Api } from "~/api/stats";
-import {queryKeyGenerator} from "./utils";
+import { queryKeyGenerator } from "./utils";
 
 export const useTotalTxEffects = (): UseQueryResult<string, Error> => {
   return useQuery<string, Error>({

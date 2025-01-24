@@ -1,13 +1,11 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
-import { Link } from "@tanstack/react-router";
-import { useParams } from "@tanstack/react-router";
+import { Link, useParams } from "@tanstack/react-router";
 import { type FC } from "react";
-import { KeyValueDisplay } from "~/components/info-display/key-value-display";
-import { useContractInstance } from "~/hooks/";
-import { getContractData, getVerifiedContractInstanceData } from "./util";
-import { routes } from "~/routes/__root";
 import { CustomTooltip } from "~/components/custom-tooltip";
-import {useSubTitle} from "~/hooks/sub-title";
+import { KeyValueDisplay } from "~/components/info-display/key-value-display";
+import { useContractInstance, useSubTitle } from "~/hooks";
+import { routes } from "~/routes/__root";
+import { getContractData, getVerifiedContractInstanceData } from "./util";
 
 export const ContractInstanceDetails: FC = () => {
   const { address } = useParams({

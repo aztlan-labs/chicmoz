@@ -1,12 +1,15 @@
 import { type FC } from "react";
 import { BlocksTable } from "~/components/blocks/blocks-table.tsx";
-import { useLatestBlocks } from "~/hooks";
-import { parseLatestBlocks } from "./util";
-import { useAvarageBlockTime, useAvarageFees } from "~/hooks/stats";
-import { formatDuration } from "~/lib/utils";
 import { InfoBadge } from "~/components/info-badge";
-import {useSubTitle} from "~/hooks/sub-title";
-import {routes} from "~/routes/__root";
+import {
+  useAvarageBlockTime,
+  useAvarageFees,
+  useLatestBlocks,
+  useSubTitle,
+} from "~/hooks";
+import { formatDuration } from "~/lib/utils";
+import { routes } from "~/routes/__root";
+import { parseLatestBlocks } from "./util";
 
 export const Blocks: FC = () => {
   useSubTitle(routes.blocks.children.index.title);

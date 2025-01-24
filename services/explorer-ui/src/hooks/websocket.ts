@@ -11,7 +11,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { z } from "zod";
 import { WS_URL } from "~/service/constants";
-import { queryKeyGenerator, statsKey } from "./utils";
+import { queryKeyGenerator, statsKey } from "./api/utils";
 
 const updateBlock = (
   queryClient: ReturnType<typeof useQueryClient>,
@@ -34,15 +34,11 @@ const updateTxEffects = (
 ) => {
   const txEffects = block.body.txEffects.map((txEffect) => {
     const effect = chicmozL2TxEffectSchema.parse(txEffect);
-    queryClient.setQueryData(
-      queryKeyGenerator.txEffectByHash(effect.txHash),
-      {
-        ...effect,
-        blockHeight: block.height,
-        timestamp: block.header.globalVariables.timestamp,
-      }
-
-    );
+    queryClient.setQueryData(queryKeyGenerator.txEffectByHash(effect.txHash), {
+      ...effect,
+      blockHeight: block.height,
+      timestamp: block.header.globalVariables.timestamp,
+    });
   });
   queryClient.setQueryData(
     queryKeyGenerator.txEffectsByBlockHeight(block.height),
@@ -88,7 +84,9 @@ const updatePendingTxs = (
     queryKeyGenerator.pendingTxs,
     (oldData: ChicmozL2PendingTx[] | undefined) => {
       if (!oldData) return txs;
-      return [...oldData, ...txs].sort((a, b) => b.birthTimestamp - a.birthTimestamp);
+      return [...oldData, ...txs].sort(
+        (a, b) => b.birthTimestamp - a.birthTimestamp
+      );
     }
   );
 };
