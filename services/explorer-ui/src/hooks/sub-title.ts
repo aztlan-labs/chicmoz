@@ -7,4 +7,4 @@ const baseTitle =
 export const useSubTitle = (title: string) =>
   useEffect(() => {
     document.title = `${title} | ${baseTitle}`;
-  });
+  }, [title]);
