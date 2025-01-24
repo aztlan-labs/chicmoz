@@ -1,3 +1,4 @@
+import { ChicmozChainInfoEvent } from "@chicmoz-pkg/message-registry";
 import { IBackOffOptions, backOff } from "exponential-backoff";
 import { logger } from "../logger.js";
 import {
@@ -7,7 +8,6 @@ import {
   queryStakingStateAndEmitUpdates,
   watchContractsEvents,
 } from "./client.js";
-import {ChicmozChainInfoEvent} from "@chicmoz-pkg/message-registry";
 
 const backOffOptions: Partial<IBackOffOptions> = {
   numOfAttempts: 10,
