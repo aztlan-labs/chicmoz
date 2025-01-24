@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { SearchInput } from "~/components/ui/input";
 import { useSearch } from "~/hooks";
 import { routes } from "~/routes/__root.tsx";
-import { L2_NETWORK_ID } from "~/service/constants";
+import { MagicDevLink } from "./magic-dev-link";
 import { Button } from "./ui";
 import { ChicmozHomeLink } from "./ui/chicmoz-home-link";
 
@@ -73,13 +73,8 @@ export const Header = () => {
             {/* Desktop Navigation */}
             <div className="hidden md:flex md:w-full md:items-center md:justify-between ">
               <div className="flex items-center">
-                <ChicmozHomeLink textClasses="hidden md:block" />
-                <Link
-                  to={routes.dev.route}
-                  className="text-secondary hover:text-white transition-colors mt-1 ml-4"
-                >
-                  {L2_NETWORK_ID}
-                </Link>
+                <ChicmozHomeLink textClasses="hidden md:block pr-2" />
+                <MagicDevLink />
               </div>
               <div className="flex  justify-center items-center w-1/2 sm:w-1/3 ">
                 <SearchInput
@@ -108,12 +103,7 @@ export const Header = () => {
             {/* Mobile Navigation Header */}
             <div className=" flex items-center justify-between w-full px-4 md:hidden">
               <ChicmozHomeLink textClasses="hidden md:block" />
-              <Link
-                to={routes.dev.route}
-                className="text-secondary hover:text-white transition-colors"
-              >
-                {L2_NETWORK_ID}
-              </Link>
+              <MagicDevLink />
               <div className="flex items-center justify-between space-x-4">
                 <Button
                   variant="ghost"

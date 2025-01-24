@@ -110,6 +110,8 @@ const handleWebSocketMessage = async (
   if (update.txs) handlePendingTxs(queryClient, update.txs);
 };
 
+export type WsReadyStateText = "CONNECTING" | "OPEN" | "CLOSING" | "CLOSED";
+
 const wsReadyStateText = {
   0: "CONNECTING",
   1: "OPEN",
@@ -117,11 +119,11 @@ const wsReadyStateText = {
   3: "CLOSED",
 } as const;
 
-type WsReadyStateText = typeof wsReadyStateText;
+type WsReadyState = typeof wsReadyStateText;
 
-export const useWebSocketConnection = (): string => {
+export const useWebSocketConnection = (): WsReadyStateText => {
   const queryClient = useQueryClient();
-  const [readyState, setReadyState] = useState<keyof WsReadyStateText>(
+  const [readyState, setReadyState] = useState<keyof WsReadyState>(
     WebSocket.CONNECTING
   );
   useEffect(() => {
@@ -129,11 +131,11 @@ export const useWebSocketConnection = (): string => {
 
     websocket.onopen = () => {
       console.log("WebSocket Connected");
-      setReadyState(websocket.readyState as keyof WsReadyStateText);
+      setReadyState(websocket.readyState as keyof WsReadyState);
     };
 
     websocket.onmessage = async (event) => {
-      setReadyState(websocket.readyState as keyof WsReadyStateText);
+      setReadyState(websocket.readyState as keyof WsReadyState);
       if (typeof event.data !== "string")
         console.error("WebSocket message is not a string");
       try {
@@ -145,7 +147,7 @@ export const useWebSocketConnection = (): string => {
 
     websocket.onclose = () => {
       console.log("WebSocket Disconnected");
-      setReadyState(websocket.readyState as keyof WsReadyStateText);
+      setReadyState(websocket.readyState as keyof WsReadyState);
     };
 
     return () => websocket.close();
