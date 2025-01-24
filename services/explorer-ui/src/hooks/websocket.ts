@@ -8,7 +8,7 @@ import {
   type WebsocketUpdateMessageReceiver,
 } from "@chicmoz-pkg/types";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { WS_URL } from "~/service/constants";
 import { queryKeyGenerator, statsKey } from "./api/utils";
@@ -110,15 +110,30 @@ const handleWebSocketMessage = async (
   if (update.txs) handlePendingTxs(queryClient, update.txs);
 };
 
-export const useWebSocketConnection = () => {
-  const queryClient = useQueryClient();
+const wsReadyStateText = {
+  0: "CONNECTING",
+  1: "OPEN",
+  2: "CLOSING",
+  3: "CLOSED",
+} as const;
 
+type WsReadyStateText = typeof wsReadyStateText;
+
+export const useWebSocketConnection = (): string => {
+  const queryClient = useQueryClient();
+  const [readyState, setReadyState] = useState<keyof WsReadyStateText>(
+    WebSocket.CONNECTING
+  );
   useEffect(() => {
     const websocket = new WebSocket(WS_URL);
 
-    websocket.onopen = () => console.log("WebSocket Connected");
+    websocket.onopen = () => {
+      console.log("WebSocket Connected");
+      setReadyState(websocket.readyState as keyof WsReadyStateText);
+    };
 
     websocket.onmessage = async (event) => {
+      setReadyState(websocket.readyState as keyof WsReadyStateText);
       if (typeof event.data !== "string")
         console.error("WebSocket message is not a string");
       try {
@@ -128,8 +143,12 @@ export const useWebSocketConnection = () => {
       }
     };
 
-    websocket.onclose = () => console.log("WebSocket Disconnected");
+    websocket.onclose = () => {
+      console.log("WebSocket Disconnected");
+      setReadyState(websocket.readyState as keyof WsReadyStateText);
+    };
 
     return () => websocket.close();
   }, [queryClient]);
+  return wsReadyStateText[readyState];
 };
