@@ -23,15 +23,11 @@ Reason: ${systemHealth.systemHealth.reason}`}
     </pre>
   );
   return (
-    <>
-      <Link to={routes.dev.route}>
-        <span className="text-secondary transition-colors">
-          {L2_NETWORK_ID}
-        </span>
-        <CustomTooltip content={tooltipContent}>
-          <span className={`text-4xl ${healthColor}`}>•</span>
-        </CustomTooltip>
-      </Link>
-    </>
+    <Link to={routes.dev.route} className="flex flex-row items-center">
+      <span className="text-secondary transition-colors">{L2_NETWORK_ID}</span>
+      <CustomTooltip content={tooltipContent}>
+        <span className={`text-4xl ${healthColor} pb-4`}>•</span>
+      </CustomTooltip>
+    </Link>
   );
 };

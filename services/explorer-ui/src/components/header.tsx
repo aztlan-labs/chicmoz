@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { SearchInput } from "~/components/ui/input";
 import { useSearch } from "~/hooks";
 import { routes } from "~/routes/__root.tsx";
+import { L2_NETWORK_ID } from "~/service/constants";
 import { MagicDevLink } from "./magic-dev-link";
 import { Button } from "./ui";
 import { ChicmozHomeLink } from "./ui/chicmoz-home-link";
@@ -65,15 +66,16 @@ export const Header = () => {
     <div className="mx-auto px-4 mt-10 max-w-[1440px] md:px-[70px]">
       <div className="flex flex-col w-full items-center bg-purple-light rounded-[40px] py-4 pr-4 md:pl-10">
         <div
-          className={`w-full transition-all duration-300 ease-in-out 
-          ${isMenuOpen ? "rounded-b-3xl" : ""}`}
+          className={`w-full transition-all duration-300 ease-in-out ${
+            isMenuOpen ? "rounded-b-3xl" : ""
+          }`}
         >
           {/* Header */}
           <div className="w-full mx-auto">
             {/* Desktop Navigation */}
             <div className="hidden md:flex md:w-full md:items-center md:justify-between ">
-              <div className="flex items-center">
-                <ChicmozHomeLink textClasses="hidden md:block pr-2" />
+              <div className="flex items-baseline">
+                <ChicmozHomeLink textClasses="hidden md:block pr-4" />
                 <MagicDevLink />
               </div>
               <div className="flex  justify-center items-center w-1/2 sm:w-1/3 ">
@@ -103,7 +105,12 @@ export const Header = () => {
             {/* Mobile Navigation Header */}
             <div className=" flex items-center justify-between w-full px-4 md:hidden">
               <ChicmozHomeLink textClasses="hidden md:block" />
-              <MagicDevLink />
+              <Link
+                to={routes.dev.route}
+                className="text-secondary hover:text-white transition-colors"
+              >
+                {L2_NETWORK_ID}
+              </Link>
               <div className="flex items-center justify-between space-x-4">
                 <Button
                   variant="ghost"
