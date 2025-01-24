@@ -6,8 +6,8 @@ import {
   RegistryAbi,
   RollupAbi,
 } from "@aztec/l1-artifacts";
-import { ConnectedToL2Event } from "@chicmoz-pkg/message-registry";
 import {
+  ChicmozChainInfo,
   EthAddress,
   chicmozL1L2ValidatorSchema,
   getL1NetworkId,
@@ -89,7 +89,7 @@ export const initClient = () => {
 };
 
 export const initContracts = (
-  l1ContractAddresses: ConnectedToL2Event["nodeInfo"]["l1ContractAddresses"]
+  l1ContractAddresses: ChicmozChainInfo["l1ContractAddresses"]
 ) => {
   // TODO: should use watch instead of "poller"
   //publicClient.watchContractEvent

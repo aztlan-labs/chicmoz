@@ -20,6 +20,12 @@ export const publishMessage = async (
   await pub(topic, message);
 };
 
+export const publishMessageSync = (
+  ...args: Parameters<typeof publishMessage>
+) => {
+  publishMessage(...args).catch((e) => logger.error((e as Error).message));
+};
+
 export const messageBusService: MicroserviceBaseSvc = generateSvc(
   INSTANCE_NAME,
   logger

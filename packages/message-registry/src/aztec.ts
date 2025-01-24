@@ -1,15 +1,11 @@
 import {
-  L2NetworkId,
+  ChicmozChainInfo,
   ChicmozL2PendingTx,
-  StringifiedNodeInfo,
+  ChicmozL2RpcNode,
+  ChicmozL2RpcNodeError,
+  ChicmozL2Sequencer,
+  L2NetworkId,
 } from "@chicmoz-pkg/types";
-
-export type ConnectedToL2Event = {
-  nodeInfo: StringifiedNodeInfo;
-  rpcUrl: string;
-  chainHeight: number;
-  latestProcessedHeight: number;
-};
 
 export type NewBlockEvent = {
   blockNumber: number;
@@ -22,7 +18,22 @@ export type PendingTxsEvent = {
 
 export type CatchupBlockEvent = NewBlockEvent;
 
-export type L2Topic = `${L2NetworkId}__${keyof L2_MESSAGES}`;
+export type ChicmozL2RpcNodeAliveEvent = {
+  rpcUrl: ChicmozL2RpcNode["rpcUrl"];
+  timestamp: number;
+};
+
+export type ChicmozL2RpcNodeErrorEvent = {
+  nodeError: ChicmozL2RpcNodeError;
+};
+
+export type ChicmozSequencerEvent = {
+  sequencer: ChicmozL2Sequencer;
+};
+
+export type ChicmozChainInfoEvent = {
+  chainInfo: ChicmozChainInfo;
+};
 
 export function generateL2TopicName(
   networkId: L2NetworkId,
@@ -32,10 +43,14 @@ export function generateL2TopicName(
 }
 
 export type L2_MESSAGES = {
-  CONNECTED_TO_L2_EVENT: ConnectedToL2Event;
   NEW_BLOCK_EVENT: NewBlockEvent;
   CATCHUP_BLOCK_EVENT: CatchupBlockEvent;
   PENDING_TXS_EVENT: PendingTxsEvent;
+  L2_RPC_NODE_ERROR_EVENT: ChicmozL2RpcNodeErrorEvent;
+  L2_RPC_NODE_ALIVE_EVENT: ChicmozL2RpcNodeAliveEvent;
+  SEQUENCER_INFO_EVENT: ChicmozSequencerEvent;
+  CHAIN_INFO_EVENT: ChicmozChainInfoEvent;
 };
 
+export type L2Topic = `${L2NetworkId}__${keyof L2_MESSAGES}`;
 export type L2Payload = L2_MESSAGES[keyof L2_MESSAGES];

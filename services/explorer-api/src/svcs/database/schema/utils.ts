@@ -1,19 +1,21 @@
-import {
-  varchar,
-  customType,
-  pgTable,
-  integer,
-  uuid,
-  bigint,
-  PgColumnBuilderBase,
-  numeric,
-} from "drizzle-orm/pg-core";
+import { L2NetworkId } from "@chicmoz-pkg/types";
 import { ColumnBuilderBaseConfig, ColumnDataType } from "drizzle-orm";
+import {
+  PgColumnBuilderBase,
+  bigint,
+  customType,
+  integer,
+  numeric,
+  pgTable,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 // TODO: this should be changed to be the same as generateUint256Column
 export const generateFrColumn = (name: string) => varchar(name, { length: 66 });
 
-export const generateUint256Column = (name: string) => numeric(name, { precision: 77, scale: 0 });
+export const generateUint256Column = (name: string) =>
+  numeric(name, { precision: 77, scale: 0 });
 
 // NOTE: remove this function and replace with generateFrColumn. Beware of summarizing operations etc!
 export const generateFrNumberColumn = (name: string) =>
@@ -36,7 +38,7 @@ export const generateTreeTable = (
     id: uuid("id").primaryKey().defaultRandom(),
     root: generateFrColumn("root"),
     nextAvailableLeafIndex: integer("next_available_leaf_index").notNull(),
-    fk
+    fk,
   });
 
 export const bufferType = customType<{
@@ -47,3 +49,5 @@ export const bufferType = customType<{
     return "bytea";
   },
 });
+
+export const l2NetworkIdDbEnum = (name: string) => varchar(name).$type<L2NetworkId>();

@@ -48,6 +48,10 @@ export const aztecExplorer = {
   getL2AverageFees: "/l2/stats/average-fees",
   getL2AverageBlockTime: "/l2/stats/average-block-time",
   getL2SearchResult: "/l2/search",
+  getL2ChainInfo: "/l2/info",
+  getL2ChainErrors: "/l2/errors",
+  getL2Sequencers: "/l2/sequencers",
+  getL2Sequencer: (enr: string) => `l2/sequencers/${enr}`,
 };
 
 export const APP_NAME = "Aztec-Scan";

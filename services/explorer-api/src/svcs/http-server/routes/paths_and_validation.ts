@@ -1,4 +1,4 @@
-import { chicmozSearchQuerySchema, ethAddressSchema, hexStringSchema } from "@chicmoz-pkg/types";
+import { chicmozL2SequencerSchema, chicmozSearchQuerySchema, ethAddressSchema, hexStringSchema } from "@chicmoz-pkg/types";
 import { z } from "zod";
 
 export const heightOrHash = "heightOrHash";
@@ -54,6 +54,11 @@ export const paths = {
   l1l2Validators: "/l1/l2-validators",
   l1l2Validator: "/l1/l2-validators/:attesterAddress",
   l1l2ValidatorHistory: "/l1/l2-validators/:attesterAddress/history",
+
+  chainInfo: "/l2/info",
+  chainErrors: "/l2/errors",
+  sequencers: "/l2/sequencers",
+  sequencer: "/l2/sequencers/:enr",
 };
 
 export const getBlockByHeightOrHashSchema = z.object({
@@ -153,5 +158,11 @@ export const getSearchSchema = z.object({
 export const getL1L2ValidatorSchema = z.object({
   params: z.object({
     attesterAddress: ethAddressSchema,
+  }),
+});
+
+export const getSequencerSchema = z.object({
+  params: z.object({
+    enr: chicmozL2SequencerSchema.shape.enr,
   }),
 });

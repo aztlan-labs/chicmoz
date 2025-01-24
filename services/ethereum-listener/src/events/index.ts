@@ -1,13 +1,13 @@
 import {
-  type ChicmozMessageBusTopic,
-  type ConnectedToL2Event,
+  ChicmozChainInfoEvent,
   generateL2TopicName,
+  type ChicmozMessageBusTopic,
 } from "@chicmoz-pkg/message-registry";
 import { ChicmozL1L2Validator } from "@chicmoz-pkg/types";
 import { L2_NETWORK_ID, SERVICE_NAME } from "../environment.js";
 import { logger } from "../logger.js";
-import { startPolling } from "../network-client/index.js";
 import { publishMessage } from "../message-bus/index.js";
+import { startPolling } from "../network-client/index.js";
 
 const emitL1Validator = async (validator: ChicmozL1L2Validator) => {
   const objToSend = {
@@ -17,19 +17,16 @@ const emitL1Validator = async (validator: ChicmozL1L2Validator) => {
   await publishMessage("L1_L2_VALIDATOR_EVENT", { validator: objToSend });
 };
 
-const onAztecConnectionEvent = async (event: ConnectedToL2Event) => {
-  logger.info(`🔗 Aztec connection event ${JSON.stringify(event)}`);
+export const onChainInfo = async (event: ChicmozChainInfoEvent) => {
+  logger.info(`🔗 chain info event ${JSON.stringify(event)}`);
   // TODO: start polling based on stored info from DB and connection to RPC (don't wait for Aztec connection event)
-  await startPolling(event.nodeInfo.l1ContractAddresses);
+  await startPolling(event.chainInfo.l1ContractAddresses);
 };
 
 const connectedToAztecHandler: EventHandler = {
   consumerGroup: SERVICE_NAME,
-  cb: onAztecConnectionEvent as (arg0: unknown) => Promise<void>,
-  topic: generateL2TopicName(
-    L2_NETWORK_ID,
-    "CONNECTED_TO_L2_EVENT"
-  )
+  cb: onChainInfo as (arg0: unknown) => Promise<void>,
+  topic: generateL2TopicName(L2_NETWORK_ID, "CHAIN_INFO_EVENT"),
 };
 
 export type EventHandler = {

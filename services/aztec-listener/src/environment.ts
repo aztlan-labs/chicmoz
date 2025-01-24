@@ -5,6 +5,7 @@ import {
 
 export const BLOCK_POLL_INTERVAL_MS = Number(process.env.BLOCK_INTERVAL_MS) || 3000;
 export const TX_POLL_INTERVAL_MS = Number(process.env.TX_POLL_INTERVAL_MS) || 500;
+export const CHAIN_INFO_POLL_INTERVAL_MS = Number(process.env.CHAIN_INFO_POLL_INTERVAL_MS) || 30000;
 export const MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS = Number(process.env.MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS) || 50;
 export const AZTEC_LISTEN_FOR_BLOCKS = process.env.AZTEC_LISTEN_FOR_BLOCKS === "true";
 export const AZTEC_LISTEN_FOR_PENDING_TXS = process.env.AZTEC_LISTEN_FOR_PENDING_TXS === "true";

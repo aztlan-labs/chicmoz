@@ -9,5 +9,5 @@ export const storeL2Tx = async (tx: ChicmozL2PendingTx): Promise<void> => {
     .insert(l2Tx)
     .values({
       ...rest,
-    });
+    }).onConflictDoNothing();
 };

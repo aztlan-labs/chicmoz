@@ -1,12 +1,28 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { createAztecNodeClient, AztecNode, NodeInfo } from "@aztec/aztec.js";
+import { AztecNode, NodeInfo, createAztecNodeClient } from "@aztec/aztec.js";
+import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
+import {
+  ChicmozChainInfo,
+  ChicmozL2Sequencer,
+  l2NetworkIdSchema,
+} from "@chicmoz-pkg/types";
+import { IBackOffOptions, backOff } from "exponential-backoff";
 import {
   AZTEC_RPC_URL,
+  L2_NETWORK_ID,
   MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS,
 } from "../../environment.js";
+import {
+  onChainInfo,
+  onL2RpcNodeAlive,
+  onL2RpcNodeError,
+  onL2SequencerInfo,
+} from "../../events/emitted/index.js";
 import { logger } from "../../logger.js";
-import { IBackOffOptions, backOff } from "exponential-backoff";
-import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
+import {
+  getChicmozChainInfoFromNodeInfo,
+  getSequencerFromNodeInfo,
+} from "./utils.js";
 
 let aztecNode: AztecNode;
 
@@ -46,15 +62,24 @@ const callNodeFunction = async <K extends keyof AztecNode>(
   args?: Parameters<AztecNode[K]>
 ): Promise<ReturnType<AztecNode[K]>> => {
   try {
-    return await backOff(async () => {
+    const res = await backOff(async () => {
       // eslint-disable-next-line @typescript-eslint/ban-types
       return (await (node()[fnName] as Function).apply(
         node(),
         args
       )) as Promise<ReturnType<AztecNode[K]>>;
     }, backOffOptions);
+    onL2RpcNodeAlive(AZTEC_RPC_URL);
+    return res;
   } catch (e) {
     logger.warn(`Aztec failed to call ${fnName}`);
+    onL2RpcNodeError({
+      name: (e as Error).name ?? "UnknownName",
+      message: (e as Error).message ?? "UnknownMessage",
+      cause: JSON.stringify((e as Error).cause) ?? "UnknownCause",
+      stack: (e as Error).stack ?? "UnknownStack",
+      data: { fnName, args, error: e },
+    });
     if ((e as Error).cause) {
       logger.warn(
         `Aztec failed to fetch: ${JSON.stringify((e as Error).cause)}`
@@ -67,10 +92,13 @@ const callNodeFunction = async <K extends keyof AztecNode>(
 export const init = async () => {
   logger.info(`Initializing Aztec node client with ${AZTEC_RPC_URL}`);
   aztecNode = createAztecNodeClient(AZTEC_RPC_URL);
-  return getFreshNodeInfo();
+  return getFreshInfo();
 };
 
-export const getFreshNodeInfo = async (): Promise<NodeInfo> => {
+export const getFreshInfo = async (): Promise<{
+  chainInfo: ChicmozChainInfo;
+  sequencer: ChicmozL2Sequencer;
+}> => {
   const nodeVersion = await callNodeFunction("getNodeVersion");
   logger.info(`🧋 Aztec node version: ${nodeVersion}`);
   const protocolVersion = await callNodeFunction("getVersion");
@@ -95,12 +123,41 @@ export const getFreshNodeInfo = async (): Promise<NodeInfo> => {
     nodeVersion,
     l1ChainId: chainId,
     protocolVersion,
-    enr,
+    enr:
+      enr ?? L2_NETWORK_ID === l2NetworkIdSchema.enum.SANDBOX
+        ? L2_NETWORK_ID
+        : undefined,
     l1ContractAddresses: contractAddresses,
     protocolContractAddresses: protocolContractAddresses,
   };
+  try {
+    await callNodeFunction("getNodeInfo");
+    logger.info(
+      `!!!! Aztec node info fetched successfully, perhaps switch back to this?`
+    );
+  } catch (e) {
+    logger.debug(`nodeInfo not available: ${(e as Error).message}`);
+  }
 
-  return nodeInfo;
+  const chainInfo = getChicmozChainInfoFromNodeInfo(L2_NETWORK_ID, nodeInfo);
+  onChainInfo(chainInfo).catch((e) => {
+    logger.error(`Aztec failed to publish chain info: ${(e as Error).message}`);
+  });
+  const sequencer = getSequencerFromNodeInfo(
+    L2_NETWORK_ID,
+    AZTEC_RPC_URL,
+    nodeInfo
+  );
+  onL2SequencerInfo(sequencer).catch((e) => {
+    logger.error(
+      `Aztec failed to publish sequencer info: ${(e as Error).message}`
+    );
+  });
+
+  return {
+    chainInfo,
+    sequencer,
+  };
 };
 
 export const getBlock = async (height: number) =>
@@ -127,11 +184,11 @@ export const getLatestHeight = async () => {
     callNodeFunction("getProvenBlockNumber"),
   ]);
   // TODO: if provenBn is constantly behind, we should start storing and displaying it in the UI
-  if (bn - provenBn > 0)
-    {logger.warn(
+  if (bn - provenBn > 0) {
+    logger.warn(
       `🃏 Difference between block and proven block: ${bn - provenBn}`
-    );}
-
+    );
+  }
   return bn;
 };
 

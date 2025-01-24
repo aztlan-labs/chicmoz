@@ -167,6 +167,9 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
     r.push(paths.contractClassUnconstrainedFunctions + "NOT FOUND");
   }
 
+  r.push(paths.chainInfo);
+  r.push(paths.chainErrors);
+
   const statsRoutes = [
     paths.statsTotalTxEffects,
     paths.statsTotalTxEffectsLast24h,
@@ -227,16 +230,6 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
   `;
   await setEntry(["GET_ROUTES"], html, NODE_ENV === "production" ? 60 : 2);
   res.send(html);
-});
-
-export const GET_AZTEC_CHAIN_CONNECTION = asyncHandler(async (_req, res) => {
-  const chainConnection =
-    await db.aztecChainConnection.getLatestWithRedactedRpc();
-  if (!chainConnection) {
-    res.status(404).send("No chain connection found");
-    return;
-  }
-  res.json(chainConnection);
 });
 
 const intervals = [

@@ -35,4 +35,8 @@ export const queryKeyGenerator = {
     "verifiedContractByInstanceAddress",
     address,
   ],
+  chainInfo: ["chainInfo"],
+  chainErrors: ["chainErrors"],
+  sequencers: ["sequencers"],
+  sequencer: (enr: string) => ["sequencer", enr],
 };

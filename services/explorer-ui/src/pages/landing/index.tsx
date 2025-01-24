@@ -1,5 +1,7 @@
-import { useMemo, type FC, useEffect } from "react";
+import { useMemo, type FC } from "react";
 import { BlocksTable } from "~/components/blocks/blocks-table";
+import { InfoBadge } from "~/components/info-badge";
+import { type TxEffectTableSchema } from "~/components/tx-effects/tx-effects-schema";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { useGetTxEffectsByBlockHeightRange, useLatestBlocks } from "~/hooks";
 import {
@@ -10,13 +12,11 @@ import {
   useTotalTxEffects,
   useTotalTxEffectsLast24h,
 } from "~/hooks/stats";
-import { mapLatestBlocks, parseTxEffectsData } from "./util";
-import { InfoBadge } from "~/components/info-badge";
-import { formatDuration, formatFees } from "~/lib/utils";
+import { useSubTitle } from "~/hooks/sub-title";
 import { usePendingTxs } from "~/hooks/tx";
-import { type TxEffectTableSchema } from "~/components/tx-effects/tx-effects-schema";
-import {useSubTitle} from "~/hooks/sub-title";
-import {routes} from "~/routes/__root";
+import { formatDuration, formatFees } from "~/lib/utils";
+import { routes } from "~/routes/__root";
+import { mapLatestBlocks, parseTxEffectsData } from "./util";
 
 export const Landing: FC = () => {
   const { data: latestBlocks, isLoading, error } = useLatestBlocks();
@@ -67,17 +67,18 @@ export const Landing: FC = () => {
   } = parseTxEffectsData(latestTxEffectsData, latestBlocks);
 
   const latestTxEffectsWithPending = useMemo(() => {
-    const disguisedPendingTxs = pendingTxs?.reduce((acc, tx) => {
-      if (!latestTxEffects.some((effect) => effect.txHash === tx.hash)) {
-        acc.push({
-          txHash: tx.hash,
-          transactionFee: -1,
-          blockNumber: -1,
-          timestamp: tx.birthTimestamp ?? 0,
-        });
-      }
-      return acc;
-    }, [] as TxEffectTableSchema[]) ?? [];
+    const disguisedPendingTxs =
+      pendingTxs?.reduce((acc, tx) => {
+        if (!latestTxEffects.some((effect) => effect.txHash === tx.hash)) {
+          acc.push({
+            txHash: tx.hash,
+            transactionFee: -1,
+            blockNumber: -1,
+            timestamp: tx.birthTimestamp ?? 0,
+          });
+        }
+        return acc;
+      }, [] as TxEffectTableSchema[]) ?? [];
     return [...disguisedPendingTxs, ...latestTxEffects];
   }, [pendingTxs, latestTxEffects]);
 

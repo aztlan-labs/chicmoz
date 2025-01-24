@@ -1,10 +1,18 @@
 import { L2Block, Tx } from "@aztec/aztec.js";
+import { PendingTxsEvent } from "@chicmoz-pkg/message-registry";
 import {
-  ConnectedToL2Event,
-  PendingTxsEvent,
-} from "@chicmoz-pkg/message-registry";
+  ChicmozChainInfo,
+  ChicmozL2RpcNodeError,
+  ChicmozL2Sequencer,
+  chicmozL2RpcNodeErrorSchema,
+} from "@chicmoz-pkg/types";
+import { AZTEC_RPC_URL } from "../../environment.js";
 import { logger } from "../../logger.js";
-import { publishMessage } from "../../svcs/message-bus/index.js";
+import {
+  publishMessage,
+  publishMessageSync,
+} from "../../svcs/message-bus/index.js";
+import { onL2RpcNodeAlive } from "./on-node-alive.js";
 
 export const onBlock = async (block: L2Block) => {
   const height = Number(block.header.globalVariables.blockNumber);
@@ -58,6 +66,41 @@ export const onPendingTxs = async (txs: Tx[]) => {
   } as PendingTxsEvent);
 };
 
-export const onConnectedToAztec = async (event: ConnectedToL2Event) => {
-  await publishMessage("CONNECTED_TO_L2_EVENT", event);
+export const onChainInfo = async (chainInfo: ChicmozChainInfo) => {
+  const event = { chainInfo };
+  logger.info(`🔗 publishing CHAIN_INFO_EVENT...`);
+  await publishMessage("CHAIN_INFO_EVENT", event);
 };
+
+export const onL2SequencerInfo = async (sequencer: ChicmozL2Sequencer) => {
+  const event = { sequencer };
+  logger.info(`🔍 publishing SEQUENCER_INFO_EVENT...`);
+  await publishMessage("SEQUENCER_INFO_EVENT", event);
+};
+
+export const onL2RpcNodeError = (
+  rpcNodeError: Omit<
+    ChicmozL2RpcNodeError,
+    "rpcUrl" | "count" | "createdAt" | "lastSeenAt"
+  >
+) => {
+  let event;
+  try {
+    event = {
+      nodeError: chicmozL2RpcNodeErrorSchema.parse({
+        ...rpcNodeError,
+        rpcUrl: AZTEC_RPC_URL,
+        count: 1,
+        createdAt: new Date(),
+        lastSeenAt: new Date(),
+      }),
+    };
+  } catch (e) {
+    logger.warn(`❌ onL2RpcNodeError on parse error: ${(e as Error).message}`);
+    return;
+  }
+  logger.info(`❌ publishing L2_RPC_NODE_ERROR_EVENT...`);
+  publishMessageSync("L2_RPC_NODE_ERROR_EVENT", event);
+};
+
+export { onL2RpcNodeAlive };

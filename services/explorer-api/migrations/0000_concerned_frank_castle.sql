@@ -257,6 +257,46 @@ CREATE TABLE IF NOT EXISTS "l1_l2_validator_withdrawer" (
 	CONSTRAINT "l1_l2_validator_withdrawer_attester_address_timestamp_pk" PRIMARY KEY("attester_address","timestamp")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "l2_chain_info" (
+	"l2_network_id" varchar PRIMARY KEY NOT NULL,
+	"l1_chain_id" integer NOT NULL,
+	"protocol_version" integer NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"l1_contract_addresses" jsonb NOT NULL,
+	"protocol_contract_addresses" jsonb NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "l2_rpc_node_error" (
+	"name" varchar PRIMARY KEY NOT NULL,
+	"rpc_node_id" uuid NOT NULL,
+	"cause" varchar NOT NULL,
+	"message" varchar NOT NULL,
+	"stack" varchar NOT NULL,
+	"data" jsonb NOT NULL,
+	"count" integer DEFAULT 1 NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"last_seen_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "l2_rpc_node" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"rpc_url" varchar NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"last_seen_at" timestamp DEFAULT now(),
+	CONSTRAINT "l2_rpc_node_rpc_url_unique" UNIQUE("rpc_url")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "l2_sequencer" (
+	"enr" varchar PRIMARY KEY NOT NULL,
+	"rpc_node_id" uuid NOT NULL,
+	"l2_network_id" varchar NOT NULL,
+	"protocol_version" integer NOT NULL,
+	"node_version" varchar NOT NULL,
+	"l1_chain_id" integer NOT NULL,
+	"created_at" timestamp DEFAULT now()
+);
+--> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "archive" ADD CONSTRAINT "archive_block_hash_l2Block_hash_fk" FOREIGN KEY ("block_hash") REFERENCES "public"."l2Block"("hash") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
@@ -403,6 +443,18 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "l1_l2_validator_withdrawer" ADD CONSTRAINT "l1_l2_validator_withdrawer_attester_address_l1_l2_validator_attester_fk" FOREIGN KEY ("attester_address") REFERENCES "public"."l1_l2_validator"("attester") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "l2_rpc_node_error" ADD CONSTRAINT "l2_rpc_node_error_rpc_node_id_l2_rpc_node_id_fk" FOREIGN KEY ("rpc_node_id") REFERENCES "public"."l2_rpc_node"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "l2_sequencer" ADD CONSTRAINT "l2_sequencer_rpc_node_id_l2_rpc_node_id_fk" FOREIGN KEY ("rpc_node_id") REFERENCES "public"."l2_rpc_node"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

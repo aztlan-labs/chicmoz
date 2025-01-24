@@ -1,4 +1,4 @@
-import { ConnectedToL2Event } from "@chicmoz-pkg/message-registry";
+import { ChicmozChainInfoEvent } from "@chicmoz-pkg/message-registry";
 import { IBackOffOptions, backOff } from "exponential-backoff";
 import { logger } from "../logger.js";
 import {
@@ -44,7 +44,7 @@ export const init = async () => {
 let stopContractWatching: () => void;
 
 export const startPolling = async (
-  l1ContractAddresses: ConnectedToL2Event["nodeInfo"]["l1ContractAddresses"]
+  l1ContractAddresses: ChicmozChainInfoEvent["chainInfo"]["l1ContractAddresses"]
 ) => {
   logger.info(`ETH: start polling: ${JSON.stringify(l1ContractAddresses)}`);
   initContracts(l1ContractAddresses);

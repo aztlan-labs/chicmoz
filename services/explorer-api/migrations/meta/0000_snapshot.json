@@ -1,5 +1,5 @@
 {
-  "id": "3de67fd6-95e6-4796-b4c6-5a8190f44d3d",
+  "id": "a83934b8-5dae-46a3-86fa-9ddc3e6fbd42",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1604,6 +1604,243 @@
           "columns": ["attester_address", "timestamp"]
         }
       },
+      "uniqueConstraints": {}
+    },
+    "public.l2_chain_info": {
+      "name": "l2_chain_info",
+      "schema": "",
+      "columns": {
+        "l2_network_id": {
+          "name": "l2_network_id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "l1_chain_id": {
+          "name": "l1_chain_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "protocol_version": {
+          "name": "protocol_version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "l1_contract_addresses": {
+          "name": "l1_contract_addresses",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "protocol_contract_addresses": {
+          "name": "protocol_contract_addresses",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.l2_rpc_node_error": {
+      "name": "l2_rpc_node_error",
+      "schema": "",
+      "columns": {
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "rpc_node_id": {
+          "name": "rpc_node_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cause": {
+          "name": "cause",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "message": {
+          "name": "message",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "stack": {
+          "name": "stack",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data": {
+          "name": "data",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "count": {
+          "name": "count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "last_seen_at": {
+          "name": "last_seen_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "l2_rpc_node_error_rpc_node_id_l2_rpc_node_id_fk": {
+          "name": "l2_rpc_node_error_rpc_node_id_l2_rpc_node_id_fk",
+          "tableFrom": "l2_rpc_node_error",
+          "tableTo": "l2_rpc_node",
+          "columnsFrom": ["rpc_node_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.l2_rpc_node": {
+      "name": "l2_rpc_node",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "rpc_url": {
+          "name": "rpc_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "last_seen_at": {
+          "name": "last_seen_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "l2_rpc_node_rpc_url_unique": {
+          "name": "l2_rpc_node_rpc_url_unique",
+          "nullsNotDistinct": false,
+          "columns": ["rpc_url"]
+        }
+      }
+    },
+    "public.l2_sequencer": {
+      "name": "l2_sequencer",
+      "schema": "",
+      "columns": {
+        "enr": {
+          "name": "enr",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "rpc_node_id": {
+          "name": "rpc_node_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "l2_network_id": {
+          "name": "l2_network_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "protocol_version": {
+          "name": "protocol_version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "node_version": {
+          "name": "node_version",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "l1_chain_id": {
+          "name": "l1_chain_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "l2_sequencer_rpc_node_id_l2_rpc_node_id_fk": {
+          "name": "l2_sequencer_rpc_node_id_l2_rpc_node_id_fk",
+          "tableFrom": "l2_sequencer",
+          "tableTo": "l2_rpc_node",
+          "columnsFrom": ["rpc_node_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }
   },

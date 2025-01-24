@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-undef
+process.env.L2_NETWORK_ID = "SANDBOX";
 import { defineConfig } from "drizzle-kit";
 import { dbCredentials } from "@chicmoz-pkg/postgres-helper";
 
@@ -5,7 +7,7 @@ import { dbCredentials } from "@chicmoz-pkg/postgres-helper";
 
 // eslint-disable-next-line import/no-default-export
 export default defineConfig({
-  schema: "./build/src/database/schema.js",
+  schema: "./build/src/svcs/database/schema.js",
   out: "./migrations",
   dbCredentials,
   dialect: "postgresql",
