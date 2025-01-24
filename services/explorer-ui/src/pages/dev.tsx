@@ -1,4 +1,7 @@
+import { Link } from "@tanstack/react-router";
 import { type FC } from "react";
+import {useSubTitle} from "~/hooks/sub-title";
+import { routes } from "~/routes/__root";
 import {
   API_URL,
   L2_NETWORK_ID,
@@ -7,6 +10,7 @@ import {
 } from "~/service/constants";
 
 export const DevPage: FC = () => {
+  useSubTitle(routes.dev.title);
   return (
     <div className="flex flex-col items-center">
       <h1>Dev Page</h1>
@@ -20,6 +24,13 @@ export const DevPage: FC = () => {
         <p>WS URL: {WS_URL}</p>
         <hr />
         <p>Indexing Aztec network: {L2_NETWORK_ID}</p>
+
+        <Link
+          to={routes.verifiedContractInstances.route}
+          className="text-purple-light hover:font-bold"
+        >
+          {routes.verifiedContractInstances.title}
+        </Link>
       </div>
     </div>
   );

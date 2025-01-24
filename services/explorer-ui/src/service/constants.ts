@@ -50,6 +50,8 @@ export const aztecExplorer = {
   getL2SearchResult: "/l2/search",
 };
 
+export const APP_NAME = "Aztec-Scan";
+
 export const L2_NETWORK_ID = l2NetworkIdSchema.parse(import.meta.env.VITE_L2_NETWORK_ID);
 export const API_URL =
   typeof import.meta.env.VITE_API_URL === "string"

@@ -2,11 +2,13 @@ import { type FC } from "react";
 import { Link } from "@tanstack/react-router";
 import { useVerifiedContractInstances } from "~/hooks/verified-contract-instance";
 import { routes } from "~/routes/__root";
+import {useSubTitle} from "~/hooks/sub-title";
 
 const contractInstanceDetailsRoute =
   routes.contracts.route + routes.contracts.children.instances.route + "/";
 export const VerifiedContractInstances: FC = () => {
   const { data, isError, isLoading } = useVerifiedContractInstances();
+  useSubTitle(routes.verifiedContractInstances.title);
   return (
     <div className="flex flex-col items-center">
       <h1>Verified contract instances</h1>
