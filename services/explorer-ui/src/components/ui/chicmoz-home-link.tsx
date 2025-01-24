@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { AztecIconWhite } from "~/assets";
 import { routes } from "~/routes/__root";
+import { APP_NAME } from "~/service/constants";
 
 export function ChicmozHomeLink({
   className = "",
@@ -14,7 +15,7 @@ export function ChicmozHomeLink({
         <p
           className={`${textClasses} text-white ml-1 font-bold text-[24px] font-space-grotesk`}
         >
-          Aztec-Scan
+          {APP_NAME}
         </p>
       </Link>
     </div>

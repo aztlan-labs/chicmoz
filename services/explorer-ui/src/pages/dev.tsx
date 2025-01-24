@@ -1,7 +1,10 @@
+import { Link } from "@tanstack/react-router";
 import { type FC } from "react";
 import { useChainErrors, useChainInfo } from "~/hooks/chain-info";
 import { useSequencers } from "~/hooks/sequencer";
+import { useSubTitle } from "~/hooks/sub-title";
 import { formatTimeSince } from "~/lib/utils";
+import { routes } from "~/routes/__root";
 import {
   API_URL,
   L2_NETWORK_ID,
@@ -10,6 +13,7 @@ import {
 } from "~/service/constants";
 
 export const DevPage: FC = () => {
+  useSubTitle(routes.dev.title);
   const {
     data: chainInfo,
     isLoading: isChainInfoLoading,
@@ -33,16 +37,23 @@ export const DevPage: FC = () => {
       <h1>Dev Page</h1>
       <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
         <pre>
-          <p>Aztec.js version           0.71.0</p>
+          <p>Aztec.js version 0.71.0</p>
           <hr />
-          <p>Explorer version           {VERSION_STRING}</p>
+          <p>Explorer version {VERSION_STRING}</p>
           <hr />
-          <p>API URL                    {API_URL}</p>
+          <p>API URL {API_URL}</p>
           <hr />
-          <p>WS URL                     {WS_URL}</p>
+          <p>WS URL {WS_URL}</p>
           <hr />
-          <p>Indexing Aztec network     {L2_NETWORK_ID}</p>
+          <p>Indexing Aztec network {L2_NETWORK_ID}</p>
         </pre>
+
+        <Link
+          to={routes.verifiedContractInstances.route}
+          className="text-purple-light hover:font-bold"
+        >
+          {routes.verifiedContractInstances.title}
+        </Link>
       </div>
       <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2 mt-4">
         <h2>Chain Info</h2>

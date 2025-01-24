@@ -5,6 +5,7 @@ import { useGetTxEffectByHash } from "~/hooks/";
 import { txEffectTabs, type TabId } from "./constants";
 import { getTxEffectData, mapTxEffectsData } from "./utils";
 import { OptionButtons } from "./tabs";
+import {useSubTitle} from "~/hooks/sub-title";
 
 const naiveDecode = (data: Buffer): string => {
   // TODO
@@ -30,6 +31,7 @@ export const TxEffectDetails: FC = () => {
   const { hash } = useParams({
     from: "/tx-effects/$hash",
   });
+  useSubTitle(`TxEff ${hash}`);
   const { data: txEffects, isLoading, error } = useGetTxEffectByHash(hash);
   const txEffectData = mapTxEffectsData(txEffects);
 

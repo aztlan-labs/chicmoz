@@ -1,4 +1,4 @@
-import { useMemo, type FC } from "react";
+import { useMemo, type FC, useEffect } from "react";
 import { BlocksTable } from "~/components/blocks/blocks-table";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { useGetTxEffectsByBlockHeightRange, useLatestBlocks } from "~/hooks";
@@ -15,6 +15,8 @@ import { InfoBadge } from "~/components/info-badge";
 import { formatDuration, formatFees } from "~/lib/utils";
 import { usePendingTxs } from "~/hooks/tx";
 import { type TxEffectTableSchema } from "~/components/tx-effects/tx-effects-schema";
+import {useSubTitle} from "~/hooks/sub-title";
+import {routes} from "~/routes/__root";
 
 export const Landing: FC = () => {
   const { data: latestBlocks, isLoading, error } = useLatestBlocks();
@@ -48,6 +50,8 @@ export const Landing: FC = () => {
     isLoading: loadingAvarageBlockTime,
     error: errorAvarageBlockTime,
   } = useAvarageBlockTime();
+
+  useSubTitle(latestBlocks?.[0]?.height.toString() ?? routes.home.title);
 
   const latestTxEffectsData = useGetTxEffectsByBlockHeightRange(
     latestBlocks?.at(40)?.height ?? latestBlocks?.at(-1)?.height,

@@ -5,11 +5,13 @@ import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { Button } from "~/components/ui";
 import { useGetBlockByIdentifier, useGetTxEffectsByBlockHeight } from "~/hooks";
 import { getBlockDetails, getTxEffects } from "./util";
+import {useSubTitle} from "~/hooks/sub-title";
 
 export const BlockDetails: FC = () => {
   const { blockNumber } = useParams({
     from: "/blocks/$blockNumber",
   });
+  useSubTitle(`Block ${blockNumber}`);
   const {
     data: latestBlock,
     isLoading,

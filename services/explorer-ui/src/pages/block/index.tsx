@@ -5,8 +5,11 @@ import { parseLatestBlocks } from "./util";
 import { useAvarageBlockTime, useAvarageFees } from "~/hooks/stats";
 import { formatDuration } from "~/lib/utils";
 import { InfoBadge } from "~/components/info-badge";
+import {useSubTitle} from "~/hooks/sub-title";
+import {routes} from "~/routes/__root";
 
 export const Blocks: FC = () => {
+  useSubTitle(routes.blocks.children.index.title);
   const { data: latestBlocks, isLoading, error } = useLatestBlocks();
   const {
     data: avarageFees,
