@@ -106,6 +106,48 @@ stack:          ${error.stack}
           {routes.verifiedContractInstances.title}
         </Link>
       </div>
+      <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2 mt-4">
+        <h2>Chain Info</h2>
+        {isChainInfoLoading && <p>Loading...</p>}
+        {chainInfoError && <p>Error: {chainInfoError.message}</p>}
+        {chainInfo && <pre>{JSON.stringify(chainInfo, null, 2)}</pre>}
+      </div>
+
+      <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2 mt-4">
+        <h2>Chain Errors</h2>
+        {isChainErrorsLoading && <p>Loading...</p>}
+        {chainErrorsError && <p>Error: {chainErrorsError.message}</p>}
+        {chainErrors && (
+          <div>
+            {chainErrors?.map((error) => (
+              <pre>
+                <hr />
+                <h3>{error.name}</h3>
+                {`
+rpcNodeId:      ${error.rpcNodeId}
+count:          ${error.count}
+cause:          ${error.cause}
+firstSeen:      ${formatTimeSince(error.createdAt.getTime())} ago
+lastSeenAt:     ${formatTimeSince(error.lastSeenAt.getTime())} ago
+data:           ${JSON.stringify(error.data)}
+
+message:        ${error.message}
+
+stack:          ${error.stack}
+`}
+              </pre>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2 mt-4">
+        <h2>Sequencers</h2>
+        {isSequencersLoading && <p>Loading...</p>}
+        {sequencersError && <p>Error: {sequencersError.message}</p>}
+        {sequencers && <p>Sequencers count: {sequencers?.length}</p>}
+        {sequencers && <pre>{JSON.stringify(sequencers, null, 2)}</pre>}
+      </div>
     </div>
   );
 };
