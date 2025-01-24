@@ -1,4 +1,4 @@
-import { ChicmozL2RpcNodeError } from "@chicmoz-pkg/types";
+import { type ChicmozL2RpcNodeError } from "@chicmoz-pkg/types";
 import { useEffect, useState } from "react";
 import { formatDuration, formatTimeSince } from "~/lib/utils";
 import { useChainErrors } from ".";
