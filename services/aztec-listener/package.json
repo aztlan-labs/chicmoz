@@ -40,7 +40,7 @@
     "predev": "yarn build",
     "dev": "yarn node build/src/index.js",
     "start": "yarn node build/src/index.js",
-    "generate": "yarn build && L2_NETWORK_ID=SANDBOX drizzle-kit generate",
+    "generate": "yarn build && drizzle-kit generate",
     "migrate": "yarn node build/scripts/migrate.js",
     "lint": "yarn run lint-base --ext .ts .",
     "lint-base": "yarn run g:lint"

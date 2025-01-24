@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-undef
+process.env.L2_NETWORK_ID = "SANDBOX";
 import { defineConfig } from "drizzle-kit";
 import { dbCredentials } from "@chicmoz-pkg/postgres-helper";
 
