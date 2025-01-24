@@ -136,7 +136,7 @@ export const getFreshInfo = async (): Promise<{
       `!!!! Aztec node info fetched successfully, perhaps switch back to this?`
     );
   } catch (e) {
-    // expected to fail sometimes
+    logger.debug(`nodeInfo not available: ${(e as Error).message}`);
   }
 
   const chainInfo = getChicmozChainInfoFromNodeInfo(L2_NETWORK_ID, nodeInfo);
