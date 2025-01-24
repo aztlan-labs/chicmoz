@@ -19,6 +19,7 @@ const emitL1Validator = async (validator: ChicmozL1L2Validator) => {
 
 export const onChainInfo = async (event: ChicmozChainInfoEvent) => {
   logger.info(`🔗 chain info event ${JSON.stringify(event)}`);
+  // TODO: start polling based on stored info from DB and connection to RPC (don't wait for Aztec connection event)
   await startPolling(event.chainInfo.l1ContractAddresses);
 };
 
