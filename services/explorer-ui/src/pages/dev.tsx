@@ -69,7 +69,7 @@ export const DevPage: FC = () => {
         {chainErrors && (
           <div>
             {chainErrors?.map((error) => (
-              <pre>
+              <pre key={error.name}>
                 <hr />
                 <h3>{error.name}</h3>
                 {`
