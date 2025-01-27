@@ -5,12 +5,12 @@ import { MicroserviceConfig } from "./types.js";
 export let conf: MicroserviceConfig;
 
 export const setConfig = (config: MicroserviceConfig, logger: Logger) => {
-  const isInstanceNameSet = INSTANCE_NAME !== DEFAULT_INSTANCE_NAME;
-  if (NODE_ENV === "production" && isInstanceNameSet) throw new Error("INSTANCE_NAME must not be set in production");
+  const isUsingDefaultInstanceName = INSTANCE_NAME === DEFAULT_INSTANCE_NAME;
+  if (NODE_ENV === "production" && isUsingDefaultInstanceName) throw new Error("Using default INSTANCE_NAME in production is not allowed");
   conf = config;
   logger.info(
     `🏗 service: ${conf.serviceName}
-instance: ${isInstanceNameSet ? "(🚨 using default)" : ""}${INSTANCE_NAME}
+instance: ${isUsingDefaultInstanceName ? "(🚨 using default)" : ""}${INSTANCE_NAME}
 config:\n${conf.formattedConfig}\n`
   );
   if (process.env.SERVICE_NAME) {
