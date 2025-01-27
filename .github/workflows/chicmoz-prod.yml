@@ -23,14 +23,14 @@ jobs:
 
       - name: Print important information
         env:
-          SP_TESTNET_OBSCURA_L2_RPC_1: ${{ secrets.SP_TESTNET_OBSCURA_L2_RPC_1 }}
-          SP_TESTNET_OBSCURA_L2_RPC_2: ${{ secrets.SP_TESTNET_OBSCURA_L2_RPC_2 }}
-          SP_TESTNET_AZTEC_L2_BOOTNODE_RPC: ${{ secrets.SP_TESTNET_AZTEC_L2_BOOTNODE_RPC }}
-          SP_TESTNET_AZTEC_L1_RPC: ${{ secrets.SP_TESTNET_AZTEC_L1_RPC }}
-          SP_TESTNET_AZTEC_L1_WS: ${{ secrets.SP_TESTNET_AZTEC_L1_WS }}
-          DEVNET_AZTEC_L2_BOOTNODE_RPC: ${{ secrets.DEVNET_AZTEC_L2_BOOTNODE_RPC }}
-          DEVNET_AZTEC_L1_RPC: ${{ secrets.DEVNET_AZTEC_L1_RPC }}
-          DEVNET_AZTEC_L1_WS: ${{ secrets.DEVNET_AZTEC_L1_WS }}
+          SP_TESTNET_OBSCURA_L2_RPC_1: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_1 }}
+          SP_TESTNET_OBSCURA_L2_RPC_2: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_2 }}
+          SP_TESTNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.SP_TESTNET_AZTEC_L2_BOOTNODE_RPC }}
+          SP_TESTNET_AZTEC_L1_RPC: ${{ vars.SP_TESTNET_AZTEC_L1_RPC }}
+          SP_TESTNET_AZTEC_L1_WS: ${{ vars.SP_TESTNET_AZTEC_L1_WS }}
+          DEVNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.DEVNET_AZTEC_L2_BOOTNODE_RPC }}
+          DEVNET_AZTEC_L1_RPC: ${{ vars.DEVNET_AZTEC_L1_RPC }}
+          DEVNET_AZTEC_L1_WS: ${{ vars.DEVNET_AZTEC_L1_WS }}
         run: |
           echo "VERSION: $(git describe --tags)"
           echo "SP_TESTNET_OBSCURA_L2_RPC_1: $SP_TESTNET_OBSCURA_L2_RPC_1"
@@ -66,14 +66,14 @@ jobs:
 
       - name: Deploy to cluster with Skaffold
         env:
-          SP_TESTNET_OBSCURA_L2_RPC_1: ${{ secrets.SP_TESTNET_OBSCURA_L2_RPC_1 }}
-          SP_TESTNET_OBSCURA_L2_RPC_2: ${{ secrets.SP_TESTNET_OBSCURA_L2_RPC_2 }}
-          SP_TESTNET_AZTEC_L2_BOOTNODE_RPC: ${{ secrets.SP_TESTNET_AZTEC_L2_BOOTNODE_RPC }}
-          SP_TESTNET_AZTEC_L1_RPC: ${{ secrets.SP_TESTNET_AZTEC_L1_RPC }}
-          SP_TESTNET_AZTEC_L1_WS: ${{ secrets.SP_TESTNET_AZTEC_L1_WS }}
-          DEVNET_AZTEC_L2_BOOTNODE_RPC: ${{ secrets.DEVNET_AZTEC_L2_BOOTNODE_RPC }}
-          DEVNET_AZTEC_L1_RPC: ${{ secrets.DEVNET_AZTEC_L1_RPC }}
-          DEVNET_AZTEC_L1_WS: ${{ secrets.DEVNET_AZTEC_L1_WS }}
+          SP_TESTNET_OBSCURA_L2_RPC_1: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_1 }}
+          SP_TESTNET_OBSCURA_L2_RPC_2: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_2 }}
+          SP_TESTNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.SP_TESTNET_AZTEC_L2_BOOTNODE_RPC }}
+          SP_TESTNET_AZTEC_L1_RPC: ${{ vars.SP_TESTNET_AZTEC_L1_RPC }}
+          SP_TESTNET_AZTEC_L1_WS: ${{ vars.SP_TESTNET_AZTEC_L1_WS }}
+          DEVNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.DEVNET_AZTEC_L2_BOOTNODE_RPC }}
+          DEVNET_AZTEC_L1_RPC: ${{ vars.DEVNET_AZTEC_L1_RPC }}
+          DEVNET_AZTEC_L1_WS: ${{ vars.DEVNET_AZTEC_L1_WS }}
         run: |
           MAX_RETRIES=3
           RETRY_DELAY=10
