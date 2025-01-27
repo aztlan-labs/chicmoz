@@ -86,7 +86,7 @@ jobs:
             --from-literal=SP_TESTNET_AZTEC_L1_WS=$SP_TESTNET_AZTEC_L1_WS \
             --from-literal=DEVNET_AZTEC_L2_BOOTNODE_RPC=$DEVNET_AZTEC_L2_BOOTNODE_RPC \
             --from-literal=DEVNET_AZTEC_L1_RPC=$DEVNET_AZTEC_L1_RPC \
-            --from-literal=DEVNET_AZTEC_L1_WS=$DEVNET_AZTEC_L1_WS
+            --from-literal=DEVNET_AZTEC_L1_WS=$DEVNET_AZTEC_L1_WS \
             -n chicmoz-prod --dry-run=client -o yaml | kubectl apply -f -
 
           for i in $(seq 1 $MAX_RETRIES); do
