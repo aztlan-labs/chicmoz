@@ -13,8 +13,8 @@ spec:
     - hosts:
         - ws.aztecscout.xyz
         - ws.aztecscan.xyz
-        - ws.devnet.aztecscout.xyz
-      secretName: chicmoz-ws-tls-devnet
+        - ws.devnet.aztecscan.xyz
+      secretName: aztecscan-ws-tls-devnet
   rules:
     - host: ws.aztecscout.xyz
       http:

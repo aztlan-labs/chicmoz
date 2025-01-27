@@ -8,3 +8,8 @@ manifests:
   rawYaml:
     - ./namespace.yaml
     - ./postgres-config.yaml
+    #- ./certificate.yaml
+    - ../cert-manager/cert-staging-issuer.yaml
+    - ../cert-manager/cert-production-issuer.yaml
+    - ../cert-manager/ingress_nginx_svc_aztecscan.xyz.yaml
+    - ../cert-manager/ingress_nginx_svc_aztecscout.xyz.yaml

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: auth-label
-  name: auth
+  name: auth-deployment
   namespace: chicmoz-prod
 spec:
   replicas: 1

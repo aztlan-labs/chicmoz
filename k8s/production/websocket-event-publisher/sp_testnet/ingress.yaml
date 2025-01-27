@@ -12,7 +12,7 @@ spec:
   tls:
     - hosts:
         - ws.sp.aztecscan.xyz
-      secretName: chicmoz-ws-tls-sp-testnet
+      secretName: aztecscan-ws-tls-sp-testnet
   rules:
     - host: ws.sp.aztecscan.xyz
       http:
@@ -21,7 +21,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: websocket-event-publisher-sp-testnet
+                name: websocket-event-publisher-sp-testnet-service
                 port:
                   name: websocket-port
 status:
