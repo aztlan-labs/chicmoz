@@ -1,8 +1,7 @@
-import { type FC } from "react";
 import { Link } from "@tanstack/react-router";
-import { useVerifiedContractInstances } from "~/hooks/verified-contract-instance";
+import { type FC } from "react";
+import { useSubTitle, useVerifiedContractInstances } from "~/hooks";
 import { routes } from "~/routes/__root";
-import {useSubTitle} from "~/hooks/sub-title";
 
 const contractInstanceDetailsRoute =
   routes.contracts.route + routes.contracts.children.instances.route + "/";
@@ -14,8 +13,8 @@ export const VerifiedContractInstances: FC = () => {
       <h1>Verified contract instances</h1>
       <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
         <p>
-          Verified contract instances mean that we have verified the deployer of the
-          contract.
+          Verified contract instances mean that we have verified the deployer of
+          the contract.
         </p>
         <br />
         <p>
@@ -31,15 +30,17 @@ export const VerifiedContractInstances: FC = () => {
           >
             our github-repo
           </a>
-          . If you think your contract instance should be verified, please create a PR to
-          that file.
+          . If you think your contract instance should be verified, please
+          create a PR to that file.
         </p>
         <br />
         <hr />
         <h2>Verified contracts:</h2>
         {isLoading && <p>Loading...</p>}
         {isError && <p>Something went wrong...</p>}
-        {data && data.length === 0 && <p>No verified contract instances found</p>}
+        {data && data.length === 0 && (
+          <p>No verified contract instances found</p>
+        )}
         {data && data.length > 0 && (
           <ul>
             {data.map((contract, index) => (
@@ -62,10 +63,7 @@ export const VerifiedContractInstances: FC = () => {
                   </a>
                 </p>
                 <Link
-                  to={
-                    contractInstanceDetailsRoute +
-                    contract.address
-                  }
+                  to={contractInstanceDetailsRoute + contract.address}
                   className="text-purple-light"
                 >
                   View contract

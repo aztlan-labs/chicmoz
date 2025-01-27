@@ -1,11 +1,14 @@
+import { useParams } from "@tanstack/react-router";
 import { type FC } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
-import { useParams } from "@tanstack/react-router";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import { Button } from "~/components/ui";
-import { useGetBlockByIdentifier, useGetTxEffectsByBlockHeight } from "~/hooks";
+import {
+  useGetBlockByIdentifier,
+  useGetTxEffectsByBlockHeight,
+  useSubTitle,
+} from "~/hooks";
 import { getBlockDetails, getTxEffects } from "./util";
-import {useSubTitle} from "~/hooks/sub-title";
 
 export const BlockDetails: FC = () => {
   const { blockNumber } = useParams({
@@ -32,9 +35,7 @@ export const BlockDetails: FC = () => {
     <div className="mx-auto px-7 max-w-[1440px] md:px-[70px]">
       <div>
         <div>
-          <h2>
-            Block Details{" "}
-          </h2>
+          <h2>Block Details </h2>
         </div>
         <div className="flex flex-col gap-4 mt-8">
           <div className="bg-white rounded-lg shadow-md p-4">

@@ -1,27 +1,27 @@
 import { useParams } from "@tanstack/react-router";
-import { useState, type FC, useEffect } from "react";
+import { useEffect, useState, type FC } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
-import { useGetTxEffectByHash } from "~/hooks/";
+import { useGetTxEffectByHash, useSubTitle } from "~/hooks";
 import { txEffectTabs, type TabId } from "./constants";
-import { getTxEffectData, mapTxEffectsData } from "./utils";
 import { OptionButtons } from "./tabs";
-import {useSubTitle} from "~/hooks/sub-title";
+import { getTxEffectData, mapTxEffectsData } from "./utils";
 
 const naiveDecode = (data: Buffer): string => {
   // TODO
   let counterZero = 0;
   let counterAbove128 = 0;
-  const res = data
-    .toString("hex")
-    .match(/.{1,64}/g)
-    ?.map((hex) => parseInt(hex, 16))
-    .map((charCode): string => {
-      if (charCode === 0) counterZero++;
-      if (charCode > 128) counterAbove128++;
-      const char = String.fromCharCode(charCode);
-      return char;
-    })
-    .join("") ?? "";
+  const res =
+    data
+      .toString("hex")
+      .match(/.{1,64}/g)
+      ?.map((hex) => parseInt(hex, 16))
+      .map((charCode): string => {
+        if (charCode === 0) counterZero++;
+        if (charCode > 128) counterAbove128++;
+        const char = String.fromCharCode(charCode);
+        return char;
+      })
+      .join("") ?? "";
   const isProbablyADecodedString = counterZero === 0 && counterAbove128 === 0;
   return isProbablyADecodedString ? res : data.toString("hex");
 };

@@ -1,19 +1,19 @@
 import { useParams } from "@tanstack/react-router";
 import { useState, type FC } from "react";
+import { ContractClassesTable } from "~/components/contracts/classes/table";
+import { ContractInstancesTable } from "~/components/contracts/instances/table";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import {
   useContractClassPrivateFunctions,
   useContractClassUnconstrainedFunctions,
   useContractClasses,
   useDeployedContractInstances,
+  useSubTitle,
 } from "~/hooks";
-import { getContractClassKeyValueData } from "./util";
-import { ContractInstancesTable } from "~/components/contracts/instances/table";
 import { mapContractClasses, mapContractInstances } from "../contract/util";
-import { ContractClassesTable } from "~/components/contracts/classes/table";
-import { OptionButtons } from "./tabs";
 import { contractClassTabs, type TabId } from "./constants";
-import {useSubTitle} from "~/hooks/sub-title";
+import { OptionButtons } from "./tabs";
+import { getContractClassKeyValueData } from "./util";
 
 export const ContractClassDetails: FC = () => {
   const [selectedTab, setSelectedTab] = useState<TabId>("contractVersions");

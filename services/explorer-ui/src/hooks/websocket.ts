@@ -8,10 +8,10 @@ import {
   type WebsocketUpdateMessageReceiver,
 } from "@chicmoz-pkg/types";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { WS_URL } from "~/service/constants";
-import { queryKeyGenerator, statsKey } from "./utils";
+import { queryKeyGenerator, statsKey } from "./api/utils";
 
 const updateBlock = (
   queryClient: ReturnType<typeof useQueryClient>,
@@ -34,15 +34,11 @@ const updateTxEffects = (
 ) => {
   const txEffects = block.body.txEffects.map((txEffect) => {
     const effect = chicmozL2TxEffectSchema.parse(txEffect);
-    queryClient.setQueryData(
-      queryKeyGenerator.txEffectByHash(effect.txHash),
-      {
-        ...effect,
-        blockHeight: block.height,
-        timestamp: block.header.globalVariables.timestamp,
-      }
-
-    );
+    queryClient.setQueryData(queryKeyGenerator.txEffectByHash(effect.txHash), {
+      ...effect,
+      blockHeight: block.height,
+      timestamp: block.header.globalVariables.timestamp,
+    });
   });
   queryClient.setQueryData(
     queryKeyGenerator.txEffectsByBlockHeight(block.height),
@@ -88,7 +84,9 @@ const updatePendingTxs = (
     queryKeyGenerator.pendingTxs,
     (oldData: ChicmozL2PendingTx[] | undefined) => {
       if (!oldData) return txs;
-      return [...oldData, ...txs].sort((a, b) => b.birthTimestamp - a.birthTimestamp);
+      return [...oldData, ...txs].sort(
+        (a, b) => b.birthTimestamp - a.birthTimestamp
+      );
     }
   );
 };
@@ -112,15 +110,32 @@ const handleWebSocketMessage = async (
   if (update.txs) handlePendingTxs(queryClient, update.txs);
 };
 
-export const useWebSocketConnection = () => {
-  const queryClient = useQueryClient();
+export type WsReadyStateText = "CONNECTING" | "OPEN" | "CLOSING" | "CLOSED";
 
+const wsReadyStateText = {
+  0: "CONNECTING",
+  1: "OPEN",
+  2: "CLOSING",
+  3: "CLOSED",
+} as const;
+
+type WsReadyState = typeof wsReadyStateText;
+
+export const useWebSocketConnection = (): WsReadyStateText => {
+  const queryClient = useQueryClient();
+  const [readyState, setReadyState] = useState<keyof WsReadyState>(
+    WebSocket.CONNECTING
+  );
   useEffect(() => {
     const websocket = new WebSocket(WS_URL);
 
-    websocket.onopen = () => console.log("WebSocket Connected");
+    websocket.onopen = () => {
+      console.log("WebSocket Connected");
+      setReadyState(websocket.readyState as keyof WsReadyState);
+    };
 
     websocket.onmessage = async (event) => {
+      setReadyState(websocket.readyState as keyof WsReadyState);
       if (typeof event.data !== "string")
         console.error("WebSocket message is not a string");
       try {
@@ -130,8 +145,12 @@ export const useWebSocketConnection = () => {
       }
     };
 
-    websocket.onclose = () => console.log("WebSocket Disconnected");
+    websocket.onclose = () => {
+      console.log("WebSocket Disconnected");
+      setReadyState(websocket.readyState as keyof WsReadyState);
+    };
 
     return () => websocket.close();
   }, [queryClient]);
+  return wsReadyStateText[readyState];
 };

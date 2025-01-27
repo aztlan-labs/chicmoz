@@ -3,17 +3,18 @@ import { BlocksTable } from "~/components/blocks/blocks-table";
 import { InfoBadge } from "~/components/info-badge";
 import { type TxEffectTableSchema } from "~/components/tx-effects/tx-effects-schema";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
-import { useGetTxEffectsByBlockHeightRange, useLatestBlocks } from "~/hooks";
 import {
   useAvarageBlockTime,
   useAvarageFees,
+  useGetTxEffectsByBlockHeightRange,
+  useLatestBlocks,
+  usePendingTxs,
+  useSubTitle,
   useTotalContracts,
   useTotalContractsLast24h,
   useTotalTxEffects,
   useTotalTxEffectsLast24h,
-} from "~/hooks/stats";
-import { useSubTitle } from "~/hooks/sub-title";
-import { usePendingTxs } from "~/hooks/tx";
+} from "~/hooks";
 import { formatDuration, formatFees } from "~/lib/utils";
 import { routes } from "~/routes/__root";
 import { mapLatestBlocks, parseTxEffectsData } from "./util";

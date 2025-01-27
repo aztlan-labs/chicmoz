@@ -1,8 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { type FC } from "react";
-import { useChainErrors, useChainInfo } from "~/hooks/chain-info";
-import { useSequencers } from "~/hooks/sequencer";
-import { useSubTitle } from "~/hooks/sub-title";
+import {
+  useChainErrors,
+  useChainInfo,
+  useSequencers,
+  useSubTitle,
+  useSystemHealth,
+} from "~/hooks";
 import { formatTimeSince } from "~/lib/utils";
 import { routes } from "~/routes/__root";
 import {
@@ -13,6 +17,7 @@ import {
 } from "~/service/constants";
 
 export const DevPage: FC = () => {
+  const systemHealth = useSystemHealth();
   useSubTitle(routes.dev.title);
   const {
     data: chainInfo,
@@ -35,25 +40,20 @@ export const DevPage: FC = () => {
   return (
     <div className="flex flex-col items-center">
       <h1>Dev Page</h1>
-      <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
-        <pre>
-          <p>Aztec.js version 0.71.0</p>
-          <hr />
-          <p>Explorer version {VERSION_STRING}</p>
-          <hr />
-          <p>API URL {API_URL}</p>
-          <hr />
-          <p>WS URL {WS_URL}</p>
-          <hr />
-          <p>Indexing Aztec network {L2_NETWORK_ID}</p>
-        </pre>
 
-        <Link
-          to={routes.verifiedContractInstances.route}
-          className="text-purple-light hover:font-bold"
-        >
-          {routes.verifiedContractInstances.title}
-        </Link>
+      <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
+        <h2>Misc</h2>
+        <pre>
+          <p>{`Aztec.js version           0.71.0`}</p>
+          <p>{`Explorer version           ${VERSION_STRING}`}</p>
+          <p>{`API URL                    ${API_URL}`}</p>
+          <p>{`WS URL                     ${WS_URL}`}</p>
+          <p>{`Indexing Aztec network     ${L2_NETWORK_ID}`}</p>
+        </pre>
+      </div>
+      <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2 mt-4">
+        <h2>System Health</h2>
+        <pre>{JSON.stringify(systemHealth, null, 2)}</pre>
       </div>
       <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2 mt-4">
         <h2>Chain Info</h2>
@@ -96,6 +96,15 @@ stack:          ${error.stack}
         {sequencersError && <p>Error: {sequencersError.message}</p>}
         {sequencers && <p>Sequencers count: {sequencers?.length}</p>}
         {sequencers && <pre>{JSON.stringify(sequencers, null, 2)}</pre>}
+      </div>
+      <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2 mt-4">
+        <h2>links</h2>
+        <Link
+          to={routes.verifiedContractInstances.route}
+          className="text-purple-light hover:font-bold"
+        >
+          {routes.verifiedContractInstances.title}
+        </Link>
       </div>
     </div>
   );
