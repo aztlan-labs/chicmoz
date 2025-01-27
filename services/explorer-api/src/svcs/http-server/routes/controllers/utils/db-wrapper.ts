@@ -26,7 +26,7 @@ export const getLatestHeight = async () => {
 export const getLatest = async (
   keys: (string | number | undefined)[],
   dbFn: () => Promise<unknown>
-): Promise<string> => {
+): Promise<string | undefined> => {
   const latestHeight = await getLatestHeight();
   if (!latestHeight) throw new Error("CACHE_ERROR: latest height not found");
   // NOTE: we add one second to the TTL to ensure that stale cache is not stored
@@ -46,7 +46,7 @@ export const get = async (
   keys: (string | number | undefined)[],
   dbFn: () => Promise<unknown>,
   ttl = CACHE_TTL_SECONDS
-): Promise<string> => {
+): Promise<string | undefined> => {
   const cachedVal = await getEntry(keys);
   const isCached = cachedVal !== null && cachedVal !== undefined;
   if (isCached) {
@@ -61,5 +61,4 @@ export const get = async (
     await setEntry(keys, dbResString, ttl);
     return dbResString;
   }
-  throw new Error(`${JSON.stringify(keys)} not found`);
 };

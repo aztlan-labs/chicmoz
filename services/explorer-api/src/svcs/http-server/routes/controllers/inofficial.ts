@@ -271,7 +271,7 @@ export const GET_L1_L2_VALIDATOR_STATUS_TEXT = asyncHandler(
       () => db.l1.getL1L2ValidatorHistory(attesterAddress)
     );
     const stringifiedHistory = chicmozL1L2ValidatorHistorySchema
-      .parse(JSON.parse(history))
+      .parse(JSON.parse(history ?? "[]"))
       .sort(
         ([timestampA], [timestampB]) =>
           timestampB.getTime() - timestampA.getTime()
@@ -295,7 +295,7 @@ export const GET_L1_L2_VALIDATOR_STATUS_TEXT = asyncHandler(
       );
 
     const validatorStatus = chicmozL1L2ValidatorSchema.parse(
-      JSON.parse(validator)
+      JSON.parse(validator ?? "{}")
     );
     const validatorStatusText = `<pre>
     <b>Status:</b>           ${L1L2ValidatorStatus[validatorStatus.status]}

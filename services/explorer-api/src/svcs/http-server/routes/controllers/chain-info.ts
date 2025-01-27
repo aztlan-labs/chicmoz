@@ -20,8 +20,8 @@ export const GET_CHAIN_INFO = asyncHandler(async (_req, res) => {
   const chainInfo = await dbWrapper.get(["l2", "chain-info"], () =>
     db.l2.getL2ChainInfo(L2_NETWORK_ID)
   );
-  if (!chainInfo) throw new Error("Chain info not found");
-  res.status(200).send(chainInfo);
+  if (!chainInfo) res.status(404).send("Chain info not found");
+  else res.status(200).send(chainInfo);
 });
 
 export const openapi_GET_CHAIN_ERRORS = {

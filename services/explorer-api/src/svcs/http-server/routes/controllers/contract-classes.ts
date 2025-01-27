@@ -159,11 +159,18 @@ export const POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT = asyncHandler(
       ["l2", "contract-classes", classId, version],
       () => db.l2Contract.getL2RegisteredContractClass(classId, version)
     );
-    const contractClass = chicmozL2ContractClassRegisteredEventSchema.parse(
-      JSON.parse(contractClassString)
-    );
-    if (contractClass.artifactJson) {
-      res.status(200).send(contractClass);
+    let contractClass;
+    if (contractClassString) {
+      contractClass = chicmozL2ContractClassRegisteredEventSchema.parse(
+        JSON.parse(contractClassString)
+      );
+      if (contractClass.artifactJson) {
+        res.status(200).send(contractClass);
+        return;
+      }
+    }
+    if (!contractClass) {
+      res.status(500).send("Contract class found in DB is not valid");
       return;
     }
     if (!stringifiedArtifactJson) {

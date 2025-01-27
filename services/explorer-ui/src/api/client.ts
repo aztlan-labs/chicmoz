@@ -1,5 +1,5 @@
 import axios, { type AxiosError } from "axios";
-import { type z } from "zod";
+import { ZodError, type z } from "zod";
 import { API_URL } from "~/service/constants";
 
 // TODO: evaluate if client instead should be a hook?
@@ -75,10 +75,22 @@ export const validateResponse = <T extends z.ZodType>(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return schema.parse(data);
   } catch (error) {
-    lastError = {
-      date: new Date(),
-      error: new ApiError(400, "Schema validation error", "Schema"),
-    };
+    if (error instanceof ZodError) {
+      lastError = {
+        date: new Date(),
+        // TODO: add request-path to error
+        error: new ApiError(400, error.errors[0].message, "Schema"),
+      };
+    } else {
+      lastError = {
+        date: new Date(),
+        error: new ApiError(
+          400,
+          `Failed to validate response: ${(error as Error).message}`,
+          "Schema"
+        ),
+      };
+    }
     throw lastError.error;
   }
 };
