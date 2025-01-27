@@ -109,7 +109,7 @@ export const useSystemHealth = () => {
   } | null>(null);
   const [lastError, setLastError] = useState<{
     date: Date;
-    error: { type: "API" | "Schema"; message: string };
+    error: { type: "API" | "Schema"; message: string; status: number };
   } | null>(null);
   const { data: chainErrors } = useChainErrors();
 
