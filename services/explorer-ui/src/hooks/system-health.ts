@@ -29,23 +29,24 @@ const evaluateHealth = ({
   lastSuccessfulRequest: { date: Date; path: string } | null;
   lastError: {
     date: Date;
-    error: { type: "API" | "Schema"; message: string };
+    error: { type: "API" | "Schema"; status: number; message: string };
   } | null;
   chainErrors: ChicmozL2RpcNodeError[] | undefined;
 }): EvaluatedHealth => {
+  // TODO: this should return an array with all evaluation-results
   const reasonableTimeStamp = Date.now() - REASONABLE_API_LIVENESS_TIME;
+
+  if (!lastSuccessfulRequest && lastError) {
+    return {
+      health: SystemHealthStatus.DOWN,
+      reason: `${lastError?.error.status} - ${lastError?.error.message}`,
+    };
+  }
 
   if (!lastSuccessfulRequest) {
     return {
       health: SystemHealthStatus.DOWN,
-      reason: "No successful API requests has been made",
-    };
-  }
-
-  if (lastError?.error.message === "No response received from server") {
-    return {
-      health: SystemHealthStatus.DOWN,
-      reason: "No response received from server",
+      reason: "No successful requests have been made",
     };
   }
 
@@ -108,7 +109,7 @@ export const useSystemHealth = () => {
   } | null>(null);
   const [lastError, setLastError] = useState<{
     date: Date;
-    error: { type: "API" | "Schema"; message: string };
+    error: { type: "API" | "Schema"; message: string; status: number };
   } | null>(null);
   const { data: chainErrors } = useChainErrors();
 

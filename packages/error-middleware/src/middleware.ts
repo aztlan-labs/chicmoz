@@ -16,6 +16,18 @@ export const createErrorMiddleware = (logger: Logger): ErrorRequestHandler => {
       return;
     }
 
+    if (
+      err instanceof Error &&
+      err.message === "CACHE_ERROR: latest height not found"
+    ) {
+      res
+        .status(500)
+        .send(
+          "Aztec indexer has not been able to index any blocks from chain yet"
+        );
+      return;
+    }
+
     if (err instanceof Error) {
       logger.error(
         `Error-handler: name: ${err.name}, message: ${err.message} (for route: ${_req.originalUrl})`
