@@ -4,7 +4,7 @@ import { routes } from "~/routes/__root.tsx";
 import { L2_NETWORK_ID } from "~/service/constants";
 import { CustomTooltip } from "./custom-tooltip";
 
-export const MagicDevLink = () => {
+export const MagicDevLink = ({ className = "", textClasses = "" }) => {
   const systemHealth = useSystemHealth();
 
   let healthColor = "text-red";
@@ -23,11 +23,15 @@ Reason: ${systemHealth.systemHealth.reason}`}
     </pre>
   );
   return (
-    <Link to={routes.dev.route} className="flex flex-row items-center">
-      <span className="text-secondary transition-colors">{L2_NETWORK_ID}</span>
-      <CustomTooltip content={tooltipContent}>
-        <span className={`text-4xl ${healthColor} pb-4`}>•</span>
-      </CustomTooltip>
-    </Link>
+    <div className={className}>
+      <Link to={routes.dev.route} className="flex flex-row items-center">
+        <p className={`${textClasses} font-space-grotesk text-secondary`}>
+          {L2_NETWORK_ID}
+        </p>
+        <CustomTooltip content={tooltipContent}>
+          <p className={`text-2xl ${healthColor} ${textClasses}`}>*</p>
+        </CustomTooltip>
+      </Link>
+    </div>
   );
 };
