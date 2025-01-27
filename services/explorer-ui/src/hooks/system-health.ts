@@ -1,19 +1,29 @@
 import { type ChicmozL2RpcNodeError } from "@chicmoz-pkg/types";
 import { useEffect, useState } from "react";
-import { formatDuration, formatTimeSince } from "~/lib/utils";
+import { formatDuration } from "~/lib/utils";
 import { useChainErrors } from ".";
 import { getLastError, getLastSuccessfulRequest } from "../api/client";
 import { useWebSocketConnection, type WsReadyStateText } from "./websocket";
 
-export enum SystemHealthStatus {
+export enum HealthStatus {
   DOWN = "DOWN",
   UP = "UP",
   UNHEALTHY = "UNHEALTHY",
 }
 
-export type EvaluatedHealth = {
-  health: SystemHealthStatus;
-  reason: string;
+export type ComponentHealth = {
+  health: HealthStatus;
+  componentId: string;
+  description: string;
+  evaluationDetails: string;
+};
+
+export type EvaluatedSystemHealth = {
+  systemHealth: {
+    health: HealthStatus;
+    reason: string;
+  };
+  components: ComponentHealth[];
 };
 
 const API_POLL_INTERVAL = 1000;
@@ -32,72 +42,103 @@ const evaluateHealth = ({
     error: { type: "API" | "Schema"; status: number; message: string };
   } | null;
   chainErrors: ChicmozL2RpcNodeError[] | undefined;
-}): EvaluatedHealth => {
-  // TODO: this should return an array with all evaluation-results
+}): EvaluatedSystemHealth => {
+  const evaluations: ComponentHealth[] = [];
   const reasonableTimeStamp = Date.now() - REASONABLE_API_LIVENESS_TIME;
+  const reasonableTimeString = formatDuration(
+    REASONABLE_API_LIVENESS_TIME / 1000
+  );
 
-  if (!lastSuccessfulRequest && lastError) {
-    return {
-      health: SystemHealthStatus.DOWN,
-      reason: `${lastError?.error.status} - ${lastError?.error.message}`,
-    };
-  }
+  const isApiConnectionHealthy = !!lastSuccessfulRequest;
+  evaluations.push({
+    health: isApiConnectionHealthy ? HealthStatus.UP : HealthStatus.DOWN,
+    componentId: "API-connectivity",
+    description: "Checks if there has been a successful request to the API",
+    evaluationDetails: isApiConnectionHealthy
+      ? `lastSuccessfulRequest: ${lastSuccessfulRequest?.path}`
+      : `lastError: ${lastError?.error.message}`,
+  });
 
-  if (!lastSuccessfulRequest) {
-    return {
-      health: SystemHealthStatus.DOWN,
-      reason: "No successful requests have been made",
-    };
-  }
+  const hasBeenSuccessfulRequestWithinReasonableTime =
+    lastSuccessfulRequest &&
+    lastSuccessfulRequest.date.getTime() > reasonableTimeStamp;
 
-  const noSuccessfulRequestWithinReasonableTime =
-    lastSuccessfulRequest.date.getTime() < reasonableTimeStamp;
   const errorFreeWithinReasonableTime =
     (lastError?.date?.getTime() ?? 0) < reasonableTimeStamp;
 
-  if (
-    noSuccessfulRequestWithinReasonableTime &&
-    errorFreeWithinReasonableTime
-  ) {
+  evaluations.push({
+    health: !hasBeenSuccessfulRequestWithinReasonableTime
+      ? HealthStatus.DOWN
+      : HealthStatus.UP,
+    componentId: "API-livesness",
+    description: `Checks if there have been any successful requests within ${reasonableTimeString}`,
+    evaluationDetails: `last successful request: ${lastSuccessfulRequest?.path}`,
+  });
+
+  evaluations.push({
+    health:
+      hasBeenSuccessfulRequestWithinReasonableTime &&
+      errorFreeWithinReasonableTime
+        ? HealthStatus.UP
+        : HealthStatus.UNHEALTHY,
+    componentId: "API-quality",
+    description: `Checks if there have been both successful requests and no errors within ${reasonableTimeString}`,
+    evaluationDetails: `last successful request: ${lastSuccessfulRequest?.path}, last error: ${lastError?.error.message}`,
+  });
+
+  const isChainErrorFreeWithinReasonableTime = chainErrors?.every(
+    (error) => error.lastSeenAt.getTime() < reasonableTimeStamp
+  );
+  evaluations.push({
+    health: isChainErrorFreeWithinReasonableTime
+      ? HealthStatus.UP
+      : HealthStatus.UNHEALTHY,
+    componentId: "Indexer",
+    description: `Checks if the indexer (backend) has reported any errors within ${reasonableTimeString}`,
+    evaluationDetails: `indexer has reported ${
+      chainErrors?.length ?? 0
+    } errors`,
+  });
+
+  evaluations.push({
+    health:
+      webSocketReadyState === "OPEN" ? HealthStatus.UP : HealthStatus.UNHEALTHY,
+    componentId: "WebSocket",
+    description:
+      "Checks if the WebSocket between the frontend and backend is open",
+    evaluationDetails: `WebSocket ready state: ${webSocketReadyState}`,
+  });
+
+  const downComponents = evaluations.filter(
+    (evaluation) => evaluation.health === HealthStatus.DOWN
+  );
+  if (downComponents.length) {
     return {
-      health: SystemHealthStatus.DOWN,
-      reason: `There has only been errors for the last ${formatDuration(
-        REASONABLE_API_LIVENESS_TIME
-      )}`,
+      systemHealth: {
+        health: HealthStatus.DOWN,
+        reason: downComponents.map((c) => c.componentId).join(", "),
+      },
+      components: evaluations,
     };
   }
-
-  if (!errorFreeWithinReasonableTime) {
+  const unhealthyComponents = evaluations.filter(
+    (evaluation) => evaluation.health === HealthStatus.UNHEALTHY
+  );
+  if (unhealthyComponents.length) {
     return {
-      health: SystemHealthStatus.UNHEALTHY,
-      reason: `There has been an API-error recently: ${
-        lastError!.error.message
-      }`,
+      systemHealth: {
+        health: HealthStatus.UNHEALTHY,
+        reason: unhealthyComponents.map((c) => c.componentId).join(", "),
+      },
+      components: evaluations,
     };
   }
-
-  if (
-    chainErrors?.length &&
-    chainErrors.some(
-      (error) => error.lastSeenAt.getTime() > reasonableTimeStamp
-    )
-  ) {
-    return {
-      health: SystemHealthStatus.UNHEALTHY,
-      reason: `API-connection is working, but the indexer has reported errors`,
-    };
-  }
-
-  if (webSocketReadyState !== "OPEN") {
-    return {
-      health: SystemHealthStatus.UNHEALTHY,
-      reason: "WebSocket connection is not open",
-    };
-  }
-
   return {
-    health: SystemHealthStatus.UP,
-    reason: "All systems are operational",
+    systemHealth: {
+      health: HealthStatus.UP,
+      reason: "All systems are operational",
+    },
+    components: evaluations,
   };
 };
 
@@ -133,22 +174,5 @@ export const useSystemHealth = () => {
     lastError,
     chainErrors,
   });
-  return {
-    systemHealth,
-    wsReadyState,
-    lastSuccessfulRequest: lastSuccessfulRequest
-      ? {
-          lastSuccessfulRequestSeen:
-            formatTimeSince(lastSuccessfulRequest.date.getTime()) + " ago",
-          path: lastSuccessfulRequest.path,
-        }
-      : null,
-    lastError: lastError
-      ? {
-          lastErrorSeen: formatTimeSince(lastError.date.getTime()) + " ago",
-          type: lastError.error.type,
-          message: lastError.error.message,
-        }
-      : null,
-  };
+  return systemHealth;
 };

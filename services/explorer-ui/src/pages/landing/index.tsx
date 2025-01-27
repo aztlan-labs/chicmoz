@@ -4,7 +4,7 @@ import { InfoBadge } from "~/components/info-badge";
 import { type TxEffectTableSchema } from "~/components/tx-effects/tx-effects-schema";
 import { TxEffectsTable } from "~/components/tx-effects/tx-effects-table";
 import {
-  SystemHealthStatus,
+  HealthStatus,
   useAvarageBlockTime,
   useAvarageFees,
   useGetTxEffectsByBlockHeightRange,
@@ -93,17 +93,29 @@ export const Landing: FC = () => {
 
   const formattedFees = formatFees(avarageFees);
 
+  const isAnyComponentLoading =
+    isLoading ||
+    loadingTotalEffects ||
+    loadingTotalEffects24h ||
+    loadingAvarageFees ||
+    loadingAmountContracts ||
+    loadingAmountContracts24h ||
+    loadingAvarageBlockTime ||
+    isLoadingTxEffects;
+  const isConclusivlyDown =
+    systemHealth.health === HealthStatus.DOWN && !isAnyComponentLoading;
+
   return (
     <div className="mx-auto px-5 max-w-[1440px] md:px-[70px]">
-      {systemHealth.health === SystemHealthStatus.DOWN && (
+      {isConclusivlyDown && (
         <div className="flex flex-col bg-white w-full h-96 justify-between rounded-lg shadow-md mt-20">
           <div className="flex flex-col items-center justify-center h-full">
             <h3>System is down</h3>
-            <p>{systemHealth.reason ?? "No reason provided"}</p>
+            <p>{systemHealth.reason}</p>
           </div>
         </div>
       )}
-      {systemHealth.health !== SystemHealthStatus.DOWN && (
+      {!isConclusivlyDown && (
         <>
           <div className="hidden md:mt-16 md:flex flex-wrap justify-center my-20">
             <h1 className="">Explore the power of privacy on Aztec</h1>
