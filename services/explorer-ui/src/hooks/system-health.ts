@@ -33,6 +33,7 @@ const evaluateHealth = ({
   } | null;
   chainErrors: ChicmozL2RpcNodeError[] | undefined;
 }): EvaluatedHealth => {
+  // TODO: this should return an array with all evaluation-results
   const reasonableTimeStamp = Date.now() - REASONABLE_API_LIVENESS_TIME;
 
   if (!lastSuccessfulRequest && lastError) {
