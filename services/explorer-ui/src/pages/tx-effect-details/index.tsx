@@ -1,5 +1,5 @@
 import { useParams } from "@tanstack/react-router";
-import { useEffect, useState, type FC } from "react";
+import { useState, type FC } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { OptionButtons } from "~/components/option-buttons";
 import { useGetTxEffectByHash, useSubTitle } from "~/hooks";
@@ -34,18 +34,6 @@ export const TxEffectDetails: FC = () => {
   useSubTitle(`TxEff ${hash}`);
   const { data: txEffects, isLoading, error } = useGetTxEffectByHash(hash);
   const txEffectData = mapTxEffectsData(txEffects);
-
-  useEffect(() => {
-    // check for the first avalible tab with data
-    if (txEffects) {
-      const firstAvailableTab = txEffectTabs.find(
-        (tab) => tab.id in txEffectData
-      );
-
-      if (firstAvailableTab) setSelectedTab(firstAvailableTab.id);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [txEffects]);
 
   const onSelectChange = (value: string) => {
     setSelectedTab(value as TabId);

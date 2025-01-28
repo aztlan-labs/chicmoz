@@ -25,6 +25,22 @@ type OptionButtonProps<T extends OptionItems> = {
   selectedItem: ExtractOptionId<T>;
 };
 
+const withAvailableTooltip = (
+  isAvailable: boolean,
+  key: number,
+  children: React.ReactNode
+) => {
+  if (!isAvailable) {
+    return (
+      <CustomTooltip key={key} content="Not available">
+        {children}
+      </CustomTooltip>
+    );
+  }
+
+  return <div key={key}>{children}</div>;
+};
+
 export const OptionButtons = <T extends OptionItems>({
   options,
   availableOptions,
@@ -33,40 +49,24 @@ export const OptionButtons = <T extends OptionItems>({
 }: OptionButtonProps<T>) => {
   return (
     <>
-      <div className="hidden lg:flex flex-row gap-4 w-10 mb-4">
+      <div className="hidden lg:flex flex-row gap-4 mb-4 justify-center">
         {options.map((option, key) => {
           const isAvailable = availableOptions[option.id];
-          if (!isAvailable) {
-            return (
-              <CustomTooltip key={key} content="Not available">
-                <Button
-                  type="button"
-                  key={option.id}
-                  disabled={false}
-                  className="shadow-[0px_0px_1px_2px_rgba(0,0,0,0)] bg-gray-300 cursor-not-allowed opacity-50 text-primary"
-                >
-                  {option.label}
-                </Button>
-              </CustomTooltip>
-            );
-          }
-          return (
-            <div
-              key={key}
-              className="flex flex-col justify-center items-center gap-1"
-            >
+          return withAvailableTooltip(
+            isAvailable,
+            key,
+            <div className="flex flex-col justify-center items-center gap-1">
               <Button
-                key={option.id}
+                key={key}
                 onClick={() => onOptionSelect(option.id)}
-                className="shadow-[0px_0px_1px_2px_rgba(0,0,0,0)] bg-primary hover:bg-primary-500"
+                disabled={!isAvailable}
+                variant="default"
+                className="hover:bg-slate-500"
               >
                 {option.label}
               </Button>
               {selectedItem === option.id && (
-                <Separator
-                  orientation="horizontal"
-                  className="h-0.5 bg-primary w-1/2 rounded-md"
-                />
+                <Separator className="h-0.5 bg-gray-700 w-1/2" />
               )}
             </div>
           );
