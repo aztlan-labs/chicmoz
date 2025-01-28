@@ -16,11 +16,11 @@ import { contractClassTabs, type TabId } from "./constants";
 import { getContractClassKeyValueData } from "./util";
 
 export const ContractClassDetails: FC = () => {
-  const [selectedTab, setSelectedTab] = useState<TabId>("contractVersions");
   const { id, version } = useParams({
     from: "/contracts/classes/$id/versions/$version",
   });
   useSubTitle(`Ctrct cls ${id}`);
+  const [selectedTab, setSelectedTab] = useState<TabId>("contractVersions");
   const onOptionSelect = (value: string) => {
     setSelectedTab(value as TabId);
   };
