@@ -61,7 +61,7 @@ export const OptionButtons = <T extends OptionItems>({
                 onClick={() => onOptionSelect(option.id)}
                 disabled={!isAvailable}
                 variant="default"
-                className="hover:bg-slate-500"
+                className="hover:bg-slate-500 border border-input"
               >
                 {option.label}
               </Button>
@@ -88,15 +88,6 @@ export const OptionButtons = <T extends OptionItems>({
                   {option.label}
                 </SelectItem>
               ))
-              //  requiredOptions.map((tab, key) => (
-              //  <SelectItem
-              //    key={key}
-              //    disabled={!isOptionAvailable(tab.id)}
-              //    value={tab.id}
-              //  >
-              //    {tab.label}
-              //  </SelectItem>
-              //))
             }
           </SelectContent>
         </Select>
