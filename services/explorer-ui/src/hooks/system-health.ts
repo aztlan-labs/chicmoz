@@ -1,6 +1,6 @@
 import { type ChicmozL2RpcNodeError } from "@chicmoz-pkg/types";
 import { useEffect, useState } from "react";
-import { formatDuration } from "~/lib/utils";
+import { formatDuration, formatTimeSince } from "~/lib/utils";
 import { useChainErrors } from ".";
 import { getLastError, getLastSuccessfulRequest } from "../api/client";
 import { useWebSocketConnection, type WsReadyStateText } from "./websocket";
@@ -34,6 +34,7 @@ const evaluateHealth = ({
   lastSuccessfulRequest,
   lastError,
   chainErrors,
+  chainErrorsError,
 }: {
   webSocketReadyState: WsReadyStateText;
   lastSuccessfulRequest: { date: Date; path: string } | null;
@@ -42,6 +43,7 @@ const evaluateHealth = ({
     error: { type: "API" | "Schema"; status: number; message: string };
   } | null;
   chainErrors: ChicmozL2RpcNodeError[] | undefined;
+  chainErrorsError: Error | null;
 }): EvaluatedSystemHealth => {
   const evaluations: ComponentHealth[] = [];
   const reasonableTimeStamp = Date.now() - REASONABLE_API_LIVENESS_TIME;
@@ -89,15 +91,25 @@ const evaluateHealth = ({
   const isChainErrorFreeWithinReasonableTime = chainErrors?.every(
     (error) => error.lastSeenAt.getTime() < reasonableTimeStamp
   );
+  const isFetchingErrors = !chainErrorsError;
+  const isChainUp = isChainErrorFreeWithinReasonableTime && !isFetchingErrors;
+  let evaluationDetails = "";
+  if (isChainUp) {
+    evaluationDetails = `Last seen error: ${chainErrors?.[0]
+      ?.name} at ${formatTimeSince(
+      chainErrors?.[0]?.lastSeenAt.getTime() ?? 0
+    )} ago`;
+  } else {
+    if (!isFetchingErrors)
+      evaluationDetails = `Trying to fetch errors failed: ${chainErrorsError?.message}`;
+    else
+      evaluationDetails = `Indexer has reported ${chainErrors?.length} errors.`;
+  }
   evaluations.push({
-    health: isChainErrorFreeWithinReasonableTime
-      ? HealthStatus.UP
-      : HealthStatus.UNHEALTHY,
+    health: isChainUp ? HealthStatus.UP : HealthStatus.UNHEALTHY,
     componentId: "Indexer",
     description: `Checks if the indexer (backend) has reported any errors within ${reasonableTimeString}`,
-    evaluationDetails: `indexer has reported ${
-      chainErrors?.length ?? 0
-    } errors`,
+    evaluationDetails,
   });
 
   evaluations.push({
@@ -152,7 +164,7 @@ export const useSystemHealth = () => {
     date: Date;
     error: { type: "API" | "Schema"; message: string; status: number };
   } | null>(null);
-  const { data: chainErrors } = useChainErrors();
+  const { data: chainErrors, error: chainErrorsError } = useChainErrors();
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -173,6 +185,7 @@ export const useSystemHealth = () => {
     lastSuccessfulRequest,
     lastError,
     chainErrors,
+    chainErrorsError,
   });
   return systemHealth;
 };
