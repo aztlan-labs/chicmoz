@@ -1,9 +1,9 @@
 import { useParams } from "@tanstack/react-router";
 import { useEffect, useState, type FC } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
+import { OptionButtons } from "~/components/option-buttons";
 import { useGetTxEffectByHash, useSubTitle } from "~/hooks";
 import { txEffectTabs, type TabId } from "./constants";
-import { OptionButtons } from "./tabs";
 import { getTxEffectData, mapTxEffectsData } from "./utils";
 
 const naiveDecode = (data: Buffer): string => {
@@ -27,7 +27,7 @@ const naiveDecode = (data: Buffer): string => {
 };
 
 export const TxEffectDetails: FC = () => {
-  const [selectedTab, setSelectedTab] = useState<TabId>("unencryptedLogs");
+  const [selectedTab, setSelectedTab] = useState<TabId>("nullifiers");
   const { hash } = useParams({
     from: "/tx-effects/$hash",
   });
@@ -47,14 +47,14 @@ export const TxEffectDetails: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [txEffects]);
 
-  const getSelectedItem = (value: string) => {
+  const onSelectChange = (value: string) => {
     setSelectedTab(value as TabId);
   };
 
   if (!hash) <div> No txEffect hash</div>;
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error</div>;
-  if (!txEffects) return <div>No data</div>;
+  if (!txEffects || !selectedTab) return <div>No data</div>;
 
   return (
     <div className="mx-auto px-7 max-w-[1440px] md:px-[70px]">
@@ -67,10 +67,9 @@ export const TxEffectDetails: FC = () => {
             <KeyValueDisplay data={getTxEffectData(txEffects)} />
           </div>
           <OptionButtons
-            key={selectedTab}
-            availableData={txEffectData}
-            requiredOptions={txEffectTabs}
-            onOptionSelect={getSelectedItem}
+            options={txEffectTabs}
+            availableOptions={txEffectData}
+            onOptionSelect={onSelectChange}
             selectedItem={selectedTab}
           />
           <div className="bg-white rounded-lg shadow-md p-4">

@@ -3,6 +3,7 @@ import { useState, type FC } from "react";
 import { ContractClassesTable } from "~/components/contracts/classes/table";
 import { ContractInstancesTable } from "~/components/contracts/instances/table";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
+import { OptionButtons } from "~/components/option-buttons";
 import {
   useContractClassPrivateFunctions,
   useContractClassUnconstrainedFunctions,
@@ -12,7 +13,6 @@ import {
 } from "~/hooks";
 import { mapContractClasses, mapContractInstances } from "../contract/util";
 import { contractClassTabs, type TabId } from "./constants";
-import { OptionButtons } from "./tabs";
 import { getContractClassKeyValueData } from "./util";
 
 export const ContractClassDetails: FC = () => {
@@ -77,8 +77,8 @@ export const ContractClassDetails: FC = () => {
           </div>
         </div>
         <OptionButtons
-          availableData={isOptionAvailable}
-          requiredOptions={contractClassTabs}
+          options={contractClassTabs}
+          availableOptions={isOptionAvailable}
           onOptionSelect={onOptionSelect}
           selectedItem={selectedTab}
         />
