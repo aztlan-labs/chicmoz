@@ -102,8 +102,18 @@ export const Landing: FC = () => {
     loadingAmountContracts24h ||
     loadingAvarageBlockTime ||
     isLoadingTxEffects;
+  const isThereAnyComponentData =
+    (latestBlocks?.length ?? 0) > 0 ||
+    !!totalTxEffects ||
+    !!totalTxEffects24h ||
+    !!avarageFees ||
+    !!totalAmountOfContracts ||
+    !!totalAmountOfContracts24h ||
+    !!avarageBlockTime;
   const isConclusivlyDown =
-    systemHealth.health === HealthStatus.DOWN && !isAnyComponentLoading;
+    systemHealth.health === HealthStatus.DOWN &&
+    !isAnyComponentLoading &&
+    !isThereAnyComponentData;
 
   return (
     <div className="mx-auto px-5 max-w-[1440px] md:px-[70px]">

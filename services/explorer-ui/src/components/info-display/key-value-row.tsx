@@ -32,32 +32,32 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
   else if (value.startsWith("0x")) displayType = DisplayType.HEX;
   else if (extLink) displayType = DisplayType.EXTERNAL_LINK;
 
+  const commonTextClasses = "text-sm flex-grow text-end justify-end";
   return (
     <div
       key={label}
-      className={`flex flex-col justify-between gap-2 py-3 ${
+      className={`flex items-center gap-2 py-3 ${
         !isLast ? "border-b border-gray-200" : ""
-      } md:flex-row md:items-center`}
+      }`}
     >
       <span className="text-gray-600 w-1/3">{label}</span>
       {displayType === DisplayType.TEXT && (
-        <span className={`text-sm flex-grow md:text-end`}>{value}</span>
+        <span className={commonTextClasses}>{value}</span>
       )}
       {displayType === DisplayType.LINK && (
         <Link
           to={link}
-          className="text-sm flex-grow text-primary-600 text-primary cursor-pointer md:text-end"
+          className={`${commonTextClasses} text-primary-600 text-primary cursor-pointer`}
         >
-          {value}
+          {truncateHashString(value)}
           <span className="ml-1">🔗</span>
         </Link>
       )}
       {displayType === DisplayType.HEX && (
-        <span className={`text-sm flex-grow md:text-end`}>
+        <span className={commonTextClasses}>
           <CopyableText
             text={truncateHashString(value)}
             toCopy={value}
-            additionalClasses="md:justify-end md:text-end"
             additionalClassesIcon="justify-end"
           />
         </span>
@@ -67,7 +67,7 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
           href={extLink}
           target="_blank"
           rel="noreferrer"
-          className="text-sm flex-grow text-primary-600 text-primary cursor-pointer md:text-end"
+          className={`${commonTextClasses} text-primary-600 text-primary cursor-pointer`}
         >
           {value}
           <span className="ml-1">↗️</span>
