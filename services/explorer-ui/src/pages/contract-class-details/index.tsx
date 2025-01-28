@@ -48,11 +48,13 @@ export const ContractClassDetails: FC = () => {
     privateFunctions:
       !contractClassPrivateFunctionsHookRes.isLoading &&
       !contractClassPrivateFunctionsHookRes.error &&
-      !!contractClassPrivateFunctionsHookRes.data,
+      !!contractClassPrivateFunctionsHookRes.data &&
+      !!contractClassPrivateFunctionsHookRes.data.length,
     unconstrainedFunctions:
       !contractClassUnconstrainedFunctionsHookRes.isLoading &&
       !contractClassUnconstrainedFunctionsHookRes.error &&
-      !!contractClassUnconstrainedFunctionsHookRes.data,
+      !!contractClassUnconstrainedFunctionsHookRes.data &&
+      !!contractClassUnconstrainedFunctionsHookRes.data.length,
   };
 
   if (!id) return <div>No classId</div>;
