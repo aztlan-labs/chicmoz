@@ -29,14 +29,15 @@ export const CopyableText: FC<Props> = ({
 
   return (
     <div className={`flex w-full ${additionalClasses}`}>
-      <div className={`flex w-full flex-row gap-2 items-center ${additionalClassesIcon}`}>
-        <CopyIcon className="cursor-pointer" onClick={handleCopy} />
-
+      <div
+        className={`flex w-full flex-row gap-2 items-center ${additionalClassesIcon}`}
+      >
         {textArea ? (
           <Textarea className="text-sm flex-grow" value={text} readOnly />
         ) : (
           <span className="relative inline-block font-mono ">{text}</span>
         )}
+        <CopyIcon className="cursor-pointer" onClick={handleCopy} />
       </div>
     </div>
   );
