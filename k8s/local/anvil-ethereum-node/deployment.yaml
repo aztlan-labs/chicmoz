@@ -21,8 +21,8 @@ spec:
           name: anvil-ethereum-node
           resources:
             limits:
-              memory: 4096Mi
-              cpu: 250m
+              memory: 30Mi
+              cpu: 15m
           command:
             - /bin/sh
             - -c

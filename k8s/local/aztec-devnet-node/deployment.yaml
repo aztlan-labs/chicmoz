@@ -21,8 +21,8 @@ spec:
           name: aztec-devnet-node
           resources:
             limits:
-              memory: 4096Mi
-              cpu: 250m
+              memory: 1500Mi
+              cpu: 1000m
           args:
             - start
             - --pxe

@@ -29,8 +29,8 @@ spec:
         - image: aztec-listener:latest
           resources:
             limits:
-              memory: 750Mi
-              cpu: 250m
+              memory: 200Mi
+              cpu: 100m
           name: aztec-listener
           envFrom:
             - configMapRef:
