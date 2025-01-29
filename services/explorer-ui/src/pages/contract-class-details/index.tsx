@@ -42,6 +42,9 @@ export const ContractClassDetails: FC = () => {
   const contractClasses = mapContractClasses(classesData);
   const contractInstances = mapContractInstances(instancesData);
 
+  const selectedVersion = classesData?.find(
+    (contract) => contract.version === Number(version)
+  );
   const isOptionAvailable = {
     contractVersions: !!contractClasses && !!contractClasses.length,
     contractInstances: !!contractInstances && !!contractInstances.length,
@@ -55,12 +58,10 @@ export const ContractClassDetails: FC = () => {
       !contractClassUnconstrainedFunctionsHookRes.error &&
       !!contractClassUnconstrainedFunctionsHookRes.data &&
       !!contractClassUnconstrainedFunctionsHookRes.data.length,
+    artifactJson: !!selectedVersion && !!selectedVersion.artifactJson,
   };
 
   if (!id) return <div>No classId</div>;
-  const selectedVersion = classesData?.find(
-    (contract) => contract.version === Number(version)
-  );
   if (!selectedVersion) return <div>No data</div>;
 
   return (
@@ -226,9 +227,18 @@ export const ContractClassDetails: FC = () => {
                 )}
               </div>
             )}
-          {
-            // TODO: add artifactJson
-          }
+          {selectedTab === "artifactJson" && selectedVersion.artifactJson && (
+            <div className="bg-white w-full rounded-lg shadow-md p-4">
+              <h4>Artifact JSON</h4>
+              <pre className="overflow-auto">
+                {JSON.stringify(
+                  JSON.parse(selectedVersion.artifactJson),
+                  null,
+                  2
+                )}
+              </pre>
+            </div>
+          )}
         </div>
       </div>
     </div>

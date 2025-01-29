@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import {
   HexString,
   type ChicmozL2Block,
-  type UnencryptedLogEntry,
 } from "@chicmoz-pkg/types";
 import { v4 as uuidv4 } from "uuid";
 import { getDb as db } from "@chicmoz-pkg/postgres-helper";
@@ -10,14 +8,12 @@ import {
   archive,
   body,
   contentCommitment,
-  functionLogs,
   gasFees,
   globalVariables,
   header,
   l1ToL2MessageTree,
   l2Block,
   lastArchive,
-  logs,
   noteHashTree,
   nullifierTree,
   partial,
@@ -25,7 +21,6 @@ import {
   publicDataWrite,
   state,
   txEffect,
-  txEffectToLogs,
 } from "../../../database/schema/l2block/index.js";
 
 export const store = async (block: ChicmozL2Block): Promise<void> => {
@@ -42,6 +37,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
       id: headerId,
       blockHash: block.hash,
       totalFees: block.header.totalFees,
+      totalManaUsed: block.header.totalManaUsed,
     });
 
     // Insert archive
@@ -165,8 +161,10 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
         noteHashes: txEff.noteHashes as HexString[],
         nullifiers: txEff.nullifiers as HexString[],
         l2ToL1Msgs: txEff.l2ToL1Msgs as HexString[],
-        unencryptedLogsLength: txEff.unencryptedLogsLength,
+        contractClassLogsLength: txEff.contractClassLogsLength,
         privateLogs: txEff.privateLogs,
+        publicLogs: txEff.publicLogs,
+        contractClassLogs: txEff.contractClassLogs,
       });
 
       // Insert public data writes
@@ -179,39 +177,6 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
           leafSlot: pdw.leafSlot,
           value: pdw.value,
         });
-      }
-
-      for (const [logType, fLogs] of Object.entries({
-        unencrypted: txEff.unencryptedLogs.functionLogs,
-      })) {
-        const txEffectToLogsId = uuidv4();
-        // Create junction entry for txEffectToLogs
-        await dbTx.insert(txEffectToLogs).values({
-          id: txEffectToLogsId,
-          txEffectHash: txEff.txHash,
-        });
-        for (const [functionLogIndex, functionLog] of Object.entries(fLogs)) {
-          // Insert logs
-          const functionLogId = uuidv4();
-          await dbTx.insert(functionLogs).values({
-            id: functionLogId,
-            index: Number(functionLogIndex),
-            txEffectToLogsId,
-          });
-          for (const [index, log] of Object.entries(
-            functionLog.logs as Array<UnencryptedLogEntry>
-          )) {
-            const logId = uuidv4();
-            await dbTx.insert(logs).values({
-              id: logId,
-              index: Number(index),
-              txEffectToLogsId,
-              type: logType,
-              data: log.data,
-              contractAddress: log.contractAddress,
-            });
-          }
-        }
       }
     }
   });

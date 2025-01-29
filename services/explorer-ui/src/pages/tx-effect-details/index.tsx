@@ -3,27 +3,25 @@ import { useState, type FC } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { OptionButtons } from "~/components/option-buttons";
 import { useGetTxEffectByHash, useSubTitle } from "~/hooks";
+import { routes } from "~/routes/__root";
 import { txEffectTabs, type TabId } from "./constants";
 import { getTxEffectData, mapTxEffectsData } from "./utils";
 
-const naiveDecode = (data: Buffer): string => {
-  // TODO
+const naiveDecode = (data: string[]): string => {
   let counterZero = 0;
   let counterAbove128 = 0;
-  const res =
-    data
-      .toString("hex")
-      .match(/.{1,64}/g)
-      ?.map((hex) => parseInt(hex, 16))
-      .map((charCode): string => {
-        if (charCode === 0) counterZero++;
-        if (charCode > 128) counterAbove128++;
-        const char = String.fromCharCode(charCode);
-        return char;
-      })
-      .join("") ?? "";
-  const isProbablyADecodedString = counterZero === 0 && counterAbove128 === 0;
-  return isProbablyADecodedString ? res : data.toString("hex");
+  const charCodes: number[] = data
+    ?.map((hex) => parseInt(hex, 16))
+    .map((charCode) => {
+      if (charCode === 0) counterZero++;
+      if (charCode > 128) counterAbove128++;
+      return charCode;
+    });
+  const isNoWeirdChars = counterZero + counterAbove128 === 0;
+  const isProbablyAReadableString =
+    isNoWeirdChars || data.length - charCodes.indexOf(0) === counterZero;
+  const res = charCodes.map((char) => String.fromCharCode(char)).join("");
+  return isProbablyAReadableString ? res : data.join("\n");
 };
 
 export const TxEffectDetails: FC = () => {
@@ -64,11 +62,6 @@ export const TxEffectDetails: FC = () => {
             {selectedTab === "privateLogs" && (
               <div className="">
                 {txEffects.privateLogs.map((log, index) => {
-                  //const entries = log.map((logNbr, i) => ({
-                  //  label: `Log ${i + 1}`,
-                  //  value: logNbr.toString(),
-                  //  isClickable: false,
-                  //}));
                   const entries = [
                     {
                       label: "data",
@@ -85,37 +78,61 @@ export const TxEffectDetails: FC = () => {
                 })}
               </div>
             )}
-            {selectedTab === "unencryptedLogs" && (
+            {selectedTab === "publicLogs" && (
               <div className="">
-                {txEffects.unencryptedLogs.functionLogs.map(
-                  (unencrypted, index) => {
-                    const entries = unencrypted.logs.map((unEncLog) => {
-                      return [
+                {
+                  txEffects.publicLogs.map(
+                    ([contractAddress, ...logData], index) => {
+                      const entries = [
                         {
                           label: "data",
-                          value: naiveDecode(unEncLog.data),
+                          value: naiveDecode(logData),
                           isClickable: false,
                         },
                         {
                           label: "Contract Address",
-                          value: (unEncLog as { contractAddress: string })
-                            .contractAddress,
+                          value: contractAddress,
+                          link: `${routes.contracts.route}/${routes.contracts.children.instances.route}/${contractAddress}`,
                           isClickable: true,
                         },
                       ];
-                    });
-                    // Flatten the nested arrays
-                    const flattenedEntries = entries.flat();
-
-                    // Render KeyValueDisplay with the flattened entries
-                    return (
-                      <div key={index}>
-                        <h4>Log {index + 1}</h4>
-                        <KeyValueDisplay key={index} data={flattenedEntries} />
-                      </div>
-                    );
-                  }
-                )}
+                      return (
+                        <div key={index}>
+                          <h4>Log {index + 1}</h4>
+                          <KeyValueDisplay key={index} data={entries} />
+                        </div>
+                      );
+                    }
+                  )
+                  // TODO: decode logs (old decode below)
+                  //  txEffects.unencryptedLogs.functionLogs.map(
+                  //  (unencrypted, index) => {
+                  //    const entries = unencrypted.logs.map((unEncLog) => {
+                  //      return [
+                  //        {
+                  //          label: "data",
+                  //          value: naiveDecode(unEncLog.data),
+                  //          isClickable: false,
+                  //        },
+                  //        {
+                  //          label: "Contract Address",
+                  //          value: (unEncLog as { contractAddress: string })
+                  //            .contractAddress,
+                  //          isClickable: true,
+                  //        },
+                  //      ];
+                  //    });
+                  //    // Flatten the nested arrays
+                  //    const flattenedEntries = entries.flat();
+                  //    // Render KeyValueDisplay with the flattened entries
+                  //    return (
+                  //      <div key={index}>
+                  //        <h4>Log {index + 1}</h4>
+                  //        <KeyValueDisplay key={index} data={flattenedEntries} />
+                  //      </div>
+                  //    );
+                  //  }
+                }
               </div>
             )}
             {selectedTab === "nullifiers" && (

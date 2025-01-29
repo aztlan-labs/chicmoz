@@ -65,6 +65,7 @@ export const chicmozL2BlockSchema = z.object({
       }),
     }),
     totalFees: z.coerce.bigint(),
+    totalManaUsed: z.coerce.bigint(),
   }),
   body: z.object({
     txEffects: z.array(chicmozL2TxEffectSchema),

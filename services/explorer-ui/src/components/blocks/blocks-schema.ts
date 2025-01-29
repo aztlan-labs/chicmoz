@@ -7,5 +7,6 @@ export const blockSchema = z.object({
   blockHash: z.string(),
   txEffectsLength: z.number(),
   totalFees: z.coerce.string(),
+  totalManaUsed: z.coerce.string(),
   timestamp: z.number(),
 });

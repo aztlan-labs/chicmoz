@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { l2NetworkIdSchema } from "../network-ids.js";
 
-export const CHICMOZ_TYPES_AZTEC_VERSION = "0.71.0";
+export const CHICMOZ_TYPES_AZTEC_VERSION = "0.72.1";
 
 export const L1ContractAddressesSchema = z.object({
   rollupAddress: z.string(),

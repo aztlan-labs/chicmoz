@@ -1,14 +1,16 @@
-import { desc, eq, isNotNull, sql } from "drizzle-orm";
-import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { getDb as db } from "@chicmoz-pkg/postgres-helper";
+import { desc, eq, sql } from "drizzle-orm";
+import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import {
   body,
   l2Block,
-  logs,
   txEffect,
-  txEffectToLogs,
 } from "../../database/schema/l2block/index.js";
-import { l2ContractInstanceDeployed, l2PrivateFunction, l2UnconstrainedFunction } from "../schema/index.js";
+import {
+  l2ContractInstanceDeployed,
+  l2PrivateFunction,
+  l2UnconstrainedFunction,
+} from "../schema/index.js";
 
 export const getABlock = async () => {
   const res = await db()
@@ -72,26 +74,25 @@ export const getSomeTxEffectWithPrivateLogs = async () => {
       txHash: txEffect.txHash,
     })
     .from(txEffect)
-    .where(isNotNull(txEffect.privateLogs))
+    .where(sql`jsonb_array_length(${txEffect.privateLogs}) > 0`)
     .limit(10)
     .execute();
   if (dbRes.length === 0) return null;
   return dbRes.map((row) => row.txHash);
 };
 
-export const getSomeTxEffectWithUnencryptedLogs = async () => {
+export const getSomeTxEffectWithPublicLogs = async () => {
   const dbRes = await db()
     .select({
-      hash: txEffectToLogs.txEffectHash,
+      hash: txEffect.txHash,
     })
-    .from(logs)
-    .where(isNotNull(logs.contractAddress))
-    .innerJoin(txEffectToLogs, eq(logs.txEffectToLogsId, txEffectToLogs.id))
+    .from(txEffect)
+    .where(sql`jsonb_array_length(${txEffect.publicLogs}) > 0`)
     .limit(10)
     .execute();
   if (dbRes.length === 0) return null;
   return dbRes.map((row) => row.hash);
-}
+};
 
 export const getABlockWithContractInstances = async () => {
   const dbRes = await db()
@@ -138,20 +139,21 @@ const getAL2PrivateFunction = async () => {
     .execute();
   if (dbRes.length === 0) return null;
   return dbRes[0];
-}
+};
 
 const getAL2UnconstrainedFunction = async () => {
   const dbRes = await db()
     .select({
       classId: l2UnconstrainedFunction.contractClassId,
-      functionSelector: l2UnconstrainedFunction.unconstrainedFunction_selector_value,
+      functionSelector:
+        l2UnconstrainedFunction.unconstrainedFunction_selector_value,
     })
     .from(l2UnconstrainedFunction)
     .limit(1)
     .execute();
   if (dbRes.length === 0) return null;
-  return dbRes[0]
-}
+  return dbRes[0];
+};
 
 export const getL2ContractFunctions = async () => {
   const [privateFunction, unconstrainedFunction] = await Promise.all([

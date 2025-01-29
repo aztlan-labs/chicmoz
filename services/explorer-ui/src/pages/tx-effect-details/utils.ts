@@ -46,9 +46,7 @@ export const mapTxEffectsData = (
 ): Record<tabId, boolean> => {
   return {
     privateLogs: !!data?.privateLogs?.length,
-    unencryptedLogs: !!data?.unencryptedLogs?.functionLogs?.filter(
-      (log) => log.logs.length > 0
-    ).length,
+    publicLogs: !!data?.publicLogs?.length,
     nullifiers: !!data?.nullifiers?.length,
     noteHashes: !!data?.noteHashes?.length,
     l2ToL1Msgs: !!data?.l2ToL1Msgs?.length,

@@ -16,6 +16,7 @@ export const header = pgTable("header", {
     .$type<HexString>()
     .references(() => l2Block.hash, { onDelete: "cascade" }),
   totalFees: bigint("total_fees", { mode: "bigint" }).notNull(),
+  totalManaUsed: bigint("total_mana_used", { mode: "bigint" }).notNull(),
 });
 
 export const lastArchive = generateTreeTable(
