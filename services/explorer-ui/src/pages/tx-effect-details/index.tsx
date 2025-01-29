@@ -41,7 +41,6 @@ export const TxEffectDetails: FC = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error</div>;
   if (!txEffects || !selectedTab) return <div>No data</div>;
-  console.log(txEffects.publicLogs);
 
   return (
     <div className="mx-auto px-7 max-w-[1440px] md:px-[70px]">
