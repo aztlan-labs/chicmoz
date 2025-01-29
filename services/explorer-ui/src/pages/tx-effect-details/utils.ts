@@ -43,26 +43,15 @@ export const getTxEffectData = (data: ChicmozL2TxEffectDeluxe) => [
 
 export const mapTxEffectsData = (
   data?: ChicmozL2TxEffectDeluxe
-): Record<string, TxEffectDataType | undefined> => {
-  if (!data) return {};
-
-  const effectsMap: Record<tabId, TxEffectDataType | undefined> = {
-    privateLogs: data.privateLogs.length ? data.privateLogs : undefined,
-    unencryptedLogs: data.unencryptedLogs?.functionLogs?.filter(
+): Record<tabId, boolean> => {
+  return {
+    privateLogs: !!data?.privateLogs?.length,
+    unencryptedLogs: !!data?.unencryptedLogs?.functionLogs?.filter(
       (log) => log.logs.length > 0
-    ).length
-      ? data.unencryptedLogs.functionLogs
-      : undefined,
-    nullifiers: data.nullifiers?.length ? data.nullifiers : undefined,
-    noteHashes: data.noteHashes?.length ? data.noteHashes : undefined,
-    l2ToL1Msgs: data.l2ToL1Msgs?.length ? data.l2ToL1Msgs : undefined,
-    publicDataWrites: data.publicDataWrites?.length
-      ? data.publicDataWrites
-      : undefined,
+    ).length,
+    nullifiers: !!data?.nullifiers?.length,
+    noteHashes: !!data?.noteHashes?.length,
+    l2ToL1Msgs: !!data?.l2ToL1Msgs?.length,
+    publicDataWrites: !!data?.publicDataWrites?.length,
   };
-
-  // Filter out undefined values
-  return Object.fromEntries(
-    Object.entries(effectsMap).filter(([_, value]) => value !== undefined)
-  );
 };
