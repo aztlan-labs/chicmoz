@@ -30,6 +30,7 @@ const withAvailableTooltip = (
   key: number,
   children: React.ReactNode
 ) => {
+  // TODO: refactor to use CustomTooltip component instead?
   if (!isAvailable) {
     return (
       <CustomTooltip key={key} content="Not available">
