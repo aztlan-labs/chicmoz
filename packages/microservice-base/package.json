@@ -14,7 +14,8 @@
     "lint-base": "yarn run g:lint"
   },
   "dependencies": {
-    "@chicmoz-pkg/logger-server": "workspace:^"
+    "@chicmoz-pkg/logger-server": "workspace:^",
+    "@chicmoz-pkg/types": "workspace:^"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "6.11.0",

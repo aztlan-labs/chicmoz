@@ -13,7 +13,8 @@
     "@aztec/aztec.js": "0.72.1",
     "@aztec/l1-artifacts": "0.72.1",
     "@aztec/noir-contracts.js": "0.72.1",
-    "@chicmoz-pkg/logger-server": "workspace:^"
+    "@chicmoz-pkg/logger-server": "workspace:^",
+    "@chicmoz-pkg/types": "workspace:^"
   },
   "devDependencies": {
     "@types/node": "20.5.0",

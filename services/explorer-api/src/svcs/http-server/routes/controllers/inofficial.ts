@@ -1,6 +1,7 @@
-import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
 import {
   L1L2ValidatorStatus,
+  NODE_ENV,
+  NodeEnv,
   chicmozL1L2ValidatorHistorySchema,
   chicmozL1L2ValidatorSchema,
 } from "@chicmoz-pkg/types";
@@ -228,7 +229,7 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
     </body>
   </html>
   `;
-  await setEntry(["GET_ROUTES"], html, NODE_ENV === "production" ? 60 : 2);
+  await setEntry(["GET_ROUTES"], html, NODE_ENV === NodeEnv.PROD ? 60 : 2);
   res.send(html);
 });
 

@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { AztecNode, NodeInfo, createAztecNodeClient } from "@aztec/aztec.js";
-import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
 import {
   ChicmozChainInfo,
   ChicmozL2Sequencer,
+  NODE_ENV,
+  NodeEnv,
   l2NetworkIdSchema,
 } from "@chicmoz-pkg/types";
 import { IBackOffOptions, backOff } from "exponential-backoff";
@@ -41,7 +42,7 @@ const backOffOptions: Partial<IBackOffOptions> = {
         `🤡 Aztec connection reset, retrying attempt ${attemptNumber}...`
       );
       return true;
-    } else if (NODE_ENV === "development" && isRetriableDevelopmentError) {
+    } else if (NODE_ENV === NodeEnv.DEV && isRetriableDevelopmentError) {
       logger.warn(
         `🤡🤡 Aztec connection refused or not found, retrying attempt ${attemptNumber}...`
       );
@@ -168,8 +169,7 @@ export const getBlocks = async (fromHeight: number, toHeight: number) => {
     throw new Error("Too many blocks to fetch");
   const blocks = [];
   for (let i = fromHeight; i < toHeight; i++) {
-    if (NODE_ENV === "development")
-      await new Promise((r) => setTimeout(r, 500));
+    if (NODE_ENV === NodeEnv.DEV) await new Promise((r) => setTimeout(r, 500));
     else await new Promise((r) => setTimeout(r, 200));
     const block = await getBlock(i);
     blocks.push(block);

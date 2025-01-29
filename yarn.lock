@@ -877,6 +877,7 @@ __metadata:
   resolution: "@chicmoz-pkg/microservice-base@workspace:packages/microservice-base"
   dependencies:
     "@chicmoz-pkg/logger-server": "workspace:^"
+    "@chicmoz-pkg/types": "workspace:^"
     "@typescript-eslint/eslint-plugin": "npm:6.11.0"
     "@typescript-eslint/parser": "npm:6.11.0"
     eslint: "npm:8.53.0"
@@ -934,6 +935,7 @@ __metadata:
   dependencies:
     "@chicmoz-pkg/error-middleware": "workspace:^"
     "@chicmoz-pkg/logger-server": "workspace:^"
+    "@chicmoz-pkg/types": "workspace:^"
     "@types/auto-bind": "npm:2.1.0"
     "@types/body-parser": "npm:1.19.5"
     "@types/cors": "npm:2.8.13"
@@ -1057,6 +1059,7 @@ __metadata:
     "@aztec/l1-artifacts": "npm:0.72.1"
     "@aztec/noir-contracts.js": "npm:0.72.1"
     "@chicmoz-pkg/logger-server": "workspace:^"
+    "@chicmoz-pkg/types": "workspace:^"
     "@types/node": "npm:20.5.0"
     "@typescript-eslint/eslint-plugin": "npm:6.11.0"
     "@typescript-eslint/parser": "npm:6.11.0"
