@@ -6,8 +6,9 @@ const getTxEffectWithHashes = (txEffects: L2Block["body"]["txEffects"]) => {
   return txEffects.map((txEffect) => {
     return {
       ...txEffect,
-      unencryptedLogslength: txEffect.unencryptedLogsLength.toNumber(),
+      contractClassLogsLength: txEffect.contractClassLogsLength,
       privateLogs: txEffect.privateLogs.map((log) => log.toFields()),
+      publicLogs: txEffect.publicLogs.map((log) => log.toFields()),
       txHash: txEffect.txHash.toString(),
     };
   });

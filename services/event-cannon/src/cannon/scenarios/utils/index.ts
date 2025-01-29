@@ -61,7 +61,7 @@ export const getNewSchnorrAccount = async ({
   salt: Fr;
 }) => {
   logger.info("  Creating new Schnorr account...");
-  const schnorrAccount = getSchnorrAccount(
+  const schnorrAccount = await getSchnorrAccount(
     pxe,
     secretKey,
     deriveSigningKey(secretKey),
@@ -70,7 +70,7 @@ export const getNewSchnorrAccount = async ({
   logger.info(
     `    Schnorr account created ${schnorrAccount.getAddress().toString()}`
   );
-  const { address } = schnorrAccount.getCompleteAddress();
+  const { address } = await schnorrAccount.getCompleteAddress();
   logger.info("    Deploying Schnorr account to network...");
   await logAndWaitForTx(schnorrAccount.deploy(), "Deploying account");
   logger.info("    Getting Schnorr account wallet...");
@@ -208,7 +208,11 @@ export const publicDeployAccounts = async (
     (
       await registerContractClass(sender, SchnorrAccountContractArtifact)
     ).request(),
-    ...instances.map((instance) => deployInstance(sender, instance!).request()),
+    ...(await Promise.all(
+      instances.map(async (instance) =>
+        (await deployInstance(sender, instance!)).request()
+      )
+    )),
   ]);
   await batch.send().wait();
 };

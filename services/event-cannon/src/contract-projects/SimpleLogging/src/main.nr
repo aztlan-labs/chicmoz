@@ -4,8 +4,7 @@ use dep::aztec::macros::aztec;
 contract SimpleLogging {
     use dep::aztec::prelude::{Map, PublicMutable};
     use dep::aztec::{
-        //keys::getters::get_public_keys,
-        macros::{storage::storage, functions::{public, initializer, private, internal}},
+        macros::{storage::storage, functions::{public, initializer, internal}},
     };
     #[storage]
     struct Storage<Context> {
@@ -17,17 +16,6 @@ contract SimpleLogging {
     fn constructor() {
     }
 
-    #[private]
-    fn increase_counter_private(counter_id: Field) {
-        //let msg_sender_npk_m_hash = get_public_keys(context.msg_sender()).npk_m.hash();
-        //let secret = context.request_nsk_app(msg_sender_npk_m_hash); // get secret key of caller of function
-        //let nullifier = std::hash::pedersen_hash([context.msg_sender().to_field(), secret]); // derive nullifier from sender and secret
-        //context.push_nullifier(nullifier);
-        SimpleLogging::at(context.this_address()).add_to_counter_public(counter_id).enqueue(
-            &mut context,
-        );
-    }
-
     #[public]
     #[internal]
     fn add_to_counter_public(counter_id: Field) {
@@ -37,7 +25,7 @@ contract SimpleLogging {
 
     #[public]
     fn increase_counter_public(counter_id: Field) {
-      context.emit_unencrypted_log(/*message=*/"Counter increased public");
+      context.emit_public_log(/*message=*/ "pub log");
       SimpleLogging::at(context.this_address()).add_to_counter_public(counter_id);
     }
     unconstrained fn get_counter_value(counter_id: Field) -> pub Field {

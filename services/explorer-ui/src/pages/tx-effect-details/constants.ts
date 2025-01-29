@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export type tabId =
   | "privateLogs"
-  | "unencryptedLogs"
+  | "publicLogs"
   | "nullifiers"
   | "noteHashes"
   | "l2ToL1Msgs"
@@ -11,7 +11,7 @@ export type tabId =
 // Define the tab IDs array
 export const tabIds = [
   "privateLogs",
-  "unencryptedLogs",
+  "publicLogs",
   "nullifiers",
   "noteHashes",
   "l2ToL1Msgs",
@@ -29,7 +29,7 @@ export type Tab = z.infer<typeof tabSchema>;
 
 export const txEffectTabs: Tab[] = [
   { id: "privateLogs", label: "Private logs" },
-  { id: "unencryptedLogs", label: "Unencrypted logs" },
+  { id: "publicLogs", label: "Public logs" },
   { id: "nullifiers", label: "Nullifiers" },
   { id: "noteHashes", label: "Note hashes" },
   { id: "l2ToL1Msgs", label: "L2 to L1 messages" },

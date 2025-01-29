@@ -39,8 +39,8 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
     await db.signOfLife.getL2ContractFunctions();
   const somePrivateLogsTxEffects =
     await db.signOfLife.getSomeTxEffectWithPrivateLogs();
-  const someUnencryptedLogsTxEffects =
-    await db.signOfLife.getSomeTxEffectWithUnencryptedLogs();
+  const somePublicLogsTxEffects =
+    await db.signOfLife.getSomeTxEffectWithPublicLogs();
   const r = [paths.latestHeight, paths.latestBlock, `${paths.blocks}?from=0`];
   const searchRoutes = [];
 
@@ -202,9 +202,9 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
           )
           .join("")}
       </ul>
-      <h3>Unencrypted logs</h3>
+      <h3>Public logs</h3>
       <ul>
-        ${someUnencryptedLogsTxEffects
+        ${somePublicLogsTxEffects
           ?.map(
             (hash) =>
               `<li><a href=localhost:5173/tx-effects/${hash}>${hash}</a></li>`

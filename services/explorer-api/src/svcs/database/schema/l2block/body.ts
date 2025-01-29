@@ -9,12 +9,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
-import {
-  bufferType,
-  generateAztecAddressColumn,
-  generateFrColumn,
-  generateFrNumberColumn,
-} from "../utils.js";
+import { generateFrColumn, generateFrNumberColumn } from "../utils.js";
 import { l2Block } from "./root.js";
 
 export const body = pgTable("body", {
@@ -40,10 +35,12 @@ export const txEffect = pgTable(
     noteHashes: jsonb("note_hashes").notNull(),
     nullifiers: jsonb("nullifiers").notNull(),
     l2ToL1Msgs: jsonb("l2_to_l1_msgs").notNull().$type<HexString[]>(),
-    unencryptedLogsLength: generateFrNumberColumn(
-      "unencrypted_logs_length"
+    contractClassLogsLength: generateFrNumberColumn(
+      "contract_class_logs_length"
     ).notNull(),
     privateLogs: jsonb("private_logs").notNull(),
+    publicLogs: jsonb("public_logs").notNull(),
+    contractClassLogs: jsonb("contract_class_logs").notNull(),
   },
   (table) => ({
     txHashIndex: index("tx_hash_index").on(table.txHash),
@@ -58,31 +55,4 @@ export const publicDataWrite = pgTable("public_data_write", {
   index: integer("index").notNull(),
   leafSlot: generateFrColumn("leaf_slot").notNull(),
   value: generateFrColumn("value").notNull(),
-});
-
-export const logs = pgTable("logs", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  // TODO: move index to junction table
-  index: integer("index").notNull(),
-  txEffectToLogsId: uuid("tx_effect_to_logs_id")
-    .notNull()
-    .references(() => txEffectToLogs.id, { onDelete: "cascade" }),
-  type: varchar("type", { length: 20 }).notNull(), // unencrypted
-  data: bufferType("data").notNull(),
-  contractAddress: generateAztecAddressColumn("contract_address"),
-});
-
-export const functionLogs = pgTable("function_logs", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  index: integer("index").notNull(),
-  txEffectToLogsId: uuid("tx_effect_to_logs_id")
-    .notNull()
-    .references(() => txEffectToLogs.id, { onDelete: "cascade" }),
-});
-
-export const txEffectToLogs = pgTable("tx_effect_to_logs", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  txEffectHash: varchar("tx_effect_hash")
-    .notNull()
-    .references(() => txEffect.txHash, { onDelete: "cascade" }),
 });

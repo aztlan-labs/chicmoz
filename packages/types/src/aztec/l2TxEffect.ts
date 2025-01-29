@@ -2,12 +2,12 @@ import { z } from "zod";
 import { aztecAddressSchema, hexStringSchema } from "../general.js";
 import { bufferSchema, frNumberSchema, frSchema } from "./utils.js";
 
-export const unencryptedLogEntrySchema = z.object({
+export const contractClassLogsSchema = z.object({
   data: bufferSchema,
   contractAddress: aztecAddressSchema,
 });
 
-const logsSchema = (logEntrySchema: typeof unencryptedLogEntrySchema) =>
+const logsSchema = (logEntrySchema: typeof contractClassLogsSchema) =>
   z.object({
     functionLogs: z.array(
       z.object({
@@ -16,28 +16,10 @@ const logsSchema = (logEntrySchema: typeof unencryptedLogEntrySchema) =>
     ),
   });
 
-//const functionSelectorSchema = z.string().length(10).regex(/^0x[0-9a-fA-F]+$/);
-
 export const chicmozL2PendingTxSchema = z.object({
   // TODO: this schema needs to be properly defined, perhaps merged with txEffect
   hash: hexStringSchema,
   birthTimestamp: z.number(),
-  //data: bufferSchema,
-  //noteEncryptedLogs: logsSchema(noteEncryptedLogEntrySchema),
-  //encryptedLogs: logsSchema(encryptedLogEntrySchema),
-  //unencryptedLogs: logsSchema(unencryptedLogEntrySchema),
-  //contractClassLogs: bufferSchema,
-  //clientIvcProof: bufferSchema,
-  //enqueuedPublicFunctionCalls: z.array(bufferSchema),
-  //publicTeardownFunctionCall: z.object({
-  //  callContext: z.object({
-  //    msgSender: aztecAddressSchema,
-  //    contractAddress: aztecAddressSchema,
-  //    functionSelector: functionSelectorSchema,
-  //    isStaticCall: z.boolean(),
-  //  }),
-  //  args: z.array(frSchema),
-  //}),
 });
 
 /**
@@ -58,12 +40,11 @@ export const chicmozL2TxEffectSchema = z.object({
   nullifiers: z.array(frSchema),
   l2ToL1Msgs: z.array(frSchema),
   publicDataWrites: z.array(z.object({ leafSlot: frSchema, value: frSchema })),
-  unencryptedLogsLength: frNumberSchema,
   privateLogs: z.array(z.array(frSchema)),
-  unencryptedLogs: logsSchema(unencryptedLogEntrySchema),
+  publicLogs: z.array(z.array(frSchema)),
+  contractClassLogs: logsSchema(contractClassLogsSchema),
+  contractClassLogsLength: frNumberSchema,
 });
-
-export type UnencryptedLogEntry = z.infer<typeof unencryptedLogEntrySchema>;
 
 export type ChicmozL2PendingTx = z.infer<typeof chicmozL2PendingTxSchema>;
 export type ChicmozL2TxEffect = z.infer<typeof chicmozL2TxEffectSchema>;

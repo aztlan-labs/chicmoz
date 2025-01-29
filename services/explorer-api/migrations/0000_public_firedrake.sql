@@ -32,21 +32,6 @@ CREATE TABLE IF NOT EXISTS "body" (
 	"block_hash" varchar NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "function_logs" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"index" integer NOT NULL,
-	"tx_effect_to_logs_id" uuid NOT NULL
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "logs" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"index" integer NOT NULL,
-	"tx_effect_to_logs_id" uuid NOT NULL,
-	"type" varchar(20) NOT NULL,
-	"data" "bytea" NOT NULL,
-	"contract_address" varchar(66)
-);
---> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "public_data_write" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"tx_effect_hash" varchar NOT NULL,
@@ -65,13 +50,10 @@ CREATE TABLE IF NOT EXISTS "tx_effect" (
 	"note_hashes" jsonb NOT NULL,
 	"nullifiers" jsonb NOT NULL,
 	"l2_to_l1_msgs" jsonb NOT NULL,
-	"unencrypted_logs_length" bigint NOT NULL,
-	"private_logs" jsonb NOT NULL
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "tx_effect_to_logs" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"tx_effect_hash" varchar NOT NULL
+	"contract_class_logs_length" bigint NOT NULL,
+	"private_logs" jsonb NOT NULL,
+	"public_logs" jsonb NOT NULL,
+	"contract_class_logs" jsonb NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "content_commitment" (
@@ -105,7 +87,8 @@ CREATE TABLE IF NOT EXISTS "global_variables" (
 CREATE TABLE IF NOT EXISTS "header" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"block_hash" varchar NOT NULL,
-	"total_fees" bigint NOT NULL
+	"total_fees" bigint NOT NULL,
+	"total_mana_used" bigint NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l1_to_l2_message_tree" (
@@ -310,18 +293,6 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "function_logs" ADD CONSTRAINT "function_logs_tx_effect_to_logs_id_tx_effect_to_logs_id_fk" FOREIGN KEY ("tx_effect_to_logs_id") REFERENCES "public"."tx_effect_to_logs"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "logs" ADD CONSTRAINT "logs_tx_effect_to_logs_id_tx_effect_to_logs_id_fk" FOREIGN KEY ("tx_effect_to_logs_id") REFERENCES "public"."tx_effect_to_logs"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
  ALTER TABLE "public_data_write" ADD CONSTRAINT "public_data_write_tx_effect_hash_tx_effect_tx_hash_fk" FOREIGN KEY ("tx_effect_hash") REFERENCES "public"."tx_effect"("tx_hash") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
@@ -329,12 +300,6 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "tx_effect" ADD CONSTRAINT "tx_effect_body_id_body_id_fk" FOREIGN KEY ("body_id") REFERENCES "public"."body"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "tx_effect_to_logs" ADD CONSTRAINT "tx_effect_to_logs_tx_effect_hash_tx_effect_tx_hash_fk" FOREIGN KEY ("tx_effect_hash") REFERENCES "public"."tx_effect"("tx_hash") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

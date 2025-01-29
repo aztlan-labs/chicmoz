@@ -1,25 +1,20 @@
+import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import {
   ChicmozL2TxEffect,
   ChicmozL2TxEffectDeluxe,
   HexString,
-  UnencryptedLogEntry,
   chicmozL2TxEffectDeluxeSchema,
-  unencryptedLogEntrySchema,
 } from "@chicmoz-pkg/types";
 import { SQL, and, asc, eq, getTableColumns } from "drizzle-orm";
 import { z } from "zod";
 import { DB_MAX_TX_EFFECTS } from "../../../../environment.js";
-import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import {
   body,
-  functionLogs,
   globalVariables,
   header,
   l2Block,
-  logs,
   publicDataWrite,
   txEffect,
-  txEffectToLogs,
 } from "../../../database/schema/l2block/index.js";
 
 enum GetTypes {
@@ -40,7 +35,7 @@ type GetTxEffectsByBlockHeight = {
 
 export const getTxEffectNestedByHash = async (
   txEffectHash: string
-): Promise<Pick<ChicmozL2TxEffect, "publicDataWrites" | "unencryptedLogs">> => {
+): Promise<Pick<ChicmozL2TxEffect, "publicDataWrites">> => {
   const publicDataWrites = await db()
     .select({
       ...getTableColumns(publicDataWrite),
@@ -50,50 +45,8 @@ export const getTxEffectNestedByHash = async (
     .where(eq(publicDataWrite.txEffectHash, txEffectHash))
     .orderBy(asc(publicDataWrite.index))
     .execute();
-
-  const mixedLogs = await db()
-    .select({
-      functionLogIndex: functionLogs.index,
-      ...getTableColumns(logs),
-    })
-    .from(txEffectToLogs)
-    .innerJoin(logs, eq(txEffectToLogs.id, logs.txEffectToLogsId))
-    .innerJoin(
-      functionLogs,
-      eq(txEffectToLogs.id, functionLogs.txEffectToLogsId)
-    )
-    .where(eq(txEffectToLogs.txEffectHash, txEffectHash))
-    .orderBy(asc(functionLogs.index), asc(logs.index))
-    .execute();
-
-  const { highestIndexUnencryptedLogs } = mixedLogs.reduce(
-    (acc, { functionLogIndex }) => ({
-      highestIndexUnencryptedLogs: Math.max(
-        acc.highestIndexUnencryptedLogs,
-        functionLogIndex
-      ),
-    }),
-    {
-      highestIndexUnencryptedLogs: -1,
-    }
-  );
-
-  const initialLogs = {
-    unencryptedLogs: {
-      functionLogs: new Array<{ logs: UnencryptedLogEntry[] }>(
-        highestIndexUnencryptedLogs + 1
-      ).fill({ logs: [] }),
-    },
-  };
-
-  for (const log of mixedLogs) {
-    const l = unencryptedLogEntrySchema.parse(log);
-    initialLogs.unencryptedLogs.functionLogs[log.functionLogIndex].logs.push(l);
-  }
-
   return {
     publicDataWrites,
-    ...initialLogs,
   };
 };
 

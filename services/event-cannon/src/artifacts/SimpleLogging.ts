@@ -32,6 +32,7 @@ import {
   PublicKeys,
   type UnencryptedL2Log,
   type Wallet,
+  type U128Like,
   type WrappedFieldLike,
 } from '@aztec/aztec.js';
 import SimpleLoggingContractArtifactJson from '../contract-projects/SimpleLogging/target/simple_logging-SimpleLogging.json' assert { type: 'json' };
@@ -130,9 +131,6 @@ export class SimpleLoggingContract extends ContractBase {
 
     /** get_counter_value(counter_id: field) */
     get_counter_value: ((counter_id: FieldLike) => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
-
-    /** increase_counter_private(counter_id: field) */
-    increase_counter_private: ((counter_id: FieldLike) => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
 
     /** increase_counter_public(counter_id: field) */
     increase_counter_public: ((counter_id: FieldLike) => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;

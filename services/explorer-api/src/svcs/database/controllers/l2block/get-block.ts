@@ -85,6 +85,7 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2BlockLight[]> =
       archive: getTableColumnsWithoutId(archive),
       header_LastArchive: getTableColumnsWithoutId(lastArchive),
       header_TotalFees: header.totalFees,
+      header_TotalManaUsed: header.totalManaUsed,
       header_ContentCommitment: getTableColumnsWithoutId(contentCommitment),
       header_State_L1ToL2MessageTree: getTableColumnsWithoutId(l1ToL2MessageTree),
       header_State_Partial_NoteHashTree: getTableColumnsWithoutId(noteHashTree),
@@ -159,6 +160,7 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2BlockLight[]> =
       header: {
         lastArchive: result.header_LastArchive,
         totalFees: result.header_TotalFees,
+        totalManaUsed: result.header_TotalManaUsed,
         contentCommitment: result.header_ContentCommitment,
         state: {
           l1ToL2MessageTree: result.header_State_L1ToL2MessageTree,

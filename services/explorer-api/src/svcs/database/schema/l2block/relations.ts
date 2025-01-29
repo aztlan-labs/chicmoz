@@ -2,11 +2,8 @@ import { relations } from "drizzle-orm";
 
 import {
   body,
-  functionLogs,
-  logs,
   publicDataWrite,
   txEffect,
-  txEffectToLogs,
 } from "./body.js";
 import {
   contentCommitment,
@@ -143,8 +140,6 @@ export const bodyRelations = relations(body, ({ one, many }) => ({
 export const txEffectRelations = relations(txEffect, ({ one, many }) => ({
   bodyToTxEffects: one(body),
   publicDataWrite: many(publicDataWrite),
-  functionLogs: many(functionLogs),
-  txEffectToLogs: many(txEffectToLogs),
 }));
 
 export const publicDataWriteRelations = relations(
@@ -153,26 +148,3 @@ export const publicDataWriteRelations = relations(
     txEffect: one(txEffect),
   })
 );
-
-export const logsRelations = relations(logs, ({ many }) => ({
-  txEffectToLogs: many(txEffectToLogs),
-}));
-
-export const functionLogsRelations = relations(functionLogs, ({ many }) => ({
-  txEffectToLogs: many(txEffectToLogs),
-}));
-
-export const txEffectToLogsRelations = relations(txEffectToLogs, ({ one }) => ({
-  txEffect: one(txEffect, {
-    fields: [txEffectToLogs.txEffectHash],
-    references: [txEffect.txHash],
-  }),
-  log: one(logs, {
-    fields: [txEffectToLogs.id],
-    references: [logs.txEffectToLogsId],
-  }),
-  functionLog: one(functionLogs, {
-    fields: [txEffectToLogs.id],
-    references: [functionLogs.txEffectToLogsId],
-  }),
-}));

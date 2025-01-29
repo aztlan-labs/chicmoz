@@ -70,6 +70,8 @@ export const storeContracts = async (b: L2Block, blockHash: string) => {
   const privateLogs = b.body.txEffects.flatMap(
     (txEffect) => txEffect.privateLogs
   );
+  // TODO: link contract instances & contract classes to blocks & txs: https://github.com/aztlan-labs/chicmoz/issues/285
+
   const contractInstances = privateLogs
     .filter((log) =>
       ContractInstanceDeployedEvent.isContractInstanceDeployedEvent(log)
