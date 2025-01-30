@@ -11,7 +11,7 @@ export const setConfig = (config: MicroserviceConfig, logger: Logger) => {
     throw new Error("Using default INSTANCE_NAME in production is not allowed");
   conf = config;
   logger.info(
-    `🏗🏗 ${conf.serviceName} 🏗🏗
+    `🏗 ==== ${conf.serviceName} ==== 🏗
 instance: ${
       isUsingDefaultInstanceName ? "(🚨 using default)" : ""
     }${INSTANCE_NAME}
