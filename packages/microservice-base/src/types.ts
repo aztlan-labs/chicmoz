@@ -7,7 +7,7 @@ export enum MicroserviceBaseSvcState {
   SHUTTING_DOWN,
 }
 export type MicroserviceBaseSvc = {
-  serviceId: string;
+  svcId: string;
   getConfigStr: () => string;
   init: () => Promise<void>;
   health: () => boolean;

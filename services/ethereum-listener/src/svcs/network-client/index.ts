@@ -1,6 +1,11 @@
 import { ChicmozChainInfoEvent } from "@chicmoz-pkg/message-registry";
+import { MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
 import { IBackOffOptions, backOff } from "exponential-backoff";
-import { logger } from "../logger.js";
+import {
+  ETHEREUM_HTTP_RPC_URL,
+  ETHEREUM_WS_RPC_URL,
+} from "../../environment.js";
+import { logger } from "../../logger.js";
 import {
   getLatestHeight,
   initClient,
@@ -28,17 +33,6 @@ export const init = async () => {
     return await getLatestHeight();
   }, backOffOptions);
   logger.info(`ETH: initialized, currently on height ${l1BlockNumber}`);
-
-  return {
-    id: "NC",
-    // eslint-disable-next-line @typescript-eslint/require-await
-    shutdownCb: async () => {
-      logger.info("ETH: shutting down...");
-      if (stopContractWatching) stopContractWatching();
-      else logger.warn("ETH: stopContractWatching not set");
-      logger.info("ETH: stopped watching contracts");
-    },
-  };
 };
 
 let stopContractWatching: () => void;
@@ -50,4 +44,17 @@ export const startPolling = async (
   initContracts(l1ContractAddresses);
   stopContractWatching = watchContractsEvents();
   await queryStakingStateAndEmitUpdates();
+};
+
+export const ethereumNetworkClient: MicroserviceBaseSvc = {
+  svcId: "EthereuemNetworkClient",
+  init,
+  health: () => true,
+  // eslint-disable-next-line @typescript-eslint/require-await
+  shutdown: async () => {
+    if (stopContractWatching) stopContractWatching();
+    else logger.warn("ETH: stopContractWatching not set");
+  },
+  getConfigStr: () =>
+    `ETH\n${JSON.stringify({ ETHEREUM_HTTP_RPC_URL, ETHEREUM_WS_RPC_URL })}`,
 };

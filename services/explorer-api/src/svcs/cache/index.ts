@@ -40,7 +40,7 @@ export const getEntry = async (keys: (string | number | undefined)[]) => {
 };
 
 export const cacheService: MicroserviceBaseSvc = {
-  serviceId: "CACHE",
+  svcId: "CACHE",
   init,
   getConfigStr: () => `REDIS\n${JSON.stringify({ REDIS_HOST, REDIS_PORT })}`,
   health: () => isInitialized && !isShutDown,

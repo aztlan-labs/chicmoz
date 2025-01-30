@@ -2,8 +2,9 @@ import {
   startMicroservice,
   type MicroserviceConfig,
 } from "@chicmoz-pkg/microservice-base";
-import { start } from "./start.js";
+import { SERVICE_NAME } from "./constants.js";
 import { logger } from "./logger.js";
+import { start } from "./start.js";
 import { services } from "./svcs/index.js";
 
 const formatConfigLog = () => {
@@ -12,7 +13,7 @@ const formatConfigLog = () => {
 
 const main = () => {
   const config: MicroserviceConfig = {
-    serviceName: "EXPLORER API",
+    serviceName: SERVICE_NAME,
     logger,
     formattedConfig: formatConfigLog(),
     services,

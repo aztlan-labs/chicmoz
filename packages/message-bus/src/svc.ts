@@ -8,6 +8,7 @@ import {
   getSvcState,
   type MicroserviceBaseSvc,
 } from "@chicmoz-pkg/microservice-base";
+import { backOff } from "exponential-backoff";
 import { MessageBus } from "./class.js";
 import {
   KAFKA_CONNECTION,
@@ -17,7 +18,7 @@ import {
 } from "./environment.js";
 
 let mb: MessageBus;
-const serviceId = "MB";
+const svcId = "MB";
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export const init = async (instanceName: string, logger: Logger) => {
@@ -34,7 +35,7 @@ export const init = async (instanceName: string, logger: Logger) => {
 };
 
 const checkReady = () => {
-  const state = getSvcState(serviceId);
+  const state = getSvcState(svcId);
   if (state === MicroserviceBaseSvcState.SHUTTING_DOWN)
     throw new Error("MessageBus is shutting down");
   if (state === MicroserviceBaseSvcState.DOWN)
@@ -52,24 +53,46 @@ export const publishMessage = async (
   await mb.publish<ChicmozMessageBusPayload>(topic, payload);
 };
 
-export const startSubscribe = async (
-  groupId: string,
-  topic: ChicmozMessageBusTopic,
-  cb: (message: ChicmozMessageBusPayload) => Promise<void>
-) => {
+const _startSubscribe = async (eventHandler: EventHandler) => {
   checkReady();
-  await mb.subscribe(groupId, topic, cb);
-  await mb.runConsumer(groupId);
+  await mb.subscribe(eventHandler.groupId, eventHandler.topic, eventHandler.cb);
+  await mb.runConsumer(eventHandler.groupId);
+};
+
+export type EventHandler = {
+  groupId: string;
+  topic: ChicmozMessageBusTopic;
+  cb: (message: ChicmozMessageBusPayload) => Promise<void>;
+};
+
+export const startSubscribe = async (
+  eventHandler: EventHandler,
+  logger: Logger
+) => {
+  const tryIt = async () => await _startSubscribe(eventHandler);
+  await backOff(tryIt, {
+    maxDelay: 10000,
+    retry: (e, attemptNumber: number) => {
+      if ((e as Error).message === "MessageBus is not initialized") {
+        logger.info("Trying to subscribe before MessageBus is initialized...");
+        return false;
+      }
+      // TODO: probably not infinite retries?
+      logger.warn(e);
+      logger.info(`Retrying attempt ${attemptNumber}...`);
+      return true;
+    },
+  });
 };
 
 export const generateSvc: (
   instanceName: string,
   logger: Logger
 ) => MicroserviceBaseSvc = (instanceName, logger) => ({
-  serviceId,
+  svcId,
   init: () => init(instanceName, logger),
   getConfigStr,
-  health: () => getSvcState(serviceId) === MicroserviceBaseSvcState.UP,
+  health: () => getSvcState(svcId) === MicroserviceBaseSvcState.UP,
   shutdown: async () => {
     await mb.disconnect();
   },

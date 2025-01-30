@@ -1,4 +1,8 @@
-import { getSvcState, MicroserviceBaseSvcState, type MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
+import {
+  MicroserviceBaseSvcState,
+  getSvcState,
+  type MicroserviceBaseSvc,
+} from "@chicmoz-pkg/microservice-base";
 import { DrizzleConfig } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
@@ -17,16 +21,19 @@ const init = async (drizzleConfig: DrizzleConfig<Record<string, unknown>>) => {
 
 export const getDb = () => {
   const state = getSvcState(serviceId);
-  if (state === MicroserviceBaseSvcState.SHUTTING_DOWN) throw new Error("Database is shutting down");
-  if (state === MicroserviceBaseSvcState.DOWN) throw new Error("Database is down");
-  if (state === MicroserviceBaseSvcState.INITIALIZING) throw new Error("Database is initializing");
+  if (state === MicroserviceBaseSvcState.SHUTTING_DOWN)
+    throw new Error("Database is shutting down");
+  if (state === MicroserviceBaseSvcState.DOWN)
+    throw new Error("Database is down");
+  if (state === MicroserviceBaseSvcState.INITIALIZING)
+    throw new Error("Database is initializing");
   return db;
 };
 
 export const generateSvc: (
   drizzleConf: DrizzleConfig<Record<string, unknown>>
 ) => MicroserviceBaseSvc = (drizzleConf) => ({
-  serviceId: "DB",
+  svcId: "DB",
   init: () => init(drizzleConf),
   getConfigStr,
   health: () => getSvcState(serviceId) === MicroserviceBaseSvcState.UP,

@@ -9,16 +9,16 @@ export const init = async (logger: Logger) => {
     return;
   }
   for (const svc of conf.services)
-    setSvcState(svc.serviceId, MicroserviceBaseSvcState.INITIALIZING);
+    setSvcState(svc.svcId, MicroserviceBaseSvcState.INITIALIZING);
 
   for (const [index, svc] of conf.services.entries()) {
     logger.info(
-      `🔧 ${svc.serviceId} [${index + 1} of ${
+      `🔧 ${svc.svcId} [${index + 1} of ${
         conf.services.length
       }] initializing with config:\n${svc.getConfigStr()}`
     );
     await svc.init();
-    setSvcState(svc.serviceId, MicroserviceBaseSvcState.UP);
+    setSvcState(svc.svcId, MicroserviceBaseSvcState.UP);
   }
   logger.info(`🍾 ${conf.serviceName} initalized!`);
 };

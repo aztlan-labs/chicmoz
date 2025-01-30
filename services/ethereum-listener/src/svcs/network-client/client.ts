@@ -18,9 +18,9 @@ import {
   ETHEREUM_HTTP_RPC_URL,
   ETHEREUM_WS_RPC_URL,
   L2_NETWORK_ID,
-} from "../environment.js";
-import { emit } from "../events/index.js";
-import { logger } from "../logger.js";
+} from "../../environment.js";
+import { emit } from "../../events/index.js";
+import { logger } from "../../logger.js";
 
 type AztecAbi =
   | typeof RollupAbi
