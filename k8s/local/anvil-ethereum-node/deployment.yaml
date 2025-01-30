@@ -22,7 +22,7 @@ spec:
           resources:
             limits:
               memory: 30Mi
-              cpu: 15m
+              cpu: 100m
           command:
             - /bin/sh
             - -c
