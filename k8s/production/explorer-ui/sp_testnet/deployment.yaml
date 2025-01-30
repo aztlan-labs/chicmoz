@@ -22,8 +22,8 @@ spec:
           name: explorer-ui-sp-testnet
           resources:
             limits:
-              memory: 500Mi
-              cpu: 200m
+              memory: 300Mi
+              cpu: 100m
           ports:
             - name: http-app-port
               containerPort: 80
