@@ -22,7 +22,7 @@ spec:
           resources:
             limits:
               memory: 300Mi
-              cpu: 50m
+              cpu: 100m
           ports:
             - name: websocket-port
               containerPort: 3000

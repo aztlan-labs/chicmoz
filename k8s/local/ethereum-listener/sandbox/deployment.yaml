@@ -21,7 +21,7 @@ spec:
           resources:
             limits:
               memory: 150Mi
-              cpu: 50m
+              cpu: 100m
           name: ethereum-listener
           env:
             - name: INSTANCE_NAME
