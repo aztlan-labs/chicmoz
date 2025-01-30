@@ -1,4 +1,6 @@
 import {
+  L1L2BlockProposed,
+  L1L2ProofVerified,
   type ChicmozL1L2Validator,
   type EthAddress,
   type L1NetworkId,
@@ -30,9 +32,11 @@ export function generateL1TopicName(
 }
 
 export type L1_MESSAGES = {
-  CONNECTED_TO_L1_EVENT: ConnectedToL1Event; // TODO: rename to L1
+  CONNECTED_TO_L1_EVENT: ConnectedToL1Event;
   NEW_L1_EVENT: NewL1Event;
   L1_L2_VALIDATOR_EVENT: L1L2ValidatorEvent;
+  L1_L2_BLOCK_PROPOSED_EVENT: L1L2BlockProposed;
+  L1_L2_PROOF_VERIFIED_EVENT: L1L2ProofVerified;
 };
 
 export type L1Payload = L1_MESSAGES[keyof L1_MESSAGES];

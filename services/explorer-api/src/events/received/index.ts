@@ -20,38 +20,38 @@ import { onSequencerInfoEvent } from "./on-sequencer-info.js";
 const groupId = `${SERVICE_NAME}-${L2_NETWORK_ID}`;
 
 const chainInfoHandler: EventHandler = {
-  groupId,
+  groupId: `${groupId}-chainInfo`,
   cb: onChainInfo as (arg0: unknown) => Promise<void>,
   topic: generateL2TopicName(L2_NETWORK_ID, "CHAIN_INFO_EVENT"),
 };
 
 const sequencerInfoHandler: EventHandler = {
-  groupId,
+  groupId: `${groupId}-sequencerInfo`,
   cb: onSequencerInfoEvent as (arg0: unknown) => Promise<void>,
   topic: generateL2TopicName(L2_NETWORK_ID, "SEQUENCER_INFO_EVENT"),
 };
 
 const l2RpcNodeAliveHandler: EventHandler = {
-  groupId,
+  groupId: `${groupId}-l2RpcNodeAlive`,
   cb: onL2RpcNodeAlive as (arg0: unknown) => Promise<void>,
   topic: generateL2TopicName(L2_NETWORK_ID, "L2_RPC_NODE_ALIVE_EVENT"),
 };
 
 const l2RpcNodeErrorHandler: EventHandler = {
-  groupId,
+  groupId: `${groupId}-l2RpcNodeError`,
   cb: onL2RpcNodeError as (arg0: unknown) => Promise<void>,
   topic: generateL2TopicName(L2_NETWORK_ID, "L2_RPC_NODE_ERROR_EVENT"),
 };
 
 const blockHandler: EventHandler = {
-  groupId,
+  groupId: `${groupId}-block`,
   cb: onBlock as (arg0: unknown) => Promise<void>,
   topic: generateL2TopicName(L2_NETWORK_ID, "NEW_BLOCK_EVENT"),
 };
 
 const catchupHandler: EventHandler = {
   // NOTE: this could be a separate handler when needed
-  groupId,
+  groupId: `${groupId}-blockCatchup`,
   cb: ((event: NewBlockEvent) => {
     logger.info(`Catchup block event`);
     return onBlock(event);
@@ -60,7 +60,7 @@ const catchupHandler: EventHandler = {
 };
 
 const pendingTxHandler: EventHandler = {
-  groupId,
+  groupId: `${groupId}-pendingTx`,
   cb: ((event: PendingTxsEvent) => {
     return onPendingTxs(event);
   }) as (arg0: unknown) => Promise<void>,
@@ -68,7 +68,7 @@ const pendingTxHandler: EventHandler = {
 };
 
 const l1L2ValidatorHandler: EventHandler = {
-  groupId,
+  groupId: `${groupId}-l1l2Validator`,
   cb: onL1L2Validator as (arg0: unknown) => Promise<void>,
   topic: generateL1TopicName(
     L2_NETWORK_ID,

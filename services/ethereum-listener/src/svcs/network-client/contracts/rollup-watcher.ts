@@ -1,3 +1,8 @@
+import {
+  l1L2BlockProposedSchema,
+  l1L2ProofVerifiedSchema,
+} from "@chicmoz-pkg/types";
+import { emit } from "../../../events/index.js";
 import { logger } from "../../../logger.js";
 import { RollupContract, UnwatchCallback } from "./utils.js";
 
@@ -20,11 +25,18 @@ export const watchRollupEvents = (
       onError: onError("L2BlockProposed"),
       onLogs: (logs) => {
         logs.forEach((log) => {
-          logger.info(`L2BlockProposed
-l2block number: ${log.args.blockNumber?.toString()}
-l2archive:      ${log.args.archive}
-l1block number: ${log.blockNumber}
-all keys:       ${Object.keys(log).join(", ")}`);
+          emit.l2BlockProposed(
+            l1L2BlockProposedSchema.parse({
+              l1BlockNumber: log.args.blockNumber,
+              l2BlockNumber: log.blockNumber,
+              archive: log.args.archive,
+              blockTimestamp: Number.parseInt(
+                (log as unknown as { blockTimestamp: `0x${string}` })
+                  .blockTimestamp,
+                16
+              ),
+            })
+          );
         });
       },
     })
@@ -33,7 +45,22 @@ all keys:       ${Object.keys(log).join(", ")}`);
     contract.watchEvent.L2ProofVerified(emptyFilterArgs, {
       fromBlock: 1n,
       onError: onError("L2ProofVerified"),
-      onLogs: onLogs("L2ProofVerified"),
+      onLogs: (logs) => {
+        logs.forEach((log) => {
+          emit.l2ProofVerified(
+            l1L2ProofVerifiedSchema.parse({
+              l1BlockNumber: log.args.blockNumber,
+              l2BlockNumber: log.blockNumber,
+              proverId: log.args.proverId,
+              blockTimestamp: Number.parseInt(
+                (log as unknown as { blockTimestamp: `0x${string}` })
+                  .blockTimestamp,
+                16
+              ),
+            })
+          );
+        });
+      },
     })
   );
   // staking events
