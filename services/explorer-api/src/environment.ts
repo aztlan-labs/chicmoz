@@ -1,19 +1,26 @@
-import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
-import { l2NetworkIdSchema, type L2NetworkId } from "@chicmoz-pkg/types";
+import {
+  ApiKey,
+  NODE_ENV,
+  NodeEnv,
+  apiKeySchema,
+  l2NetworkIdSchema,
+  type L2NetworkId,
+} from "@chicmoz-pkg/types";
 import {
   DEFAULT_VERIFIED_CONTRACT_INSTANCES_DEV,
   DEFAULT_VERIFIED_CONTRACT_INSTANCES_PROD,
 } from "./constants.js";
 
 const verifiedContractAddresses =
-  NODE_ENV === "production"
+  NODE_ENV === NodeEnv.PROD
     ? DEFAULT_VERIFIED_CONTRACT_INSTANCES_PROD
     : DEFAULT_VERIFIED_CONTRACT_INSTANCES_DEV;
 
 export const VERIFIED_CONTRACT_INSTANCES = verifiedContractAddresses;
 
-export const PUBLIC_API_KEY =
-  process.env.PUBLIC_API_KEY ?? "d1e2083a-660c-4314-a6f2-1d42f4b944f4";
+export const PUBLIC_API_KEY: ApiKey = apiKeySchema.parse(
+  process.env.PUBLIC_API_KEY
+);
 
 export const CACHE_TTL_SECONDS = Number(process.env.CACHE_TTL) || 60;
 export const CACHE_LATEST_TTL_SECONDS =

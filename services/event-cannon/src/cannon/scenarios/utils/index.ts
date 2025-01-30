@@ -26,7 +26,7 @@ import { deriveSigningKey } from "@aztec/circuits.js";
 import { FunctionType } from "@aztec/foundation/abi";
 import { ContractClassRegisteredEvent } from "@aztec/protocol-contracts/class-registerer";
 import { request } from "http";
-import { EXPLORER_API_URL } from "../../../environment.js";
+import { EXPLORER_API_KEY, EXPLORER_API_URL } from "../../../environment.js";
 import { logger } from "../../../logger.js";
 
 export const truncateHashString = (value: string) => {
@@ -239,7 +239,7 @@ export const registerContractClassArtifact = async (
   skipSleep = false
 ) => {
   const url = new URL(
-    `${EXPLORER_API_URL}/l2/contract-classes/${contractClassId}/versions/${version}`
+    `${EXPLORER_API_URL}/${EXPLORER_API_KEY}/l2/contract-classes/${contractClassId}/versions/${version}`
   );
   const artifactJson = (artifactObj as { default: NoirCompiledContract })
     .default

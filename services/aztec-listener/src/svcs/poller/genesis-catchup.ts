@@ -1,4 +1,4 @@
-import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
+import { NODE_ENV, NodeEnv } from "@chicmoz-pkg/types";
 import { onCatchupBlock } from "../../events/emitted/index.js";
 import { logger } from "../../logger.js";
 import { getBlock } from "./network-client.js";
@@ -18,7 +18,7 @@ export const startCatchup = async ({
     if (!blockRes) throw new Error("FATAL: Catchup received no block.");
     logger.info(`🐨 publishing block ${i} (stopping at ${to - 1})`);
     await onCatchupBlock(blockRes);
-    if (NODE_ENV === "development") {
+    if (NODE_ENV === NodeEnv.DEV) {
       // NOTE: we are restarting our local cluster quiet often, so we shouldn't spam them unnecessarily
       await new Promise((resolve) => setTimeout(resolve, ARTIFICIAL_WAIT));
     }

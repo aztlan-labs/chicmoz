@@ -1,4 +1,4 @@
-import { NODE_ENV } from "@chicmoz-pkg/microservice-base";
+import { NODE_ENV, NodeEnv } from "@chicmoz-pkg/types";
 import {
   CACHE_LATEST_TTL_SECONDS,
   CACHE_TTL_SECONDS,
@@ -50,7 +50,7 @@ export const get = async (
   const cachedVal = await getEntry(keys);
   const isCached = cachedVal !== null && cachedVal !== undefined;
   if (isCached) {
-    if (NODE_ENV === "development")
+    if (NODE_ENV === NodeEnv.DEV)
       logger.info(`CACHE_HIT: ${JSON.stringify(keys)}`);
     return cachedVal;
   }

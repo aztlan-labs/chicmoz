@@ -6,6 +6,7 @@
   "dependencies": {
     "@chicmoz-pkg/error-middleware": "workspace:^",
     "@chicmoz-pkg/logger-server": "workspace:^",
+    "@chicmoz-pkg/types": "workspace:^",
     "auto-bind": "5.0.1",
     "body-parser": "1.20.2",
     "cors": "2.8.5",

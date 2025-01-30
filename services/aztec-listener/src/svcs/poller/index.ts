@@ -1,5 +1,6 @@
 import { NodeInfo } from "@aztec/aztec.js";
-import { MicroserviceBaseSvc, NODE_ENV } from "@chicmoz-pkg/microservice-base";
+import { MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
+import { NODE_ENV, NodeEnv } from "@chicmoz-pkg/types";
 import {
   AZTEC_GENESIS_CATCHUP,
   AZTEC_LISTEN_FOR_BLOCKS,
@@ -30,7 +31,7 @@ const getHeights = async () => {
 };
 
 export const init = async () => {
-  if (NODE_ENV === "development") {
+  if (NODE_ENV === NodeEnv.DEV) {
     onL2RpcNodeError({
       name: "Mocked Node Error",
       message: "Lorem ipsum dolor sit amet",

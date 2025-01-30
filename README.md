@@ -27,7 +27,7 @@ minikube start --kubernetes-version=v1.25.3 --cpus max --memory max && skaffold 
 Now you can access the explorer at http://sandbox.chicmoz.localhost and also...
 
 - API: http://api.sandbox.chicmoz.localhost
-- index of API: http://api.sandbox.chicmoz.localhost/v1/d1e2083a-660c-4314-a6f2-1d42f4b944f4/l2/index
+- index of API: http://api.sandbox.chicmoz.localhost/v1/dev-api-key/l2/index
 
 ### Different Aztec-setups
 

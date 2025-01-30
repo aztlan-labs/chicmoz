@@ -1,4 +1,5 @@
-import { MicroserviceBaseSvc, NODE_ENV } from "@chicmoz-pkg/microservice-base";
+import { MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
+import { NODE_ENV } from "@chicmoz-pkg/types";
 import express from "express";
 import http from "http";
 import { BODY_LIMIT, PARAMETER_LIMIT, PORT } from "../../environment.js";

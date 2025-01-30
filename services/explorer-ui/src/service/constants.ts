@@ -1,4 +1,4 @@
-import {l2NetworkIdSchema} from "@chicmoz-pkg/types";
+import { apiKeySchema, l2NetworkIdSchema } from "@chicmoz-pkg/types";
 
 export const aztecExplorer = {
   getL2LatestHeight: "l2/latest-height",
@@ -56,10 +56,13 @@ export const aztecExplorer = {
 
 export const APP_NAME = "Aztec-Scan";
 
-export const L2_NETWORK_ID = l2NetworkIdSchema.parse(import.meta.env.VITE_L2_NETWORK_ID);
+export const L2_NETWORK_ID = l2NetworkIdSchema.parse(
+  import.meta.env.VITE_L2_NETWORK_ID
+);
+const API_KEY = apiKeySchema.parse(import.meta.env.VITE_API_KEY);
 export const API_URL =
   typeof import.meta.env.VITE_API_URL === "string"
-    ? import.meta.env.VITE_API_URL
+    ? `${import.meta.env.VITE_API_URL}/${API_KEY}`
     : "";
 export const WS_URL =
   typeof import.meta.env.VITE_WS_URL === "string"

@@ -1,7 +1,7 @@
 import { type Logger } from "@chicmoz-pkg/logger-server";
 import { getMicroserviceState, getSvcState, setLogger, setSvcState } from "./health.js";
 import { conf, setConfig } from "./config.js";
-import { INSTANCE_NAME, NODE_ENV } from "./environment.js";
+import { INSTANCE_NAME} from "./environment.js";
 import { init } from "./init.js";
 import { start } from "./start.js";
 import { stop } from "./stop.js";
@@ -14,7 +14,6 @@ import {
 export {
   INSTANCE_NAME,
   MicroserviceBaseSvcState,
-  NODE_ENV,
   getMicroserviceState,
   getSvcState,
   setSvcState,

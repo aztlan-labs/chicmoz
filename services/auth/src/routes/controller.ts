@@ -1,4 +1,5 @@
 import { Logger } from "@chicmoz-pkg/logger-server";
+import { apiKeySchema } from "@chicmoz-pkg/types";
 import autoBind from "auto-bind";
 import { RequestHandler } from "express";
 import { LRUCache } from "lru-cache";
@@ -34,19 +35,27 @@ export class Controller {
       return;
     }
 
-    if (!this.core.isUUID(apiKey)) {
-      this.logger.info(`Invalid UUID: ${apiKey}`);
-      // TODO: for some reason it returns 500, fix it
-      res.status(400).send(`Invalid UUID: ${apiKey}`);
-      return;
-    }
+    //if (!this.core.isUUID(apiKey)) {
+    //  this.logger.info(`Invalid UUID: ${apiKey}`);
+    //  // TODO: for some reason it returns 500, fix it
+    //  res.status(400).send(`Invalid UUID: ${apiKey}`);
+    //  return;
+    //}
 
     let exists: boolean;
-    if (this.apiKeyCache.get(apiKey)) {
+    //if (this.apiKeyCache.get(apiKey)) {
+    //  exists = true;
+    //} else {
+    //  exists = (await this.db.getByApiKey(apiKey)) !== null;
+    //  if (exists) this.apiKeyCache.set(apiKey, true);
+    //}
+
+    try {
+      apiKeySchema.parse(apiKey);
       exists = true;
-    } else {
-      exists = (await this.db.getByApiKey(apiKey)) !== null;
-      if (exists) this.apiKeyCache.set(apiKey, true);
+    } catch (e) {
+      this.logger.info((e as Error).message);
+      exists = false;
     }
 
     if (!exists) {
