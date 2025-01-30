@@ -10,9 +10,9 @@ import {
   getLatestHeight,
   initClient,
   initContracts,
-  queryStakingStateAndEmitUpdates,
   watchContractsEvents,
 } from "./client.js";
+import { UnwatchCallback } from "./contracts/utils.js";
 
 const backOffOptions: Partial<IBackOffOptions> = {
   numOfAttempts: 10,
@@ -26,8 +26,7 @@ const backOffOptions: Partial<IBackOffOptions> = {
   },
 };
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export const init = async () => {
+const init = async () => {
   initClient();
   const l1BlockNumber = await backOff(async () => {
     return await getLatestHeight();
@@ -35,18 +34,21 @@ export const init = async () => {
   logger.info(`ETH: initialized, currently on height ${l1BlockNumber}`);
 };
 
-let stopContractWatching: () => void;
+let stopContractWatching: UnwatchCallback | undefined;
 
-export const startPolling = async (
+export const onL1ContractAddresses = (
   l1ContractAddresses: ChicmozChainInfoEvent["chainInfo"]["l1ContractAddresses"]
 ) => {
-  logger.info(`ETH: start polling: ${JSON.stringify(l1ContractAddresses)}`);
+  if (stopContractWatching) return;
+  logger.info(
+    `ETH: onL1ContractAddresses ${JSON.stringify(l1ContractAddresses)}`
+  );
   initContracts(l1ContractAddresses);
+  logger.info("ETH: watching contracts events");
   stopContractWatching = watchContractsEvents();
-  await queryStakingStateAndEmitUpdates();
 };
 
-export const ethereumNetworkClient: MicroserviceBaseSvc = {
+export const ethereumNetworkClientService: MicroserviceBaseSvc = {
   svcId: "EthereuemNetworkClient",
   init,
   health: () => true,

@@ -1,8 +1,14 @@
 // TODO
 import { MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
 import { logger } from "../../logger.js";
+import { queryStakingStateAndEmitUpdates } from "../network-client/client.js";
 
-export const pendingBlocksPoller: MicroserviceBaseSvc = {
+export const startPolling = async () => {
+  // TODO: poll logic with backoff etc...
+  await queryStakingStateAndEmitUpdates();
+};
+
+export const pendingContractChangesPoller: MicroserviceBaseSvc = {
   svcId: "pendingBlocksPoller",
   // eslint-disable-next-line @typescript-eslint/require-await
   init: async () => {

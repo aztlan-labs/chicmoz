@@ -1048,6 +1048,7 @@ __metadata:
     eslint-plugin-promise: "npm:6.0.0"
     exponential-backoff: "npm:3.1.1"
     typescript: "npm:5.2.2"
+    viem: "npm:2.20.0"
   languageName: unknown
   linkType: soft
 
