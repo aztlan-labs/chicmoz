@@ -25,7 +25,7 @@ spec:
           resources:
             limits:
               memory: 300Mi
-              cpu: 100m
+              cpu: 500m
           readinessProbe:
             tcpSocket:
               port: 3000
