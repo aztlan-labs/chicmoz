@@ -1,4 +1,4 @@
-import { NODE_ENV, NodeEnv } from "@chicmoz-pkg/types";
+import { NODE_ENV, NodeEnv, jsonStringify } from "@chicmoz-pkg/types";
 import {
   CACHE_LATEST_TTL_SECONDS,
   CACHE_TTL_SECONDS,
@@ -32,15 +32,6 @@ export const getLatest = async (
   if (!latestHeight) throw new Error("CACHE_ERROR: latest height not found");
   // NOTE: we add one second to the TTL to ensure that stale cache is not stored
   return get([...keys, latestHeight], dbFn, CACHE_LATEST_TTL_SECONDS + 1);
-};
-
-const jsonStringify = (param: unknown): string => {
-  // TODO: move this to backend-utils and make use of it in websockets as well
-  return JSON.stringify(
-    param,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    (_key, value) => (typeof value === "bigint" ? value.toString() : value)
-  );
 };
 
 export const get = async (
