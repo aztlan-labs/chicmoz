@@ -1033,7 +1033,6 @@ __metadata:
   dependencies:
     "@aztec/aztec.js": "npm:0.72.1"
     "@aztec/l1-artifacts": "npm:0.72.1"
-    "@chicmoz-pkg/backend-utils": "workspace:^"
     "@chicmoz-pkg/logger-server": "workspace:^"
     "@chicmoz-pkg/message-bus": "workspace:^"
     "@chicmoz-pkg/message-registry": "workspace:^"
