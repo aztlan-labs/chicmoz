@@ -1,5 +1,5 @@
-import { ethAddressSchema } from "../general.js";
 import { z } from "zod";
+import { ethAddressSchema } from "../general.js";
 export * from "./contract-events.js";
 
 // NOTE: explaination copied from aztec-packages: l1-contracts/src/core/interfaces/IStaking.sol
@@ -15,6 +15,10 @@ export enum L1L2ValidatorStatus {
   EXITING,
 }
 
+const timestampSchema = z.coerce.date();
+const keyChangedSchema = z.coerce.string();
+const newValueSchema = z.coerce.string();
+
 export const chicmozL1L2ValidatorSchema = z.object({
   attester: ethAddressSchema,
   stake: z.coerce.bigint().nonnegative(), // TODO: this is not Fr but it might as well be. It is a uint256
@@ -22,15 +26,11 @@ export const chicmozL1L2ValidatorSchema = z.object({
   proposer: ethAddressSchema,
   status: z.nativeEnum(L1L2ValidatorStatus),
   // NOTE: we could use createdAt and updatedAt, but I want to emphasize that this is the first time we saw this validator. It can be way off from the actual creation time (on chain).
-  firstSeenAt: z.coerce.date().default(() => new Date()),
-  latestSeenChangeAt: z.coerce.date().default(() => new Date()),
+  firstSeenAt: timestampSchema.default(() => new Date()),
+  latestSeenChangeAt: timestampSchema.default(() => new Date()),
 });
 
 export type ChicmozL1L2Validator = z.infer<typeof chicmozL1L2ValidatorSchema>;
-
-const timestampSchema = z.coerce.date();
-const keyChangedSchema = z.coerce.string();
-const newValueSchema = z.coerce.string();
 
 export const chicmozL1L2ValidatorHistoryEntrySchema = z.tuple([
   timestampSchema,

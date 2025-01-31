@@ -15,7 +15,20 @@ import {
 
 export const chicmozL2BlockSchema = z.object({
   hash: hexStringSchema,
-  height: z.number().nonnegative(),
+  height: z.coerce.bigint().nonnegative(),
+  proposedOnL1: z
+    .object({
+      blockNumber: z.coerce.bigint().nonnegative(),
+      timestamp: z.number(),
+    })
+    .optional(),
+  proofVerifiedOnL1: z
+    .object({
+      blockNumber: z.coerce.bigint().nonnegative(),
+      timestamp: z.number(),
+      proverId: frSchema,
+    })
+    .optional(),
   archive: z.object({
     root: frSchema,
     nextAvailableLeafIndex: z.number(),

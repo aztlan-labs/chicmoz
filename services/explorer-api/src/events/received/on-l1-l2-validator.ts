@@ -1,11 +1,32 @@
-import { L1L2ValidatorEvent } from "@chicmoz-pkg/message-registry";
-import { chicmozL1L2ValidatorSchema } from "@chicmoz-pkg/types";
+import { EventHandler } from "@chicmoz-pkg/message-bus";
+import {
+  L1L2ValidatorEvent,
+  generateL1TopicName,
+  getConsumerGroupId,
+} from "@chicmoz-pkg/message-registry";
+import { chicmozL1L2ValidatorSchema, getL1NetworkId } from "@chicmoz-pkg/types";
+import { SERVICE_NAME } from "../../constants.js";
+import { L2_NETWORK_ID } from "../../environment.js";
 import { logger } from "../../logger.js";
 import { l1 } from "../../svcs/database/controllers/index.js";
 
-export const onL1L2Validator = async (event: L1L2ValidatorEvent) => {
+const onL1L2Validator = async (event: L1L2ValidatorEvent) => {
   logger.info(`🤖 L1L2 validator event ${JSON.stringify(event)}`);
   await l1.storeL1L2Validator(
     chicmozL1L2ValidatorSchema.parse(event.validator)
   );
+};
+
+export const l1L2ValidatorHandler: EventHandler = {
+  groupId: getConsumerGroupId({
+    serviceName: SERVICE_NAME,
+    networkId: L2_NETWORK_ID,
+    handlerName: "l1L2ValidatorHandler",
+  }),
+  topic: generateL1TopicName(
+    L2_NETWORK_ID,
+    getL1NetworkId(L2_NETWORK_ID),
+    "L1_L2_VALIDATOR_EVENT"
+  ),
+  cb: onL1L2Validator as (arg0: unknown) => Promise<void>,
 };
