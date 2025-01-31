@@ -27,7 +27,8 @@ import { dbWrapper } from "./utils/index.js";
 const SUB_PATH = `/v1/${PUBLIC_API_KEY}`;
 
 export const GET_ROUTES = asyncHandler(async (_req, res) => {
-  const cachedHtml = await getEntry(["GET_ROUTES"]);
+  const cacheRes = await getEntry(["GET_ROUTES"]);
+  const cachedHtml = cacheRes.value;
   if (cachedHtml) {
     res.send(cachedHtml);
     return;

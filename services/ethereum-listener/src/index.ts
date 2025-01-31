@@ -1,20 +1,25 @@
-import { SERVICE_NAME } from "./environment.js";
+import {
+  startMicroservice,
+  type MicroserviceConfig,
+} from "@chicmoz-pkg/microservice-base";
+import { SERVICE_NAME } from "./constants.js";
 import { logger } from "./logger.js";
 import { start } from "./start.js";
-import { gracefulShutdown } from "./stop.js";
+import { services } from "./svcs/index.js";
 
-const main = async () => {
-  logger.info(`🚀 ${SERVICE_NAME} starting...`);
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  process.on("SIGINT", gracefulShutdown());
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  process.on("SIGTERM", gracefulShutdown());
-  await start();
-  logger.info(`🥳 ${SERVICE_NAME} started!`);
+const formatConfigLog = () => {
+  return `TODO: is this needed if each service logs?`;
 };
 
-main().catch((e) => {
-  logger.error(`during startup of ${SERVICE_NAME}: ${(e as Error).stack ?? e}`);
-  process.exit(1);
-});
+const main = () => {
+  const config: MicroserviceConfig = {
+    serviceName: SERVICE_NAME,
+    logger,
+    formattedConfig: formatConfigLog(),
+    services,
+    startCallback: start,
+  };
+  startMicroservice(config);
+};
 
+main();

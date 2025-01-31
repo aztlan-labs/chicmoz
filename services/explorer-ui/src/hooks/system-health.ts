@@ -91,8 +91,9 @@ const evaluateHealth = ({
   const isChainErrorFreeWithinReasonableTime = chainErrors?.every(
     (error) => error.lastSeenAt.getTime() < reasonableTimeStamp
   );
-  const isFetchingErrors = !chainErrorsError;
-  const isChainUp = isChainErrorFreeWithinReasonableTime && !isFetchingErrors;
+  const isErrorsWithFetchingChainErrors = !!chainErrorsError;
+  const isChainUp =
+    isChainErrorFreeWithinReasonableTime && !isErrorsWithFetchingChainErrors;
   let evaluationDetails = "";
   if (isChainUp) {
     evaluationDetails = `Last seen error: ${chainErrors?.[0]
@@ -100,7 +101,7 @@ const evaluateHealth = ({
       chainErrors?.[0]?.lastSeenAt.getTime() ?? 0
     )} ago`;
   } else {
-    if (!isFetchingErrors)
+    if (isErrorsWithFetchingChainErrors)
       evaluationDetails = `Trying to fetch errors failed: ${chainErrorsError?.message}`;
     else
       evaluationDetails = `Indexer has reported ${chainErrors?.length} errors.`;

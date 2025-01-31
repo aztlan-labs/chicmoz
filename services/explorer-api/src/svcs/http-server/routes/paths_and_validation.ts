@@ -1,4 +1,10 @@
-import { chicmozL2SequencerSchema, chicmozSearchQuerySchema, ethAddressSchema, hexStringSchema } from "@chicmoz-pkg/types";
+import {
+  chicmozL2BlockSchema,
+  chicmozL2SequencerSchema,
+  chicmozSearchQuerySchema,
+  ethAddressSchema,
+  hexStringSchema,
+} from "@chicmoz-pkg/types";
 import { z } from "zod";
 
 export const heightOrHash = "heightOrHash";
@@ -63,26 +69,26 @@ export const paths = {
 
 export const getBlockByHeightOrHashSchema = z.object({
   params: z.object({
-    [heightOrHash]: hexStringSchema.or(z.coerce.number().nonnegative()),
+    [heightOrHash]: hexStringSchema.or(chicmozL2BlockSchema.shape.height),
   }),
 });
 
 export const getBlocksSchema = z.object({
   query: z.object({
-    from: z.coerce.number().nonnegative().optional(),
-    to: z.coerce.number().nonnegative().optional(),
+    from: chicmozL2BlockSchema.shape.height.optional(),
+    to: chicmozL2BlockSchema.shape.height.optional(),
   }),
 });
 
 export const getTxEffectsByBlockHeightSchema = z.object({
   params: z.object({
-    [blockHeight]: z.coerce.number().nonnegative(),
+    [blockHeight]: chicmozL2BlockSchema.shape.height,
   }),
 });
 
 export const getTxEffectByBlockHeightAndIndexSchema = z.object({
   params: z.object({
-    [blockHeight]: z.coerce.number().nonnegative(),
+    [blockHeight]: chicmozL2BlockSchema.shape.height,
     [txEffectIndex]: z.coerce.number().nonnegative(),
   }),
 });
@@ -101,8 +107,8 @@ export const getContractInstanceSchema = z.object({
 
 export const getContractInstancesSchema = z.object({
   query: z.object({
-    fromHeight: z.coerce.number().nonnegative().optional(),
-    toHeight: z.coerce.number().nonnegative().optional(),
+    fromHeight: chicmozL2BlockSchema.shape.height.optional(),
+    toHeight: chicmozL2BlockSchema.shape.height.optional(),
   }),
 });
 

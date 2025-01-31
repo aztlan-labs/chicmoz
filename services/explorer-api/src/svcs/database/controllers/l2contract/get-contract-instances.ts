@@ -14,8 +14,8 @@ export const getL2DeployedContractInstances = async ({
   fromHeight,
   toHeight,
 }: {
-  fromHeight?: number;
-  toHeight?: number;
+  fromHeight?: bigint;
+  toHeight?: bigint;
 }): Promise<ChicmozL2ContractInstanceDeluxe[]> => {
   const whereRange = getBlocksWhereRange({ from: fromHeight, to: toHeight });
   const result = await db()

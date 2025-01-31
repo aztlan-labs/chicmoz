@@ -23,24 +23,30 @@ const getCache = () => {
   return cache;
 };
 
+export type CacheKeys = (string | number | bigint | undefined)[];
+export type CacheValue = string | number;
+
 export const setEntry = async (
-  keys: (string | number | undefined)[],
-  value: string | number,
+  keys: CacheKeys,
+  value: CacheValue,
   secondsTtl: number
 ) => {
-  return await getCache().set(
-    [L2_NETWORK_ID, ...keys].join("-"),
-    value,
-    { EX: secondsTtl }
-  );
+  return await getCache().set([L2_NETWORK_ID, ...keys].join("-"), value, {
+    EX: secondsTtl,
+  });
 };
 
-export const getEntry = async (keys: (string | number | undefined)[]) => {
-  return await getCache().get([L2_NETWORK_ID, ...keys].join("-"));
+export const getEntry = async (keys: CacheKeys) => {
+  const keysStr = [L2_NETWORK_ID, ...keys].join("-");
+  const value = await getCache().get(keysStr);
+  return {
+    keysStr,
+    value,
+  };
 };
 
 export const cacheService: MicroserviceBaseSvc = {
-  serviceId: "CACHE",
+  svcId: "CACHE",
   init,
   getConfigStr: () => `REDIS\n${JSON.stringify({ REDIS_HOST, REDIS_PORT })}`,
   health: () => isInitialized && !isShutDown,

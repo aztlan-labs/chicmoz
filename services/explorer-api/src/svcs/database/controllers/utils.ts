@@ -1,7 +1,7 @@
 import { Table, and, getTableColumns, gte, lt } from "drizzle-orm";
 import { ZodError } from "zod";
-import { logger } from "../../../logger.js";
 import { DB_MAX_BLOCKS } from "../../../environment.js";
+import { logger } from "../../../logger.js";
 import { l2Block } from "../schema/index.js";
 
 export const dbParseErrorCallback = (e: Error) => {
@@ -31,8 +31,8 @@ export const getBlocksWhereRange = ({
   from,
   to,
 }: {
-  from: number | undefined;
-  to: number | undefined;
+  from: bigint | undefined;
+  to: bigint | undefined;
 }) => {
   let whereRange;
   if (to && from) {
@@ -43,7 +43,7 @@ export const getBlocksWhereRange = ({
   } else if (from) {
     whereRange = and(
       gte(l2Block.height, from),
-      lt(l2Block.height, from + DB_MAX_BLOCKS)
+      lt(l2Block.height, from + BigInt(DB_MAX_BLOCKS))
     );
   } else if (to) {
     whereRange = lt(l2Block.height, to);

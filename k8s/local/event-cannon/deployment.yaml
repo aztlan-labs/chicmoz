@@ -20,8 +20,8 @@ spec:
         - image: event-cannon:latest
           resources:
             limits:
-              memory: 250Mi
-              cpu: 30m
+              memory: 500Mi
+              cpu: 500m
           name: event-cannon
           env:
             - name: AZTEC_RPC_URL

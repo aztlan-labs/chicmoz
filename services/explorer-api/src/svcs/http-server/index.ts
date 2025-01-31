@@ -43,7 +43,7 @@ export const init = async () => {
 };
 
 export const httpServerService: MicroserviceBaseSvc = {
-  serviceId: "HTTP_SERVER",
+  svcId: "HTTP_SERVER",
   init,
   getConfigStr: () => `EXPRESS\n${JSON.stringify({ PORT, BODY_LIMIT })}`,
   health: () => true,

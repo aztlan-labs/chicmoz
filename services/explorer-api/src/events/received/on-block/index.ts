@@ -1,7 +1,14 @@
 import { L2Block } from "@aztec/aztec.js";
 import { blockFromString, parseBlock } from "@chicmoz-pkg/backend-utils";
-import { NewBlockEvent } from "@chicmoz-pkg/message-registry";
+import { EventHandler } from "@chicmoz-pkg/message-bus";
+import {
+  NewBlockEvent,
+  generateL2TopicName,
+  getConsumerGroupId,
+} from "@chicmoz-pkg/message-registry";
 import { ChicmozL2Block, ChicmozL2TxEffect } from "@chicmoz-pkg/types";
+import { SERVICE_NAME } from "../../../constants.js";
+import { L2_NETWORK_ID } from "../../../environment.js";
 import { logger } from "../../../logger.js";
 import { controllers } from "../../../svcs/database/index.js";
 import { handleDuplicateBlockError } from "../utils.js";
@@ -33,8 +40,7 @@ const hackyLogBlock = (b: L2Block) => {
   });
 };
 
-export const onBlock = async ({ block, blockNumber }: NewBlockEvent) => {
-  // TODO: start storing NODE_INFO connected to the block
+const onBlock = async ({ block, blockNumber }: NewBlockEvent) => {
   if (!block) {
     logger.error("🚫 Block is empty");
     return;
@@ -72,4 +78,27 @@ const storeBlock = async (parsedBlock: ChicmozL2Block) => {
 
 const pendingTxsHook = async (txEffects: ChicmozL2TxEffect[]) => {
   await controllers.l2Tx.replaceTxsWithTxEffects(txEffects);
+};
+
+export const blockHandler: EventHandler = {
+  groupId: getConsumerGroupId({
+    serviceName: SERVICE_NAME,
+    networkId: L2_NETWORK_ID,
+    handlerName: "blockHandler",
+  }),
+  topic: generateL2TopicName(L2_NETWORK_ID, "NEW_BLOCK_EVENT"),
+  cb: onBlock as (arg0: unknown) => Promise<void>,
+};
+
+export const catchupHandler: EventHandler = {
+  groupId: getConsumerGroupId({
+    serviceName: SERVICE_NAME,
+    networkId: L2_NETWORK_ID,
+    handlerName: "catchupHandler",
+  }),
+  topic: generateL2TopicName(L2_NETWORK_ID, "CATCHUP_BLOCK_EVENT"),
+  cb: ((event: NewBlockEvent) => {
+    logger.info(`Catchup block event`);
+    return onBlock(event);
+  }) as (arg0: unknown) => Promise<void>,
 };

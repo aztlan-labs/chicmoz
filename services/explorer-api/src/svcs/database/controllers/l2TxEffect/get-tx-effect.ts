@@ -23,13 +23,13 @@ enum GetTypes {
 }
 
 type GetTxEffectByBlockHeightAndIndex = {
-  blockHeight: number;
-  txEffectIndex: number;
+  blockHeight: bigint;
+  txEffectIndex: number
   getType: GetTypes.BlockHeightAndIndex;
 };
 
 type GetTxEffectsByBlockHeight = {
-  blockHeight: number;
+  blockHeight: bigint;
   getType: GetTypes.BlockHeight;
 };
 
@@ -51,7 +51,7 @@ export const getTxEffectNestedByHash = async (
 };
 
 export const getTxEffectByBlockHeightAndIndex = async (
-  blockHeight: number,
+  blockHeight: bigint,
   txEffectIndex: number
 ): Promise<ChicmozL2TxEffectDeluxe | null> => {
   const res = await _getTxEffects({
@@ -66,7 +66,7 @@ export const getTxEffectByBlockHeightAndIndex = async (
 };
 
 export const getTxEffectsByBlockHeight = async (
-  height: number
+  height: bigint
 ): Promise<ChicmozL2TxEffectDeluxe[]> => {
   return _getTxEffects({ blockHeight: height, getType: GetTypes.BlockHeight });
 };

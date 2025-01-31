@@ -21,8 +21,6 @@ const frToHexString = (val: unknown) => {
   else return val;
 };
 
-// TODO: frSchema should be replaced with
-//      z.coerce.bigint().nonnegative()
 export const frSchema = z.preprocess(
   frToHexString,
   z

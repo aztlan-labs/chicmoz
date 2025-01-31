@@ -4,25 +4,25 @@ import { l2NetworkIdSchema } from "../network-ids.js";
 export const CHICMOZ_TYPES_AZTEC_VERSION = "0.72.1";
 
 export const L1ContractAddressesSchema = z.object({
-  rollupAddress: z.string(),
-  registryAddress: z.string(),
-  inboxAddress: z.string(),
-  outboxAddress: z.string(),
-  feeJuiceAddress: z.string(),
-  feeJuicePortalAddress: z.string(),
-  coinIssuerAddress: z.string(),
-  rewardDistributorAddress: z.string(),
-  governanceProposerAddress: z.string(),
-  governanceAddress: z.string(),
-  stakingAssetAddress: z.string(),
-  slashFactoryAddress: z.string(),
+  rollupAddress: z.string().startsWith("0x"),
+  registryAddress: z.string().startsWith("0x"),
+  inboxAddress: z.string().startsWith("0x"),
+  outboxAddress: z.string().startsWith("0x"),
+  feeJuiceAddress: z.string().startsWith("0x"),
+  feeJuicePortalAddress: z.string().startsWith("0x"),
+  coinIssuerAddress: z.string().startsWith("0x"),
+  rewardDistributorAddress: z.string().startsWith("0x"),
+  governanceProposerAddress: z.string().startsWith("0x"),
+  governanceAddress: z.string().startsWith("0x"),
+  stakingAssetAddress: z.string().startsWith("0x"),
+  slashFactoryAddress: z.string().startsWith("0x"),
 });
 
 export const ProtocolContractAddressesSchema = z.object({
-  classRegisterer: z.string(),
-  feeJuice: z.string(),
-  instanceDeployer: z.string(),
-  multiCallEntrypoint: z.string(),
+  classRegisterer: z.string().startsWith("0x"),
+  feeJuice: z.string().startsWith("0x"),
+  instanceDeployer: z.string().startsWith("0x"),
+  multiCallEntrypoint: z.string().startsWith("0x"),
 });
 
 export const chicmozChainInfoSchema = z.object({

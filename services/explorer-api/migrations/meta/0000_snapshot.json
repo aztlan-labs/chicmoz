@@ -1,5 +1,5 @@
 {
-  "id": "09c080f8-cdb0-431b-93f8-9a3ef1bc32b8",
+  "id": "d44cdc3c-62a7-4820-976d-f63228f6a9ce",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -94,79 +94,6 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
-    },
-    "public.archive": {
-      "name": "archive",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "root": {
-          "name": "root",
-          "type": "varchar(66)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "next_available_leaf_index": {
-          "name": "next_available_leaf_index",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "block_hash": {
-          "name": "block_hash",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "archive_block_hash_l2Block_hash_fk": {
-          "name": "archive_block_hash_l2Block_hash_fk",
-          "tableFrom": "archive",
-          "tableTo": "l2Block",
-          "columnsFrom": ["block_hash"],
-          "columnsTo": ["hash"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.l2Block": {
-      "name": "l2Block",
-      "schema": "",
-      "columns": {
-        "hash": {
-          "name": "hash",
-          "type": "varchar",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "height": {
-          "name": "height",
-          "type": "bigint",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "l2Block_height_unique": {
-          "name": "l2Block_height_unique",
-          "nullsNotDistinct": false,
-          "columns": ["height"]
-        }
-      }
     },
     "public.body": {
       "name": "body",
@@ -879,6 +806,152 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
+    },
+    "public.l1L2BlockProposed": {
+      "name": "l1L2BlockProposed",
+      "schema": "",
+      "columns": {
+        "l2BlockNumber": {
+          "name": "l2BlockNumber",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "l1BlockNumber": {
+          "name": "l1BlockNumber",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "l1BlockTimestamp": {
+          "name": "l1BlockTimestamp",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "archive": {
+          "name": "archive",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "block_proposal": {
+          "name": "block_proposal",
+          "columns": ["l2BlockNumber", "archive"]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.l1L2ProofVerified": {
+      "name": "l1L2ProofVerified",
+      "schema": "",
+      "columns": {
+        "l2BlockNumber": {
+          "name": "l2BlockNumber",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "l1BlockNumber": {
+          "name": "l1BlockNumber",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "l1BlockTimestamp": {
+          "name": "l1BlockTimestamp",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "proverId": {
+          "name": "proverId",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.archive": {
+      "name": "archive",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "root": {
+          "name": "root",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "next_available_leaf_index": {
+          "name": "next_available_leaf_index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "block_hash": {
+          "name": "block_hash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "archive_block_hash_l2Block_hash_fk": {
+          "name": "archive_block_hash_l2Block_hash_fk",
+          "tableFrom": "archive",
+          "tableTo": "l2Block",
+          "columnsFrom": ["block_hash"],
+          "columnsTo": ["hash"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.l2Block": {
+      "name": "l2Block",
+      "schema": "",
+      "columns": {
+        "hash": {
+          "name": "hash",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "height": {
+          "name": "height",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "l2Block_height_unique": {
+          "name": "l2Block_height_unique",
+          "nullsNotDistinct": false,
+          "columns": ["height"]
+        }
+      }
     },
     "public.tx": {
       "name": "tx",

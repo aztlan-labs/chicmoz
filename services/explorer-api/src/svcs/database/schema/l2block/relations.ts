@@ -1,10 +1,6 @@
 import { relations } from "drizzle-orm";
 
-import {
-  body,
-  publicDataWrite,
-  txEffect,
-} from "./body.js";
+import { body, publicDataWrite, txEffect } from "./body.js";
 import {
   contentCommitment,
   gasFees,
@@ -18,9 +14,18 @@ import {
   publicDataTree,
   state,
 } from "./header.js";
+import { l1L2BlockProposedTable, l1L2ProofVerifiedTable } from "./l1-data.js";
 import { archive, l2Block } from "./root.js";
 
 export const l2BlockRelations = relations(l2Block, ({ one }) => ({
+  proposedOnL1: one(l1L2BlockProposedTable, {
+    fields: [l2Block.hash],
+    references: [l1L2BlockProposedTable.l2BlockNumber],
+  }),
+  proofVerifiedOnL1: one(l1L2ProofVerifiedTable, {
+    fields: [l2Block.hash],
+    references: [l1L2ProofVerifiedTable.l2BlockNumber],
+  }),
   archive: one(archive, {
     fields: [l2Block.hash],
     references: [archive.fk],
@@ -34,6 +39,20 @@ export const l2BlockRelations = relations(l2Block, ({ one }) => ({
     references: [body.blockHash],
   }),
 }));
+
+export const l1L2BlockProposedTableRelations = relations(
+  l1L2BlockProposedTable,
+  ({ one }) => ({
+    l2Block: one(l2Block),
+  })
+);
+
+export const l1L2ProofVerifiedTableRelations = relations(
+  l1L2ProofVerifiedTable,
+  ({ one }) => ({
+    l2Block: one(l2Block),
+  })
+);
 
 export const archiveRelations = relations(archive, ({ one }) => ({
   l2Block: one(l2Block),

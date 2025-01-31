@@ -14,19 +14,6 @@ CREATE TABLE IF NOT EXISTS "aztec-chain-connection" (
 	"protocol_contract_addresses" jsonb NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "archive" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"root" varchar(66),
-	"next_available_leaf_index" integer NOT NULL,
-	"block_hash" varchar NOT NULL
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "l2Block" (
-	"hash" varchar PRIMARY KEY NOT NULL,
-	"height" bigint NOT NULL,
-	CONSTRAINT "l2Block_height_unique" UNIQUE("height")
-);
---> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "body" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"block_hash" varchar NOT NULL
@@ -134,6 +121,34 @@ CREATE TABLE IF NOT EXISTS "public_data_tree" (
 CREATE TABLE IF NOT EXISTS "state" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"header_id" uuid NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "l1L2BlockProposed" (
+	"l2BlockNumber" bigint NOT NULL,
+	"l1BlockNumber" bigint NOT NULL,
+	"l1BlockTimestamp" integer NOT NULL,
+	"archive" varchar(66) NOT NULL,
+	CONSTRAINT "block_proposal" PRIMARY KEY("l2BlockNumber","archive")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "l1L2ProofVerified" (
+	"l2BlockNumber" bigint PRIMARY KEY NOT NULL,
+	"l1BlockNumber" bigint NOT NULL,
+	"l1BlockTimestamp" integer NOT NULL,
+	"proverId" varchar(66) NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "archive" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"root" varchar(66),
+	"next_available_leaf_index" integer NOT NULL,
+	"block_hash" varchar NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "l2Block" (
+	"hash" varchar PRIMARY KEY NOT NULL,
+	"height" bigint NOT NULL,
+	CONSTRAINT "l2Block_height_unique" UNIQUE("height")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tx" (
@@ -281,12 +296,6 @@ CREATE TABLE IF NOT EXISTS "l2_sequencer" (
 );
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "archive" ADD CONSTRAINT "archive_block_hash_l2Block_hash_fk" FOREIGN KEY ("block_hash") REFERENCES "public"."l2Block"("hash") ON DELETE cascade ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
  ALTER TABLE "body" ADD CONSTRAINT "body_block_hash_l2Block_hash_fk" FOREIGN KEY ("block_hash") REFERENCES "public"."l2Block"("hash") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
@@ -366,6 +375,12 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "state" ADD CONSTRAINT "state_header_id_header_id_fk" FOREIGN KEY ("header_id") REFERENCES "public"."header"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "archive" ADD CONSTRAINT "archive_block_hash_l2Block_hash_fk" FOREIGN KEY ("block_hash") REFERENCES "public"."l2Block"("hash") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

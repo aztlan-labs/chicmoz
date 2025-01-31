@@ -37,8 +37,8 @@ spec:
           name: aztec-listener
           resources:
             limits:
-              memory: 200Mi
-              cpu: 100m
+              memory: 750Mi
+              cpu: 500m
           envFrom:
             - configMapRef:
                 name: postgres-config-global

@@ -1,10 +1,11 @@
+import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import {
   ChicmozL2BlockLight,
   HexString,
   chicmozL2BlockLightSchema,
 } from "@chicmoz-pkg/types";
-import { asc, desc, eq } from "drizzle-orm";
-import { getDb as db } from "@chicmoz-pkg/postgres-helper";
+import { and, asc, desc, eq, getTableColumns } from "drizzle-orm";
+import { DB_MAX_BLOCKS } from "../../../../environment.js";
 import {
   archive,
   body,
@@ -12,6 +13,8 @@ import {
   gasFees,
   globalVariables,
   header,
+  l1L2BlockProposedTable,
+  l1L2ProofVerifiedTable,
   l1ToL2MessageTree,
   l2Block,
   lastArchive,
@@ -22,7 +25,6 @@ import {
   state,
   txEffect,
 } from "../../../database/schema/l2block/index.js";
-import { DB_MAX_BLOCKS } from "../../../../environment.js";
 import { getBlocksWhereRange, getTableColumnsWithoutId } from "../utils.js";
 
 enum GetTypes {
@@ -32,7 +34,7 @@ enum GetTypes {
 }
 
 type GetBlocksByHeight = {
-  height: number;
+  height: bigint;
   getType: GetTypes.BlockHeight;
 };
 
@@ -42,8 +44,8 @@ type GetBlocksByHash = {
 };
 
 type GetBlocksByRange = {
-  from: number | undefined;
-  to: number | undefined;
+  from: bigint | undefined;
+  to: bigint | undefined;
   getType: GetTypes.Range;
 };
 
@@ -51,17 +53,17 @@ export const getBlocks = async ({
   from,
   to,
 }: {
-  from: number | undefined;
-  to: number | undefined;
+  from: bigint | undefined;
+  to: bigint | undefined;
 }): Promise<ChicmozL2BlockLight[]> => {
   return _getBlocks({ from, to, getType: GetTypes.Range });
 };
 
 export const getBlock = async (
-  heightOrHash: number | HexString
+  heightOrHash: bigint | HexString
 ): Promise<ChicmozL2BlockLight | null> => {
   const res = await _getBlocks(
-    typeof heightOrHash === "number"
+    typeof heightOrHash === "bigint"
       ? { height: heightOrHash, getType: GetTypes.BlockHeight }
       : { hash: heightOrHash, getType: GetTypes.BlockHash }
   );
@@ -71,7 +73,9 @@ export const getBlock = async (
 
 type GetBlocksArgs = GetBlocksByHeight | GetBlocksByHash | GetBlocksByRange;
 
-const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2BlockLight[]> => {
+const _getBlocks = async (
+  args: GetBlocksArgs
+): Promise<ChicmozL2BlockLight[]> => {
   const whereRange =
     args.getType === GetTypes.Range ? getBlocksWhereRange(args) : undefined;
 
@@ -80,42 +84,48 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2BlockLight[]> =
 
   const joinQuery = db()
     .select({
-      hash: l2Block.hash,
-      height: l2Block.height,
+      ...getTableColumns(l2Block),
       archive: getTableColumnsWithoutId(archive),
+      l1L2BlockProposed: getTableColumnsWithoutId(l1L2BlockProposedTable),
+      l1L2ProofVerified: getTableColumnsWithoutId(l1L2ProofVerifiedTable),
       header_LastArchive: getTableColumnsWithoutId(lastArchive),
       header_TotalFees: header.totalFees,
       header_TotalManaUsed: header.totalManaUsed,
       header_ContentCommitment: getTableColumnsWithoutId(contentCommitment),
-      header_State_L1ToL2MessageTree: getTableColumnsWithoutId(l1ToL2MessageTree),
+      header_State_L1ToL2MessageTree:
+        getTableColumnsWithoutId(l1ToL2MessageTree),
       header_State_Partial_NoteHashTree: getTableColumnsWithoutId(noteHashTree),
-      header_State_Partial_NullifierTree: getTableColumnsWithoutId(nullifierTree),
-      headerState_Partial_PublicDataTree: getTableColumnsWithoutId(publicDataTree),
+      header_State_Partial_NullifierTree:
+        getTableColumnsWithoutId(nullifierTree),
+      headerState_Partial_PublicDataTree:
+        getTableColumnsWithoutId(publicDataTree),
       header_GlobalVariables: getTableColumnsWithoutId(globalVariables),
       header_GlobalVariables_GasFees: getTableColumnsWithoutId(gasFees),
       bodyId: body.id,
     })
     .from(l2Block)
     .innerJoin(archive, eq(l2Block.hash, archive.fk))
+    .innerJoin(
+      l1L2BlockProposedTable,
+      and(
+        eq(l2Block.height, l1L2BlockProposedTable.l2BlockNumber),
+        eq(archive.root, l1L2BlockProposedTable.archive)
+      )
+    )
+    .innerJoin(
+      l1L2ProofVerifiedTable,
+      eq(l2Block.height, l1L2ProofVerifiedTable.l2BlockNumber)
+    )
     .innerJoin(header, eq(l2Block.hash, header.blockHash))
     .innerJoin(lastArchive, eq(header.id, lastArchive.fk))
-    .innerJoin(
-      contentCommitment,
-      eq(header.id, contentCommitment.headerId)
-    )
+    .innerJoin(contentCommitment, eq(header.id, contentCommitment.headerId))
     .innerJoin(state, eq(header.id, state.headerId))
-    .innerJoin(
-      l1ToL2MessageTree,
-      eq(state.id, l1ToL2MessageTree.fk)
-    )
+    .innerJoin(l1ToL2MessageTree, eq(state.id, l1ToL2MessageTree.fk))
     .innerJoin(partial, eq(state.id, partial.stateId))
     .innerJoin(noteHashTree, eq(partial.id, noteHashTree.fk))
     .innerJoin(nullifierTree, eq(partial.id, nullifierTree.fk))
     .innerJoin(publicDataTree, eq(partial.id, publicDataTree.fk))
-    .innerJoin(
-      globalVariables,
-      eq(header.id, globalVariables.headerId)
-    )
+    .innerJoin(globalVariables, eq(header.id, globalVariables.headerId))
     .innerJoin(gasFees, eq(globalVariables.id, gasFees.globalVariablesId))
     .innerJoin(body, eq(l2Block.hash, body.blockHash));
 
@@ -124,7 +134,7 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2BlockLight[]> =
   switch (args.getType) {
     case GetTypes.BlockHeight:
       whereQuery =
-        args.height === -1
+        args.height === -1n
           ? joinQuery.orderBy(desc(l2Block.height)).limit(1)
           : joinQuery.where(eq(l2Block.height, args.height)).limit(1);
       break;
@@ -157,6 +167,12 @@ const _getBlocks = async (args: GetBlocksArgs): Promise<ChicmozL2BlockLight[]> =
       hash: result.hash,
       height: result.height,
       archive: result.archive,
+      proposedOnL1: result.l1L2BlockProposed.l1BlockTimestamp
+        ? result.l1L2BlockProposed
+        : undefined,
+      proofVerifiedOnL1: result.l1L2ProofVerified.l1BlockTimestamp
+        ? result.l1L2ProofVerified
+        : undefined,
       header: {
         lastArchive: result.header_LastArchive,
         totalFees: result.header_TotalFees,

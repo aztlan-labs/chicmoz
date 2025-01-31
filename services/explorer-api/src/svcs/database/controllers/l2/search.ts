@@ -1,11 +1,11 @@
-import { eq, or } from "drizzle-orm";
 import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import {
+  ChicmozSearchQuery,
+  HexString,
   chicmozSearchResultsSchema,
   type ChicmozSearchResults,
-  HexString,
-  ChicmozSearchQuery,
 } from "@chicmoz-pkg/types";
+import { eq, or } from "drizzle-orm";
 import {
   l2Block,
   l2ContractClassRegistered,
@@ -14,7 +14,7 @@ import {
 } from "../../schema/index.js";
 
 const getBlockHashByHeight = async (
-  height: number
+  height: bigint
 ): Promise<ChicmozSearchResults["results"]["blocks"]> => {
   const res = await db()
     .select({
@@ -87,7 +87,7 @@ const matchContractInstance = async (
 export const search = async (
   query: ChicmozSearchQuery["q"]
 ): Promise<ChicmozSearchResults> => {
-  if (typeof query === "number") {
+  if (typeof query === "bigint") {
     return {
       searchPhrase: query.toString(),
       results: {

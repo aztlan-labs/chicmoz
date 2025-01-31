@@ -69,7 +69,7 @@ export const startPoller = async () => {
 export const getNodeInfo = () => nodeInfo;
 
 export const pollerService: MicroserviceBaseSvc = {
-  serviceId: "POLLER",
+  svcId: "POLLER",
   getConfigStr,
   init,
   // TODO: improve health check

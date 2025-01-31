@@ -23,7 +23,7 @@ const updateBlock = (
     (oldData: ChicmozL2BlockLight[] | undefined) => {
       if (!oldData) return [block];
       if (oldData.find((b) => b.hash === block.hash)) return oldData;
-      return [...oldData, block].sort((a, b) => b.height - a.height);
+      return [...oldData, block].sort((a, b) => Number(b.height - a.height));
     }
   );
 };

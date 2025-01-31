@@ -1,65 +1,33 @@
-import {
-  //FeeJuiceAbi,
-  FeeJuicePortalAbi,
-  InboxAbi,
-  OutboxAbi,
-  RegistryAbi,
-  RollupAbi,
-} from "@aztec/l1-artifacts";
+import { RollupAbi } from "@aztec/l1-artifacts";
 import {
   ChicmozChainInfo,
-  EthAddress,
   chicmozL1L2ValidatorSchema,
   getL1NetworkId,
 } from "@chicmoz-pkg/types";
-import { Log, PublicClient, createPublicClient, defineChain, http } from "viem";
+import { PublicClient, createPublicClient, defineChain, webSocket } from "viem";
 import { foundry, mainnet, sepolia } from "viem/chains";
 import {
   ETHEREUM_HTTP_RPC_URL,
   ETHEREUM_WS_RPC_URL,
   L2_NETWORK_ID,
-} from "../environment.js";
-import { emit } from "../events/index.js";
-import { logger } from "../logger.js";
+} from "../../environment.js";
+import { emit } from "../../events/index.js";
+import { logger } from "../../logger.js";
+import { getL1Contracts, init as initC } from "./contracts/index.js";
+export { watchContractsEvents } from "./contracts/index.js";
 
-type AztecAbi =
-  | typeof RollupAbi
-  | typeof RegistryAbi
-  | typeof InboxAbi
-  | typeof OutboxAbi
-  //| typeof FeeJuiceAbi
-  | typeof FeeJuicePortalAbi;
+let publicClient: PublicClient | undefined = undefined;
 
-let l1Contracts:
-  | {
-      rollup: {
-        address: EthAddress;
-        abi: typeof RollupAbi;
-      };
-      registry: {
-        address: EthAddress;
-        abi: typeof RegistryAbi;
-      };
-      inbox: {
-        address: EthAddress;
-        abi: typeof InboxAbi;
-      };
-      outbox: {
-        address: EthAddress;
-        abi: typeof OutboxAbi;
-      };
-      //feeJuice: {
-      //  address: EthAddress;
-      //  abi: typeof FeeJuiceAbi;
-      //},
-      feeJuicePortal: {
-        address: EthAddress;
-        abi: typeof FeeJuicePortalAbi;
-      };
-    }
-  | undefined = undefined;
+export const initContracts = (
+  l1ContractAddresses: ChicmozChainInfo["l1ContractAddresses"]
+) => {
+  initC(l1ContractAddresses, getPublicClient());
+};
 
-let publicClient: PublicClient;
+const getPublicClient = () => {
+  if (!publicClient) throw new Error("Client not initialized");
+  return publicClient;
+};
 
 export const initClient = () => {
   let chainConf;
@@ -84,80 +52,17 @@ export const initClient = () => {
   });
   publicClient = createPublicClient({
     chain,
-    transport: http(),
+    transport: webSocket(),
   });
-};
-
-export const initContracts = (
-  l1ContractAddresses: ChicmozChainInfo["l1ContractAddresses"]
-) => {
-  // TODO: should use watch instead of "poller"
-  //publicClient.watchContractEvent
-  l1Contracts = {
-    rollup: {
-      address: l1ContractAddresses.rollupAddress,
-      abi: RollupAbi,
-    },
-    registry: {
-      address: l1ContractAddresses.registryAddress,
-      abi: RegistryAbi,
-    },
-    inbox: {
-      address: l1ContractAddresses.inboxAddress,
-      abi: InboxAbi,
-    },
-    outbox: {
-      address: l1ContractAddresses.outboxAddress,
-      abi: OutboxAbi,
-    },
-    //feeJuice: {
-    //  address: l1ContractAddresses.feeJuiceAddress,
-    //  abi: FeeJuiceAbi,
-    //},
-    feeJuicePortal: {
-      address: l1ContractAddresses.feeJuicePortalAddress,
-      abi: FeeJuicePortalAbi,
-    },
-  };
 };
 
 export const getLatestHeight = async () => {
-  return await publicClient.getBlockNumber();
+  return await getPublicClient().getBlockNumber();
 };
 
 export const getBlock = async (blockNumber: number) => {
-  return await publicClient.getBlock({
+  return await getPublicClient().getBlock({
     blockNumber: BigInt(blockNumber),
-  });
-};
-
-const watchContractEvents = ({
-  name,
-  address,
-  abi,
-  cb,
-}: {
-  name: string;
-  address: EthAddress;
-  abi: AztecAbi;
-  cb: (event: Log) => Promise<unknown>;
-}) => {
-  return publicClient.watchContractEvent({
-    // TODO: fix these type-casts in a better way
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-    address: address as `0x${string}`,
-    abi,
-    onLogs: (logs) => {
-      for (const log of logs) {
-        cb(log).catch((e) => {
-          logger.error(
-            `Callback function for ${name.toUpperCase()} failed: ${
-              (e as Error).stack
-            }`
-          );
-        });
-      }
-    },
   });
 };
 
@@ -168,43 +73,6 @@ const json = (param: unknown): string => {
     (_key, value) => (typeof value === "bigint" ? value.toString() : value),
     2
   );
-};
-
-const isStakingEvent = (event: Log) => {
-  const eventName = (event as unknown as { eventName: string })?.eventName;
-  return (
-    eventName === "Deposit" ||
-    eventName === "WithdrawInitiated" ||
-    eventName === "WithdrawFinalised" ||
-    eventName === "Slashed"
-  );
-};
-
-export const watchContractsEvents = () => {
-  if (!l1Contracts) throw new Error("Contracts not initialized");
-  const unwatches = Object.entries(l1Contracts).map(
-    ([name, { address, abi }]) => {
-      return watchContractEvents({
-        name,
-        address,
-        abi,
-        // eslint-disable-next-line @typescript-eslint/require-await
-        cb: async (event) => {
-          if (isStakingEvent(event))
-            logger.info("================= STAKING EVENT =================");
-
-          logger.info(
-            `${name.toUpperCase()} at block ${event.blockNumber
-              ?.valueOf()
-              .toString()}\n${json(event)}`
-          );
-        },
-      });
-    }
-  );
-  return () => {
-    unwatches.forEach((unwatch) => unwatch());
-  };
 };
 
 //export const emitRandomizedChangeWithinRandomizedTime = async (
@@ -262,8 +130,9 @@ export const watchContractsEvents = () => {
 
 export const queryStakingStateAndEmitUpdates = async () => {
   // TODO: this entire function should be replaced with a watch on the contract (and some initial state query)
+  const l1Contracts = getL1Contracts();
   if (!l1Contracts) throw new Error("Contracts not initialized");
-  const attesterCount = await publicClient.readContract({
+  const attesterCount = await getPublicClient().readContract({
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     address: l1Contracts.rollup.address as `0x${string}`,
     abi: RollupAbi,
@@ -272,14 +141,14 @@ export const queryStakingStateAndEmitUpdates = async () => {
   logger.info(`Active attester count: ${attesterCount.toString()}`);
   if (attesterCount > 0) {
     for (let i = 0; i < attesterCount; i++) {
-      const attester = await publicClient.readContract({
+      const attester = await getPublicClient().readContract({
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         address: l1Contracts.rollup.address as `0x${string}`,
         abi: RollupAbi,
         functionName: "getAttesterAtIndex",
         args: [BigInt(i)],
       });
-      const attesterInfo = await publicClient.readContract({
+      const attesterInfo = await getPublicClient().readContract({
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         address: l1Contracts.rollup.address as `0x${string}`,
         abi: RollupAbi,
