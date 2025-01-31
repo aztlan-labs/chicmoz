@@ -23,19 +23,20 @@ const getCache = () => {
   return cache;
 };
 
+export type CacheKeys = (string | number | bigint | undefined)[];
+export type CacheValue = string | number;
+
 export const setEntry = async (
-  keys: (string | number | undefined)[],
-  value: string | number,
+  keys: CacheKeys,
+  value: CacheValue,
   secondsTtl: number
 ) => {
-  return await getCache().set(
-    [L2_NETWORK_ID, ...keys].join("-"),
-    value,
-    { EX: secondsTtl }
-  );
+  return await getCache().set([L2_NETWORK_ID, ...keys].join("-"), value, {
+    EX: secondsTtl,
+  });
 };
 
-export const getEntry = async (keys: (string | number | undefined)[]) => {
+export const getEntry = async (keys: CacheKeys) => {
   return await getCache().get([L2_NETWORK_ID, ...keys].join("-"));
 };
 

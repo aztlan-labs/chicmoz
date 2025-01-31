@@ -1,9 +1,6 @@
-import {
-  HexString,
-  type ChicmozL2Block,
-} from "@chicmoz-pkg/types";
-import { v4 as uuidv4 } from "uuid";
 import { getDb as db } from "@chicmoz-pkg/postgres-helper";
+import { HexString, type ChicmozL2Block } from "@chicmoz-pkg/types";
+import { v4 as uuidv4 } from "uuid";
 import {
   archive,
   body,
@@ -28,7 +25,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
     // Insert l2Block
     await dbTx.insert(l2Block).values({
       hash: block.hash,
-      height: block.header.globalVariables.blockNumber,
+      height: BigInt(block.header.globalVariables.blockNumber),
     });
 
     const headerId = uuidv4();

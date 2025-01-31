@@ -1,14 +1,14 @@
+import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import { ChicmozL2BlockLight } from "@chicmoz-pkg/types";
 import { desc } from "drizzle-orm";
-import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import { l2Block } from "../../../database/schema/l2block/index.js";
 import { getBlock } from "./get-block.js";
 
 export const getLatestBlock = async (): Promise<ChicmozL2BlockLight | null> => {
-  return getBlock(-1);
+  return getBlock(-1n);
 };
 
-export const getLatestHeight = async (): Promise<number | null> => {
+export const getLatestHeight = async (): Promise<bigint | null> => {
   const latestBlockNumber = await db()
     .select({ height: l2Block.height })
     .from(l2Block)
@@ -16,5 +16,5 @@ export const getLatestHeight = async (): Promise<number | null> => {
     .limit(1)
     .execute();
   if (latestBlockNumber.length === 0) return null;
-  return Number(latestBlockNumber[0].height);
-}
+  return latestBlockNumber[0].height;
+};

@@ -24,6 +24,11 @@ CREATE TABLE IF NOT EXISTS "archive" (
 CREATE TABLE IF NOT EXISTS "l2Block" (
 	"hash" varchar PRIMARY KEY NOT NULL,
 	"height" bigint NOT NULL,
+	"proposedOnL1_blockNumber" bigint,
+	"proposedOnL1_timestamp" integer,
+	"proofVerifiedOnL1_blockNumber" bigint,
+	"proofVerifiedOnL1_timestamp" integer,
+	"proofVerifiedOnL1_proverId" varchar(66),
 	CONSTRAINT "l2Block_height_unique" UNIQUE("height")
 );
 --> statement-breakpoint

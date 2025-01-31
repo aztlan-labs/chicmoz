@@ -7,8 +7,7 @@ export const l2Block = pgTable(
   "l2Block",
   {
     hash: varchar("hash").primaryKey().notNull().$type<HexString>(),
-    // TODO: change to bigint
-    height: bigint("height", { mode: "number" }).notNull(),
+    height: bigint("height", { mode: "bigint" }).notNull(),
     proposedOnL1_blockNumber: bigint("proposedOnL1_blockNumber", {
       mode: "bigint",
     }),

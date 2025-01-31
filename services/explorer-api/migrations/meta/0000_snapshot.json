@@ -1,5 +1,5 @@
 {
-  "id": "09c080f8-cdb0-431b-93f8-9a3ef1bc32b8",
+  "id": "1752a336-30ae-411c-851e-ec8500608306",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -155,6 +155,36 @@
           "type": "bigint",
           "primaryKey": false,
           "notNull": true
+        },
+        "proposedOnL1_blockNumber": {
+          "name": "proposedOnL1_blockNumber",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "proposedOnL1_timestamp": {
+          "name": "proposedOnL1_timestamp",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "proofVerifiedOnL1_blockNumber": {
+          "name": "proofVerifiedOnL1_blockNumber",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "proofVerifiedOnL1_timestamp": {
+          "name": "proofVerifiedOnL1_timestamp",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "proofVerifiedOnL1_proverId": {
+          "name": "proofVerifiedOnL1_proverId",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},

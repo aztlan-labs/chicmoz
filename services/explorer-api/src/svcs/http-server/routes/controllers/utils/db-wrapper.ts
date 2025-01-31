@@ -4,7 +4,7 @@ import {
   CACHE_TTL_SECONDS,
 } from "../../../../../environment.js";
 import { logger } from "../../../../../logger.js";
-import { getEntry, setEntry } from "../../../../cache/index.js";
+import { CacheKeys, getEntry, setEntry } from "../../../../cache/index.js";
 import { dbParseErrorCallback } from "../../../../database/controllers/utils.js";
 import { controllers as db } from "../../../../database/index.js";
 
@@ -17,14 +17,14 @@ export const getLatestHeight = async () => {
 
   const dbVal = await db.l2Block.getLatestHeight().catch(dbParseErrorCallback);
   if (dbVal) {
-    await setEntry([LATEST_HEIGHT], dbVal, CACHE_LATEST_TTL_SECONDS);
+    await setEntry([LATEST_HEIGHT], dbVal.toString(), CACHE_LATEST_TTL_SECONDS);
     return dbVal;
   }
   throw new Error("CACHE_ERROR: latest height not found");
 };
 
 export const getLatest = async (
-  keys: (string | number | undefined)[],
+  keys: CacheKeys,
   dbFn: () => Promise<unknown>
 ): Promise<string | undefined> => {
   const latestHeight = await getLatestHeight();
@@ -43,7 +43,7 @@ const jsonStringify = (param: unknown): string => {
 };
 
 export const get = async (
-  keys: (string | number | undefined)[],
+  keys: CacheKeys,
   dbFn: () => Promise<unknown>,
   ttl = CACHE_TTL_SECONDS
 ): Promise<string | undefined> => {

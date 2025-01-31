@@ -12,10 +12,18 @@ import {
 } from "@chicmoz-pkg/types";
 import { SERVICE_NAME } from "../../constants.js";
 import { L2_NETWORK_ID } from "../../environment.js";
+import { logger } from "../../logger.js";
+import {
+  addL1L2BlockProposed,
+  addL1L2ProofVerified,
+} from "../../svcs/database/controllers/l2block/add_l1_data.js";
 
-// eslint-disable-next-line @typescript-eslint/require-await
 const onProp = async (event: L1L2BlockProposed) => {
-  l1L2BlockProposedSchema.parse(event);
+  logger.info(
+    `🎓 L1L2BlockProposed l2BlockNumber: ${event.l2BlockNumber} l1BlockNumber: ${event.l1BlockNumber}`
+  );
+  const parsed = l1L2BlockProposedSchema.parse(event);
+  await addL1L2BlockProposed(parsed);
 };
 
 export const l1L2BlockProposedHandler: EventHandler = {
@@ -32,9 +40,12 @@ export const l1L2BlockProposedHandler: EventHandler = {
   cb: onProp as (arg0: unknown) => Promise<void>,
 };
 
-// eslint-disable-next-line @typescript-eslint/require-await
 const onVerf = async (event: L1L2ProofVerified) => {
-  l1L2ProofVerifiedSchema.parse(event);
+  logger.info(
+    `🎩 L1L2ProofVerified l2BlockNumber: ${event.l2BlockNumber} l1BlockNumber: ${event.l1BlockNumber}`
+  );
+  const parsed = l1L2ProofVerifiedSchema.parse(event);
+  await addL1L2ProofVerified(parsed);
 };
 
 export const l1L2ProofVerifiedHandler: EventHandler = {
