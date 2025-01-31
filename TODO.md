@@ -1,6 +1,5 @@
 1. [x] refactor eth-listener to MSB
-1. [ ] use DB in eth-listener
-1. [ ] add catch-up mechanism to eth-listener
-1. [ ] add watch contracts for eth-listener
-1. [ ] poll for _pending_ txs
-1. [ ] determine if we can both get "seen" and "settled" for blocks
+1. [x] add watch contracts for eth-listener
+1. [x] fix - UI only sees latest TX-effect
+1. [ ] simple UI for block l1-stuff
+1. [ ] ensure other contract-events are being logged
