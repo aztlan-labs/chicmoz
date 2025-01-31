@@ -4,6 +4,7 @@ import {
   ethAddressSchema,
   hexStringSchema,
 } from "../general.js";
+import { l1L2BlockProposedSchema, l1L2ProofVerifiedSchema } from "../index.js";
 import { deepPartial } from "../utils.js";
 import { chicmozL2TxEffectSchema } from "./l2TxEffect.js";
 import {
@@ -16,19 +17,12 @@ import {
 export const chicmozL2BlockSchema = z.object({
   hash: hexStringSchema,
   height: z.coerce.bigint().nonnegative(),
-  proposedOnL1: z
-    .object({
-      blockNumber: z.coerce.bigint().nonnegative(),
-      timestamp: z.number(),
-    })
-    .optional(),
-  proofVerifiedOnL1: z
-    .object({
-      blockNumber: z.coerce.bigint().nonnegative(),
-      timestamp: z.number(),
-      proverId: frSchema,
-    })
-    .optional(),
+  proposedOnL1: z.lazy(() =>
+    l1L2BlockProposedSchema.omit({ l2BlockNumber: true }).optional()
+  ),
+  proofVerifiedOnL1: z.lazy(() =>
+    l1L2ProofVerifiedSchema.omit({ l2BlockNumber: true }).optional()
+  ),
   archive: z.object({
     root: frSchema,
     nextAvailableLeafIndex: z.number(),

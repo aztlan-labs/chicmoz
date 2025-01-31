@@ -4,7 +4,7 @@ import {
   HexString,
   chicmozL2BlockLightSchema,
 } from "@chicmoz-pkg/types";
-import { asc, desc, eq, getTableColumns } from "drizzle-orm";
+import { and, asc, desc, eq, getTableColumns } from "drizzle-orm";
 import { DB_MAX_BLOCKS } from "../../../../environment.js";
 import {
   archive,
@@ -13,6 +13,8 @@ import {
   gasFees,
   globalVariables,
   header,
+  l1L2BlockProposedTable,
+  l1L2ProofVerifiedTable,
   l1ToL2MessageTree,
   l2Block,
   lastArchive,
@@ -84,6 +86,8 @@ const _getBlocks = async (
     .select({
       ...getTableColumns(l2Block),
       archive: getTableColumnsWithoutId(archive),
+      l1L2BlockProposed: getTableColumnsWithoutId(l1L2BlockProposedTable),
+      l1L2ProofVerified: getTableColumnsWithoutId(l1L2ProofVerifiedTable),
       header_LastArchive: getTableColumnsWithoutId(lastArchive),
       header_TotalFees: header.totalFees,
       header_TotalManaUsed: header.totalManaUsed,
@@ -101,6 +105,17 @@ const _getBlocks = async (
     })
     .from(l2Block)
     .innerJoin(archive, eq(l2Block.hash, archive.fk))
+    .innerJoin(
+      l1L2BlockProposedTable,
+      and(
+        eq(l2Block.height, l1L2BlockProposedTable.l2BlockNumber),
+        eq(archive.root, l1L2BlockProposedTable.archive)
+      )
+    )
+    .innerJoin(
+      l1L2ProofVerifiedTable,
+      eq(l2Block.height, l1L2ProofVerifiedTable.l2BlockNumber)
+    )
     .innerJoin(header, eq(l2Block.hash, header.blockHash))
     .innerJoin(lastArchive, eq(header.id, lastArchive.fk))
     .innerJoin(contentCommitment, eq(header.id, contentCommitment.headerId))
@@ -152,18 +167,14 @@ const _getBlocks = async (
       hash: result.hash,
       height: result.height,
       archive: result.archive,
-      proposedOnL1: result.proposedOnL1_timestamp
+      proposedOnL1: result.l1L2BlockProposed.l1BlockTimestamp
         ? {
-            blockNumber: result.proposedOnL1_blockNumber,
-            timestamp: result.proposedOnL1_timestamp,
+            blockNumber: result.l1L2BlockProposed.l1BlockNumber,
+            timestamp: result.l1L2BlockProposed.l1BlockTimestamp,
           }
         : undefined,
-      proofVerifiedOnL1: result.proofVerifiedOnL1_timestamp
-        ? {
-            blockNumber: result.proofVerifiedOnL1_blockNumber,
-            timestamp: result.proofVerifiedOnL1_timestamp,
-            proverId: result.proofVerifiedOnL1_proverId,
-          }
+      proofVerifiedOnL1: result.l1L2ProofVerified.l1BlockTimestamp
+        ? result.l1L2ProofVerified
         : undefined,
       header: {
         lastArchive: result.header_LastArchive,

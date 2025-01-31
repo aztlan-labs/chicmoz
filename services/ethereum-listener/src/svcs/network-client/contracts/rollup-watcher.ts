@@ -27,10 +27,10 @@ export const watchRollupEvents = (
         logs.forEach((log) => {
           emit.l2BlockProposed(
             l1L2BlockProposedSchema.parse({
-              l1BlockNumber: log.args.blockNumber,
-              l2BlockNumber: log.blockNumber,
+              l1BlockNumber: log.blockNumber,
+              l2BlockNumber: log.args.blockNumber,
               archive: log.args.archive,
-              blockTimestamp: Number.parseInt(
+              l1BlockTimestamp: Number.parseInt(
                 (log as unknown as { blockTimestamp: `0x${string}` })
                   .blockTimestamp,
                 16
@@ -49,10 +49,10 @@ export const watchRollupEvents = (
         logs.forEach((log) => {
           emit.l2ProofVerified(
             l1L2ProofVerifiedSchema.parse({
-              l1BlockNumber: log.args.blockNumber,
-              l2BlockNumber: log.blockNumber,
+              l1BlockNumber: log.blockNumber,
+              l2BlockNumber: log.args.blockNumber,
               proverId: log.args.proverId,
-              blockTimestamp: Number.parseInt(
+              l1BlockTimestamp: Number.parseInt(
                 (log as unknown as { blockTimestamp: `0x${string}` })
                   .blockTimestamp,
                 16
