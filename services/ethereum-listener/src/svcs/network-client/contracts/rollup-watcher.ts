@@ -15,6 +15,13 @@ const onLogs = (name: string) => (logs: unknown[]) => {
   logger.info(logs);
 };
 
+const asyncForEach = async <T>(
+  array: T[],
+  callback: (value: T) => Promise<void>
+) => {
+  for (const item of array) await callback(item);
+};
+
 export const watchRollupEvents = (
   contract: RollupContract
 ): UnwatchCallback => {
@@ -24,8 +31,8 @@ export const watchRollupEvents = (
       fromBlock: 1n,
       onError: onError("L2BlockProposed"),
       onLogs: (logs) => {
-        logs.forEach((log) => {
-          emit.l2BlockProposed(
+        asyncForEach(logs, async (log) => {
+          await emit.l2BlockProposed(
             l1L2BlockProposedSchema.parse({
               l1BlockNumber: log.blockNumber,
               l2BlockNumber: log.args.blockNumber,
@@ -37,6 +44,8 @@ export const watchRollupEvents = (
               ),
             })
           );
+        }).catch((e) => {
+          logger.error(`💀 Rollup blockProposed: ${(e as Error).stack}`);
         });
       },
     })
@@ -46,8 +55,8 @@ export const watchRollupEvents = (
       fromBlock: 1n,
       onError: onError("L2ProofVerified"),
       onLogs: (logs) => {
-        logs.forEach((log) => {
-          emit.l2ProofVerified(
+        asyncForEach(logs, async (log) => {
+          await emit.l2ProofVerified(
             l1L2ProofVerifiedSchema.parse({
               l1BlockNumber: log.blockNumber,
               l2BlockNumber: log.args.blockNumber,
@@ -59,6 +68,8 @@ export const watchRollupEvents = (
               ),
             })
           );
+        }).catch((e) => {
+          logger.error(`💀 Rollup proofVerified: ${(e as Error).stack}`);
         });
       },
     })

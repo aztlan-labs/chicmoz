@@ -168,10 +168,7 @@ const _getBlocks = async (
       height: result.height,
       archive: result.archive,
       proposedOnL1: result.l1L2BlockProposed.l1BlockTimestamp
-        ? {
-            blockNumber: result.l1L2BlockProposed.l1BlockNumber,
-            timestamp: result.l1L2BlockProposed.l1BlockTimestamp,
-          }
+        ? result.l1L2BlockProposed
         : undefined,
       proofVerifiedOnL1: result.l1L2ProofVerified.l1BlockTimestamp
         ? result.l1L2ProofVerified
