@@ -11,7 +11,8 @@ import { controllers as db } from "../../../../database/index.js";
 const LATEST_HEIGHT = "latestHeight";
 
 export const getLatestHeight = async () => {
-  const cachedVal = await getEntry([LATEST_HEIGHT]);
+  const cacheRes = await getEntry([LATEST_HEIGHT]);
+  const cachedVal = cacheRes.value;
   const isCached = cachedVal !== null && cachedVal !== undefined;
   if (isCached) return cachedVal;
 
@@ -47,11 +48,11 @@ export const get = async (
   dbFn: () => Promise<unknown>,
   ttl = CACHE_TTL_SECONDS
 ): Promise<string | undefined> => {
-  const cachedVal = await getEntry(keys);
+  const res = await getEntry(keys);
+  const cachedVal = res.value;
   const isCached = cachedVal !== null && cachedVal !== undefined;
   if (isCached) {
-    if (NODE_ENV === NodeEnv.DEV)
-      logger.info(`CACHE_HIT: ${JSON.stringify(keys)}`);
+    if (NODE_ENV === NodeEnv.DEV) logger.info(`CACHE_HIT: ${res.keysStr}`);
     return cachedVal;
   }
 

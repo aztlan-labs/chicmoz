@@ -37,7 +37,12 @@ export const setEntry = async (
 };
 
 export const getEntry = async (keys: CacheKeys) => {
-  return await getCache().get([L2_NETWORK_ID, ...keys].join("-"));
+  const keysStr = [L2_NETWORK_ID, ...keys].join("-");
+  const value = await getCache().get(keysStr);
+  return {
+    keysStr,
+    value,
+  };
 };
 
 export const cacheService: MicroserviceBaseSvc = {

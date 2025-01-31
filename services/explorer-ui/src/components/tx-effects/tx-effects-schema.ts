@@ -21,6 +21,6 @@ export const getTxEffectTableObj = (
 const txEffectSchema = z.object({
   txHash: z.string(),
   transactionFee: z.number(),
-  blockNumber: z.number(),
+  blockNumber: z.coerce.number(),
   timestamp: z.number(),
 });

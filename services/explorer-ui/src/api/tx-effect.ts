@@ -1,6 +1,7 @@
 import {
   chicmozL2TxEffectDeluxeSchema,
   type ChicmozL2TxEffectDeluxe,
+  chicmozL2BlockSchema,
 } from "@chicmoz-pkg/types";
 import { z } from "zod";
 import { aztecExplorer } from "~/service/constants";
@@ -14,7 +15,7 @@ export const TxEffectsAPI = {
     return validateResponse(chicmozL2TxEffectDeluxeSchema, response.data);
   },
   getTxEffectsByBlockHeight: async (
-    height: number,
+    height: bigint,
   ): Promise<ChicmozL2TxEffectDeluxe[]> => {
     const response = await client.get(
       aztecExplorer.getL2TxEffectsByHeight(height),
@@ -22,18 +23,18 @@ export const TxEffectsAPI = {
     return validateResponse(z.array(chicmozL2TxEffectDeluxeSchema), response.data);
   },
   getTxEffectByBlockHeightAndIndex: async (
-    height: number,
+    height: bigint,
     index: number,
-  ): Promise<number> => {
+  ): Promise<bigint> => {
     const response = await client.get(
       aztecExplorer.getL2TxEffectByHeightAndIndex(height, index),
     );
-    return validateResponse(z.number(), response.data);
+    return validateResponse(chicmozL2BlockSchema.shape.height, response.data);
   },
   getTxEffectsByHeightRange: async (
-    start: number,
-    end: number,
-  ): Promise<number> => {
+    start: bigint,
+    end: bigint,
+  ): Promise<bigint> => {
     const response = await client.get(
       aztecExplorer.getL2TxEffectsByHeightRange,
       {
@@ -43,6 +44,6 @@ export const TxEffectsAPI = {
         },
       },
     );
-    return validateResponse(z.number(), response.data);
+    return validateResponse(chicmozL2BlockSchema.shape.height, response.data);
   },
 };

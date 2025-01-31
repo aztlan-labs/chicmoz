@@ -1,8 +1,8 @@
 import { type ChicmozL2TxEffectDeluxe } from "@chicmoz-pkg/types";
 import {
-  type UseQueryResult,
-  useQuery,
   useQueries,
+  useQuery,
+  type UseQueryResult,
 } from "@tanstack/react-query";
 import { TxEffectsAPI } from "~/api";
 import { queryKeyGenerator } from "./utils";
@@ -17,30 +17,31 @@ export const useGetTxEffectByHash = (
 };
 
 export const useGetTxEffectsByBlockHeight = (
-  height: number | string | undefined
+  height: bigint | string | number | undefined
 ): UseQueryResult<ChicmozL2TxEffectDeluxe[], Error> => {
   if (typeof height === "string" && height?.startsWith("0x"))
     throw new Error("Invalid block height");
   return useQuery<ChicmozL2TxEffectDeluxe[], Error>({
-    queryKey: queryKeyGenerator.txEffectsByBlockHeight(Number(height)),
+    queryKey: queryKeyGenerator.txEffectsByBlockHeight(height),
     queryFn: () =>
       !height
         ? Promise.resolve([])
-        : TxEffectsAPI.getTxEffectsByBlockHeight(Number(height)),
+        : TxEffectsAPI.getTxEffectsByBlockHeight(BigInt(height)),
   });
 };
 
 export const useGetTxEffectsByBlockHeightRange = (
-  from: number | undefined,
-  to: number | undefined
+  from: bigint | undefined,
+  to: bigint | undefined
 ): UseQueryResult<(ChicmozL2TxEffectDeluxe | undefined)[], Error>[] => {
   return useQueries({
     queries:
       from === undefined || to === undefined
         ? []
-        : new Array(to - from + 1).fill(0).map((_, i) => ({
-            queryKey: queryKeyGenerator.txEffectsByBlockHeight(to - i),
-            queryFn: () => TxEffectsAPI.getTxEffectsByBlockHeight(to - i),
+        : new Array(to - from + 1n).fill(0n).map((_, i) => ({
+            queryKey: queryKeyGenerator.txEffectsByBlockHeight(to - BigInt(i)),
+            queryFn: () =>
+              TxEffectsAPI.getTxEffectsByBlockHeight(to - BigInt(i)),
           })),
   });
 };

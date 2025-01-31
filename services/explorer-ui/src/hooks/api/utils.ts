@@ -2,9 +2,9 @@ export const REFETCH_INTERVAL = 1_000; // NOTE: delay for queries dependant on "
 export const statsKey = "stats";
 
 export const queryKeyGenerator = {
-  txEffectsByBlockHeight: (height: number) => [
+  txEffectsByBlockHeight: (height: string | number | bigint | undefined) => [
     "txEffectsByBlockHeight",
-    height,
+    Number(height),
   ],
   txEffectByHash: (hash: string) => ["txEffectByHash", hash],
   pendingTxs: ["pendingTxs"],
@@ -18,8 +18,14 @@ export const queryKeyGenerator = {
   averageFees: [statsKey, "averageFees"],
   averageBlockTime: [statsKey, "averageBlockTime"],
   contractClass: (classId?: string) => ["contractClass", classId],
-  contractClassPrivateFunctions: (classId: string) => ["contractClassPrivateFunctions", classId],
-  contractClassUnconstrainedFunctions: (classId: string) => ["contractClassUnconstrainedFunctions", classId],
+  contractClassPrivateFunctions: (classId: string) => [
+    "contractClassPrivateFunctions",
+    classId,
+  ],
+  contractClassUnconstrainedFunctions: (classId: string) => [
+    "contractClassUnconstrainedFunctions",
+    classId,
+  ],
   latestContractClasses: (classId?: string) => [
     "latestContractClasses",
     classId,
