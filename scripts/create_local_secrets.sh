@@ -5,8 +5,8 @@ ENV_FILE="$PROJECT_ROOT/.chicmoz.env"
 
 # Check if .local.env exists
 if [ ! -f "$ENV_FILE" ]; then
-    echo "Error: .local.env file not found at $ENV_FILE"
-    echo "Please make sure the .local.env file exists in the project root directory."
+    echo "Error: env-file not found at $ENV_FILE"
+    echo "Please make sure the env-file exists"
     exit 1
 fi
 

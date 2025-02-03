@@ -104,7 +104,11 @@ const watchContractEventsGeneric = <T extends AztecContract>({
         },
         onLogs: (logs) => {
           logs.forEach((log) => {
-            logger.info(`🍔 ${name}.${eventName}\n${jsonStringify(log)}`);
+            logger.info(
+              `🍔 ${name}.${eventName}\n${jsonStringify(
+                (log as { args: unknown }).args ?? "no args!"
+              )}`
+            );
           });
         },
       }
