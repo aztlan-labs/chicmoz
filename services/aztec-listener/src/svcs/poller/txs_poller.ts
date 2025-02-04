@@ -6,7 +6,7 @@ import { getPendingTxs } from "./network-client.js";
 
 let pollInterval: NodeJS.Timeout;
 
-let handledTxs: string[] = [];
+let handledTxs: `0x${string}`[] = [];
 
 export const startPolling = () => {
   pollInterval = setInterval(() => {
@@ -19,12 +19,15 @@ export const stopPolling = () => {
 };
 
 const internalOnPendingTxs = async (pendingTxs: Tx[]) => {
-  const newPendingTxs = pendingTxs.filter(
-    (tx) => !handledTxs.includes(tx.getTxHash().toString())
+  const pendingTxsHashes = await Promise.all(
+    pendingTxs.map((tx) => tx.getTxHash())
   );
-  if (newPendingTxs.length === 0) return;
-  await onPendingTxs(pendingTxs);
-  handledTxs = pendingTxs.map((tx) => tx.getTxHash().toString());
+  const newPendingTxsHashes = pendingTxsHashes.filter(
+    (tx) => !handledTxs.includes(tx.toString())
+  );
+  if (newPendingTxsHashes.length === 0) return;
+  await onPendingTxs(newPendingTxsHashes);
+  handledTxs = pendingTxsHashes.map((tx) => tx.toString());
 };
 
 const fetchAndPublishPendingTxs = async () => {

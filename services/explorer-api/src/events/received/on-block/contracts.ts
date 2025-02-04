@@ -83,12 +83,14 @@ export const storeContracts = async (b: L2Block, blockHash: string) => {
     .flatMap((txEffect) => (txEffect ? [txEffect.contractClassLogs] : []))
     .flatMap((txLog) => txLog.unrollLogs());
 
-  const contractClasses = contractClassLogs
-    .filter((log) =>
-      ContractClassRegisteredEvent.isContractClassRegisteredEvent(log.data)
-    )
-    .map((log) => ContractClassRegisteredEvent.fromLog(log.data))
-    .map((e) => e.toContractClassPublic());
+  const contractClasses = await Promise.all(
+    contractClassLogs
+      .filter((log) =>
+        ContractClassRegisteredEvent.isContractClassRegisteredEvent(log.data)
+      )
+      .map((log) => ContractClassRegisteredEvent.fromLog(log.data))
+      .map((e) => e.toContractClassPublic())
+  );
 
   const privateFnEvents = contractClassLogs
     .filter((log) =>

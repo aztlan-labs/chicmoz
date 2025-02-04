@@ -49,7 +49,7 @@ const onBlock = async ({ block, blockNumber }: NewBlockEvent) => {
   const b = blockFromString(block);
   let parsedBlock;
   try {
-    parsedBlock = parseBlock(b);
+    parsedBlock = await parseBlock(b);
   } catch (e) {
     logger.error(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions

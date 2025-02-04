@@ -1,4 +1,4 @@
-import { L2Block, Tx } from "@aztec/aztec.js";
+import { L2Block, TxHash } from "@aztec/aztec.js";
 import { PendingTxsEvent } from "@chicmoz-pkg/message-registry";
 import {
   ChicmozChainInfo,
@@ -33,13 +33,13 @@ export const onCatchupBlock = async (block: L2Block) => {
 };
 // TODO: onCatchupRequestFromExplorerApi
 
-export const onPendingTxs = async (txs: Tx[]) => {
+export const onPendingTxs = async (txs: TxHash[]) => {
   if (!txs || txs.length === 0) return;
 
   await publishMessage("PENDING_TXS_EVENT", {
     txs: txs.map((tx) => {
       return {
-        hash: tx.getTxHash().toString(),
+        hash: tx.toString(),
         birthTimestamp: new Date().getTime(),
       };
     }),

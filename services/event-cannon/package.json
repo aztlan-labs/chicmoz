@@ -9,10 +9,10 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "@aztec/accounts": "0.72.1",
-    "@aztec/aztec.js": "0.72.1",
-    "@aztec/l1-artifacts": "0.72.1",
-    "@aztec/noir-contracts.js": "0.72.1",
+    "@aztec/accounts": "0.73.0",
+    "@aztec/aztec.js": "0.73.0",
+    "@aztec/l1-artifacts": "0.73.0",
+    "@aztec/noir-contracts.js": "0.73.0",
     "@chicmoz-pkg/logger-server": "workspace:^",
     "@chicmoz-pkg/types": "workspace:^"
   },

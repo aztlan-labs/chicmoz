@@ -18,8 +18,8 @@ export const blockFromString = (stringifiedBlock: string): L2Block => {
   return L2Block.fromString(stringifiedBlock);
 };
 
-export const parseBlock = (b: L2Block): ChicmozL2Block => {
-  const blockHash = b.hash();
+export const parseBlock = async (b: L2Block): Promise<ChicmozL2Block> => {
+  const blockHash = await b.hash();
 
   const blockWithTxEffectsHashesAdded = {
     ...b,

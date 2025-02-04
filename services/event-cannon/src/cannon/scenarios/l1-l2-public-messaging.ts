@@ -9,14 +9,18 @@ import {
   retryUntil,
   waitForPXE,
 } from "@aztec/aztec.js";
-import { logger } from "../../logger.js";
-import { getAztecNodeClient, getPxe, getWallets } from "../pxe.js";
 import {
-  deployContract,
-  logAndWaitForTx,
-  publicDeployAccounts,
-  registerContractClassArtifact,
-} from "./utils/index.js";
+  RollupAbi,
+  TestERC20Abi,
+  TestERC20Bytecode,
+  TokenPortalAbi,
+  TokenPortalBytecode,
+} from "@aztec/l1-artifacts";
+import { TokenContract } from "@aztec/noir-contracts.js/Token";
+import { TokenBridgeContract } from "@aztec/noir-contracts.js/TokenBridge";
+import * as tokenBridgeContractArtifactJson from "@aztec/noir-contracts.js/artifacts/token_bridge_contract-TokenBridge" assert { type: "json" };
+import * as tokenContractArtifactJson from "@aztec/noir-contracts.js/artifacts/token_contract-Token" assert { type: "json" };
+import assert from "assert";
 import {
   createPublicClient,
   createWalletClient,
@@ -26,18 +30,14 @@ import {
 import { mnemonicToAccount } from "viem/accounts";
 import { foundry } from "viem/chains";
 import { ETHEREUM_RPC_URL } from "../../environment.js";
+import { logger } from "../../logger.js";
+import { getAztecNodeClient, getPxe, getWallets } from "../pxe.js";
 import {
-  RollupAbi,
-  TestERC20Abi,
-  TestERC20Bytecode,
-  TokenPortalAbi,
-  TokenPortalBytecode,
-} from "@aztec/l1-artifacts";
-import assert from "assert";
-import { TokenContract } from "@aztec/noir-contracts.js/Token";
-import * as tokenContractArtifactJson from "@aztec/noir-contracts.js/artifacts/token_contract-Token" assert { type: "json" };
-import { TokenBridgeContract } from "@aztec/noir-contracts.js/TokenBridge";
-import * as tokenBridgeContractArtifactJson from "@aztec/noir-contracts.js/artifacts/token_bridge_contract-TokenBridge" assert { type: "json" };
+  deployContract,
+  logAndWaitForTx,
+  publicDeployAccounts,
+  registerContractClassArtifact,
+} from "./utils/index.js";
 
 const MNEMONIC = "test test test test test test test test test test test junk";
 const TOKEN_NAME = "TokenName";
@@ -260,17 +260,17 @@ export const run = async () => {
 
   const user1Wallet = wallet;
   await logAndWaitForTx(
-    user1Wallet
-      .setPublicAuthWit(
+    (
+      await user1Wallet.setPublicAuthWit(
         {
           caller: l2Bridge.address,
-          action: l2Token.methods
+          action: await l2Token.methods
             .burn_public(ownerAddress, withdrawAmount, nonce)
             .request(),
         },
         true
       )
-      .send(),
+    ).send(),
     "setting public auth wit"
   );
 
