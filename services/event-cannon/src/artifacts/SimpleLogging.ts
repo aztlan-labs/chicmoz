@@ -123,8 +123,8 @@ export class SimpleLoggingContract extends ContractBase {
   /** Type-safe wrappers for the public methods exposed by the contract. */
   public declare methods: {
     
-    /** compute_note_hash_and_optionally_a_nullifier(contract_address: struct, nonce: field, storage_slot: field, note_type_id: field, compute_nullifier: boolean, serialized_note: array) */
-    compute_note_hash_and_optionally_a_nullifier: ((contract_address: AztecAddressLike, nonce: FieldLike, storage_slot: FieldLike, note_type_id: FieldLike, compute_nullifier: boolean, serialized_note: FieldLike[]) => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
+    /** compute_note_hash_and_optionally_a_nullifier(contract_address: struct, nonce: field, storage_slot: field, note_type_id: field, compute_nullifier: boolean, packed_note_content: array) */
+    compute_note_hash_and_optionally_a_nullifier: ((contract_address: AztecAddressLike, nonce: FieldLike, storage_slot: FieldLike, note_type_id: FieldLike, compute_nullifier: boolean, packed_note_content: FieldLike[]) => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
 
     /** constructor() */
     constructor: (() => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;

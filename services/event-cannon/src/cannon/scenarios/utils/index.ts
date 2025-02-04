@@ -8,6 +8,7 @@ import {
   Contract,
   DeploySentTx,
   Fr,
+  FunctionCall,
   FunctionSelector,
   NoirCompiledContract,
   PXE,
@@ -97,12 +98,14 @@ const getNewContractClassId = async (node: AztecNode, blockNumber?: number) => {
     .flatMap((txEffect) => (txEffect ? [txEffect.contractClassLogs] : []))
     .flatMap((txLog) => txLog.unrollLogs());
 
-  const contractClasses = contractClassLogs
-    .filter((log) =>
-      ContractClassRegisteredEvent.isContractClassRegisteredEvent(log.data)
-    )
-    .map((log) => ContractClassRegisteredEvent.fromLog(log.data))
-    .map((e) => e.toContractClassPublic());
+  const contractClasses = await Promise.all(
+    contractClassLogs
+      .filter((log) =>
+        ContractClassRegisteredEvent.isContractClassRegisteredEvent(log.data)
+      )
+      .map((log) => ContractClassRegisteredEvent.fromLog(log.data))
+      .map((e) => e.toContractClassPublic())
+  );
 
   return contractClasses[0]?.id.toString();
 };
@@ -152,7 +155,7 @@ export const broadcastFunctions = async ({
   for (const fn of contract.artifact.functions) {
     logger.info(`${getFunctionSpacer(fn.functionType)}${fn.name}`);
     if (fn.functionType === FunctionType.PRIVATE) {
-      const selector = FunctionSelector.fromNameAndParameters(
+      const selector = await FunctionSelector.fromNameAndParameters(
         fn.name,
         fn.parameters
       );
@@ -164,7 +167,7 @@ export const broadcastFunctions = async ({
       );
     }
     if (fn.functionType === FunctionType.UNCONSTRAINED) {
-      const selector = FunctionSelector.fromNameAndParameters(
+      const selector = await FunctionSelector.fromNameAndParameters(
         fn.name,
         fn.parameters
       );
@@ -187,43 +190,49 @@ export const publicDeployAccounts = async (
   accountsToDeploy: Wallet[],
   pxe: PXE
 ) => {
-  const accountAddressesToDeploy = await Promise.all(
+  const notPubliclyDeployedAccounts = await Promise.all(
     accountsToDeploy.map(async (a) => {
       const address = a.getAddress();
-      const isDeployed = await pxe.isContractPubliclyDeployed(address);
-      return { address, isDeployed };
+      const contractMetadata = await pxe.getContractMetadata(address);
+      return contractMetadata;
     })
   ).then((results) =>
-    results
-      .filter((result) => !result.isDeployed)
-      .map((result) => result.address)
+    results.filter((result) => !result.isContractPubliclyDeployed)
   );
-  if (accountAddressesToDeploy.length === 0) return;
-  const instances = await Promise.all(
-    accountAddressesToDeploy.map((account) =>
-      sender.getContractInstance(account)
-    )
-  );
-  const batch = new BatchCall(sender, [
-    (
+  if (notPubliclyDeployedAccounts.length === 0) return;
+  const deployCalls: FunctionCall[] = [
+    await (
       await registerContractClass(sender, SchnorrAccountContractArtifact)
     ).request(),
-    ...(await Promise.all(
-      instances.map(async (instance) =>
-        (await deployInstance(sender, instance!)).request()
+    ...((
+      await Promise.all(
+        notPubliclyDeployedAccounts.map(async (contractMetadata) => {
+          if (!contractMetadata.contractInstance) {
+            logger.warn(
+              `🚨 Contract instance not found for contract isIntialized: ${contractMetadata.isContractInitialized}`
+            );
+            return undefined;
+          }
+          return (
+            await deployInstance(sender, contractMetadata.contractInstance)
+          ).request();
+        })
       )
-    )),
-  ]);
+    ).filter((call) => call !== undefined) as FunctionCall[]),
+  ];
+  const batch = new BatchCall(sender, deployCalls);
   await batch.send().wait();
 };
 
-const testGetContractClassFromArtifact = (stringifiedArtifactJson: string) => {
+const testGetContractClassFromArtifact = async (
+  stringifiedArtifactJson: string
+) => {
   try {
     const parsed = JSON.parse(
       stringifiedArtifactJson
     ) as unknown as NoirCompiledContract;
     const loaded = loadContractArtifact(parsed);
-    getContractClassFromArtifact(loaded);
+    await getContractClassFromArtifact(loaded);
   } catch (e) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     logger.error(`🚨 Error parsing artifact: ${(e as Error).stack ?? e}`);
@@ -246,7 +255,7 @@ export const registerContractClassArtifact = async (
     ? (artifactObj as { default: NoirCompiledContract }).default
     : artifactObj;
   const stringifiedArtifactJson = JSON.stringify(artifactJson);
-  testGetContractClassFromArtifact(stringifiedArtifactJson);
+  await testGetContractClassFromArtifact(stringifiedArtifactJson);
   const postData = JSON.stringify({
     stringifiedArtifactJson,
   });

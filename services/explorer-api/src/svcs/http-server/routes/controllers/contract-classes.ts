@@ -177,7 +177,7 @@ export const POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT = asyncHandler(
       res.status(400).send("Missing artifact json");
       return;
     }
-    const uploadedArtifact = getContractClassFromArtifact(
+    const uploadedArtifact = await getContractClassFromArtifact(
       loadContractArtifact(
         JSON.parse(stringifiedArtifactJson) as unknown as NoirCompiledContract
       )
