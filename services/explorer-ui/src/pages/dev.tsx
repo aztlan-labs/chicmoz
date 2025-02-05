@@ -44,7 +44,7 @@ export const DevPage: FC = () => {
       <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
         <h2>Misc</h2>
         <pre>
-          <p>{`Aztec.js version           0.73.0`}</p>
+          <p>{`Aztec.js version           0.74.0`}</p>
           <p>{`Explorer version           ${VERSION_STRING}`}</p>
           <p>{`API URL                    ${API_URL}`}</p>
           <p>{`WS URL                     ${WS_URL}`}</p>
