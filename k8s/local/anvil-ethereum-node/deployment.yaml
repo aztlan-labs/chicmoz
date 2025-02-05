@@ -17,8 +17,14 @@ spec:
         app: anvil-ethereum-node
     spec:
       containers:
-        - image: aztecprotocol/foundry:25f24e677a6a32a62512ad4f561995589ac2c7dc-amd64
+        - image: aztecprotocol/foundry
           name: anvil-ethereum-node
+          env:
+            - name: ARCH_TAG
+              valueFrom:
+                configMapKeyRef:
+                  name: arch-config
+                  key: arch_tag
           resources:
             limits:
               memory: 300Mi
@@ -32,4 +38,3 @@ spec:
             - name: anvil-port
               containerPort: 8545
               protocol: TCP
-status: {}

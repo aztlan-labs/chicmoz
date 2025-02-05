@@ -1,0 +1,20 @@
+apiVersion: skaffold/v4beta5
+kind: Config
+metadata:
+  name: anvil-deployment
+build:
+  artifacts:
+    - image: aztecprotocol/foundry
+      custom:
+        buildCommand: |
+          ARCH=$(uname -m)
+          if [ "$ARCH" = "arm64" ] || [ "$ARCH" = "aarch64" ]; then
+            ARCH_TAG="arm64"
+          else
+            ARCH_TAG="amd64"
+          fi
+          docker pull aztecprotocol/foundry:25f24e677a6a32a62512ad4f561995589ac2c7dc-${ARCH_TAG}
+          docker tag aztecprotocol/foundry:25f24e677a6a32a62512ad4f561995589ac2c7dc-${ARCH_TAG} $IMAGE
+        dependencies:
+          paths:
+            - "."
