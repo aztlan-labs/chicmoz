@@ -14,30 +14,8 @@ spec:
   tls:
     - secretName: aztecscan-api-tls-devnet
       hosts:
-        - api.aztecscout.xyz
-        - api.aztecscan.xyz
         - api.devnet.aztecscan.xyz
   rules:
-    - host: api.aztecscout.xyz
-      http:
-        paths:
-          - path: /v1/([^/]+)/(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: explorer-api-devnet-service
-                port:
-                  name: http-app
-    - host: api.aztecscan.xyz
-      http:
-        paths:
-          - path: /v1/([^/]+)/(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: explorer-api-devnet-service
-                port:
-                  name: http-app
     - host: api.devnet.aztecscan.xyz
       http:
         paths:

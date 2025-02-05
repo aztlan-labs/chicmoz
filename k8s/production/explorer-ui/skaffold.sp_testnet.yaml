@@ -11,6 +11,7 @@ build:
         buildArgs:
           NODE_ENV: "production"
           VITE_L2_NETWORK_ID: "SP_TESTNET"
+          VITE_CHICMOZ_ALL_UI_URLS: "Devnet|https://devnet.aztecscan.xyz,S&P-testnet|https://sp.aztecscan.xyz"
           VITE_API_URL: "https://api.sp.aztecscan.xyz/v1"
           VITE_API_KEY: "temporary-api-key"
           VITE_WS_URL: "wss://ws.sp.aztecscan.xyz"

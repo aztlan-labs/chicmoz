@@ -10,36 +10,14 @@ spec:
   tls:
     - secretName: aztecscan-ui-tls-devnet
       hosts:
-        - aztecscout.xyz
-        - aztecscan.xyz
         - devnet.aztecscan.xyz
   rules:
-    - host: aztecscout.xyz
-      http:
-        paths:
-          - backend:
-              service:
-                name: explorer-ui-devnet
-                port:
-                  name: http-app
-            path: /
-            pathType: Prefix
-    - host: aztecscan.xyz
-      http:
-        paths:
-          - backend:
-              service:
-                name: explorer-ui-devnet
-                port:
-                  name: http-app
-            path: /
-            pathType: Prefix
     - host: devnet.aztecscan.xyz
       http:
         paths:
           - backend:
               service:
-                name: explorer-ui-devnet
+                name: explorer-ui-devnet-service
                 port:
                   name: http-app
             path: /

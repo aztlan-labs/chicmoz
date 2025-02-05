@@ -6,5 +6,5 @@ deploy:
       apply: ["--force"]
 manifests:
   rawYaml:
-    - ./namespace.yaml
-    - ./postgres-config.yaml
+    - ../cert-manager/ingress_nginx_svc_aztecscan.xyz.yaml
+    - ../cert-manager/ingress_nginx_svc_aztecscout.xyz.yaml

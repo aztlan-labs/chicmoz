@@ -6,5 +6,5 @@ deploy:
       apply: ["--force"]
 manifests:
   rawYaml:
-    - ./namespace.yaml
-    - ./postgres-config.yaml
+    - ../cert-manager/cert-staging-issuer.yaml
+    - ../cert-manager/cert-production-issuer.yaml

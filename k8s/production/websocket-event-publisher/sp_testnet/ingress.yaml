@@ -11,9 +11,31 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
+        - ws.aztecscout.xyz
+        - ws.aztecscan.xyz
         - ws.sp.aztecscan.xyz
       secretName: aztecscan-ws-tls-sp-testnet
   rules:
+    - host: ws.aztecscout.xyz
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: websocket-event-publisher-sp-testnet-service
+                port:
+                  name: websocket-port
+    - host: ws.aztecscan.xyz
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: websocket-event-publisher-sp-testnet-service
+                port:
+                  name: websocket-port
     - host: ws.sp.aztecscan.xyz
       http:
         paths:
