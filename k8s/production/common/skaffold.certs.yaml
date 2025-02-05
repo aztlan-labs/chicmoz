@@ -6,5 +6,4 @@ deploy:
       apply: ["--force"]
 manifests:
   rawYaml:
-    - ../cert-manager/cert-staging-issuer.yaml
     - ../cert-manager/cert-production-issuer.yaml
