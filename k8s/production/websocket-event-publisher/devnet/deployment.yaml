@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: websocket-event-publisher-sp-testnet-label
-  name: websocket-event-publisher-deployment
+    app: websocket-event-publisher-devnet-label
+  name: websocket-event-publisher-devnet-deployment
   namespace: chicmoz-prod
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: websocket-event-publisher-sp-testnet-label
+      app: websocket-event-publisher-devnet-label
   strategy: {}
   template:
     metadata:
       labels:
-        app: websocket-event-publisher-sp-testnet-label
+        app: websocket-event-publisher-devnet-label
     spec:
       containers:
         - image: registry.digitalocean.com/aztlan-containers/websocket-event-publisher:latest

@@ -11,31 +11,9 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - ws.aztecscout.xyz
-        - ws.aztecscan.xyz
         - ws.devnet.aztecscan.xyz
       secretName: aztecscan-ws-tls-devnet
   rules:
-    - host: ws.aztecscout.xyz
-      http:
-        paths:
-          - path: /
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: websocket-event-publisher-devnet
-                port:
-                  name: websocket-port
-    - host: ws.aztecscan.xyz
-      http:
-        paths:
-          - path: /
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: websocket-event-publisher-devnet
-                port:
-                  name: websocket-port
     - host: ws.devnet.aztecscan.xyz
       http:
         paths:
@@ -43,7 +21,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: websocket-event-publisher-devnet
+                name: websocket-event-publisher-devnet-service
                 port:
                   name: websocket-port
 status:

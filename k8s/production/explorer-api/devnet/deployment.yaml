@@ -55,6 +55,8 @@ spec:
               value: "devnet_explorer-api"
             - name: L2_NETWORK_ID
               value: "DEVNET"
+            - name: PUBLIC_API_KEY
+              value: "temporary-api-key"
           readinessProbe:
             httpGet:
               path: /health
