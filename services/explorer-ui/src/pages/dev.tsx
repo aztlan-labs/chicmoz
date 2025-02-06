@@ -101,12 +101,22 @@ stack:          ${error.stack}
       <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2 mt-4">
         <h2>links</h2>
         <h3>Internal</h3>
-        <Link
-          to={routes.verifiedContractInstances.route}
-          className="text-purple-light hover:font-bold"
-        >
-          {routes.verifiedContractInstances.title}
-        </Link>
+        <p>
+          <Link
+            to={routes.verifiedContractInstances.route}
+            className="text-purple-light hover:font-bold"
+          >
+            {routes.verifiedContractInstances.title}
+          </Link>
+        </p>
+        <p>
+          <Link
+            to={routes.feeRecipients.route}
+            className="text-purple-light hover:font-bold"
+          >
+            {routes.feeRecipients.title}
+          </Link>
+        </p>
         <h3>External</h3>
         <ul>
           {CHICMOZ_ALL_UI_URLS.map((ui) => (

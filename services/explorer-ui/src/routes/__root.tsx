@@ -119,6 +119,10 @@ export const routes = {
     route: "/verified-contract-instances",
     title: "Verified Contract Instances",
   },
+  feeRecipients: {
+    route: "/fee-recipients",
+    title: "Fee Recipients",
+  },
 };
 
 function notFoundComponent() {
