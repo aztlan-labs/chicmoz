@@ -21,6 +21,7 @@ const VerifiedContractInstancesLazyImport = createFileRoute(
   '/verified-contract-instances',
 )()
 const PrivacyPolicyLazyImport = createFileRoute('/privacy-policy')()
+const FeeRecipientsLazyImport = createFileRoute('/fee-recipients')()
 const DevLazyImport = createFileRoute('/dev')()
 const AboutUsLazyImport = createFileRoute('/about-us')()
 const IndexLazyImport = createFileRoute('/')()
@@ -51,6 +52,13 @@ const PrivacyPolicyLazyRoute = PrivacyPolicyLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
   import('./routes/privacy-policy.lazy').then((d) => d.Route),
+)
+
+const FeeRecipientsLazyRoute = FeeRecipientsLazyImport.update({
+  path: '/fee-recipients',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/fee-recipients.lazy').then((d) => d.Route),
 )
 
 const DevLazyRoute = DevLazyImport.update({
@@ -156,6 +164,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DevLazyImport
       parentRoute: typeof rootRoute
     }
+    '/fee-recipients': {
+      id: '/fee-recipients'
+      path: '/fee-recipients'
+      fullPath: '/fee-recipients'
+      preLoaderRoute: typeof FeeRecipientsLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/privacy-policy': {
       id: '/privacy-policy'
       path: '/privacy-policy'
@@ -229,6 +244,7 @@ export const routeTree = rootRoute.addChildren({
   TermsAndConditionsRoute,
   AboutUsLazyRoute,
   DevLazyRoute,
+  FeeRecipientsLazyRoute,
   PrivacyPolicyLazyRoute,
   VerifiedContractInstancesLazyRoute,
   BlocksBlockNumberLazyRoute,
@@ -252,6 +268,7 @@ export const routeTree = rootRoute.addChildren({
         "/terms-and-conditions",
         "/about-us",
         "/dev",
+        "/fee-recipients",
         "/privacy-policy",
         "/verified-contract-instances",
         "/blocks/$blockNumber",
@@ -274,6 +291,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/dev": {
       "filePath": "dev.lazy.tsx"
+    },
+    "/fee-recipients": {
+      "filePath": "fee-recipients.lazy.tsx"
     },
     "/privacy-policy": {
       "filePath": "privacy-policy.lazy.tsx"

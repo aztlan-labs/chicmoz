@@ -1,14 +1,14 @@
-import { type ChicmozL2BlockLight } from "@chicmoz-pkg/types";
-import { type UseQueryResult, useQuery } from "@tanstack/react-query";
-import { BlockAPI } from "~/api";
+import { type ChicmozFeeRecipient } from "@chicmoz-pkg/types";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { FeeRecipientAPI } from "~/api/fee-recipient";
 import { queryKeyGenerator } from "./utils";
 
-export const useLatestBlocks = (): UseQueryResult<
-  ChicmozL2BlockLight[],
+export const useFeeRecipients = (): UseQueryResult<
+  ChicmozFeeRecipient[],
   Error
 > => {
-  return useQuery<ChicmozL2BlockLight[], Error>({
-    queryKey: queryKeyGenerator.latestBlocks,
-    queryFn: () => BlockAPI.getBlocksByHeightRange(),
+  return useQuery<ChicmozFeeRecipient[], Error>({
+    queryKey: queryKeyGenerator.feeRecipients,
+    queryFn: () => FeeRecipientAPI.getFeeRecipients(),
   });
 };
