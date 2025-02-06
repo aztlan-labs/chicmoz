@@ -1,6 +1,9 @@
 import { RollupAbi } from "@aztec/l1-artifacts";
 import {
   ChicmozChainInfo,
+  ChicmozL1L2Validator,
+  NODE_ENV,
+  NodeEnv,
   chicmozL1L2ValidatorSchema,
   getL1NetworkId,
 } from "@chicmoz-pkg/types";
@@ -75,58 +78,60 @@ const json = (param: unknown): string => {
   );
 };
 
-//export const emitRandomizedChangeWithinRandomizedTime = async (
-//  depth: number,
-//  oldValues: ChicmozL1L2Validator
-//) => {
-//  if (depth === 0) return;
-//  const rand = Math.random();
-//  const sleepTime = 30000;
-//  logger.info(
-//    `ATTESTER ${oldValues.attester} - DEPTH ${depth} - SLEEP ${sleepTime / 1000}s`
-//  );
-//  await new Promise((resolve) => setTimeout(resolve, sleepTime));
-//  let newValues = oldValues;
-//  if (rand < 0.25) {
-//    const stake = BigInt(Math.floor(Math.random() * 100000000));
-//    logger.info(`STAKE CHANGED: ${oldValues.stake} -> ${stake}`);
-//    newValues = {
-//      ...oldValues,
-//      stake,
-//      latestSeenChangeAt: new Date(),
-//    };
-//  } else if (rand < 0.5) {
-//    const status = [0, 1, 2, 3][Math.floor(Math.random() * 4)];
-//    logger.info(`STATUS CHANGED: ${oldValues.status} -> ${status}`);
-//    newValues = {
-//      ...oldValues,
-//      status,
-//      latestSeenChangeAt: new Date(),
-//    };
-//  } else if (rand < 0.75) {
-//    const withdrawer = oldValues.withdrawer
-//      .slice(0, -Math.floor(rand * 5))
-//      .padEnd(42, ["A", "B", "C", "D", "E"][Math.floor(Math.random() * 5)]);
-//    logger.info(`WITHDRAWER CHANGED: ${oldValues.withdrawer} -> ${withdrawer}`);
-//    newValues = {
-//      ...oldValues,
-//      withdrawer,
-//      latestSeenChangeAt: new Date(),
-//    };
-//  } else {
-//    const proposer = oldValues.proposer
-//      .slice(0, -Math.floor(rand * 5))
-//      .padEnd(42, ["A", "B", "C", "D", "E"][Math.floor(Math.random() * 5)]);
-//    logger.info(`PROPOSER CHANGED: ${oldValues.proposer} -> ${proposer}`);
-//    newValues = {
-//      ...oldValues,
-//      proposer,
-//      latestSeenChangeAt: new Date(),
-//    };
-//  }
-//  await emit.l1Validator(newValues);
-//  await emitRandomizedChangeWithinRandomizedTime(depth - 1, newValues);
-//};
+export const emitRandomizedChangeWithinRandomizedTime = async (
+  depth: number,
+  oldValues: ChicmozL1L2Validator
+) => {
+  if (depth === 0) return;
+  const rand = Math.random();
+  const sleepTime = 30000;
+  logger.info(
+    `ATTESTER ${oldValues.attester} - DEPTH ${depth} - SLEEP ${
+      sleepTime / 1000
+    }s`
+  );
+  await new Promise((resolve) => setTimeout(resolve, sleepTime));
+  let newValues = oldValues;
+  if (rand < 0.25) {
+    const stake = BigInt(Math.floor(Math.random() * 100000000));
+    logger.info(`STAKE CHANGED: ${oldValues.stake} -> ${stake}`);
+    newValues = {
+      ...oldValues,
+      stake,
+      latestSeenChangeAt: new Date(),
+    };
+  } else if (rand < 0.5) {
+    const status = [0, 1, 2, 3][Math.floor(Math.random() * 4)];
+    logger.info(`STATUS CHANGED: ${oldValues.status} -> ${status}`);
+    newValues = {
+      ...oldValues,
+      status,
+      latestSeenChangeAt: new Date(),
+    };
+  } else if (rand < 0.75) {
+    const withdrawer = oldValues.withdrawer
+      .slice(0, -Math.floor(rand * 5))
+      .padEnd(42, ["A", "B", "C", "D", "E"][Math.floor(Math.random() * 5)]);
+    logger.info(`WITHDRAWER CHANGED: ${oldValues.withdrawer} -> ${withdrawer}`);
+    newValues = {
+      ...oldValues,
+      withdrawer,
+      latestSeenChangeAt: new Date(),
+    };
+  } else {
+    const proposer = oldValues.proposer
+      .slice(0, -Math.floor(rand * 5))
+      .padEnd(42, ["A", "B", "C", "D", "E"][Math.floor(Math.random() * 5)]);
+    logger.info(`PROPOSER CHANGED: ${oldValues.proposer} -> ${proposer}`);
+    newValues = {
+      ...oldValues,
+      proposer,
+      latestSeenChangeAt: new Date(),
+    };
+  }
+  await emit.l1Validator(newValues);
+  await emitRandomizedChangeWithinRandomizedTime(depth - 1, newValues);
+};
 
 export const queryStakingStateAndEmitUpdates = async () => {
   // TODO: this entire function should be replaced with a watch on the contract (and some initial state query)
@@ -162,17 +167,45 @@ export const queryStakingStateAndEmitUpdates = async () => {
           attester,
         })
       );
-      //await emitRandomizedChangeWithinRandomizedTime(
-      //  100,
-      //  chicmozL1L2ValidatorSchema.parse({
-      //    ...attesterInfo,
-      //    attester,
-      //  })
-      //).catch((e) => {
-      //  logger.error(
-      //    `Randomized change emission failed: ${(e as Error).stack}`
-      //  );
-      //});
+    }
+  } else {
+    if (NODE_ENV === NodeEnv.DEV) {
+      logger.info("Mocking dev attesters");
+      const mockedAttesters = [
+        {
+          attester: "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          stake: BigInt(100000000),
+          status: 0,
+          withdrawer: "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          proposer: "0xcccccccccccccccccccccccccccccccccccccccc",
+          latestSeenChangeAt: new Date(),
+        },
+        {
+          attester: "0x1111111111111111111111111111111111111111",
+          stake: BigInt(200000000),
+          status: 1,
+          withdrawer: "0x2222222222222222222222222222222222222222",
+          proposer: "0x3333333333333333333333333333333333333333",
+        },
+      ];
+      for (const attesterInfo of mockedAttesters) {
+        await emit.l1Validator(
+          chicmozL1L2ValidatorSchema.parse({
+            ...attesterInfo,
+            attester: attesterInfo.attester,
+          })
+        );
+      }
+      for (const attesterInfo of mockedAttesters) {
+        await emitRandomizedChangeWithinRandomizedTime(
+          100,
+          chicmozL1L2ValidatorSchema.parse(attesterInfo)
+        ).catch((e) => {
+          logger.error(
+            `Randomized change emission failed: ${(e as Error).stack}`
+          );
+        });
+      }
     }
   }
 };

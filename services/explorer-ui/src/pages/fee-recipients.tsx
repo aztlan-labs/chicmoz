@@ -34,7 +34,7 @@ export const FeeRecipientPage: FC = () => {
                 )
                 .map((feeRecipient) => (
                   <tr key={feeRecipient.l2Address}>
-                    <td className={tdClasses}>{feeRecipient.l2Address}</td>
+                    <td className={`${tdClasses} font-mono`}>{feeRecipient.l2Address}</td>
                     <td className={tdClasses}>{feeRecipient.nbrOfBlocks}</td>
                     <td className={tdClasses}>
                       {Number(feeRecipient.feesReceived)}
