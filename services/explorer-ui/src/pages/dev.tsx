@@ -117,6 +117,14 @@ stack:          ${error.stack}
             {routes.feeRecipients.title}
           </Link>
         </p>
+        <p>
+          <Link
+            to={routes.validators.route}
+            className="text-purple-light hover:font-bold"
+          >
+            {routes.validators.title}
+          </Link>
+        </p>
         <h3>External</h3>
         <ul>
           {CHICMOZ_ALL_UI_URLS.map((ui) => (

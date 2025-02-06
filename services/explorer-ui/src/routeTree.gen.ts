@@ -20,6 +20,7 @@ import { Route as TermsAndConditionsImport } from './routes/terms-and-conditions
 const VerifiedContractInstancesLazyImport = createFileRoute(
   '/verified-contract-instances',
 )()
+const ValidatorsLazyImport = createFileRoute('/validators')()
 const PrivacyPolicyLazyImport = createFileRoute('/privacy-policy')()
 const FeeRecipientsLazyImport = createFileRoute('/fee-recipients')()
 const DevLazyImport = createFileRoute('/dev')()
@@ -46,6 +47,11 @@ const VerifiedContractInstancesLazyRoute =
   } as any).lazy(() =>
     import('./routes/verified-contract-instances.lazy').then((d) => d.Route),
   )
+
+const ValidatorsLazyRoute = ValidatorsLazyImport.update({
+  path: '/validators',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/validators.lazy').then((d) => d.Route))
 
 const PrivacyPolicyLazyRoute = PrivacyPolicyLazyImport.update({
   path: '/privacy-policy',
@@ -178,6 +184,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyPolicyLazyImport
       parentRoute: typeof rootRoute
     }
+    '/validators': {
+      id: '/validators'
+      path: '/validators'
+      fullPath: '/validators'
+      preLoaderRoute: typeof ValidatorsLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/verified-contract-instances': {
       id: '/verified-contract-instances'
       path: '/verified-contract-instances'
@@ -246,6 +259,7 @@ export const routeTree = rootRoute.addChildren({
   DevLazyRoute,
   FeeRecipientsLazyRoute,
   PrivacyPolicyLazyRoute,
+  ValidatorsLazyRoute,
   VerifiedContractInstancesLazyRoute,
   BlocksBlockNumberLazyRoute,
   TxEffectsHashLazyRoute,
@@ -270,6 +284,7 @@ export const routeTree = rootRoute.addChildren({
         "/dev",
         "/fee-recipients",
         "/privacy-policy",
+        "/validators",
         "/verified-contract-instances",
         "/blocks/$blockNumber",
         "/tx-effects/$hash",
@@ -297,6 +312,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/privacy-policy": {
       "filePath": "privacy-policy.lazy.tsx"
+    },
+    "/validators": {
+      "filePath": "validators.lazy.tsx"
     },
     "/verified-contract-instances": {
       "filePath": "verified-contract-instances.lazy.tsx"

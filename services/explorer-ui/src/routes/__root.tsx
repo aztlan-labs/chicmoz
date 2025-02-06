@@ -9,7 +9,7 @@ const TanStackRouterDevtools =
     ? lazy(() =>
         import("@tanstack/router-devtools").then((res) => ({
           default: res.TanStackRouterDevtools,
-        })),
+        }))
       )
     : () => null;
 
@@ -122,6 +122,20 @@ export const routes = {
   feeRecipients: {
     route: "/fee-recipients",
     title: "Fee Recipients",
+  },
+  validators: {
+    route: "/validators",
+    title: "Validators",
+    children: {
+      index: {
+        route: "/",
+        title: "All Validators",
+      },
+      attesterAddress: {
+        route: "/$attesterAddress",
+        title: "Validator Details",
+      },
+    },
   },
 };
 

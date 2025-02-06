@@ -46,4 +46,7 @@ export const queryKeyGenerator = {
   sequencers: ["sequencers"],
   sequencer: (enr: string) => ["sequencer", enr],
   feeRecipients: ["feeRecipients"],
+  l1L2Validators: ["l1L2Validators"],
+  l1L2Validator: (address: string) => ["l1L2Validator", address],
+  l1L2ValidatorHistory: (address: string) => ["l1L2ValidatorHistory", address],
 };

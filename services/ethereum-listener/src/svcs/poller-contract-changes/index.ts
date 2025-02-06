@@ -3,8 +3,12 @@ import { MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
 import { logger } from "../../logger.js";
 import { queryStakingStateAndEmitUpdates } from "../network-client/client.js";
 
+let started = false;
+
 export const startPolling = async () => {
   // TODO: poll logic with backoff etc...
+  if (started) return;
+  started = true;
   await queryStakingStateAndEmitUpdates();
 };
 

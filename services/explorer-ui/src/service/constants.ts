@@ -53,6 +53,10 @@ export const aztecExplorer = {
   getL2Sequencers: "/l2/sequencers",
   getL2Sequencer: (enr: string) => `l2/sequencers/${enr}`,
   getL2FeeRecipients: "/l2/fee-recipients",
+  getL1L2Validators: `l1/l2-validators`,
+  getL1L2Validator: (address: string) => `l1/l2-validators/${address}`,
+  getL1L2ValidatorHistory: (address: string) =>
+    `l1/l2-validators/${address}/history`,
 };
 
 export const APP_NAME = "Aztec-Scan";

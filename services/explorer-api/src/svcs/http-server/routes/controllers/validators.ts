@@ -27,9 +27,9 @@ export const GET_L1_L2_VALIDATORS = asyncHandler(async (_req, res) => {
 });
 
 export const openapi_GET_L1_L2_VALIDATOR = {
-  "/l1/l2-validators/:attesterAddress/history": {
+  "/l1/l2-validators/:attesterAddress": {
     get: {
-      summary: "Get L1 and L2 validator history",
+      summary: "Get L1L2Validator",
       parameters: [
         {
           name: "attesterAddress",
@@ -59,7 +59,7 @@ export const GET_L1_L2_VALIDATOR = asyncHandler(async (req, res) => {
 export const openapi_GET_L1_L2_VALIDATOR_HISTORY = {
   "/l1/l2-validators/:attesterAddress/history": {
     get: {
-      summary: "Get L1 and L2 validator history",
+      summary: "Get L1L2Validator history",
       parameters: [
         {
           name: "attesterAddress",
