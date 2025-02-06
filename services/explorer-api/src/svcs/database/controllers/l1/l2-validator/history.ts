@@ -1,16 +1,21 @@
-import { EthAddress, L1L2ValidatorStatus } from "@chicmoz-pkg/types";
-import { eq, desc, sql } from "drizzle-orm";
 import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import {
+  ChicmozL1L2ValidatorHistoryEntry,
+  EthAddress,
+  L1L2ValidatorStatus,
+  chicmozL1L2ValidatorHistoryEntrySchema,
+} from "@chicmoz-pkg/types";
+import { desc, eq, sql } from "drizzle-orm";
+import {
+  l1L2ValidatorProposerTable,
   l1L2ValidatorStakeTable,
   l1L2ValidatorStatusTable,
   l1L2ValidatorWithdrawerTable,
-  l1L2ValidatorProposerTable,
 } from "../../../schema/l1/l2-validator.js";
 
 export async function getL1L2ValidatorHistory(
   attesterAddress: EthAddress
-): Promise<[Date, string, string][]> {
+): Promise<ChicmozL1L2ValidatorHistoryEntry[]> {
   const result = await db()
     .select({
       timestamp: l1L2ValidatorStakeTable.timestamp,
@@ -54,11 +59,15 @@ export async function getL1L2ValidatorHistory(
     .orderBy(desc(sql`timestamp`))
     .execute();
 
-  return result.map(({ timestamp, keyChanged, newValue }) => [
-    new Date(timestamp),
-    keyChanged,
-    keyChanged === "status"
-      ? L1L2ValidatorStatus[newValue as keyof typeof L1L2ValidatorStatus].toString()
-      : newValue,
-  ]);
+  return result.map(({ timestamp, keyChanged, newValue }) =>
+    chicmozL1L2ValidatorHistoryEntrySchema.parse([
+      new Date(timestamp),
+      keyChanged,
+      keyChanged === "status"
+        ? L1L2ValidatorStatus[
+            newValue as keyof typeof L1L2ValidatorStatus
+          ].toString()
+        : newValue,
+    ])
+  );
 }

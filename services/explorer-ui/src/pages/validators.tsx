@@ -1,7 +1,9 @@
 import { L1L2ValidatorStatus } from "@chicmoz-pkg/types";
+import { Link } from "@tanstack/react-router";
 import { type FC } from "react";
 import { useSubTitle } from "~/hooks";
 import { useL1L2Validators } from "~/hooks/api/l1-l2-validator";
+import { formatTimeSince } from "~/lib/utils";
 import { routes } from "~/routes/__root";
 
 const tdClasses = "p-2 border border-gray-300";
@@ -26,7 +28,7 @@ export const ValidatorsPage: FC = () => {
                 <th>Proposer</th>
                 <th>Status</th>
                 <th>First Seen At</th>
-                <th>Latest Seen Change At</th>
+                <th>Latest Seen Change</th>
               </tr>
             </thead>
             <tbody>
@@ -35,7 +37,12 @@ export const ValidatorsPage: FC = () => {
                 .map((validator) => (
                   <tr key={validator.attester}>
                     <td className={`${tdClasses} font-mono`}>
-                      {validator.attester}
+                      <Link
+                        to={`${routes.validators.route}/${validator.attester}`}
+                        className="text-purple-light hover:font-bold"
+                      >
+                        {validator.attester}
+                      </Link>
                     </td>
                     <td className={tdClasses}>{Number(validator.stake)}</td>
                     <td className={`${tdClasses} font-mono`}>
@@ -51,7 +58,7 @@ export const ValidatorsPage: FC = () => {
                       {validator.firstSeenAt.toISOString()}
                     </td>
                     <td className={tdClasses}>
-                      {validator.latestSeenChangeAt.toISOString()}
+                      {formatTimeSince(validator.latestSeenChangeAt.getTime())}
                     </td>
                   </tr>
                 ))}

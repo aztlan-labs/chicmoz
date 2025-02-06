@@ -20,15 +20,18 @@ import { Route as TermsAndConditionsImport } from './routes/terms-and-conditions
 const VerifiedContractInstancesLazyImport = createFileRoute(
   '/verified-contract-instances',
 )()
-const ValidatorsLazyImport = createFileRoute('/validators')()
 const PrivacyPolicyLazyImport = createFileRoute('/privacy-policy')()
 const FeeRecipientsLazyImport = createFileRoute('/fee-recipients')()
 const DevLazyImport = createFileRoute('/dev')()
 const AboutUsLazyImport = createFileRoute('/about-us')()
 const IndexLazyImport = createFileRoute('/')()
+const ValidatorsIndexLazyImport = createFileRoute('/validators/')()
 const TxEffectsIndexLazyImport = createFileRoute('/tx-effects/')()
 const ContractsIndexLazyImport = createFileRoute('/contracts/')()
 const BlocksIndexLazyImport = createFileRoute('/blocks/')()
+const ValidatorsAttesterAddressLazyImport = createFileRoute(
+  '/validators/$attesterAddress',
+)()
 const TxEffectsHashLazyImport = createFileRoute('/tx-effects/$hash')()
 const BlocksBlockNumberLazyImport = createFileRoute('/blocks/$blockNumber')()
 const ContractsInstancesAddressLazyImport = createFileRoute(
@@ -47,11 +50,6 @@ const VerifiedContractInstancesLazyRoute =
   } as any).lazy(() =>
     import('./routes/verified-contract-instances.lazy').then((d) => d.Route),
   )
-
-const ValidatorsLazyRoute = ValidatorsLazyImport.update({
-  path: '/validators',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/validators.lazy').then((d) => d.Route))
 
 const PrivacyPolicyLazyRoute = PrivacyPolicyLazyImport.update({
   path: '/privacy-policy',
@@ -87,6 +85,13 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
+const ValidatorsIndexLazyRoute = ValidatorsIndexLazyImport.update({
+  path: '/validators/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/validators/index.lazy').then((d) => d.Route),
+)
+
 const TxEffectsIndexLazyRoute = TxEffectsIndexLazyImport.update({
   path: '/tx-effects/',
   getParentRoute: () => rootRoute,
@@ -105,6 +110,14 @@ const BlocksIndexLazyRoute = BlocksIndexLazyImport.update({
   path: '/blocks/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/blocks/index.lazy').then((d) => d.Route))
+
+const ValidatorsAttesterAddressLazyRoute =
+  ValidatorsAttesterAddressLazyImport.update({
+    path: '/validators/$attesterAddress',
+    getParentRoute: () => rootRoute,
+  } as any).lazy(() =>
+    import('./routes/validators/$attesterAddress.lazy').then((d) => d.Route),
+  )
 
 const TxEffectsHashLazyRoute = TxEffectsHashLazyImport.update({
   path: '/tx-effects/$hash',
@@ -184,13 +197,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyPolicyLazyImport
       parentRoute: typeof rootRoute
     }
-    '/validators': {
-      id: '/validators'
-      path: '/validators'
-      fullPath: '/validators'
-      preLoaderRoute: typeof ValidatorsLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/verified-contract-instances': {
       id: '/verified-contract-instances'
       path: '/verified-contract-instances'
@@ -212,6 +218,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TxEffectsHashLazyImport
       parentRoute: typeof rootRoute
     }
+    '/validators/$attesterAddress': {
+      id: '/validators/$attesterAddress'
+      path: '/validators/$attesterAddress'
+      fullPath: '/validators/$attesterAddress'
+      preLoaderRoute: typeof ValidatorsAttesterAddressLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/blocks/': {
       id: '/blocks/'
       path: '/blocks'
@@ -231,6 +244,13 @@ declare module '@tanstack/react-router' {
       path: '/tx-effects'
       fullPath: '/tx-effects'
       preLoaderRoute: typeof TxEffectsIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/validators/': {
+      id: '/validators/'
+      path: '/validators'
+      fullPath: '/validators'
+      preLoaderRoute: typeof ValidatorsIndexLazyImport
       parentRoute: typeof rootRoute
     }
     '/contracts/instances/$address': {
@@ -259,13 +279,14 @@ export const routeTree = rootRoute.addChildren({
   DevLazyRoute,
   FeeRecipientsLazyRoute,
   PrivacyPolicyLazyRoute,
-  ValidatorsLazyRoute,
   VerifiedContractInstancesLazyRoute,
   BlocksBlockNumberLazyRoute,
   TxEffectsHashLazyRoute,
+  ValidatorsAttesterAddressLazyRoute,
   BlocksIndexLazyRoute,
   ContractsIndexLazyRoute,
   TxEffectsIndexLazyRoute,
+  ValidatorsIndexLazyRoute,
   ContractsInstancesAddressLazyRoute,
   ContractsClassesIdVersionsVersionLazyRoute,
 })
@@ -284,13 +305,14 @@ export const routeTree = rootRoute.addChildren({
         "/dev",
         "/fee-recipients",
         "/privacy-policy",
-        "/validators",
         "/verified-contract-instances",
         "/blocks/$blockNumber",
         "/tx-effects/$hash",
+        "/validators/$attesterAddress",
         "/blocks/",
         "/contracts/",
         "/tx-effects/",
+        "/validators/",
         "/contracts/instances/$address",
         "/contracts/classes/$id/versions/$version"
       ]
@@ -313,9 +335,6 @@ export const routeTree = rootRoute.addChildren({
     "/privacy-policy": {
       "filePath": "privacy-policy.lazy.tsx"
     },
-    "/validators": {
-      "filePath": "validators.lazy.tsx"
-    },
     "/verified-contract-instances": {
       "filePath": "verified-contract-instances.lazy.tsx"
     },
@@ -325,6 +344,9 @@ export const routeTree = rootRoute.addChildren({
     "/tx-effects/$hash": {
       "filePath": "tx-effects/$hash.lazy.tsx"
     },
+    "/validators/$attesterAddress": {
+      "filePath": "validators/$attesterAddress.lazy.tsx"
+    },
     "/blocks/": {
       "filePath": "blocks/index.lazy.tsx"
     },
@@ -333,6 +355,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/tx-effects/": {
       "filePath": "tx-effects/index.lazy.tsx"
+    },
+    "/validators/": {
+      "filePath": "validators/index.lazy.tsx"
     },
     "/contracts/instances/$address": {
       "filePath": "contracts/instances.$address.lazy.tsx"
