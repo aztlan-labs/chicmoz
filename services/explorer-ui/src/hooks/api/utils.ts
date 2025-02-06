@@ -45,4 +45,5 @@ export const queryKeyGenerator = {
   chainErrors: ["chainErrors"],
   sequencers: ["sequencers"],
   sequencer: (enr: string) => ["sequencer", enr],
+  feeRecipients: ["feeRecipients"],
 };

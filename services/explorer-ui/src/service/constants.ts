@@ -52,6 +52,7 @@ export const aztecExplorer = {
   getL2ChainErrors: "/l2/errors",
   getL2Sequencers: "/l2/sequencers",
   getL2Sequencer: (enr: string) => `l2/sequencers/${enr}`,
+  getL2FeeRecipients: "/l2/fee-recipients",
 };
 
 export const APP_NAME = "Aztec-Scan";
