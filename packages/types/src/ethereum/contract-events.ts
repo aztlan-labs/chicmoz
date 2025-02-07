@@ -31,7 +31,7 @@ export const chicmozL1GenericContractEventSchema = z.object({
   l1BlockHash: z.string().startsWith("0x"),
   l1BlockTimestamp: z.number(),
   l1ContractAddress: z.string(),
-  l1TransactionHash: z.string().startsWith("0x").optional(),
+  l1TransactionHash: z.string().startsWith("0x").optional().nullable(),
 });
 
 export type ChicmozL1GenericContractEvent = z.infer<

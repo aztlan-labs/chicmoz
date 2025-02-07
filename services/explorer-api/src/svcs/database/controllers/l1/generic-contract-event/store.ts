@@ -2,7 +2,7 @@ import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import { ChicmozL1GenericContractEvent } from "@chicmoz-pkg/types";
 import { l1GenericContractEventTable } from "../../../schema/l1/generic-contract-event.js";
 
-export const storeL1GenericContractEvent = async (contractEvent: ChicmozL1GenericContractEvent) => {
+export const store = async (contractEvent: ChicmozL1GenericContractEvent) => {
   return await db().insert(l1GenericContractEventTable).values({
     // TODO: txHash: contractEvent.txHash,
     l1BlockHash: contractEvent.l1BlockHash,

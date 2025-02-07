@@ -60,6 +60,7 @@ export const paths = {
   l1l2Validators: "/l1/l2-validators",
   l1l2Validator: "/l1/l2-validators/:attesterAddress",
   l1l2ValidatorHistory: "/l1/l2-validators/:attesterAddress/history",
+  l1ContractEvents: "/l1/contract-events",
 
   chainInfo: "/l2/info",
   chainErrors: "/l2/errors",
