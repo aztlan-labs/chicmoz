@@ -1,3 +1,4 @@
+import { CHICMOZ_TYPES_AZTEC_VERSION } from "@chicmoz-pkg/types";
 import { Link } from "@tanstack/react-router";
 import { type FC } from "react";
 import {
@@ -45,7 +46,7 @@ export const DevPage: FC = () => {
       <div className="bg-white w-full rounded-lg shadow-md p-4 md:w-1/2">
         <h2>Misc</h2>
         <pre>
-          <p>{`Aztec.js version           0.74.0`}</p>
+          <p>{`Aztec.js version           ${CHICMOZ_TYPES_AZTEC_VERSION}`}</p>
           <p>{`Explorer version           ${VERSION_STRING}`}</p>
           <p>{`API URL                    ${API_URL}`}</p>
           <p>{`WS URL                     ${WS_URL}`}</p>
