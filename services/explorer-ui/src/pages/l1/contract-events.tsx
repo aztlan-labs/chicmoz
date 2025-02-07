@@ -19,11 +19,11 @@ export const ContractEventsPage: FC = () => {
           <table>
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Event Name</th>
-                <th>Contract Address</th>
-                <th>Block Number</th>
-                <th>Transaction Hash</th>
+                <th className="p-2">Event Name</th>
+                <th className="p-2">Contract Address</th>
+                <th className="p-2">Block Number</th>
+                <th className="p-2">Transaction Hash</th>
+                <th className="p-2">Args</th>
               </tr>
             </thead>
             <tbody>
@@ -33,17 +33,14 @@ export const ContractEventsPage: FC = () => {
                 )
                 .map((event, index) => (
                   <tr key={index}>
-                    <td className={tdClasses}>
-                      {
-                        event.id
-                        // TODO: remove, use link instead
-                      }
-                    </td>
                     <td className={tdClasses}>{event.eventName}</td>
                     <td className={tdClasses}>{event.l1ContractAddress}</td>
                     <td className={tdClasses}>{Number(event.l1BlockNumber)}</td>
                     <td className={tdClasses}>
                       {event.l1TransactionHash ?? "N/A"}
+                    </td>
+                    <td className={tdClasses}>
+                      {JSON.stringify(event.eventArgs)}
                     </td>
                   </tr>
                 ))}

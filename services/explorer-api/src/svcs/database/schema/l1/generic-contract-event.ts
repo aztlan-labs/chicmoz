@@ -21,5 +21,15 @@ export const l1GenericContractEventTable = pgTable(
     l1TransactionHash: varchar("l1_transaction_hash"),
     eventName: varchar("event_name").notNull(),
     eventArgs: jsonb("event_args"),
-  }
+  },
+  (table) => ({
+    unique: {
+      l1BlockNumber_l1ContractAddress_eventName: [
+        table.l1BlockNumber,
+        table.l1ContractAddress,
+        table.eventName,
+        table.eventArgs,
+      ],
+    },
+  })
 );

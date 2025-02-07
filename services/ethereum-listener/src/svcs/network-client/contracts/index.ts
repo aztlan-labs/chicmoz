@@ -76,17 +76,22 @@ export const watchContractsEvents = (): UnwatchCallback => {
   const unwatches = (
     Object.entries(contracts) as [keyof AztecContracts, AztecContract][]
   ).map(([name, contract]) => {
+    logger.info(`🍔 Generic watcher:  ${name}`);
+    const unwatches = [
+      watchContractEventsGeneric({
+        name,
+        contract,
+      }),
+    ];
     const specificWatcher = contractWatchers[name];
     if (specificWatcher) {
       logger.info(`🍟 Specific watcher: ${name}`);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      return specificWatcher(contract as any);
+      unwatches.push(specificWatcher(contract as any));
     }
-    logger.info(`🍔 Generic watcher:  ${name}`);
-    return watchContractEventsGeneric({
-      name,
-      contract,
-    });
+    return () => {
+      unwatches.forEach((unwatch) => unwatch());
+    };
   });
 
   return () => {
