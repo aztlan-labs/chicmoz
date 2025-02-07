@@ -1,10 +1,11 @@
 import {
+  ChicmozL1GenericContractEvent,
+  ChicmozL1L2Validator,
+  EthAddress,
   L1L2BlockProposed,
   L1L2ProofVerified,
-  type ChicmozL1L2Validator,
-  type EthAddress,
-  type L1NetworkId,
-  type L2NetworkId,
+  L1NetworkId,
+  L2NetworkId,
 } from "@chicmoz-pkg/types";
 
 export type ConnectedToL1Event = {
@@ -37,6 +38,7 @@ export type L1_MESSAGES = {
   L1_L2_VALIDATOR_EVENT: L1L2ValidatorEvent;
   L1_L2_BLOCK_PROPOSED_EVENT: L1L2BlockProposed;
   L1_L2_PROOF_VERIFIED_EVENT: L1L2ProofVerified;
+  L1_GENERIC_CONTRACT_EVENT: ChicmozL1GenericContractEvent;
 };
 
 export type L1Payload = L1_MESSAGES[keyof L1_MESSAGES];

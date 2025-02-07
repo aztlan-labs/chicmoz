@@ -4,9 +4,11 @@ import {
   getConsumerGroupId,
 } from "@chicmoz-pkg/message-registry";
 import {
+  ChicmozL1GenericContractEvent,
   L1L2BlockProposed,
   L1L2ProofVerified,
   getL1NetworkId,
+  jsonStringify,
   l1L2BlockProposedSchema,
   l1L2ProofVerifiedSchema,
 } from "@chicmoz-pkg/types";
@@ -60,4 +62,24 @@ export const l1L2ProofVerifiedHandler: EventHandler = {
     "L1_L2_PROOF_VERIFIED_EVENT"
   ),
   cb: onVerf as (arg0: unknown) => Promise<void>,
+};
+
+// eslint-disable-next-line @typescript-eslint/require-await
+const onGeneric = async (event: ChicmozL1GenericContractEvent) => {
+  logger.info(`🍔🍔 L1GenericContractEvent`);
+  logger.info(jsonStringify(event));
+};
+
+export const l1GenericContractEventHandler: EventHandler = {
+  groupId: getConsumerGroupId({
+    serviceName: SERVICE_NAME,
+    networkId: L2_NETWORK_ID,
+    handlerName: "l1GenericContractEventHandler",
+  }),
+  topic: generateL1TopicName(
+    L2_NETWORK_ID,
+    getL1NetworkId(L2_NETWORK_ID),
+    "L1_GENERIC_CONTRACT_EVENT"
+  ),
+  cb: onGeneric as (arg0: unknown) => Promise<void>,
 };

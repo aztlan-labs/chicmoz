@@ -2,9 +2,10 @@ import {
   l1L2BlockProposedSchema,
   l1L2ProofVerifiedSchema,
 } from "@chicmoz-pkg/types";
-import { emit } from "../../../events/index.js";
-import { logger } from "../../../logger.js";
-import { RollupContract, UnwatchCallback } from "./utils.js";
+import { emit } from "../../../../events/index.js";
+import { logger } from "../../../../logger.js";
+import { RollupContract, UnwatchCallback } from "../utils.js";
+import { asyncForEach } from "./index.js";
 
 const emptyFilterArgs = {};
 const onError = (name: string) => (e: Error) => {
@@ -13,13 +14,6 @@ const onError = (name: string) => (e: Error) => {
 const onLogs = (name: string) => (logs: unknown[]) => {
   logger.info(`💀${name} UNHANDLED!`);
   logger.info(logs);
-};
-
-const asyncForEach = async <T>(
-  array: T[],
-  callback: (value: T) => Promise<void>
-) => {
-  for (const item of array) await callback(item);
 };
 
 export const watchRollupEvents = (
