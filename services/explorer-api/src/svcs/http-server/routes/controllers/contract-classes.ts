@@ -3,11 +3,11 @@ import {
   loadContractArtifact,
   type NoirCompiledContract,
 } from "@aztec/aztec.js";
+import { setEntry } from "@chicmoz-pkg/redis-helper";
 import { chicmozL2ContractClassRegisteredEventSchema } from "@chicmoz-pkg/types";
 import asyncHandler from "express-async-handler";
 import { CACHE_TTL_SECONDS } from "../../../../environment.js";
 import { logger } from "../../../../logger.js";
-import { setEntry } from "../../../cache/index.js";
 import { controllers as db } from "../../../database/index.js";
 import {
   getContractClassesByClassIdSchema,

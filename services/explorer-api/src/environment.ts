@@ -25,8 +25,6 @@ export const PUBLIC_API_KEY: ApiKey = apiKeySchema.parse(
 export const CACHE_TTL_SECONDS = Number(process.env.CACHE_TTL) || 60;
 export const CACHE_LATEST_TTL_SECONDS =
   Number(process.env.CACHE_LATEST_TTL) || 10;
-export const REDIS_HOST = process.env.REDIS_HOST ?? "redis-master";
-export const REDIS_PORT = Number(process.env.REDIS_PORT) || 6379;
 
 export const PORT = Number(process.env.PORT) || 80;
 export const BODY_LIMIT = process.env.BODY_LIMIT ?? "64kb";

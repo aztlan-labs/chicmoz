@@ -1,4 +1,5 @@
 import { type Logger } from "@chicmoz-pkg/logger-server";
+import { L2NetworkId } from "@chicmoz-pkg/types";
 
 export enum MicroserviceBaseSvcState {
   INITIALIZING,
@@ -9,7 +10,7 @@ export enum MicroserviceBaseSvcState {
 export type MicroserviceBaseSvc = {
   svcId: string;
   getConfigStr: () => string;
-  init: () => Promise<void>;
+  init: (l2NetworkId?: L2NetworkId) => Promise<void>;
   health: () => boolean;
   shutdown: () => Promise<void>;
 };

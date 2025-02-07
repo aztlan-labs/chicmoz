@@ -1,10 +1,10 @@
+import { CacheKeys, getEntry, setEntry } from "@chicmoz-pkg/redis-helper";
 import { NODE_ENV, NodeEnv, jsonStringify } from "@chicmoz-pkg/types";
 import {
   CACHE_LATEST_TTL_SECONDS,
   CACHE_TTL_SECONDS,
 } from "../../../../../environment.js";
 import { logger } from "../../../../../logger.js";
-import { CacheKeys, getEntry, setEntry } from "../../../../cache/index.js";
 import { dbParseErrorCallback } from "../../../../database/controllers/utils.js";
 import { controllers as db } from "../../../../database/index.js";
 

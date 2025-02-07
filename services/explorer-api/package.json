@@ -16,6 +16,7 @@
     "@chicmoz-pkg/message-registry": "workspace:^",
     "@chicmoz-pkg/microservice-base": "workspace:^",
     "@chicmoz-pkg/postgres-helper": "workspace:^",
+    "@chicmoz-pkg/redis-helper": "workspace:^",
     "@chicmoz-pkg/types": "workspace:^",
     "body-parser": "1.20.2",
     "cors": "2.8.5",

@@ -1,7 +1,7 @@
+import { getEntry, setEntry } from "@chicmoz-pkg/redis-helper";
 import { NODE_ENV, NodeEnv } from "@chicmoz-pkg/types";
 import asyncHandler from "express-async-handler";
 import { PUBLIC_API_KEY } from "../../../../environment.js";
-import { getEntry, setEntry } from "../../../cache/index.js";
 import { controllers as db } from "../../../database/index.js";
 import {
   address,
