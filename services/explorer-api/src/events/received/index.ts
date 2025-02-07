@@ -3,6 +3,7 @@ import { blockHandler, catchupHandler } from "./on-block/index.js";
 import { chainInfoHandler } from "./on-chain-info.js";
 import { l1L2ValidatorHandler } from "./on-l1-l2-validator.js";
 import {
+  l1GenericContractEventHandler,
   l1L2BlockProposedHandler,
   l1L2ProofVerifiedHandler,
 } from "./on-l1-rollup-contract-events.js";
@@ -24,4 +25,5 @@ export const subscribeHandlers = async () => {
   await startSubscribe(l1L2ValidatorHandler);
   await startSubscribe(l1L2BlockProposedHandler);
   await startSubscribe(l1L2ProofVerifiedHandler);
+  await startSubscribe(l1GenericContractEventHandler);
 };

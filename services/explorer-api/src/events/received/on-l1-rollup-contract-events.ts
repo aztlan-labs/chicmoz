@@ -4,6 +4,7 @@ import {
   getConsumerGroupId,
 } from "@chicmoz-pkg/message-registry";
 import {
+  ChicmozL1GenericContractEvent,
   L1L2BlockProposed,
   L1L2ProofVerified,
   getL1NetworkId,
@@ -13,6 +14,7 @@ import {
 import { SERVICE_NAME } from "../../constants.js";
 import { L2_NETWORK_ID } from "../../environment.js";
 import { logger } from "../../logger.js";
+import { store } from "../../svcs/database/controllers/l1/generic-contract-event/store.js";
 import {
   addL1L2BlockProposed,
   addL1L2ProofVerified,
@@ -60,4 +62,24 @@ export const l1L2ProofVerifiedHandler: EventHandler = {
     "L1_L2_PROOF_VERIFIED_EVENT"
   ),
   cb: onVerf as (arg0: unknown) => Promise<void>,
+};
+
+// eslint-disable-next-line @typescript-eslint/require-await
+const onGeneric = async (event: ChicmozL1GenericContractEvent) => {
+  logger.info(`🍔 L1GenericContractEvent`);
+  await store(event);
+};
+
+export const l1GenericContractEventHandler: EventHandler = {
+  groupId: getConsumerGroupId({
+    serviceName: SERVICE_NAME,
+    networkId: L2_NETWORK_ID,
+    handlerName: "l1GenericContractEventHandler",
+  }),
+  topic: generateL1TopicName(
+    L2_NETWORK_ID,
+    getL1NetworkId(L2_NETWORK_ID),
+    "L1_GENERIC_CONTRACT_EVENT"
+  ),
+  cb: onGeneric as (arg0: unknown) => Promise<void>,
 };

@@ -45,6 +45,8 @@ export const openApiPaths = {
   ...controller.openapi_GET_L1_L2_VALIDATOR,
   ...controller.openapi_GET_L1_L2_VALIDATOR_HISTORY,
 
+  ...controller.openapi_GET_L1_CONTRACT_EVENTS,
+
   ...controller.openapi_GET_CHAIN_INFO,
   ...controller.openapi_GET_CHAIN_ERRORS,
 
@@ -181,6 +183,8 @@ export const init = ({ router }: { router: Router }) => {
     paths.l1l2ValidatorHistory,
     controller.GET_L1_L2_VALIDATOR_HISTORY
   );
+
+  router.get(paths.l1ContractEvents, controller.GET_L1_CONTRACT_EVENTS);
 
   router.get(paths.chainInfo, controller.GET_CHAIN_INFO);
   router.get(paths.chainErrors, controller.GET_CHAIN_ERRORS);

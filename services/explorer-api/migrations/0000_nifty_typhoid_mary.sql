@@ -222,6 +222,17 @@ CREATE TABLE IF NOT EXISTS "l2_unconstrained_function" (
 	CONSTRAINT "unconstrained_function_contract_class" PRIMARY KEY("contract_class_id","unconstrained_function_selector_value")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "l1_generic_contract_event" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"l1_block_hash" varchar NOT NULL,
+	"l1_block_number" bigint NOT NULL,
+	"l1_block_timestamp" integer NOT NULL,
+	"l1_contract_address" varchar(42) NOT NULL,
+	"l1_transaction_hash" varchar,
+	"event_name" varchar NOT NULL,
+	"event_args" jsonb
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l1_l2_validator_proposer" (
 	"attester_address" varchar(42) NOT NULL,
 	"proposer" varchar(42) NOT NULL,

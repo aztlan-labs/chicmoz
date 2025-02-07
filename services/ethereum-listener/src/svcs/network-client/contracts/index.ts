@@ -6,29 +6,21 @@ import {
   RegistryAbi,
   RollupAbi,
 } from "@aztec/l1-artifacts";
-import { ChicmozChainInfo, jsonStringify } from "@chicmoz-pkg/types";
+import { ChicmozChainInfo } from "@chicmoz-pkg/types";
 import { PublicClient } from "viem";
 import { logger } from "../../../logger.js";
-import { watchRollupEvents } from "./rollup-watcher.js";
 import {
   AztecContract,
   AztecContracts,
   UnwatchCallback,
   getTypedContract,
 } from "./utils.js";
+import {
+  watchContractEventsGeneric,
+  watchRollupEvents,
+} from "./watchers/index.js";
 
 let l1Contracts: AztecContracts | undefined = undefined;
-
-type WatchEventFunction = (
-  args: Record<string, unknown>,
-  options: {
-    onLogs: (logs: unknown[]) => void;
-    onError: (e: Error) => void;
-    fromBlock: bigint;
-  }
-) => UnwatchCallback;
-
-type ContractEventMap = Record<string, WatchEventFunction>;
 
 const contractWatchers: {
   [K in keyof AztecContracts]?: (
@@ -79,61 +71,27 @@ export const init = (
   };
 };
 
-const watchContractEventsGeneric = <T extends AztecContract>({
-  name,
-  contract,
-}: {
-  name: string;
-  contract: T;
-}): UnwatchCallback => {
-  const eventNames = contract.abi.filter(
-    (item) => item.type === "event" && typeof item.name === "string"
-  );
-  const watchEvents = contract.watchEvent as unknown as ContractEventMap;
-
-  const unwatches = eventNames.map((event) => {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-    const eventName = (event as { name: string }).name;
-    logger.info(`🍔🍔 ${name}.${eventName}`);
-    return watchEvents[eventName](
-      {},
-      {
-        fromBlock: 1n,
-        onError: (e) => {
-          logger.error(`🍔 ${name}.${eventName}: ${e.stack}`);
-        },
-        onLogs: (logs) => {
-          logs.forEach((log) => {
-            logger.info(
-              `🍔 ${name}.${eventName}\n${jsonStringify(
-                (log as { args: unknown }).args ?? "no args!"
-              )}`
-            );
-          });
-        },
-      }
-    );
-  });
-
-  return () => unwatches.forEach((unwatch) => unwatch());
-};
-
 export const watchContractsEvents = (): UnwatchCallback => {
   const contracts = getL1Contracts();
   const unwatches = (
     Object.entries(contracts) as [keyof AztecContracts, AztecContract][]
   ).map(([name, contract]) => {
+    logger.info(`🍔 Generic watcher:  ${name}`);
+    const unwatches = [
+      watchContractEventsGeneric({
+        name,
+        contract,
+      }),
+    ];
     const specificWatcher = contractWatchers[name];
     if (specificWatcher) {
       logger.info(`🍟 Specific watcher: ${name}`);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      return specificWatcher(contract as any);
+      unwatches.push(specificWatcher(contract as any));
     }
-    logger.info(`🍔 Generic watcher:  ${name}`);
-    return watchContractEventsGeneric({
-      name,
-      contract,
-    });
+    return () => {
+      unwatches.forEach((unwatch) => unwatch());
+    };
   });
 
   return () => {
