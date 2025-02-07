@@ -28,9 +28,10 @@ export const chicmozL1GenericContractEventSchema = z.object({
   // TODO: does some events have bigints in args?
   eventArgs: z.record(z.unknown()).optional(),
   l1BlockNumber: z.coerce.bigint(),
-  l1BlockHash: z.string(),
+  l1BlockHash: z.string().startsWith("0x"),
   l1BlockTimestamp: z.number(),
   l1ContractAddress: z.string(),
+  l1TransactionHash: z.string().startsWith("0x").optional(),
 });
 
 export type ChicmozL1GenericContractEvent = z.infer<

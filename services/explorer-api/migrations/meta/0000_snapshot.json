@@ -1,5 +1,5 @@
 {
-  "id": "d44cdc3c-62a7-4820-976d-f63228f6a9ce",
+  "id": "df619266-a55f-4d1e-94d3-c5fe7939eca5",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1368,6 +1368,65 @@
           ]
         }
       },
+      "uniqueConstraints": {}
+    },
+    "public.l1_generic_contract_event": {
+      "name": "l1_generic_contract_event",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "l1_block_hash": {
+          "name": "l1_block_hash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "l1_block_number": {
+          "name": "l1_block_number",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "l1_block_timestamp": {
+          "name": "l1_block_timestamp",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "l1_contract_address": {
+          "name": "l1_contract_address",
+          "type": "varchar(42)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "l1_transaction_hash": {
+          "name": "l1_transaction_hash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "event_name": {
+          "name": "event_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "event_args": {
+          "name": "event_args",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "public.l1_l2_validator_proposer": {

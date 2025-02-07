@@ -63,6 +63,7 @@ export const watchContractEventsGeneric = <T extends AztecContract>({
                   16
                 ),
                 l1ContractAddress: log.address,
+                l1TransactionHash: log.transactionHash,
                 eventName: log.eventName,
                 eventArgs: log.args,
               })

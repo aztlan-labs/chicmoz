@@ -8,13 +8,13 @@ import {
   L1L2BlockProposed,
   L1L2ProofVerified,
   getL1NetworkId,
-  jsonStringify,
   l1L2BlockProposedSchema,
   l1L2ProofVerifiedSchema,
 } from "@chicmoz-pkg/types";
 import { SERVICE_NAME } from "../../constants.js";
 import { L2_NETWORK_ID } from "../../environment.js";
 import { logger } from "../../logger.js";
+import { storeL1GenericContractEvent } from "../../svcs/database/controllers/l1/generic-contract-event/store.js";
 import {
   addL1L2BlockProposed,
   addL1L2ProofVerified,
@@ -66,8 +66,8 @@ export const l1L2ProofVerifiedHandler: EventHandler = {
 
 // eslint-disable-next-line @typescript-eslint/require-await
 const onGeneric = async (event: ChicmozL1GenericContractEvent) => {
-  logger.info(`🍔🍔 L1GenericContractEvent`);
-  logger.info(jsonStringify(event));
+  logger.info(`🍔 L1GenericContractEvent`);
+  await storeL1GenericContractEvent(event);
 };
 
 export const l1GenericContractEventHandler: EventHandler = {
