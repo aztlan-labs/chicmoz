@@ -53,6 +53,7 @@ export const aztecExplorer = {
   getL2Sequencers: "/l2/sequencers",
   getL2Sequencer: (enr: string) => `l2/sequencers/${enr}`,
   getL2FeeRecipients: "/l2/fee-recipients",
+  getL1GenericContractEvents: "/l1/contract-events",
   getL1L2Validators: `l1/l2-validators`,
   getL1L2Validator: (address: string) => `l1/l2-validators/${address}`,
   getL1L2ValidatorHistory: (address: string) =>

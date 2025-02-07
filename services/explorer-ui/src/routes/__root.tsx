@@ -123,6 +123,20 @@ export const routes = {
     route: "/fee-recipients",
     title: "Fee Recipients",
   },
+  l1: {
+    route: "/l1",
+    title: "L1",
+    children: {
+      index: {
+        route: "/",
+        title: "L1 base",
+      },
+      contractEvents: {
+        route: "/contract-events",
+        title: "L1 Contract Events",
+      },
+    },
+  },
   validators: {
     route: "/validators",
     title: "Validators",

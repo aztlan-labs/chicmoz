@@ -24,6 +24,7 @@ export const l1L2ProofVerifiedSchema = z.object({
 export type L1L2ProofVerified = z.infer<typeof l1L2ProofVerifiedSchema>;
 
 export const chicmozL1GenericContractEventSchema = z.object({
+  id: z.string().uuid().optional(),
   eventName: z.string(),
   // TODO: does some events have bigints in args?
   eventArgs: z.record(z.unknown()).optional(),
