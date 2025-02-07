@@ -33,3 +33,4 @@
 !packages/auth0-middleware
 !packages/microservice-base
 !packages/postgres-helper
+!packages/redis-helper
