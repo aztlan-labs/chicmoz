@@ -30,6 +30,8 @@ export async function run() {
     node: getAztecNodeClient(),
   });
 
+  // contract is of type EasyPrivateVotingContract
+
   // ====== PROVING
   // things that only the deployer knows
   // deployerWallet
