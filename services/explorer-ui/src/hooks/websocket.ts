@@ -84,9 +84,12 @@ const updatePendingTxs = (
     queryKeyGenerator.pendingTxs,
     (oldData: ChicmozL2PendingTx[] | undefined) => {
       if (!oldData) return txs;
-      return [...oldData, ...txs].sort(
-        (a, b) => b.birthTimestamp - a.birthTimestamp
-      );
+      return [...oldData, ...txs]
+        .filter(
+          (tx, index, self) =>
+            self.findIndex((t) => t.hash === tx.hash) === index
+        )
+        .sort((a, b) => b.birthTimestamp - a.birthTimestamp);
     }
   );
 };
