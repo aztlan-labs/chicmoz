@@ -29,6 +29,21 @@ export async function run() {
     broadcastWithWallet: deployerWallet, // NOTE: comment this out to not broadcast
     node: getAztecNodeClient(),
   });
+
+  // ====== PROVING
+  // things that only the deployer knows
+  // deployerWallet
+  // contract.instance.initializationHash
+  // contract.instance.publicKeys // <- private keys?
+  // contract.instance.salt
+
+  // ❓ is there something missing here?
+  // ❓ how to create proof of all or part of the above?
+
+  // ====== VERIFYING
+  // ❓
+
+
   registerContractClassArtifact(
     contractLoggingName,
     contractArtifactJson,
