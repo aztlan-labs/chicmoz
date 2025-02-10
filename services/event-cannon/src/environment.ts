@@ -1,4 +1,3 @@
-import { apiKeySchema } from "@chicmoz-pkg/types";
 import { z } from "zod";
 
 export const SERVICE_NAME = process.env.SERVICE_NAME ?? "event-cannon";
@@ -9,9 +8,6 @@ export const ETHEREUM_RPC_URL =
   process.env.ETHEREUM_RPC_URL ?? "http://eth.sandbox.chicmoz.localhost";
 export const EXPLORER_API_URL =
   process.env.EXPLORER_API_URL ?? "http://api.sandbox.chicmoz.localhost/v1";
-export const EXPLORER_API_KEY = apiKeySchema.parse(
-  process.env.EXPLORER_API_KEY
-);
 
 export const SCENARIO_DELAY = z.coerce
   .number()

@@ -2,7 +2,12 @@ import { MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
 import { NODE_ENV } from "@chicmoz-pkg/types";
 import express from "express";
 import http from "http";
-import { BODY_LIMIT, PARAMETER_LIMIT, PORT } from "../../environment.js";
+import {
+  ARTIFACT_BODY_LIMIT,
+  BODY_LIMIT,
+  PARAMETER_LIMIT,
+  PORT,
+} from "../../environment.js";
 import { logger } from "../../logger.js";
 import { setup } from "./express-config.js";
 
@@ -45,7 +50,11 @@ export const init = async () => {
 export const httpServerService: MicroserviceBaseSvc = {
   svcId: "HTTP_SERVER",
   init,
-  getConfigStr: () => `EXPRESS\n${JSON.stringify({ PORT, BODY_LIMIT })}`,
+  getConfigStr: () => `EXPRESS
+PORT: ${PORT}
+BODY_LIMIT: ${BODY_LIMIT}
+PARAMETER_LIMIT: ${PARAMETER_LIMIT}
+ARTIFACT_BODY_LIMIT: ${ARTIFACT_BODY_LIMIT}`,
   health: () => true,
   shutdown: async () => {
     await new Promise<void>((resolve) => {
