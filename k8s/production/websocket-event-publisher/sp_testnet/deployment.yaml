@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: websocket-event-publisher-sp-testnet-label
-  name: websocket-event-publisher-deployment
+  name: websocket-event-publisher-sp-deployment
   namespace: chicmoz-prod
 spec:
   replicas: 1
