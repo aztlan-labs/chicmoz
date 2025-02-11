@@ -14,8 +14,6 @@ import {
   PXE,
   SentTx,
   Wallet,
-  getContractClassFromArtifact,
-  loadContractArtifact,
 } from "@aztec/aztec.js";
 import {
   broadcastPrivateFunction,
@@ -26,6 +24,10 @@ import {
 import { deriveSigningKey } from "@aztec/circuits.js";
 import { FunctionType } from "@aztec/foundation/abi";
 import { ContractClassRegisteredEvent } from "@aztec/protocol-contracts/class-registerer";
+import {
+  generateVerifyArtifactPayload,
+  generateVerifyArtifactUrl,
+} from "@chicmoz-pkg/contract-verification";
 import { request } from "http";
 import { EXPLORER_API_URL } from "../../../environment.js";
 import { logger } from "../../../logger.js";
@@ -224,22 +226,6 @@ export const publicDeployAccounts = async (
   await batch.send().wait();
 };
 
-const testGetContractClassFromArtifact = async (
-  stringifiedArtifactJson: string
-) => {
-  try {
-    const parsed = JSON.parse(
-      stringifiedArtifactJson
-    ) as unknown as NoirCompiledContract;
-    const loaded = loadContractArtifact(parsed);
-    await getContractClassFromArtifact(loaded);
-  } catch (e) {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    logger.error(`🚨 Error parsing artifact: ${(e as Error).stack ?? e}`);
-    throw new Error("Error parsing artifact before sending to explorer-api");
-  }
-};
-
 export const registerContractClassArtifact = async (
   contractLoggingName: string,
   artifactObj: { default: NoirCompiledContract } | NoirCompiledContract,
@@ -248,17 +234,9 @@ export const registerContractClassArtifact = async (
   skipSleep = false
 ) => {
   const url = new URL(
-    `${EXPLORER_API_URL}/l2/contract-classes/${contractClassId}/versions/${version}`
+    generateVerifyArtifactUrl(EXPLORER_API_URL, contractClassId, version)
   );
-  const artifactJson = (artifactObj as { default: NoirCompiledContract })
-    .default
-    ? (artifactObj as { default: NoirCompiledContract }).default
-    : artifactObj;
-  const stringifiedArtifactJson = JSON.stringify(artifactJson);
-  await testGetContractClassFromArtifact(stringifiedArtifactJson);
-  const postData = JSON.stringify({
-    stringifiedArtifactJson,
-  });
+  const postData = JSON.stringify(generateVerifyArtifactPayload(artifactObj));
 
   const sizeInMB = Buffer.byteLength(postData) / 1000 ** 2;
   if (sizeInMB > 10) {

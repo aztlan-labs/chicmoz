@@ -10,6 +10,7 @@
     "@aztec/circuits.js": "0.75.0",
     "@aztec/protocol-contracts": "0.75.0",
     "@chicmoz-pkg/backend-utils": "workspace:^",
+    "@chicmoz-pkg/contract-verification": "workspace:^",
     "@chicmoz-pkg/error-middleware": "workspace:^",
     "@chicmoz-pkg/logger-server": "workspace:^",
     "@chicmoz-pkg/message-bus": "workspace:^",
