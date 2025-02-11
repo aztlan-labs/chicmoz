@@ -147,7 +147,7 @@ export const run = async () => {
     throw new Error(`Token admin is not ${owner.toString()}`);
 
   if (
-    !((await bridge.methods.get_token().simulate()) as AztecAddress).equals(
+    !((await bridge.methods.get_config().simulate()) as AztecAddress).equals(
       token.address
     )
   )
