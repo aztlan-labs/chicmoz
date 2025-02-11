@@ -11,8 +11,9 @@ export const addNonProdDefault = <T>(
 export enum NodeEnv {
   DEV = "development",
   PROD = "production",
+  TEST = "test",
 }
-export const nodeEnvSchema = z.enum([NodeEnv.DEV, NodeEnv.PROD]);
+export const nodeEnvSchema = z.enum([NodeEnv.DEV, NodeEnv.PROD, NodeEnv.TEST]);
 export const NODE_ENV: NodeEnv = nodeEnvSchema
   .default(NodeEnv.DEV)
   .parse(process.env.NODE_ENV);
