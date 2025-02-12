@@ -14,6 +14,8 @@ on:
 jobs:
   set-up:
     runs-on: ubuntu-latest
+    outputs:
+      tools-cache-key: ${{ steps.cache-key.outputs.key }}
 
     steps:
       - name: Checkout Repository
@@ -43,26 +45,39 @@ jobs:
           echo "DEVNET_AZTEC_L1_WS: $DEVNET_AZTEC_L1_WS"
         shell: bash
 
+      - name: Set up tools directory
+        run: mkdir -p ${GITHUB_WORKSPACE}/tools
+
       - name: Install Skaffold
         run: |
-          curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
-          sudo install skaffold /usr/local/bin/
+          curl -Lo ${GITHUB_WORKSPACE}/tools/skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
+          chmod +x ${GITHUB_WORKSPACE}/tools/skaffold
+          echo "${GITHUB_WORKSPACE}/tools" >> $GITHUB_PATH
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
+      - name: Copy doctl to tools directory
+        run: |
+          which doctl
+          cp $(which doctl) ${GITHUB_WORKSPACE}/tools/
+          chmod +x ${GITHUB_WORKSPACE}/tools/doctl
+
+      - name: Generate cache key
+        id: cache-key
+        run: |
+          echo "key=${{ runner.os }}-tools-${{ hashFiles('${GITHUB_WORKSPACE}/tools/*') }}" >> $GITHUB_OUTPUT
+
       - name: Cache tools
         uses: actions/cache@v4
         with:
-          path: |
-            /usr/local/bin/skaffold
-            /usr/local/bin/doctl
-          key: ${{ runner.os }}-tools-${{ hashFiles('/usr/local/bin/skaffold', '/usr/local/bin/doctl') }}
+          path: ${GITHUB_WORKSPACE}/tools
+          key: ${{ steps.cache-key.outputs.key }}
 
-      - name: Log in to DigitalOcean Container Registry with short-lived credentials
-        run: doctl registry login --expiry-seconds 1200
+      - name: Log in to DigitalOcean Container Registry
+        run: ${GITHUB_WORKSPACE}/tools/doctl registry login --expiry-seconds 1200
 
       - name: Build application with Skaffold
         env:
@@ -76,7 +91,8 @@ jobs:
           DEVNET_AZTEC_L1_WS: ${{ vars.DEVNET_AZTEC_L1_WS }}
         run: |
           cd k8s/production/common
-          skaffold build -f ./skaffold.chicmoz-base-image.yaml --default-repo=registry.digitalocean.com/aztlan-containers
+          ${GITHUB_WORKSPACE}/tools/skaffold build -f ./skaffold.chicmoz-base-image.yaml --default-repo=registry.digitalocean.com/aztlan-containers
+
   build_explorer-api:
     runs-on: ubuntu-latest
     needs: set-up
@@ -87,15 +103,21 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set up tools directory
+        run: mkdir -p ${GITHUB_WORKSPACE}/tools
+
       - name: Restore cached tools
         uses: actions/cache@v4
         with:
-          path: |
-            /usr/local/bin/skaffold
-            /usr/local/bin/doctl
-          key: ${{ runner.os }}-tools-${{ hashFiles('/usr/local/bin/skaffold', '/usr/local/bin/doctl') }}
+          path: ${GITHUB_WORKSPACE}/tools
+          key: ${{ needs.set-up.outputs.tools-cache-key }}
 
-      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+      - name: Add tools to PATH
+        run: |
+          chmod +x ${GITHUB_WORKSPACE}/tools/*
+          echo "${GITHUB_WORKSPACE}/tools" >> $GITHUB_PATH
+
+      - name: Log in to DigitalOcean Container Registry
         run: doctl registry login --expiry-seconds 1200
 
       - name: Build application with Skaffold
@@ -122,15 +144,21 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set up tools directory
+        run: mkdir -p ${GITHUB_WORKSPACE}/tools
+
       - name: Restore cached tools
         uses: actions/cache@v4
         with:
-          path: |
-            /usr/local/bin/skaffold
-            /usr/local/bin/doctl
-          key: ${{ runner.os }}-tools-${{ hashFiles('/usr/local/bin/skaffold', '/usr/local/bin/doctl') }}
+          path: ${GITHUB_WORKSPACE}/tools
+          key: ${{ needs.set-up.outputs.tools-cache-key }}
 
-      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+      - name: Add tools to PATH
+        run: |
+          chmod +x ${GITHUB_WORKSPACE}/tools/*
+          echo "${GITHUB_WORKSPACE}/tools" >> $GITHUB_PATH
+
+      - name: Log in to DigitalOcean Container Registry
         run: doctl registry login --expiry-seconds 1200
 
       - name: Build application with Skaffold
@@ -150,6 +178,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs:
+      - set-up
       - build_explorer-api
       - build_explorer-ui_devnet
 
@@ -159,13 +188,19 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set up tools directory
+        run: mkdir -p ${GITHUB_WORKSPACE}/tools
+
       - name: Restore cached tools
         uses: actions/cache@v4
         with:
-          path: |
-            /usr/local/bin/skaffold
-            /usr/local/bin/doctl
-          key: ${{ runner.os }}-tools-${{ hashFiles('/usr/local/bin/skaffold', '/usr/local/bin/doctl') }}
+          path: ${GITHUB_WORKSPACE}/tools
+          key: ${{ needs.set-up.outputs.tools-cache-key }}
+
+      - name: Add tools to PATH
+        run: |
+          chmod +x ${GITHUB_WORKSPACE}/tools/*
+          echo "${GITHUB_WORKSPACE}/tools" >> $GITHUB_PATH
 
       - name: Save DigitalOcean kubeconfig
         run: doctl kubernetes cluster kubeconfig save "chicmoz-prod"
