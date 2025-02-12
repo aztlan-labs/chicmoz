@@ -46,13 +46,13 @@ jobs:
         shell: bash
 
       - name: Set up tools directory
-        run: mkdir -p ${GITHUB_WORKSPACE}/tools
+        run: mkdir -p tools
 
       - name: Install Skaffold
         run: |
-          curl -Lo ${GITHUB_WORKSPACE}/tools/skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
-          chmod +x ${GITHUB_WORKSPACE}/tools/skaffold
-          echo "${GITHUB_WORKSPACE}/tools" >> $GITHUB_PATH
+          curl -Lo tools/skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
+          chmod +x tools/skaffold
+          echo "$PWD/tools" >> $GITHUB_PATH
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
@@ -62,37 +62,37 @@ jobs:
       - name: Copy doctl to tools directory
         run: |
           which doctl
-          cp $(which doctl) ${GITHUB_WORKSPACE}/tools/
-          chmod +x ${GITHUB_WORKSPACE}/tools/doctl
+          cp $(which doctl) tools/
+          chmod +x tools/doctl
 
       - name: Generate cache key
         id: cache-key
         run: |
-          echo "key=${{ runner.os }}-tools-${{ hashFiles('${GITHUB_WORKSPACE}/tools/*') }}" >> $GITHUB_OUTPUT
+          echo "key=${{ runner.os }}-tools-$(date '+%Y-%m-%d')" >> $GITHUB_OUTPUT
 
       - name: Cache tools
         uses: actions/cache@v4
         with:
-          path: ${GITHUB_WORKSPACE}/tools
+          path: tools
           key: ${{ steps.cache-key.outputs.key }}
 
       - name: Log in to DigitalOcean Container Registry
-        run: ${GITHUB_WORKSPACE}/tools/doctl registry login --expiry-seconds 1200
+        run: tools/doctl registry login --expiry-seconds 1200
 
-      #- name: Build application with Skaffold
-      #  env:
-      #    SP_TESTNET_OBSCURA_L2_RPC_1: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_1 }}
-      #    SP_TESTNET_OBSCURA_L2_RPC_2: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_2 }}
-      #    SP_TESTNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.SP_TESTNET_AZTEC_L2_BOOTNODE_RPC }}
-      #    SP_TESTNET_AZTEC_L1_HTTP: ${{ vars.SP_TESTNET_AZTEC_L1_HTTP }}
-      #    SP_TESTNET_AZTEC_L1_WS: ${{ vars.SP_TESTNET_AZTEC_L1_WS }}
-      #    DEVNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.DEVNET_AZTEC_L2_BOOTNODE_RPC }}
-      #    DEVNET_AZTEC_L1_HTTP: ${{ vars.DEVNET_AZTEC_L1_HTTP }}
-      #    DEVNET_AZTEC_L1_WS: ${{ vars.DEVNET_AZTEC_L1_WS }}
-      #  run: |
-      #    cd k8s/production/common
-      #    ${GITHUB_WORKSPACE}/tools/skaffold build -f ./skaffold.chicmoz-base-image.yaml --default-repo=registry.digitalocean.com/aztlan-containers
-
+  #      - name: Build application with Skaffold
+  #        env:
+  #          SP_TESTNET_OBSCURA_L2_RPC_1: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_1 }}
+  #          SP_TESTNET_OBSCURA_L2_RPC_2: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_2 }}
+  #          SP_TESTNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.SP_TESTNET_AZTEC_L2_BOOTNODE_RPC }}
+  #          SP_TESTNET_AZTEC_L1_HTTP: ${{ vars.SP_TESTNET_AZTEC_L1_HTTP }}
+  #          SP_TESTNET_AZTEC_L1_WS: ${{ vars.SP_TESTNET_AZTEC_L1_WS }}
+  #          DEVNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.DEVNET_AZTEC_L2_BOOTNODE_RPC }}
+  #          DEVNET_AZTEC_L1_HTTP: ${{ vars.DEVNET_AZTEC_L1_HTTP }}
+  #          DEVNET_AZTEC_L1_WS: ${{ vars.DEVNET_AZTEC_L1_WS }}
+  #        run: |
+  #          cd k8s/production/common
+  #          ../../tools/skaffold build -f ./skaffold.chicmoz-base-image.yaml --default-repo=registry.digitalocean.com/aztlan-containers
+  #
   build_explorer-api:
     runs-on: ubuntu-latest
     needs: set-up
@@ -103,19 +103,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up tools directory
-        run: mkdir -p ${GITHUB_WORKSPACE}/tools
-
       - name: Restore cached tools
         uses: actions/cache@v4
         with:
-          path: ${GITHUB_WORKSPACE}/tools
+          path: tools
           key: ${{ needs.set-up.outputs.tools-cache-key }}
+          fail-on-cache-miss: true
 
       - name: Add tools to PATH
         run: |
-          chmod +x ${GITHUB_WORKSPACE}/tools/*
-          echo "${GITHUB_WORKSPACE}/tools" >> $GITHUB_PATH
+          chmod +x tools/*
+          echo "$PWD/tools" >> $GITHUB_PATH
 
       - name: Log in to DigitalOcean Container Registry
         run: doctl registry login --expiry-seconds 1200
@@ -144,19 +142,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up tools directory
-        run: mkdir -p ${GITHUB_WORKSPACE}/tools
-
       - name: Restore cached tools
         uses: actions/cache@v4
         with:
-          path: ${GITHUB_WORKSPACE}/tools
+          path: tools
           key: ${{ needs.set-up.outputs.tools-cache-key }}
+          fail-on-cache-miss: true
 
       - name: Add tools to PATH
         run: |
-          chmod +x ${GITHUB_WORKSPACE}/tools/*
-          echo "${GITHUB_WORKSPACE}/tools" >> $GITHUB_PATH
+          chmod +x tools/*
+          echo "$PWD/tools" >> $GITHUB_PATH
 
       - name: Log in to DigitalOcean Container Registry
         run: doctl registry login --expiry-seconds 1200
@@ -188,19 +184,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up tools directory
-        run: mkdir -p ${GITHUB_WORKSPACE}/tools
-
       - name: Restore cached tools
         uses: actions/cache@v4
         with:
-          path: ${GITHUB_WORKSPACE}/tools
+          path: tools
           key: ${{ needs.set-up.outputs.tools-cache-key }}
+          fail-on-cache-miss: true
 
       - name: Add tools to PATH
         run: |
-          chmod +x ${GITHUB_WORKSPACE}/tools/*
-          echo "${GITHUB_WORKSPACE}/tools" >> $GITHUB_PATH
+          chmod +x tools/*
+          echo "$PWD/tools" >> $GITHUB_PATH
 
       - name: Save DigitalOcean kubeconfig
         run: doctl kubernetes cluster kubeconfig save "chicmoz-prod"
