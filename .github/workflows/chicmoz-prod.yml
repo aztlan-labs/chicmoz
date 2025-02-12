@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - production
+      - feat/improve_deployment
   pull_request:
     branches:
       - production
@@ -11,9 +12,8 @@ on:
       - closed
 
 jobs:
-  build_and_deploy:
-    runs-on:
-      labels: ubuntu-latest
+  set-up:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
@@ -57,9 +57,82 @@ jobs:
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 1200
 
-      - name: Cleanup old images
+      - name: Build application with Skaffold
+        env:
+          SP_TESTNET_OBSCURA_L2_RPC_1: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_1 }}
+          SP_TESTNET_OBSCURA_L2_RPC_2: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_2 }}
+          SP_TESTNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.SP_TESTNET_AZTEC_L2_BOOTNODE_RPC }}
+          SP_TESTNET_AZTEC_L1_HTTP: ${{ vars.SP_TESTNET_AZTEC_L1_HTTP }}
+          SP_TESTNET_AZTEC_L1_WS: ${{ vars.SP_TESTNET_AZTEC_L1_WS }}
+          DEVNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.DEVNET_AZTEC_L2_BOOTNODE_RPC }}
+          DEVNET_AZTEC_L1_HTTP: ${{ vars.DEVNET_AZTEC_L1_HTTP }}
+          DEVNET_AZTEC_L1_WS: ${{ vars.DEVNET_AZTEC_L1_WS }}
         run: |
-          bash -x "scripts/production/cleanup-registry.sh"
+          cd k8s/production/common
+          skaffold build -f ./skaffold.chicmoz-base-image.yaml --default-repo=registry.digitalocean.com/aztlan-containers
+  build_explorer-api:
+    runs-on: ubuntu-latest
+    needs: set-up
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 1200
+
+      - name: Build application with Skaffold
+        run: |
+          cd services/explorer-api/common
+          skaffold build -f ./skaffold.base.yaml --default-repo=registry.digitalocean.com/aztlan-containers
+        env:
+          SP_TESTNET_OBSCURA_L2_RPC_1: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_1 }}
+          SP_TESTNET_OBSCURA_L2_RPC_2: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_2 }}
+          SP_TESTNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.SP_TESTNET_AZTEC_L2_BOOTNODE_RPC }}
+          SP_TESTNET_AZTEC_L1_HTTP: ${{ vars.SP_TESTNET_AZTEC_L1_HTTP }}
+          SP_TESTNET_AZTEC_L1_WS: ${{ vars.SP_TESTNET_AZTEC_L1_WS }}
+          DEVNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.DEVNET_AZTEC_L2_BOOTNODE_RPC }}
+          DEVNET_AZTEC_L1_HTTP: ${{ vars.DEVNET_AZTEC_L1_HTTP }}
+          DEVNET_AZTEC_L1_WS: ${{ vars.DEVNET_AZTEC_L1_WS }}
+
+  build_explorer-ui_devnet:
+    runs-on: ubuntu-latest
+    needs: set-up
+
+    setup:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 1200
+
+      - name: Build application with Skaffold
+        run: |
+          cd services/explorer-ui
+          skaffold build -f ./skaffold.devnet.yaml --default-repo=registry.digitalocean.com/aztlan-containers
+        env:
+          SP_TESTNET_OBSCURA_L2_RPC_1: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_1 }}
+          SP_TESTNET_OBSCURA_L2_RPC_2: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_2 }}
+          SP_TESTNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.SP_TESTNET_AZTEC_L2_BOOTNODE_RPC }}
+          SP_TESTNET_AZTEC_L1_HTTP: ${{ vars.SP_TESTNET_AZTEC_L1_HTTP }}
+          SP_TESTNET_AZTEC_L1_WS: ${{ vars.SP_TESTNET_AZTEC_L1_WS }}
+          DEVNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.DEVNET_AZTEC_L2_BOOTNODE_RPC }}
+          DEVNET_AZTEC_L1_HTTP: ${{ vars.DEVNET_AZTEC_L1_HTTP }}
+          DEVNET_AZTEC_L1_WS: ${{ vars.DEVNET_AZTEC_L1_WS }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Save DigitalOcean kubeconfig
         run: doctl kubernetes cluster kubeconfig save "chicmoz-prod"
