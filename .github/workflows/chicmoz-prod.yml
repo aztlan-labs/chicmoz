@@ -115,6 +115,11 @@ jobs:
           chmod +x tools/*
           echo "$PWD/tools" >> $GITHUB_PATH
 
+      - name: Configure doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
       - name: Log in to DigitalOcean Container Registry
         run: doctl registry login --expiry-seconds 1200
 
@@ -153,6 +158,11 @@ jobs:
         run: |
           chmod +x tools/*
           echo "$PWD/tools" >> $GITHUB_PATH
+
+      - name: Configure doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
       - name: Log in to DigitalOcean Container Registry
         run: doctl registry login --expiry-seconds 1200
@@ -195,6 +205,11 @@ jobs:
         run: |
           chmod +x tools/*
           echo "$PWD/tools" >> $GITHUB_PATH
+
+      - name: Configure doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
       - name: Save DigitalOcean kubeconfig
         run: doctl kubernetes cluster kubeconfig save "chicmoz-prod"
