@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - production
-      - feat/improve_deployment
   pull_request:
     branches:
       - production
