@@ -79,19 +79,19 @@ jobs:
       - name: Log in to DigitalOcean Container Registry
         run: ${GITHUB_WORKSPACE}/tools/doctl registry login --expiry-seconds 1200
 
-      - name: Build application with Skaffold
-        env:
-          SP_TESTNET_OBSCURA_L2_RPC_1: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_1 }}
-          SP_TESTNET_OBSCURA_L2_RPC_2: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_2 }}
-          SP_TESTNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.SP_TESTNET_AZTEC_L2_BOOTNODE_RPC }}
-          SP_TESTNET_AZTEC_L1_HTTP: ${{ vars.SP_TESTNET_AZTEC_L1_HTTP }}
-          SP_TESTNET_AZTEC_L1_WS: ${{ vars.SP_TESTNET_AZTEC_L1_WS }}
-          DEVNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.DEVNET_AZTEC_L2_BOOTNODE_RPC }}
-          DEVNET_AZTEC_L1_HTTP: ${{ vars.DEVNET_AZTEC_L1_HTTP }}
-          DEVNET_AZTEC_L1_WS: ${{ vars.DEVNET_AZTEC_L1_WS }}
-        run: |
-          cd k8s/production/common
-          ${GITHUB_WORKSPACE}/tools/skaffold build -f ./skaffold.chicmoz-base-image.yaml --default-repo=registry.digitalocean.com/aztlan-containers
+      #- name: Build application with Skaffold
+      #  env:
+      #    SP_TESTNET_OBSCURA_L2_RPC_1: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_1 }}
+      #    SP_TESTNET_OBSCURA_L2_RPC_2: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_2 }}
+      #    SP_TESTNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.SP_TESTNET_AZTEC_L2_BOOTNODE_RPC }}
+      #    SP_TESTNET_AZTEC_L1_HTTP: ${{ vars.SP_TESTNET_AZTEC_L1_HTTP }}
+      #    SP_TESTNET_AZTEC_L1_WS: ${{ vars.SP_TESTNET_AZTEC_L1_WS }}
+      #    DEVNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.DEVNET_AZTEC_L2_BOOTNODE_RPC }}
+      #    DEVNET_AZTEC_L1_HTTP: ${{ vars.DEVNET_AZTEC_L1_HTTP }}
+      #    DEVNET_AZTEC_L1_WS: ${{ vars.DEVNET_AZTEC_L1_WS }}
+      #  run: |
+      #    cd k8s/production/common
+      #    ${GITHUB_WORKSPACE}/tools/skaffold build -f ./skaffold.chicmoz-base-image.yaml --default-repo=registry.digitalocean.com/aztlan-containers
 
   build_explorer-api:
     runs-on: ubuntu-latest
