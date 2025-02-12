@@ -11,9 +11,10 @@ on:
       - closed
 
 jobs:
-  build_and_deploy:
-    runs-on:
-      labels: ubuntu-latest
+  set-up:
+    runs-on: ubuntu-latest
+    outputs:
+      tools-cache-key: ${{ steps.cache-key.outputs.key }}
 
     steps:
       - name: Checkout Repository
@@ -43,26 +44,73 @@ jobs:
           echo "DEVNET_AZTEC_L1_WS: $DEVNET_AZTEC_L1_WS"
         shell: bash
 
+      - name: Set up tools directory
+        run: mkdir -p tools
+
       - name: Install Skaffold
         run: |
-          curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
-          sudo install skaffold /usr/local/bin/
-        shell: bash
+          curl -Lo tools/skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
+          chmod +x tools/skaffold
+          echo "$PWD/tools" >> $GITHUB_PATH
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Log in to DigitalOcean Container Registry with short-lived credentials
-        run: doctl registry login --expiry-seconds 1200
-
-      - name: Cleanup old images
+      - name: Copy doctl to tools directory
         run: |
-          bash -x "scripts/production/cleanup-registry.sh"
+          which doctl
+          cp $(which doctl) tools/
+          chmod +x tools/doctl
+
+      - name: Generate cache key
+        id: cache-key
+        run: |
+          echo "key=${{ runner.os }}-tools-$(date '+%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Cache tools
+        uses: actions/cache@v4
+        with:
+          path: tools
+          key: ${{ steps.cache-key.outputs.key }}
+
+      - name: Log in to DigitalOcean Container Registry
+        run: tools/doctl registry login --expiry-seconds 1200
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - set-up
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Restore cached tools
+        uses: actions/cache@v4
+        with:
+          path: tools
+          key: ${{ needs.set-up.outputs.tools-cache-key }}
+          fail-on-cache-miss: true
+
+      - name: Add tools to PATH
+        run: |
+          chmod +x tools/*
+          echo "$PWD/tools" >> $GITHUB_PATH
+
+      - name: Configure doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
       - name: Save DigitalOcean kubeconfig
         run: doctl kubernetes cluster kubeconfig save "chicmoz-prod"
+
+      - name: Log in to DigitalOcean Container Registry
+        run: doctl registry login --expiry-seconds 1200
 
       - name: Deploy to cluster with Skaffold
         env:
