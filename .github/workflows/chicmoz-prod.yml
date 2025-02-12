@@ -91,96 +91,27 @@ jobs:
           DEVNET_AZTEC_L1_WS: ${{ vars.DEVNET_AZTEC_L1_WS }}
         run: |
           cd k8s/production/common
-          skaffold build -f ./skaffold.chicmoz-base-image.yaml --default-repo=registry.digitalocean.com/aztlan-containers
+          skaffold build -f ./skaffold.chicmoz-base-image.yaml --default-repo=registry.digitalocean.com/aztlan-containers --cache-artifacts=false
 
   build_explorer-api:
-    runs-on: ubuntu-latest
     needs: set-up
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Restore cached tools
-        uses: actions/cache@v4
-        with:
-          path: tools
-          key: ${{ needs.set-up.outputs.tools-cache-key }}
-          fail-on-cache-miss: true
-
-      - name: Add tools to PATH
-        run: |
-          chmod +x tools/*
-          echo "$PWD/tools" >> $GITHUB_PATH
-
-      - name: Configure doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-
-      - name: Log in to DigitalOcean Container Registry
-        run: doctl registry login --expiry-seconds 1200
-
-      - name: Build application with Skaffold
-        run: |
-          cd ./k8s/production/explorer-api/common
-          skaffold build -f ./skaffold.base.yaml --default-repo=registry.digitalocean.com/aztlan-containers
-        env:
-          SP_TESTNET_OBSCURA_L2_RPC_1: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_1 }}
-          SP_TESTNET_OBSCURA_L2_RPC_2: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_2 }}
-          SP_TESTNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.SP_TESTNET_AZTEC_L2_BOOTNODE_RPC }}
-          SP_TESTNET_AZTEC_L1_HTTP: ${{ vars.SP_TESTNET_AZTEC_L1_HTTP }}
-          SP_TESTNET_AZTEC_L1_WS: ${{ vars.SP_TESTNET_AZTEC_L1_WS }}
-          DEVNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.DEVNET_AZTEC_L2_BOOTNODE_RPC }}
-          DEVNET_AZTEC_L1_HTTP: ${{ vars.DEVNET_AZTEC_L1_HTTP }}
-          DEVNET_AZTEC_L1_WS: ${{ vars.DEVNET_AZTEC_L1_WS }}
+    uses: ./.github/workflows/reusable-build.yaml
+    with:
+      build_path: services/explorer-api/common
+      skaffold_file: ./skaffold.base.yaml
+      cache-key: ${{ needs.set-up.outputs.tools-cache-key }}
+    secrets:
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
   build_explorer-ui_devnet:
-    runs-on: ubuntu-latest
     needs: set-up
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Restore cached tools
-        uses: actions/cache@v4
-        with:
-          path: tools
-          key: ${{ needs.set-up.outputs.tools-cache-key }}
-          fail-on-cache-miss: true
-
-      - name: Add tools to PATH
-        run: |
-          chmod +x tools/*
-          echo "$PWD/tools" >> $GITHUB_PATH
-
-      - name: Configure doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-
-      - name: Log in to DigitalOcean Container Registry
-        run: doctl registry login --expiry-seconds 1200
-
-      - name: Build application with Skaffold
-        run: |
-          cd ./k8s/production/explorer-ui
-          skaffold build -f ./skaffold.devnet.yaml --default-repo=registry.digitalocean.com/aztlan-containers
-        env:
-          SP_TESTNET_OBSCURA_L2_RPC_1: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_1 }}
-          SP_TESTNET_OBSCURA_L2_RPC_2: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_2 }}
-          SP_TESTNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.SP_TESTNET_AZTEC_L2_BOOTNODE_RPC }}
-          SP_TESTNET_AZTEC_L1_HTTP: ${{ vars.SP_TESTNET_AZTEC_L1_HTTP }}
-          SP_TESTNET_AZTEC_L1_WS: ${{ vars.SP_TESTNET_AZTEC_L1_WS }}
-          DEVNET_AZTEC_L2_BOOTNODE_RPC: ${{ vars.DEVNET_AZTEC_L2_BOOTNODE_RPC }}
-          DEVNET_AZTEC_L1_HTTP: ${{ vars.DEVNET_AZTEC_L1_HTTP }}
-          DEVNET_AZTEC_L1_WS: ${{ vars.DEVNET_AZTEC_L1_WS }}
-
+    uses: ./.github/workflows/reusable-build.yaml
+    with:
+      build_path: services/explorer-ui
+      skaffold_file: ./skaffold.devnet.yaml
+      cache-key: ${{ needs.set-up.outputs.tools-cache-key }}
+    secrets:
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
   deploy:
     runs-on: ubuntu-latest
     needs:
