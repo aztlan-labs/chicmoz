@@ -3,6 +3,9 @@ name: Reusable Build Workflow
 on:
   workflow_call:
     inputs:
+      cache-key:
+        required: true
+        type: string
       build_path:
         required: true
         type: string
