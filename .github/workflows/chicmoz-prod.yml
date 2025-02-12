@@ -125,7 +125,7 @@ jobs:
 
       - name: Build application with Skaffold
         run: |
-          cd services/explorer-api/common
+          cd ./k8s/local/explorer-api/common
           skaffold build -f ./skaffold.base.yaml --default-repo=registry.digitalocean.com/aztlan-containers
         env:
           SP_TESTNET_OBSCURA_L2_RPC_1: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_1 }}
@@ -169,7 +169,7 @@ jobs:
 
       - name: Build application with Skaffold
         run: |
-          cd services/explorer-ui
+          cd ./k8s/local/explorer-ui
           skaffold build -f ./skaffold.devnet.yaml --default-repo=registry.digitalocean.com/aztlan-containers
         env:
           SP_TESTNET_OBSCURA_L2_RPC_1: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_1 }}
