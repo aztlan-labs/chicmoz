@@ -1,0 +1,29 @@
+name: Setup Tools
+
+on:
+  workflow_call:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    outputs:
+      skafo_ld_path: ${{ steps.install_skaffold.outputs.skafo_ld_path }}
+      doctl_path: ${{ steps.install_doctl.outputs.doctl_path }}
+
+    steps:
+      - name: Install Skaffold
+        id: install_skaffold
+        run: |
+          curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
+          sudo install skaffold /usr/local/bin/
+        outputs:
+          skafo_ld_path: /usr/local/bin/skaffold
+
+      - name: Install doctl
+        id: install_doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+        outputs:
+          doctl_path: /usr/local/bin/doctl

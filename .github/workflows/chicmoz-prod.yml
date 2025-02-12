@@ -43,16 +43,8 @@ jobs:
           echo "DEVNET_AZTEC_L1_WS: $DEVNET_AZTEC_L1_WS"
         shell: bash
 
-      - name: Install Skaffold
-        run: |
-          curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64
-          sudo install skaffold /usr/local/bin/
-        shell: bash
-
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Setup Tools
+        uses: ./.github/workflows/setup-tools.yml
 
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 1200
@@ -80,6 +72,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup Tools
+        uses: ./.github/workflows/setup-tools.yml
+
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 1200
 
@@ -106,6 +101,9 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
+      - name: Setup Tools
+        uses: ./.github/workflows/setup-tools.yml
 
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 1200
