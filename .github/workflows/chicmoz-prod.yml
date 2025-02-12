@@ -95,7 +95,7 @@ jobs:
 
   build_explorer-api:
     needs: set-up
-    uses: ./.github/workflows/reusable-build.yml
+    uses: ./.github/workflows/reusable-build-service.yml
     with:
       build_path: services/explorer-api/common
       skaffold_file: ./skaffold.base.yaml
@@ -105,7 +105,7 @@ jobs:
 
   build_explorer-ui_devnet:
     needs: set-up
-    uses: ./.github/workflows/reusable-build.yml
+    uses: ./.github/workflows/reusable-build-service.yml
     with:
       build_path: services/explorer-ui
       skaffold_file: ./skaffold.devnet.yaml
