@@ -93,25 +93,26 @@ jobs:
           cd k8s/production/common
           skaffold build -f ./skaffold.chicmoz-base-image.yaml --default-repo=registry.digitalocean.com/aztlan-containers --cache-artifacts=false
 
-  build_explorer-api:
+  explorer-api:
     needs: set-up
     uses: ./.github/workflows/reusable-build-service.yml
     with:
-      build_path: services/explorer-api/common
+      build_path: k8s/production/explorer-api/common
       skaffold_file: ./skaffold.base.yaml
       cache-key: ${{ needs.set-up.outputs.tools-cache-key }}
     secrets:
       DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-  build_explorer-ui_devnet:
+  explorer-ui_devnet:
     needs: set-up
     uses: ./.github/workflows/reusable-build-service.yml
     with:
-      build_path: services/explorer-ui
+      build_path: k8s/production/explorer-ui
       skaffold_file: ./skaffold.devnet.yaml
       cache-key: ${{ needs.set-up.outputs.tools-cache-key }}
     secrets:
       DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
   deploy:
     runs-on: ubuntu-latest
     needs:
