@@ -16,7 +16,8 @@
     "@aztec/noir-contracts.js": "0.76.1",
     "@chicmoz-pkg/contract-verification": "workspace:^",
     "@chicmoz-pkg/logger-server": "workspace:^",
-    "@chicmoz-pkg/types": "workspace:^"
+    "@chicmoz-pkg/types": "workspace:^",
+    "viem": "2.20.0"
   },
   "devDependencies": {
     "@types/node": "20.5.0",
