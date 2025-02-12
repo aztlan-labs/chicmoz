@@ -91,7 +91,7 @@ jobs:
           DEVNET_AZTEC_L1_WS: ${{ vars.DEVNET_AZTEC_L1_WS }}
         run: |
           cd k8s/production/common
-          ../../tools/skaffold build -f ./skaffold.chicmoz-base-image.yaml --default-repo=registry.digitalocean.com/aztlan-containers
+          skaffold build -f ./skaffold.chicmoz-base-image.yaml --default-repo=registry.digitalocean.com/aztlan-containers
 
   build_explorer-api:
     runs-on: ubuntu-latest
