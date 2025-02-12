@@ -49,7 +49,7 @@ jobs:
       - name: Build application with Skaffold
         run: |
           cd ${{ inputs.build_path }}
-          skaffold build -f ${{ inputs.skaffold_file }} --default-repo=registry.digitalocean.com/aztlan-containers --cache-artifacts=false
+          skaffold build -f ${{ inputs.skaffold_file }} --default-repo=registry.digitalocean.com/aztlan-containers
         env:
           SP_TESTNET_OBSCURA_L2_RPC_1: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_1 }}
           SP_TESTNET_OBSCURA_L2_RPC_2: ${{ vars.SP_TESTNET_OBSCURA_L2_RPC_2 }}

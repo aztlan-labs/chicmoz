@@ -91,7 +91,8 @@ jobs:
           DEVNET_AZTEC_L1_WS: ${{ vars.DEVNET_AZTEC_L1_WS }}
         run: |
           cd k8s/production/common
-          skaffold build -f ./skaffold.chicmoz-base-image.yaml --default-repo=registry.digitalocean.com/aztlan-containers --cache-artifacts=false
+          skaffold build -f ./skaffold.chicmoz-base-image.yaml --default-repo=registry.digitalocean.com/aztlan-containers
+          sleep 30
 
   explorer-api:
     needs: set-up
