@@ -12,6 +12,11 @@ jobs:
       doctl_path: ${{ steps.install_doctl.outputs.doctl_path }}
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - name: Install Skaffold
         id: install_skaffold
         run: |
