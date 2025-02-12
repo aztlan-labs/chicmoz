@@ -95,7 +95,7 @@ jobs:
 
   build_explorer-api:
     needs: set-up
-    uses: ./.github/workflows/reusable-build.yaml
+    uses: ./.github/workflows/reusable-build.yml
     with:
       build_path: services/explorer-api/common
       skaffold_file: ./skaffold.base.yaml
@@ -105,7 +105,7 @@ jobs:
 
   build_explorer-ui_devnet:
     needs: set-up
-    uses: ./.github/workflows/reusable-build.yaml
+    uses: ./.github/workflows/reusable-build.yml
     with:
       build_path: services/explorer-ui
       skaffold_file: ./skaffold.devnet.yaml
@@ -144,6 +144,9 @@ jobs:
 
       - name: Save DigitalOcean kubeconfig
         run: doctl kubernetes cluster kubeconfig save "chicmoz-prod"
+
+      #- name: Log in to DigitalOcean Container Registry
+      #run: doctl registry login --expiry-seconds 1200
 
       - name: Deploy to cluster with Skaffold
         env:
