@@ -1,5 +1,5 @@
 import { getDb as db } from "@chicmoz-pkg/postgres-helper";
-import { desc, eq, sql } from "drizzle-orm";
+import { desc, eq, isNotNull, sql } from "drizzle-orm";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import {
   body,
@@ -7,6 +7,7 @@ import {
   txEffect,
 } from "../../database/schema/l2block/index.js";
 import {
+  l2ContractClassRegistered,
   l2ContractInstanceDeployed,
   l2PrivateFunction,
   l2UnconstrainedFunction,
@@ -126,6 +127,21 @@ export const getABlockWithContractInstances = async () => {
       classId: dbRes[0].l2ContractInstanceDeployed.classId,
     },
   };
+};
+
+export const getContractClassesWithArtifactJson = async () => {
+  const dbRes = await db()
+    .select({
+      classId: l2ContractClassRegistered.contractClassId,
+      version: l2ContractClassRegistered.version,
+      artifactJson: l2ContractClassRegistered.artifactJson,
+    })
+    .from(l2ContractClassRegistered)
+    .where(isNotNull(l2ContractClassRegistered.artifactJson))
+    .limit(10)
+    .execute();
+  if (dbRes.length === 0) return [];
+  return dbRes;
 };
 
 const getAL2PrivateFunction = async () => {
