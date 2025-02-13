@@ -1,4 +1,5 @@
 import {
+  INIFINITE_LOOP,
   SCENARIO_DELAY,
   SCENARIO_FUNCTIONS_VOTE,
   SCENARIO_L1L2_PRIVATE_MESSAGING,
@@ -71,6 +72,8 @@ export async function init() {
 
   logger.info(`
 SCENARIO_DELAY:                  ${SCENARIO_DELAY / 1000} seconds
+INIFINITE_LOOP:                  ${INIFINITE_LOOP ? "✅" : "❌"}
+=======================
 SCENARIO_SIMPLE_DEFAULT_ACCOUNT: ${
     SCENARIO_SIMPLE_DEFAULT_ACCOUNT ? "✅" : "❌"
   }
@@ -95,25 +98,33 @@ SCENARIO_L1L2_PRIVATE_MESSAGING: ${
   };
 }
 
-export const start = async () => {
-  logger.info("Starting Cannon...");
-  let index = 0;
-  let loopCount = 0;
-  while (!isShutdown) {
-    logger.info();
-    logger.info(`====== Loop count: ${loopCount++} ======`);
-    logger.info(`Running scenario: ${scenariosToRun[index].envVar}`);
+const runScenarios = async () => {
+  for (const scenario of scenariosToRun) {
+    if (isShutdown) return;
+    logger.info(`Running scenario: ${scenario.envVar}`);
     try {
-      await scenariosToRun[index].scenario();
+      await scenario.scenario();
     } catch (e) {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       logger.error(`Error running scenario: ${(e as Error).stack ?? e}`);
     }
-
-    index = (index + 1) % scenariosToRun.length;
     logger.info(
       `waiting ${SCENARIO_DELAY / 1000} seconds before next scenario...`
     );
     await new Promise((resolve) => setTimeout(resolve, SCENARIO_DELAY));
   }
+};
+
+export const start = async () => {
+  logger.info("Starting Cannon...");
+  let loopCount = 0;
+  if (INIFINITE_LOOP) {
+    while (!isShutdown) {
+      logger.info(`Loop count: ${loopCount++}`);
+      await runScenarios();
+    }
+  } else {
+    await runScenarios();
+  }
+  logger.info("Cannon shutdown complete");
 };

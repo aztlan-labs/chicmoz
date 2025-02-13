@@ -12,8 +12,9 @@ export const EXPLORER_API_URL =
 export const SCENARIO_DELAY = z.coerce
   .number()
   .default(1000)
-  .optional()
   .parse(process.env.SCENARIO_DELAY);
+
+export const INIFINITE_LOOP = process.env.INIFINITE_LOOP === "true" ?? false;
 
 export const SCENARIO_SIMPLE_DEFAULT_ACCOUNT =
   process.env.SCENARIO_SIMPLE_DEFAULT_ACCOUNT === "true" ?? false;
