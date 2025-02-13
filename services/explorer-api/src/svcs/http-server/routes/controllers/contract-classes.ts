@@ -19,6 +19,7 @@ import {
   contractClassResponseArray,
   dbWrapper,
 } from "./utils/index.js";
+import {chicmozL2ContractClassRegisteredEventSchema} from "@chicmoz-pkg/types";
 
 export const openapi_GET_L2_REGISTERED_CONTRACT_CLASS = {
   "/l2/contract-classes/{classId}/versions/{version}": {
@@ -156,27 +157,20 @@ export const POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT = asyncHandler(
       body,
     } = postContrctClassArtifactSchema.parse(req);
 
-    // TODO: uncomment after demo
-    //const contractClassString = await dbWrapper.get(
-    //  ["l2", "contract-classes", classId, version],
-    //  () => db.l2Contract.getL2RegisteredContractClass(classId, version)
-    //);
-    const dbContractClass = await db.l2Contract.getL2RegisteredContractClass(
-      // TODO: remove me after demo
-      classId,
-      version
+    const contractClassString = await dbWrapper.get(
+      ["l2", "contract-classes", classId, version],
+      () => db.l2Contract.getL2RegisteredContractClass(classId, version)
     );
-    // TODO: uncomment after demo
-    //let dbContractClass;
-    //if (contractClassString) {
-    //  dbContractClass = chicmozL2ContractClassRegisteredEventSchema.parse(
-    //    JSON.parse(contractClassString)
-    //  );
-    //  if (dbContractClass.artifactJson) {
-    //    res.status(200).send(dbContractClass);
-    //    return;
-    //  }
-    //}
+    let dbContractClass;
+    if (contractClassString) {
+      dbContractClass = chicmozL2ContractClassRegisteredEventSchema.parse(
+        JSON.parse(contractClassString)
+      );
+      if (dbContractClass.artifactJson) {
+        res.status(200).send(dbContractClass);
+        return;
+      }
+    }
     if (!dbContractClass) {
       res.status(500).send("Contract class found in DB is not valid");
       return;
