@@ -5,7 +5,9 @@ import {
   verifyArtifactPayload,
 } from "@chicmoz-pkg/contract-verification";
 import { setEntry } from "@chicmoz-pkg/redis-helper";
+import { chicmozL2ContractClassRegisteredEventSchema } from "@chicmoz-pkg/types";
 import asyncHandler from "express-async-handler";
+import { z } from "zod";
 import { CACHE_TTL_SECONDS } from "../../../../environment.js";
 import { logger } from "../../../../logger.js";
 import { controllers as db } from "../../../database/index.js";
@@ -104,6 +106,17 @@ export const GET_L2_REGISTERED_CONTRACT_CLASSES = asyncHandler(
       ["l2", "contract-classes"],
       () => db.l2Contract.getL2RegisteredContractClasses()
     );
+    // eslint-disable-next-line no-console
+    console.log(
+      z
+        .array(chicmozL2ContractClassRegisteredEventSchema)
+        .parse(JSON.parse(contractClasses ?? "[]"))
+        .map((x) => ({
+          ...x,
+          artifactJson: "artifactJson",
+          packedBytecode: "packedBytecode",
+        }))
+    );
     res.status(200).send(contractClasses);
   }
 );
@@ -186,10 +199,8 @@ export const POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT = asyncHandler(
       res.status(400).send("Missing artifact json");
       return;
     }
-    const {isMatchingByteCode, artifactContractName} = await verifyArtifactPayload(
-      body,
-      dbContractClass
-    );
+    const { isMatchingByteCode, artifactContractName } =
+      await verifyArtifactPayload(body, dbContractClass);
     if (!isMatchingByteCode) throw new Error("Incorrect artifact");
     const completeContractClass = {
       ...dbContractClass,
@@ -209,6 +220,11 @@ export const POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT = asyncHandler(
         body.stringifiedArtifactJson
       ) as unknown as NoirCompiledContract
     );
+    // eslint-disable-next-line no-console
+    console.log(`\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+                ${artifactContractName}
+    ${JSON.stringify(isTokenRes)}
+    ///////////////////////////`);
     await db.l2Contract.addArtifactJson(
       dbContractClass.contractClassId,
       dbContractClass.version,
