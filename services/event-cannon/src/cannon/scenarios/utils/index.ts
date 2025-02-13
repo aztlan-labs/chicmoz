@@ -29,7 +29,8 @@ import {
   generateVerifyArtifactUrl,
 } from "@chicmoz-pkg/contract-verification";
 import { NODE_ENV, NodeEnv } from "@chicmoz-pkg/types";
-import { request } from "http";
+import http from "http";
+import https from "https";
 import { EXPLORER_API_URL } from "../../../environment.js";
 import { logger } from "../../../logger.js";
 
@@ -74,7 +75,9 @@ export const getNewSchnorrAccount = async ({
     salt
   );
   logger.info(
-    `    Schnorr account created ${schnorrAccount.getAddress().toString()} (${accountName})`
+    `    Schnorr account created ${schnorrAccount
+      .getAddress()
+      .toString()} (${accountName})`
   );
   const { address } = await schnorrAccount.getCompleteAddress();
   logger.info(`    Deploying Schnorr account to network... (${accountName})`);
@@ -262,6 +265,8 @@ export const registerContractClassArtifact = async (
     `📜 ${contractLoggingName} Trying to register artifact in explorer-api: ${url.href} (byte length: ${sizeInMB} MB)`
   );
   if (!skipSleep) await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  const request = url.protocol === "https:" ? https.request : http.request;
 
   const res: {
     statusCode: number | undefined;
