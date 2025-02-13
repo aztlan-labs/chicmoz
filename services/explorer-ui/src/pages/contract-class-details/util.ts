@@ -34,4 +34,8 @@ export const getContractClassKeyValueData = (
       data.version.toString()
     )}`,
   },
+  {
+    label: "IS TOKEN CONTRACT",
+    value: data.isToken ? "✅" : "❌",
+  },
 ];

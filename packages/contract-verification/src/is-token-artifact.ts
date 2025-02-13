@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { NoirCompiledContract } from "@aztec/aztec.js";
+import { IsTokenArtifactResult } from "types.js";
 import { z } from "zod";
 
 const transferToPrivateStr = "transfer_to_private";
@@ -74,10 +75,7 @@ const customErrorMap: z.ZodErrorMap = (_error, ctx: z.ErrorMapCtx) => {
 
 export const isTokenArtifact = (
   artifact: NoirCompiledContract
-): {
-  result: boolean;
-  details: string;
-} => {
+): IsTokenArtifactResult => {
   let details = "";
   try {
     tokenSchema.parse(artifact, { errorMap: customErrorMap });

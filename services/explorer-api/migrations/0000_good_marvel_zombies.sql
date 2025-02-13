@@ -164,6 +164,8 @@ CREATE TABLE IF NOT EXISTS "l2_contract_class_registered" (
 	"private_functions_root" varchar(66) NOT NULL,
 	"packed_bytecode" "bytea" NOT NULL,
 	"artifact_json" varchar,
+	"is_token_contract" boolean DEFAULT false,
+	"why_not_token" varchar,
 	CONSTRAINT "contract_class_id_version" PRIMARY KEY("contract_class_id","version")
 );
 --> statement-breakpoint
