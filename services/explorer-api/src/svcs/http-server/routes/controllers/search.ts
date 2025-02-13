@@ -4,7 +4,7 @@ import { getSearchSchema } from "../paths_and_validation.js";
 import { searchResultResponse } from "./utils/index.js";
 
 export const openapi_SEARCH = {
-  "l2/search": {
+  "/l2/search": {
     get: {
       summary:
         "Search for blocks, txEffects, contract classes and contract instances on Aztec",

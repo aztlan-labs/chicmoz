@@ -25,10 +25,10 @@ export const AboutUs: FC = () => {
         <p>
           The easiest way to find us is following{" "}
           <a
-            href="https://x.com/Obscura_Network"
+            href="https://x.com/Obscura_Build"
             className="text-purple-light hover:font-bold"
           >
-            @Obscura_Network
+            @Obscura_Build
           </a>{" "}
           on X.
         </p>

@@ -105,17 +105,6 @@ const _getBlocks = async (
     })
     .from(l2Block)
     .innerJoin(archive, eq(l2Block.hash, archive.fk))
-    .innerJoin(
-      l1L2BlockProposedTable,
-      and(
-        eq(l2Block.height, l1L2BlockProposedTable.l2BlockNumber),
-        eq(archive.root, l1L2BlockProposedTable.archive)
-      )
-    )
-    .innerJoin(
-      l1L2ProofVerifiedTable,
-      eq(l2Block.height, l1L2ProofVerifiedTable.l2BlockNumber)
-    )
     .innerJoin(header, eq(l2Block.hash, header.blockHash))
     .innerJoin(lastArchive, eq(header.id, lastArchive.fk))
     .innerJoin(contentCommitment, eq(header.id, contentCommitment.headerId))
@@ -127,7 +116,18 @@ const _getBlocks = async (
     .innerJoin(publicDataTree, eq(partial.id, publicDataTree.fk))
     .innerJoin(globalVariables, eq(header.id, globalVariables.headerId))
     .innerJoin(gasFees, eq(globalVariables.id, gasFees.globalVariablesId))
-    .innerJoin(body, eq(l2Block.hash, body.blockHash));
+    .innerJoin(body, eq(l2Block.hash, body.blockHash))
+    .leftJoin(
+      l1L2BlockProposedTable,
+      and(
+        eq(l2Block.height, l1L2BlockProposedTable.l2BlockNumber),
+        eq(archive.root, l1L2BlockProposedTable.archive)
+      )
+    )
+    .leftJoin(
+      l1L2ProofVerifiedTable,
+      eq(l2Block.height, l1L2ProofVerifiedTable.l2BlockNumber)
+    );
 
   let whereQuery;
 
@@ -167,10 +167,10 @@ const _getBlocks = async (
       hash: result.hash,
       height: result.height,
       archive: result.archive,
-      proposedOnL1: result.l1L2BlockProposed.l1BlockTimestamp
+      proposedOnL1: result.l1L2BlockProposed?.l1BlockTimestamp
         ? result.l1L2BlockProposed
         : undefined,
-      proofVerifiedOnL1: result.l1L2ProofVerified.l1BlockTimestamp
+      proofVerifiedOnL1: result.l1L2ProofVerified?.l1BlockTimestamp
         ? result.l1L2ProofVerified
         : undefined,
       header: {

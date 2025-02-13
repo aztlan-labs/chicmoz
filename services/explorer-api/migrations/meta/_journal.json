@@ -8,6 +8,13 @@
       "when": 1739462225315,
       "tag": "0000_easy_wallop",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1739466953738,
+      "tag": "0001_chubby_bloodstrike",
+      "breakpoints": true
     }
   ]
 }

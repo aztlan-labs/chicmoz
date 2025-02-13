@@ -2,15 +2,16 @@ import {
   ChicmozL2Block,
   ChicmozL2PendingTx,
   WebsocketUpdateMessageSender,
+  jsonStringify,
 } from "@chicmoz-pkg/types";
-import { WebSocketServer, WebSocket } from "ws";
-import { logger } from "../logger.js";
+import { WebSocket, WebSocketServer } from "ws";
 import { PORT } from "../environment.js";
+import { logger } from "../logger.js";
 
 let wss: WebSocketServer;
 
 const sendUpdateToClients = (update: WebsocketUpdateMessageSender) => {
-  const stringifiedUpdate = JSON.stringify(update);
+  const stringifiedUpdate = jsonStringify(update);
   if (!wss) throw new Error("WebSocket server is not initialized");
   const clientStatuses: {
     sent: number;

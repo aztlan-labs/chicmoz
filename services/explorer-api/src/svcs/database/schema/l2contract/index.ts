@@ -2,6 +2,7 @@ import { HexString } from "@chicmoz-pkg/types";
 import { relations } from "drizzle-orm";
 import {
   bigint,
+  boolean,
   foreignKey,
   integer,
   jsonb,
@@ -65,6 +66,8 @@ export const l2ContractClassRegistered = pgTable(
     privateFunctionsRoot: generateFrColumn("private_functions_root").notNull(),
     packedBytecode: bufferType("packed_bytecode").notNull(),
     artifactJson: varchar("artifact_json"),
+    isToken: boolean("is_token_contract").default(false),
+    whyNotToken: varchar("why_not_token")
   },
   (t) => ({
     primaryKey: primaryKey({

@@ -1,17 +1,17 @@
+import { NoirCompiledContract } from "@aztec/aztec.js";
 import {
-  getContractClassFromArtifact,
-  loadContractArtifact,
-  type NoirCompiledContract,
-} from "@aztec/aztec.js";
+  IsTokenArtifactResult,
+  isTokenArtifact,
+  verifyArtifactPayload,
+} from "@chicmoz-pkg/contract-verification";
 import { setEntry } from "@chicmoz-pkg/redis-helper";
-import { chicmozL2ContractClassRegisteredEventSchema } from "@chicmoz-pkg/types";
 import asyncHandler from "express-async-handler";
 import { CACHE_TTL_SECONDS } from "../../../../environment.js";
 import { logger } from "../../../../logger.js";
 import { controllers as db } from "../../../database/index.js";
 import {
-  getContractClassesByClassIdSchema,
   getContractClassSchema,
+  getContractClassesByClassIdSchema,
   postContrctClassArtifactSchema,
 } from "../paths_and_validation.js";
 import {
@@ -153,42 +153,47 @@ export const POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT = asyncHandler(
   async (req, res) => {
     const {
       params: { classId, version },
-      body: { stringifiedArtifactJson },
+      body,
     } = postContrctClassArtifactSchema.parse(req);
-    const contractClassString = await dbWrapper.get(
-      ["l2", "contract-classes", classId, version],
-      () => db.l2Contract.getL2RegisteredContractClass(classId, version)
+
+    // TODO: uncomment after demo
+    //const contractClassString = await dbWrapper.get(
+    //  ["l2", "contract-classes", classId, version],
+    //  () => db.l2Contract.getL2RegisteredContractClass(classId, version)
+    //);
+    const dbContractClass = await db.l2Contract.getL2RegisteredContractClass(
+      // TODO: remove me after demo
+      classId,
+      version
     );
-    let contractClass;
-    if (contractClassString) {
-      contractClass = chicmozL2ContractClassRegisteredEventSchema.parse(
-        JSON.parse(contractClassString)
-      );
-      if (contractClass.artifactJson) {
-        res.status(200).send(contractClass);
-        return;
-      }
-    }
-    if (!contractClass) {
+    // TODO: uncomment after demo
+    //let dbContractClass;
+    //if (contractClassString) {
+    //  dbContractClass = chicmozL2ContractClassRegisteredEventSchema.parse(
+    //    JSON.parse(contractClassString)
+    //  );
+    //  if (dbContractClass.artifactJson) {
+    //    res.status(200).send(dbContractClass);
+    //    return;
+    //  }
+    //}
+    if (!dbContractClass) {
       res.status(500).send("Contract class found in DB is not valid");
       return;
     }
-    if (!stringifiedArtifactJson) {
+    if (!body.stringifiedArtifactJson) {
+      // TODO: zod validation before endpoint?
       res.status(400).send("Missing artifact json");
       return;
     }
-    const uploadedArtifact = await getContractClassFromArtifact(
-      loadContractArtifact(
-        JSON.parse(stringifiedArtifactJson) as unknown as NoirCompiledContract
-      )
-    );
-    const isMatchingByteCode = uploadedArtifact.packedBytecode.equals(
-      contractClass.packedBytecode
+    const isMatchingByteCode = await verifyArtifactPayload(
+      body,
+      dbContractClass
     );
     if (!isMatchingByteCode) throw new Error("Incorrect artifact");
     const completeContractClass = {
-      ...contractClass,
-      artifactJson: stringifiedArtifactJson,
+      ...dbContractClass,
+      artifactJson: body.stringifiedArtifactJson,
     };
 
     setEntry(
@@ -198,10 +203,17 @@ export const POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT = asyncHandler(
     ).catch((err) => {
       logger.warn(`Failed to cache contract class: ${err}`);
     });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const isTokenRes: IsTokenArtifactResult = isTokenArtifact(
+      JSON.parse(
+        body.stringifiedArtifactJson
+      ) as unknown as NoirCompiledContract
+    );
     await db.l2Contract.addArtifactJson(
-      contractClass.contractClassId,
-      contractClass.version,
-      stringifiedArtifactJson
+      dbContractClass.contractClassId,
+      dbContractClass.version,
+      body.stringifiedArtifactJson,
+      isTokenRes
     );
     res.status(201).send(completeContractClass);
   }

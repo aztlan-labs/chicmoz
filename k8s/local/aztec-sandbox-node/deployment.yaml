@@ -17,7 +17,7 @@ spec:
         app: aztec-sandbox-node
     spec:
       containers:
-        - image: aztecprotocol/aztec:0.75.0
+        - image: aztecprotocol/aztec:0.76.1
           name: aztec-sandbox-node
           resources:
             limits:
