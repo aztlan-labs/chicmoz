@@ -12,7 +12,6 @@ export const EXPLORER_API_URL =
 export const SCENARIO_DELAY = z.coerce
   .number()
   .default(1000)
-  .optional()
   .parse(process.env.SCENARIO_DELAY);
 
 export const SCENARIO_SIMPLE_DEFAULT_ACCOUNT =
@@ -29,3 +28,5 @@ export const SCENARIO_L1L2_PUBLIC_MESSAGING =
   process.env.SCENARIO_L1L2_PUBLIC_MESSAGING === "true" ?? false;
 export const SCENARIO_L1L2_PRIVATE_MESSAGING =
   process.env.SCENARIO_L1L2_PRIVATE_MESSAGING === "true" ?? false;
+
+// yarn build && NODE_ENV=production AZTEC_RPC_URL=http://34.83.184.137:8080 ETHEREUM_RPC_URL=http://34.83.148.196:8545 EXPLORER_API_URL=http://api.devnet.aztecscan.xyz/v1/temporary-api-key SCENARIO_DELAY=10000 SCENARIO_SIMPLE_CONTRACT=true yarn start

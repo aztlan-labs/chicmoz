@@ -101,6 +101,7 @@ export const start = async () => {
     }
 
     index = (index + 1) % scenariosToRun.length;
+    logger.info(`waiting ${SCENARIO_DELAY / 1000} seconds before next scenario...`);
     await new Promise((resolve) => setTimeout(resolve, SCENARIO_DELAY));
   }
 };
