@@ -24,9 +24,10 @@ import assert from "assert";
 import { getContract } from "viem";
 import { ETHEREUM_RPC_URL } from "../../environment.js";
 import { logger } from "../../logger.js";
-import { getAztecNodeClient, getPxe, getWallets } from "../pxe.js";
+import { getAztecNodeClient, getPxe } from "../pxe.js";
 import {
   deployContract,
+  getNewAccount,
   logAndWaitForTx,
   publicDeployAccounts,
   registerContractClassArtifact,
@@ -41,17 +42,16 @@ export const run = async () => {
   const aztecNode = getAztecNodeClient();
   const pxe = getPxe();
   await waitForPXE(pxe);
-  const namedWallets = getWallets();
+  const randomGenWallets = await Promise.all([
+    getNewAccount(pxe).then(({ wallet }) => wallet),
+    getNewAccount(pxe).then(({ wallet }) => wallet),
+    getNewAccount(pxe).then(({ wallet }) => wallet),
+  ]);
+  if (!randomGenWallets) throw new Error("No initial accounts");
+  const wallet = await getNewAccount(pxe).then(({ wallet }) => wallet);
 
-  const wallets = [
-    // NOTE: for similarity with tutorial
-    namedWallets.alice,
-    namedWallets.bob,
-    namedWallets.charlie,
-  ];
-  const wallet = namedWallets.alice; // NOTE: for similarity with tutorial
   logger.info("🐰 Deploying accounts...");
-  await publicDeployAccounts(wallet, wallets, pxe);
+  await publicDeployAccounts(wallet, randomGenWallets, pxe);
 
   const { walletClient, publicClient } = createL1Clients(
     ETHEREUM_RPC_URL,
@@ -230,6 +230,8 @@ export const run = async () => {
     "🐰 3. consuming L1 -> L2 message and minting public tokens on L2",
   );
   const { claimAmount, claimSecret, messageLeafIndex } = claim;
+  logger.info("🥲  claiming public tokens...");
+
   await logAndWaitForTx(
     l2Bridge.methods
       .claim_public(ownerAddress, claimAmount, claimSecret, messageLeafIndex)
@@ -237,6 +239,7 @@ export const run = async () => {
     "claiming public tokens",
   );
 
+  logger.info("🥲 checking public token balance matches...");
   const l2TokenBalance = (await l2Token.methods
     .balance_of_public(ownerAddress)
     .simulate()) as bigint;
@@ -270,12 +273,14 @@ export const run = async () => {
     l2Bridge.address,
     EthAddress.ZERO,
   );
+
   const l2TxReceipt = await logAndWaitForTx(
     l2Bridge.methods
       .exit_to_l1_public(ethAccount, withdrawAmount, EthAddress.ZERO, nonce)
       .send(),
     "exiting to L1",
   );
+
   assert(
     (await l2Token.methods.balance_of_public(ownerAddress).simulate()) ===
       bridgeAmount - withdrawAmount,
@@ -287,7 +292,7 @@ export const run = async () => {
 
   const [l2ToL1MessageIndex, siblingPath] =
     await aztecNode.getL2ToL1MessageMembershipWitness(
-      l2TxReceipt.blockNumber!,
+      l2TxReceipt!.blockNumber!,
       l2ToL1Message,
     );
   // TODO: Not sure if this is necessary. Prefer to have some "wait-thingy" instead
@@ -298,7 +303,7 @@ export const run = async () => {
   await l1TokenPortalManager.withdrawFunds(
     withdrawAmount,
     ethAccount,
-    BigInt(l2TxReceipt.blockNumber!),
+    BigInt(l2TxReceipt!.blockNumber!),
     l2ToL1MessageIndex,
     siblingPath,
   );

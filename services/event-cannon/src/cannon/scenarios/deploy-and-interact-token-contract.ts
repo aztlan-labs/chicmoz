@@ -27,7 +27,7 @@ export async function run() {
         tokenAdmin,
         "lol",
         "LOL",
-        9
+        9,
       ).send();
     },
     node: getAztecNodeClient(),
@@ -37,7 +37,7 @@ export async function run() {
     contractLoggingName,
     tokenContractArtifactJson,
     tokenContract.instance.contractClassId.toString(),
-    tokenContract.instance.version
+    tokenContract.instance.version,
   ).catch((err) => {
     logger.error(err);
   });
@@ -47,19 +47,19 @@ export async function run() {
       tokenContract.methods
         .mint_to_public(namedWallets.alice.getAddress(), 1000)
         .send(),
-      "Mint to Alice"
+      "Mint to Alice",
     ),
     logAndWaitForTx(
       tokenContract.methods
         .mint_to_public(namedWallets.bob.getAddress(), 1000)
         .send(),
-      "Mint to Bob"
+      "Mint to Bob",
     ),
     logAndWaitForTx(
       tokenContract.methods
         .mint_to_public(namedWallets.charlie.getAddress(), 1000)
         .send(),
-      "Mint to Charlie"
+      "Mint to Charlie",
     ),
   ]);
   const [balanceAlice, balanceBob, balanceCharlie] = await Promise.all([
@@ -83,19 +83,19 @@ export async function run() {
   const aliceContract = (await Contract.at(
     tokenContract.address,
     TokenContract.artifact,
-    namedWallets.alice
+    namedWallets.alice,
   )) as TokenContract;
 
   const bobsTokenContract = (await Contract.at(
     tokenContract.address,
     TokenContract.artifact,
-    namedWallets.bob
+    namedWallets.bob,
   )) as TokenContract;
 
   const charliesTokenContract = (await Contract.at(
     tokenContract.address,
     TokenContract.artifact,
-    namedWallets.charlie
+    namedWallets.charlie,
   )) as TokenContract;
 
   let bobNonce = 0;
@@ -105,10 +105,10 @@ export async function run() {
         namedWallets.bob.getAddress(),
         namedWallets.alice.getAddress(),
         100,
-        bobNonce
+        bobNonce,
       )
       .send(),
-    "Public transfer from Alice to Bob"
+    "Public transfer from Alice to Bob",
   );
   bobNonce++;
 
@@ -130,7 +130,7 @@ export async function run() {
     charliesTokenContract.methods
       .transfer_to_private(namedWallets.alice.getAddress(), 100)
       .send(),
-    "Public to private transfer from Charlie to Alice"
+    "Public to private transfer from Charlie to Alice",
   );
 
   let aliceNonce = 0;
@@ -140,13 +140,13 @@ export async function run() {
         namedWallets.alice.getAddress(),
         namedWallets.bob.getAddress(),
         100,
-        aliceNonce
+        aliceNonce,
       )
       .send(),
-    "Private transfer from Bob to Alice"
+    "Private transfer from Bob to Alice",
   );
   aliceNonce++;
-
+  logger.info(`Private transfer from Bob to Alice`);
   const [
     balancePrivateAlice,
     balancePublicAlice,

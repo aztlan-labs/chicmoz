@@ -41,11 +41,15 @@ export const truncateHashString = (value: string) => {
 export const logAndWaitForTx = async (tx: SentTx, additionalInfo: string) => {
   const hash = (await tx.getTxHash()).toString();
   logger.info(`📫 TX ${hash} (${additionalInfo})`);
-  const receipt = await tx.wait();
-  logger.info(
-    `⛏  TX ${hash} (${additionalInfo}) block ${receipt.blockNumber}`
-  );
-  return receipt;
+  try {
+    const receipt = await tx.wait();
+    logger.info(
+      `⛏  TX ${hash} (${additionalInfo}) block ${receipt.blockNumber}`,
+    );
+    return receipt;
+  } catch (err) {
+    logger.error(err);
+  }
 };
 
 export const getFunctionSpacer = (type: FunctionType) => {
@@ -68,10 +72,10 @@ export const getNewSchnorrAccount = async ({
     pxe,
     secretKey,
     deriveSigningKey(secretKey),
-    salt
+    salt,
   );
   logger.info(
-    `    Schnorr account created ${schnorrAccount.getAddress().toString()}`
+    `    Schnorr account created ${schnorrAccount.getAddress().toString()}`,
   );
   const { address } = await schnorrAccount.getCompleteAddress();
   logger.info("    Deploying Schnorr account to network...");
@@ -103,10 +107,10 @@ const getNewContractClassId = async (node: AztecNode, blockNumber?: number) => {
   const contractClasses = await Promise.all(
     contractClassLogs
       .filter((log) =>
-        ContractClassRegisteredEvent.isContractClassRegisteredEvent(log.data)
+        ContractClassRegisteredEvent.isContractClassRegisteredEvent(log.data),
       )
       .map((log) => ContractClassRegisteredEvent.fromLog(log.data))
-      .map((e) => e.toContractClassPublic())
+      .map((e) => e.toContractClassPublic()),
   );
 
   return contractClasses[0]?.id.toString();
@@ -135,7 +139,7 @@ export const deployContract = async <T extends Contract>({
     ? `(🍏 also, a new contract class was added: ${newClassId})`
     : `(🍎 attached classId: ${deployedContract.instance.contractClassId.toString()})`;
   logger.info(
-    `⛏  ${contractLoggingName} instance deployed at: ${addressString} block: ${receipt.blockNumber} ${classIdString}`
+    `⛏  ${contractLoggingName} instance deployed at: ${addressString} block: ${receipt.blockNumber} ${classIdString}`,
   );
   if (broadcastWithWallet) {
     await broadcastFunctions({
@@ -159,29 +163,29 @@ export const broadcastFunctions = async ({
     if (fn.functionType === FunctionType.PRIVATE) {
       const selector = await FunctionSelector.fromNameAndParameters(
         fn.name,
-        fn.parameters
+        fn.parameters,
       );
       await logAndWaitForTx(
         (
           await broadcastPrivateFunction(wallet, contract.artifact, selector)
         ).send(),
-        `Broadcasting private function ${fn.name}`
+        `Broadcasting private function ${fn.name}`,
       );
     }
     if (fn.functionType === FunctionType.UNCONSTRAINED) {
       const selector = await FunctionSelector.fromNameAndParameters(
         fn.name,
-        fn.parameters
+        fn.parameters,
       );
       await logAndWaitForTx(
         (
           await broadcastUnconstrainedFunction(
             wallet,
             contract.artifact,
-            selector
+            selector,
           )
         ).send(),
-        `Broadcasting unconstrained function ${fn.name}`
+        `Broadcasting unconstrained function ${fn.name}`,
       );
     }
   }
@@ -190,16 +194,16 @@ export const broadcastFunctions = async ({
 export const publicDeployAccounts = async (
   sender: Wallet,
   accountsToDeploy: Wallet[],
-  pxe: PXE
+  pxe: PXE,
 ) => {
   const notPubliclyDeployedAccounts = await Promise.all(
     accountsToDeploy.map(async (a) => {
       const address = a.getAddress();
       const contractMetadata = await pxe.getContractMetadata(address);
       return contractMetadata;
-    })
+    }),
   ).then((results) =>
-    results.filter((result) => !result.isContractPubliclyDeployed)
+    results.filter((result) => !result.isContractPubliclyDeployed),
   );
   if (notPubliclyDeployedAccounts.length === 0) return;
   const deployCalls: FunctionCall[] = [
@@ -211,17 +215,22 @@ export const publicDeployAccounts = async (
         notPubliclyDeployedAccounts.map(async (contractMetadata) => {
           if (!contractMetadata.contractInstance) {
             logger.warn(
-              `🚨 Contract instance not found for contract isIntialized: ${contractMetadata.isContractInitialized}`
+              `🚨 Contract instance not found for contract isIntialized: ${contractMetadata.isContractInitialized}`,
             );
             return undefined;
           }
           return (
             await deployInstance(sender, contractMetadata.contractInstance)
           ).request();
-        })
+        }),
       )
     ).filter((call) => call !== undefined) as FunctionCall[]),
   ];
+
+  /*BUG:
+  [15:46:44.860] ERROR: world-state:database Call BATCH_INSERT failed: Error: Unable to insert values into tree NullifierTree leaf type NullifierLeafValue is not updateable and 0x27b6a0fa0d19417c4c820c9328f9cbfc724d18272d005c7144647888ff2a1b2a is already present: [Error: Unable to insert values into tree NullifierTree leaf type NullifierLeafValue is not updateable and 0x27b6a0fa0d19417c4c820c9328f9cbfc724d18272d005c7144647888ff2a1b2a is already present] {"treeId":"NULLIFIER_TREE","forkId":1571,"leavesCount":64}
+  - BatchCall failed with error above it does not matter that the addresses are random genererated. the error still persists
+  */
   const batch = new BatchCall(sender, deployCalls);
   await batch.send().wait();
 };
@@ -231,22 +240,22 @@ export const registerContractClassArtifact = async (
   artifactObj: { default: NoirCompiledContract } | NoirCompiledContract,
   contractClassId: string,
   version: number,
-  skipSleep = false
+  skipSleep = false,
 ) => {
   const url = new URL(
-    generateVerifyArtifactUrl(EXPLORER_API_URL, contractClassId, version)
+    generateVerifyArtifactUrl(EXPLORER_API_URL, contractClassId, version),
   );
   const postData = JSON.stringify(generateVerifyArtifactPayload(artifactObj));
 
   const sizeInMB = Buffer.byteLength(postData) / 1000 ** 2;
   if (sizeInMB > 10) {
     logger.warn(
-      `🚨📜 ${contractLoggingName} Artifact is too large to register in explorer-api: ${url.href} (byte length: ${sizeInMB} MB)`
+      `🚨📜 ${contractLoggingName} Artifact is too large to register in explorer-api: ${url.href} (byte length: ${sizeInMB} MB)`,
     );
     return;
   }
   logger.info(
-    `📜 ${contractLoggingName} Trying to register artifact in explorer-api: ${url.href} (byte length: ${sizeInMB} MB)`
+    `📜 ${contractLoggingName} Trying to register artifact in explorer-api: ${url.href} (byte length: ${sizeInMB} MB)`,
   );
   if (!skipSleep) await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -277,7 +286,7 @@ export const registerContractClassArtifact = async (
           });
         });
         // get the status code
-      }
+      },
     );
     req.on("error", (error) => {
       logger.error(`🚨📜 ${contractLoggingName} Artifact registration failed.`);
@@ -298,8 +307,8 @@ export const registerContractClassArtifact = async (
         {
           statusCode: res.statusCode,
           statusMessage: res.statusMessage,
-        }
-      )}`
+        },
+      )}`,
     );
   } else {
     logger.error(
@@ -308,8 +317,8 @@ export const registerContractClassArtifact = async (
           statusCode: res.statusCode,
           statusMessage: res.statusMessage,
           data: res.data,
-        }
-      )}`
+        },
+      )}`,
     );
   }
 };

@@ -9,9 +9,10 @@ import {
   waitForPXE,
 } from "@aztec/aztec.js";
 import { logger } from "../../logger.js";
-import { getAztecNodeClient, getPxe, getWallets } from "../pxe.js";
+import { getAztecNodeClient, getPxe } from "../pxe.js";
 import {
   deployContract,
+  getNewAccount,
   logAndWaitForTx,
   publicDeployAccounts,
   registerContractClassArtifact,
@@ -41,12 +42,17 @@ export const run = async () => {
   const aztecNode = getAztecNodeClient();
   const pxe = getPxe();
   await waitForPXE(pxe);
-  const namedWallets = getWallets();
+  const randomGenWallets = await Promise.all([
+    getNewAccount(pxe).then(({ wallet }) => wallet),
+    getNewAccount(pxe).then(({ wallet }) => wallet),
+    getNewAccount(pxe).then(({ wallet }) => wallet),
+  ]);
+  if (!randomGenWallets) throw new Error("No initial accounts");
 
-  const wallets = [namedWallets.alice, namedWallets.bob, namedWallets.charlie];
-  const wallet = namedWallets.alice;
+  const wallet = await getNewAccount(pxe).then(({ wallet }) => wallet);
+
   logger.info("🐰 Deploying accounts...");
-  await publicDeployAccounts(wallet, wallets, pxe);
+  await publicDeployAccounts(wallet, randomGenWallets, pxe);
 
   const { walletClient, publicClient } = createL1Clients(
     ETHEREUM_RPC_URL,
@@ -226,6 +232,7 @@ export const run = async () => {
     "🐰 3. consuming L1 -> L2 message and minting private tokens on L2",
   );
   const { claimAmount, claimSecret, messageLeafIndex } = claim;
+
   await logAndWaitForTx(
     l2Bridge.methods
       .claim_private(ownerAddress, claimAmount, claimSecret, messageLeafIndex)
@@ -272,6 +279,7 @@ export const run = async () => {
     (await l2Token.methods.balance_of_private(ownerAddress).simulate()) ===
       bridgeAmount - withdrawAmount,
   );
+
   assert(
     (await l1TokenManager.getL1TokenBalance(ethAccount.toString())) ===
       l1TokenBalance - bridgeAmount,
@@ -279,7 +287,7 @@ export const run = async () => {
 
   const [l2ToL1MessageIndex, siblingPath] =
     await aztecNode.getL2ToL1MessageMembershipWitness(
-      l2TxReceipt.blockNumber!,
+      l2TxReceipt!.blockNumber!,
       l2ToL1Message,
     );
 
@@ -290,7 +298,7 @@ export const run = async () => {
   await l1TokenPortalManager.withdrawFunds(
     withdrawAmount,
     ethAccount,
-    BigInt(l2TxReceipt.blockNumber!),
+    BigInt(l2TxReceipt!.blockNumber!),
     l2ToL1MessageIndex,
     siblingPath,
   );
