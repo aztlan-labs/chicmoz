@@ -21,7 +21,6 @@ import {
   contractClassResponseArray,
   dbWrapper,
 } from "./utils/index.js";
-import {chicmozL2ContractClassRegisteredEventSchema} from "@chicmoz-pkg/types";
 
 export const openapi_GET_L2_REGISTERED_CONTRACT_CLASS = {
   "/l2/contract-classes/{classId}/versions/{version}": {
