@@ -43,7 +43,7 @@ export const ContractClassDetails: FC = () => {
   const contractInstances = mapContractInstances(instancesData);
 
   const selectedVersion = classesData?.find(
-    (contract) => contract.version === Number(version)
+    (contract) => contract.version === Number(version),
   );
   const isOptionAvailable = {
     contractVersions: !!contractClasses && !!contractClasses.length,
@@ -118,7 +118,7 @@ export const ContractClassDetails: FC = () => {
                       <h4>
                         {"0x" +
                           privateFunction.privateFunction.selector.value.toString(
-                            16
+                            16,
                           )}
                       </h4>
                       <p>
@@ -130,7 +130,7 @@ export const ContractClassDetails: FC = () => {
                           <p>
                             privateFunctionTreeSiblingPath-{index}: {path}
                           </p>
-                        )
+                        ),
                       )}
                       <p>
                         privateFunctionTreeLeafIndex:{" "}
@@ -141,7 +141,7 @@ export const ContractClassDetails: FC = () => {
                           <p>
                             artifactFunctionTreeSiblingPath-{index}: {path}
                           </p>
-                        )
+                        ),
                       )}
                       <p>
                         artifactFunctionTreeLeafIndex:{" "}
@@ -167,7 +167,7 @@ export const ContractClassDetails: FC = () => {
                       </div>
                       <hr />
                     </div>
-                  )
+                  ),
                 )}
               </div>
             )}
@@ -181,7 +181,7 @@ export const ContractClassDetails: FC = () => {
                       <h4>
                         {"0x" +
                           unconstrainedFunction.unconstrainedFunction.selector.value.toString(
-                            16
+                            16,
                           )}
                       </h4>
                       <p>
@@ -197,7 +197,7 @@ export const ContractClassDetails: FC = () => {
                           <p>
                             artifactFunctionTreeSiblingPath-{index}: {path}
                           </p>
-                        )
+                        ),
                       )}
                       <p>
                         artifactFunctionTreeLeafIndex:{" "}
@@ -224,7 +224,7 @@ export const ContractClassDetails: FC = () => {
                       </div>
                       <hr />
                     </div>
-                  )
+                  ),
                 )}
               </div>
             )}
@@ -235,7 +235,7 @@ export const ContractClassDetails: FC = () => {
                 {JSON.stringify(
                   JSON.parse(selectedVersion.artifactJson),
                   null,
-                  2
+                  2,
                 )}
               </pre>
             </div>

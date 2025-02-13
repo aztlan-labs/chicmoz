@@ -4,8 +4,12 @@ import { type FC } from "react";
 import { CustomTooltip } from "~/components/custom-tooltip";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { useContractInstance, useSubTitle } from "~/hooks";
-import { routes } from "~/routes/__root";
-import { getContractData, getVerifiedContractInstanceData } from "./util";
+import {
+  getContractData,
+  getVerifiedContractInstanceData,
+  tempVerifiedContractInstanceData,
+} from "./util";
+import { PillSection } from "./pill-section";
 
 export const ContractInstanceDetails: FC = () => {
   const { address } = useParams({
@@ -23,7 +27,8 @@ export const ContractInstanceDetails: FC = () => {
   if (error) return <div>Error</div>;
   if (!contractInstanceDetails) return <div>No data</div>;
 
-  const verfiedData = getVerifiedContractInstanceData(contractInstanceDetails);
+  // const verfiedData = getVerifiedContractInstanceData(contractInstanceDetails);
+  const verfiedData = tempVerifiedContractInstanceData();
 
   return (
     <div className="mx-auto px-[70px] max-w-[1440px]">
@@ -42,27 +47,12 @@ export const ContractInstanceDetails: FC = () => {
             </div>
           </div>
         </div>
-        {verfiedData && (
-          <div className="mt-20">
-            <div>
-              <h2 className="flex items-center gap-2">
-                Verified contract instance data
-                <div className="relative group">
-                  <Link to={routes.verifiedContractInstances.route}>
-                    <CustomTooltip content="Read more about verified contract instances here">
-                      <CheckCircledIcon className="size-10 stroke-lime-700" />
-                    </CustomTooltip>
-                  </Link>
-                </div>
-              </h2>
-            </div>
-            <div className="flex flex-col gap-4 mt-8">
-              <div className="bg-white rounded-lg shadow-md p-4">
-                <KeyValueDisplay data={verfiedData} />
-              </div>
-            </div>
-          </div>
-        )}
+        <div className="mt-5">
+          <PillSection
+            verifiedDeploymentData={verfiedData.contractDetails}
+            contactDetailsData={verfiedData.DeployerDetails}
+          />
+        </div>
       </div>
     </div>
   );
