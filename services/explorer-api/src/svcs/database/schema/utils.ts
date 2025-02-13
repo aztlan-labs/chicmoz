@@ -13,6 +13,8 @@ import {
 
 // TODO: this should be changed to be the same as generateUint256Column
 export const generateFrColumn = (name: string) => varchar(name, { length: 66 });
+export const generateFrLongColumn = (name: string) => varchar(name, { length: 500 });
+
 
 export const generateUint256Column = (name: string) =>
   numeric(name, { precision: 77, scale: 0 });

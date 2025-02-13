@@ -42,6 +42,7 @@ export const paths = {
   contractInstancesByBlockHash: `/l2/blocks/:${blockHash}/contract-instances`,
   contractInstance: `/l2/contract-instances/:${address}`,
   contractInstances: "/l2/contract-instances",
+  contractInstanceVerify: `/l2/contract-instance/verify/:${address}`,
 
   search: "/l2/search",
 
@@ -157,6 +158,20 @@ export const getContractInstancesByContractClassIdSchema =
   getContractClassesByClassIdSchema;
 
 export const getVerifiedContractInstanceSchema = getContractInstanceSchema;
+
+export const postVerifiedContractInstanceSchema = z.lazy(() => {
+  return z.object({
+    ...getContractInstanceSchema.shape,
+    body: z.object({
+      stringifiedArtifactJson: z.string(),
+      version: z.coerce.number().nonnegative(),
+      publicKeys: z.string().optional(),
+      salt: z.string().optional(),
+      deployer: z.string().optional(),
+      args: z.string().array(),
+    }),
+  });
+});
 
 export const getSearchSchema = z.object({
   query: chicmozSearchQuerySchema,

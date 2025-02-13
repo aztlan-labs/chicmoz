@@ -335,3 +335,109 @@ export const registerContractClassArtifact = async (
     );
   }
 };
+
+
+export const registerContractInstance = async (
+  contractLoggingName: string,
+  artifactObj: { default: NoirCompiledContract } | NoirCompiledContract,
+  contractInstanceAddress: string,
+  version: number,
+  publicKeys: string,
+  deployer: string,
+  salt: string,
+  args: string[],
+  skipSleep = false
+) => {
+  const url = new URL(
+    `${EXPLORER_API_URL}/l2/contract-instance/verify/${contractInstanceAddress}`
+  );
+  const artifactJson = (artifactObj as { default: NoirCompiledContract })
+    .default
+    ? (artifactObj as { default: NoirCompiledContract }).default
+    : artifactObj;
+  const stringifiedArtifactJson = JSON.stringify(artifactJson);
+  await testGetContractClassFromArtifact(stringifiedArtifactJson);
+  const postData = JSON.stringify({
+    version,
+    publicKeys,
+    salt,
+    deployer,
+    args,
+    stringifiedArtifactJson,
+  });
+
+  const sizeInMB = Buffer.byteLength(postData) / 1000 ** 2;
+  if (sizeInMB > 10) {
+    logger.warn(
+      `🚨📜 ${contractLoggingName} Artifact is too large to register in explorer-api: ${url.href} (byte length: ${sizeInMB} MB)`
+    );
+    return;
+  }
+  logger.info(
+    `📜 ${contractLoggingName} Trying to register artifact in explorer-api: ${url.href} (byte length: ${sizeInMB} MB)`
+  );
+  if (!skipSleep) await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  const res: {
+    statusCode: number | undefined;
+    statusMessage: string | undefined;
+    data: string;
+  } = await new Promise((resolve, reject) => {
+    const req = request(
+      url,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Length": Buffer.byteLength(postData),
+        },
+      },
+      (res) => {
+        let data = "";
+        res.on("data", (chunk) => {
+          data += chunk;
+        });
+        res.on("end", () => {
+          resolve({
+            statusCode: res.statusCode,
+            statusMessage: res.statusMessage,
+            data,
+          });
+        });
+        // get the status code
+      }
+    );
+    req.on("error", (error) => {
+      logger.error(`🚨📜 ${contractLoggingName} Artifact registration failed.`);
+      reject(error);
+    });
+
+    // Set a timeout (e.g., 5 seconds)
+    req.setTimeout(5000, () => {
+      reject(new Error("Request timed out"));
+    });
+
+    req.write(postData);
+    req.end(); // This actually sends the request
+  });
+  if (res.statusCode === 200 || res.statusCode === 201) {
+    logger.info(
+      `📜✅ ${contractLoggingName} Artifact registered in explorer-api. ${JSON.stringify(
+        {
+          statusCode: res.statusCode,
+          statusMessage: res.statusMessage,
+        }
+      )}`
+    );
+  } else {
+    logger.error(
+      `📜🚨 ${contractLoggingName} Artifact registration failed. ${JSON.stringify(
+        {
+          statusCode: res.statusCode,
+          statusMessage: res.statusMessage,
+          data: res.data,
+        }
+      )}`
+    );
+  }
+};

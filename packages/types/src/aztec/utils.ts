@@ -29,6 +29,13 @@ export const frSchema = z.preprocess(
     .regex(/^0x[0-9a-fA-F]+$/)
 );
 
+export const frLongSchema = z.preprocess(
+  frToHexString,
+  z
+    .string()
+    .regex(/^0x[0-9a-fA-F]+$/)
+);
+
 type FrPoint = {
   x: AztecFr;
   y: AztecFr;

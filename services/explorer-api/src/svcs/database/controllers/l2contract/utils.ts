@@ -18,32 +18,10 @@ export const parseDeluxe = (contractClass: any, instance: any): ChicmozL2Contrac
     initializationHash: instance.initializationHash,
     deployer: instance.deployer,
     publicKeys: {
-      masterNullifierPublicKey: {
-        x: instance.publicKeys_masterNullifierPublicKey_x,
-        y: instance.publicKeys_masterNullifierPublicKey_y,
-        isInfinite: instance.publicKeys_masterNullifierPublicKey_isInfinite,
-        kind: instance.publicKeys_masterNullifierPublicKey_kind,
-      },
-      masterIncomingViewingPublicKey: {
-        x: instance.publicKeys_masterIncomingViewingPublicKey_x,
-        y: instance.publicKeys_masterIncomingViewingPublicKey_y,
-        isInfinite:
-          instance.publicKeys_masterIncomingViewingPublicKey_isInfinite,
-        kind: instance.publicKeys_masterIncomingViewingPublicKey_kind,
-      },
-      masterOutgoingViewingPublicKey: {
-        x: instance.publicKeys_masterOutgoingViewingPublicKey_x,
-        y: instance.publicKeys_masterOutgoingViewingPublicKey_y,
-        isInfinite:
-          instance.publicKeys_masterOutgoingViewingPublicKey_isInfinite,
-        kind: instance.publicKeys_masterOutgoingViewingPublicKey_kind,
-      },
-      masterTaggingPublicKey: {
-        x: instance.publicKeys_masterTaggingPublicKey_x,
-        y: instance.publicKeys_masterTaggingPublicKey_y,
-        isInfinite: instance.publicKeys_masterTaggingPublicKey_isInfinite,
-        kind: instance.publicKeys_masterTaggingPublicKey_kind,
-      },
-    },
+      masterNullifierPublicKey: instance.masterNullifierPublicKey,
+      masterIncomingViewingPublicKey: instance.masterIncomingViewingPublicKey,
+      masterOutgoingViewingPublicKey: instance.masterOutgoingViewingPublicKey,
+      masterTaggingPublicKey: instance.masterTaggingPublicKey,
+    }
   });
 };

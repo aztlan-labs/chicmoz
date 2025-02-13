@@ -3,19 +3,23 @@ import {
   getContractClassFromArtifact,
   loadContractArtifact,
 } from "@aztec/aztec.js";
-import { chicmozL2ContractClassRegisteredEventSchema } from "@chicmoz-pkg/types";
 
-export const loadArtifact = async (stringifiedArtifactJson:string) => {
+export const loadCCFromArtifact = async (stringifiedArtifactJson:string) => {
     const artifact = await getContractClassFromArtifact(
       loadContractArtifact(
         JSON.parse(stringifiedArtifactJson) as unknown as NoirCompiledContract
       )
     );
-    chicmozL2ContractClassRegisteredEventSchema.parse(artifact)
     return { ...artifact }
 }
 
-export const createArtifact = async (
+export const loadArtifact = (artifactString: string) => {
+  return loadContractArtifact(
+    JSON.parse(artifactString) as unknown as NoirCompiledContract
+  )
+}
+
+export const createArtifact = (
   _contractLoggingName: string,
   artifactObj: { default: NoirCompiledContract } | NoirCompiledContract,
   _contractClassId: string,
@@ -26,5 +30,5 @@ export const createArtifact = async (
     ? (artifactObj as { default: NoirCompiledContract }).default
     : artifactObj;
   const stringifiedArtifactJson = JSON.stringify(artifactJson);
-  await loadArtifact(stringifiedArtifactJson);
+  loadArtifact(stringifiedArtifactJson);
 };

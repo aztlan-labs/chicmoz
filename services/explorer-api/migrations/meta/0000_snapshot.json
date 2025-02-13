@@ -1,5 +1,5 @@
 {
-  "id": "df619266-a55f-4d1e-94d3-c5fe7939eca5",
+  "id": "0957be0d-3dfe-4f50-a9ae-d4e4205aa534",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1096,99 +1096,27 @@
           "primaryKey": false,
           "notNull": true
         },
-        "public_keys_master_nullifier_public_key_x": {
-          "name": "public_keys_master_nullifier_public_key_x",
-          "type": "varchar(66)",
+        "masterNullifierPublicKey": {
+          "name": "masterNullifierPublicKey",
+          "type": "varchar(500)",
           "primaryKey": false,
           "notNull": true
         },
-        "public_keys_master_nullifier_public_key_y": {
-          "name": "public_keys_master_nullifier_public_key_y",
-          "type": "varchar(66)",
+        "masterIncomingViewingPublicKey": {
+          "name": "masterIncomingViewingPublicKey",
+          "type": "varchar(500)",
           "primaryKey": false,
           "notNull": true
         },
-        "public_keys_master_nullifier_public_key_is_infinite": {
-          "name": "public_keys_master_nullifier_public_key_is_infinite",
-          "type": "boolean",
+        "masterOutgoingViewingPublicKey": {
+          "name": "masterOutgoingViewingPublicKey",
+          "type": "varchar(500)",
           "primaryKey": false,
           "notNull": true
         },
-        "public_keys_master_nullifier_public_key_kind": {
-          "name": "public_keys_master_nullifier_public_key_kind",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "public_keys_master_incoming_viewing_public_key_x": {
-          "name": "public_keys_master_incoming_viewing_public_key_x",
-          "type": "varchar(66)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "public_keys_master_incoming_viewing_public_key_y": {
-          "name": "public_keys_master_incoming_viewing_public_key_y",
-          "type": "varchar(66)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "public_keys_master_incoming_viewing_public_key_is_infinite": {
-          "name": "public_keys_master_incoming_viewing_public_key_is_infinite",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "public_keys_master_incoming_viewing_public_key_kind": {
-          "name": "public_keys_master_incoming_viewing_public_key_kind",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "public_keys_master_outgoing_viewing_public_key_x": {
-          "name": "public_keys_master_outgoing_viewing_public_key_x",
-          "type": "varchar(66)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "public_keys_master_outgoing_viewing_public_key_y": {
-          "name": "public_keys_master_outgoing_viewing_public_key_y",
-          "type": "varchar(66)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "public_keys_master_outgoing_viewing_public_key_is_infinite": {
-          "name": "public_keys_master_outgoing_viewing_public_key_is_infinite",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "public_keys_master_outgoing_viewing_public_key_kind": {
-          "name": "public_keys_master_outgoing_viewing_public_key_kind",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "public_keys_master_tagging_public_key_x": {
-          "name": "public_keys_master_tagging_public_key_x",
-          "type": "varchar(66)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "public_keys_master_tagging_public_key_y": {
-          "name": "public_keys_master_tagging_public_key_y",
-          "type": "varchar(66)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "public_keys_master_tagging_public_key_is_infinite": {
-          "name": "public_keys_master_tagging_public_key_is_infinite",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "public_keys_master_tagging_public_key_kind": {
-          "name": "public_keys_master_tagging_public_key_kind",
-          "type": "varchar",
+        "masterTaggingPublicKey": {
+          "name": "masterTaggingPublicKey",
+          "type": "varchar(500)",
           "primaryKey": false,
           "notNull": true
         }

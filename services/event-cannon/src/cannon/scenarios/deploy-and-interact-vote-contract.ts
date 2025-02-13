@@ -5,6 +5,7 @@ import {
   deployContract,
   logAndWaitForTx,
   registerContractClassArtifact,
+  registerContractInstance,
 } from "./utils/index.js";
 import {
   EasyPrivateVotingContract,
@@ -34,6 +35,20 @@ export async function run() {
     contractArtifactJson,
     contract.instance.contractClassId.toString(),
     contract.instance.version
+  )
+  .catch((err) => {
+    logger.error(err);
+  });
+
+  registerContractInstance(
+    contractLoggingName,
+    contractArtifactJson,
+    contract.instance.address.toString(),
+    contract.instance.version,
+    contract.instance.publicKeys.toString(),
+    contract.instance.deployer.toString(),
+    contract.instance.salt.toString(),
+    [votingAdmin.toString()]
   ).catch((err) => {
     logger.error(err);
   });

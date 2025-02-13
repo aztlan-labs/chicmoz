@@ -155,6 +155,14 @@ export const init = ({ router }: { router: Router }) => {
     controller.POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT
   );
 
+  router.post(
+    paths.contractInstanceVerify,
+    bodyParser.json({
+      limit: ARTIFACT_BODY_LIMIT,
+    }),
+    controller.POST_L2_VERIFIED_CONTRACT_INSTANCE
+  );
+
   router.get(
     paths.contractInstancesByBlockHash,
     controller.GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH
