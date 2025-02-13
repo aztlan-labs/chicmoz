@@ -77,6 +77,29 @@ export const l2ContractClassRegistered = pgTable(
   })
 );
 
+export const l2ContractInstanceRegistered = pgTable(
+  "l2_contract_instance_registered",
+  {
+    blockHash: varchar("block_hash")
+      .notNull()
+      .$type<HexString>()
+      .references(() => l2Block.hash, { onDelete: "cascade" }),
+    address: generateAztecAddressColumn("address").notNull(),
+    version: bigint("version", { mode: "number" }).notNull(),
+    publicKeys: varchar("publicKeys").notNull(),
+    deployer: generateAztecAddressColumn("deployer").notNull(),
+    salt: generateFrColumn("salt").notNull(),
+    artifactJson: varchar("artifact_json"),
+    args: varchar("args"),
+  },
+  (t) => ({
+    primaryKey: primaryKey({
+      name: "contract_instance_address",
+      columns: [t.address],
+    }),
+  })
+);
+
 export const l2ContractInstanceDeployedRelations = relations(
   l2ContractInstanceDeployed,
   ({ one }) => ({

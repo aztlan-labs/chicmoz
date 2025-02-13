@@ -15,8 +15,6 @@ import { NoirCompiledContract, loadContractArtifact, Fr, AztecAddress, PublicKey
 import { computeInitializationHash, computeSaltedInitializationHash, computeContractAddressFromInstance, getContractClassFromArtifact } from"@aztec/circuits.js"
 import { chicmozL2ContractClassRegisteredEventSchema, chicmozL2ContractInstanceDeployedEventSchema } from "@chicmoz-pkg/types";
 
-
-
 export const openapi_GET_L2_VERIFIED_CONTRACT_INSTANCES = {
   "/l2/verified-contract-instances": {
     get: {
@@ -149,13 +147,24 @@ export const POST_L2_VERIFIED_CONTRACT_INSTANCE = asyncHandler(
     const initializationHash = await computeInitializationHash(initFn, args)
     const saltedHash = await computeSaltedInitializationHash({initializationHash, salt: Fr.fromString(salt!), deployer: AztecAddress.fromString(deployer!)})
     const computedAddress = await computeContractAddressFromInstance({contractClassId: Fr.fromString(classId), saltedInitializationHash: saltedHash, publicKeys: PublicKeys.fromString(pubKeyString)})
+    
     if (address !== computedAddress.toString()) {
       res.status(500).send("Uploaded data does not lead to correct contract address")
       return
     }
-  
-    //TODO: add verification status and arguments to DB
 
-    res.status(201).send("jippieee");
+    await db.l2Contract.storeContractInstanceRegistration({
+      address:computedAddress,
+      blockHash: contractInstance.blockHash,
+      version,
+      salt,
+      initializationHash,
+      deployer,
+      publicKeys:pubKeyString,
+      args: JSON.stringify(args),
+      artifactJson: stringifiedArtifactJson,
+    });
+
+    res.status(200).send("Contract instance registered");
   }
 );

@@ -23,6 +23,22 @@ export type ChicmozL2ContractInstanceDeployedEvent = z.infer<
   typeof chicmozL2ContractInstanceDeployedEventSchema
 >;
 
+export const chicmozL2ContractInstanceRegisteredSchema = z.object({
+  address: aztecAddressSchema,
+  blockHash: chicmozL2BlockSchema.shape.hash,
+  version: z.number(),
+  salt: frSchema,
+  initializationHash: frSchema,
+  deployer: aztecAddressSchema,
+  publicKeys: z.string(),
+  args: z.string(),
+  artifactJson: z.string().nullable().optional(),
+});
+
+export type ChicmozL2ContractInstanceRegisteredEvent = z.infer<
+  typeof chicmozL2ContractInstanceRegisteredSchema
+>;
+
 export const chicmozL2ContractClassRegisteredEventSchema = z.object({
   blockHash: chicmozL2BlockSchema.shape.hash,
   contractClassId: frSchema,

@@ -5,11 +5,13 @@ import {
   type ChicmozL2ContractInstanceDeployedEvent,
   type ChicmozL2PrivateFunctionBroadcastedEvent,
   type ChicmozL2UnconstrainedFunctionBroadcastedEvent,
+  type ChicmozL2ContractInstanceRegisteredEvent
 } from "@chicmoz-pkg/types";
 import { and, eq } from "drizzle-orm";
 import {
   l2ContractClassRegistered,
   l2ContractInstanceDeployed,
+  l2ContractInstanceRegistered,
   l2PrivateFunction,
   l2UnconstrainedFunction,
 } from "../../../database/schema/l2contract/index.js";
@@ -21,6 +23,14 @@ export const storeContractInstance = async (
   await db()
     .insert(l2ContractInstanceDeployed)
     .values({...publicKeys, ...rest});
+};
+
+export const storeContractInstanceRegistration = async (
+  instance: ChicmozL2ContractInstanceRegisteredEvent
+): Promise<void> => {
+  await db()
+    .insert(l2ContractInstanceRegistered)
+    .values({...instance});
 };
 
 export const storeContractClass = async (
