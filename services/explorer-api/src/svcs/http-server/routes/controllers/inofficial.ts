@@ -29,6 +29,8 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
   const blockAndTxEffect = await db.signOfLife.getABlockWithTxEffects();
   const blockAndAContractInstance =
     await db.signOfLife.getABlockWithContractInstances();
+  const contractClassesWithArtifactJson =
+    await db.signOfLife.getContractClassesWithArtifactJson();
   const { privateFunction, unconstrainedFunction } =
     await db.signOfLife.getL2ContractFunctions();
   const somePrivateLogsTxEffects =
@@ -206,6 +208,15 @@ export const GET_ROUTES = asyncHandler(async (_req, res) => {
           .join("")}
       </ul>
       <br>
+      <h2>Contract classes with artifact json</h2>
+      <ul>
+        ${contractClassesWithArtifactJson
+          .map(
+            (contractClass) =>
+              `<li><a href=${SUB_PATH}/contract-classes/${contractClass.classId}/versions/${contractClass.version}>${contractClass.classId} - ${contractClass.version}</a></li>`
+          )
+          .join("")}
+      </ul>
       <h2>Search routes</h2>
       <ul>
         ${searchRoutes

@@ -186,7 +186,7 @@ export const POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT = asyncHandler(
       res.status(400).send("Missing artifact json");
       return;
     }
-    const isMatchingByteCode = await verifyArtifactPayload(
+    const {isMatchingByteCode, artifactContractName} = await verifyArtifactPayload(
       body,
       dbContractClass
     );
@@ -213,6 +213,7 @@ export const POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT = asyncHandler(
       dbContractClass.contractClassId,
       dbContractClass.version,
       body.stringifiedArtifactJson,
+      artifactContractName,
       isTokenRes
     );
     res.status(201).send(completeContractClass);

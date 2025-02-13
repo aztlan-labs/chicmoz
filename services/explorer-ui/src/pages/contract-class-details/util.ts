@@ -38,4 +38,9 @@ export const getContractClassKeyValueData = (
     label: "IS TOKEN CONTRACT",
     value: data.isToken ? "✅" : "❌",
   },
+  {
+    label: "WHY NOT TOKEN",
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    value: data.whyNotToken ? data.whyNotToken : "N/A",
+  },
 ];
