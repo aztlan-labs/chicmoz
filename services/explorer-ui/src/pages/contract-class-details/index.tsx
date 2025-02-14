@@ -45,24 +45,58 @@ export const ContractClassDetails: FC = () => {
   const selectedVersion = classesData?.find(
     (contract) => contract.version === Number(version),
   );
-  const isOptionAvailable = {
-    contractVersions: !!contractClasses && !!contractClasses.length,
-    contractInstances: !!contractInstances && !!contractInstances.length,
-    privateFunctions:
-      !contractClassPrivateFunctionsHookRes.isLoading &&
-      !contractClassPrivateFunctionsHookRes.error &&
-      !!contractClassPrivateFunctionsHookRes.data &&
-      !!contractClassPrivateFunctionsHookRes.data.length,
-    unconstrainedFunctions:
-      !contractClassUnconstrainedFunctionsHookRes.isLoading &&
-      !contractClassUnconstrainedFunctionsHookRes.error &&
-      !!contractClassUnconstrainedFunctionsHookRes.data &&
-      !!contractClassUnconstrainedFunctionsHookRes.data.length,
-    artifactJson: !!selectedVersion && !!selectedVersion.artifactJson,
-  };
+  // const isOptionAvailable = {
+  //   contractVersions: !!contractClasses && !!contractClasses.length,
+  //   contractInstances: !!contractInstances && !!contractInstances.length,
+  //   privateFunctions:
+  //     !contractClassPrivateFunctionsHookRes.isLoading &&
+  //     !contractClassPrivateFunctionsHookRes.error &&
+  //     !!contractClassPrivateFunctionsHookRes.data &&
+  //     !!contractClassPrivateFunctionsHookRes.data.length,
+  //   unconstrainedFunctions:
+  //     !contractClassUnconstrainedFunctionsHookRes.isLoading &&
+  //     !contractClassUnconstrainedFunctionsHookRes.error &&
+  //     !!contractClassUnconstrainedFunctionsHookRes.data &&
+  //     !!contractClassUnconstrainedFunctionsHookRes.data.length,
+  //   artifactJson: !!selectedVersion && !!selectedVersion.artifactJson,
+  //   functionJson: !!selectedVersion && !!selectedVersion.artifactJson
+  // };
 
   if (!id) return <div>No classId</div>;
   if (!selectedVersion) return <div>No data</div>;
+  let artifact
+  let privFunc
+  let pubFunc
+  let uncFunc
+  if(selectedVersion.artifactJson){
+    artifact = JSON.parse(selectedVersion.artifactJson)
+    uncFunc = {}
+    privFunc = {}
+    pubFunc = {}
+    artifact.functions.map((func:any)=> {
+      func.abi.parameters.map((param:any)=>{
+        if(func.is_unconstrained){
+          uncFunc[func.name] = {[param.name]:param.type.kind}
+        }
+        if(func.custom_attributes){
+          pubFunc[func.name] = {[param.name]:param.type.kind}
+        }
+        if(func.custom_attributes.includes("private")){
+          privFunc[func.name] = {[param.name]:param.type.kind}
+        }
+      })
+    })
+  }
+
+  const isOptionAvailable = {
+    contractVersions: !!contractClasses && !!contractClasses.length,
+    contractInstances: !!contractInstances && !!contractInstances.length,
+    privateFunctions: !!selectedVersion&&Object.values(privFunc).length > 1,
+    unconstrainedFunctions: !!selectedVersion&&Object.values(uncFunc).length > 1,
+    publicFunctions: !!selectedVersion&&Object.values(pubFunc).length > 1,
+    artifactJson: !!selectedVersion && !!selectedVersion.artifactJson,
+    functionJson: !!selectedVersion && !!selectedVersion.artifactJson
+  };
 
   return (
     <div className="mx-auto px-[70px] max-w-[1440px]">
@@ -108,11 +142,30 @@ export const ContractClassDetails: FC = () => {
               />
             </div>
           )}
+          {selectedTab === "publicFunctions" && pubFunc && (
+            <div className="bg-white w-full rounded-lg shadow-md p-4">
+              <h4>Public Functions</h4>
+              <pre className="overflow-auto">
+                {JSON.stringify(
+                  pubFunc,
+                  null,
+                  2,
+                )}
+              </pre>
+            </div>
+          )}
           {selectedTab === "privateFunctions" &&
-            contractClassPrivateFunctionsHookRes.data && (
+            privFunc && (
               <div className="bg-white w-full rounded-lg shadow-md p-4">
                 <h4>Private Functions</h4>
-                {contractClassPrivateFunctionsHookRes.data.map(
+                <pre className="overflow-auto">
+                {JSON.stringify(
+                  privFunc,
+                  null,
+                  2,
+                )}
+              </pre>
+                {/* {contractClassPrivateFunctionsHookRes.data.map(
                   (privateFunction) => (
                     <div>
                       <h4>
@@ -168,14 +221,21 @@ export const ContractClassDetails: FC = () => {
                       <hr />
                     </div>
                   ),
-                )}
+                )} */}
               </div>
             )}
           {selectedTab === "unconstrainedFunctions" &&
-            contractClassUnconstrainedFunctionsHookRes.data && (
+            uncFunc && (
               <div className="bg-white w-full rounded-lg shadow-md p-4">
                 <h4>Unconstrained Functions</h4>
-                {contractClassUnconstrainedFunctionsHookRes.data.map(
+                <pre className="overflow-auto">
+                  {JSON.stringify(
+                    uncFunc,
+                    null,
+                    2,
+                  )}
+                </pre>
+                {/* {contractClassUnconstrainedFunctionsHookRes.data.map(
                   (unconstrainedFunction) => (
                     <div>
                       <h4>
@@ -225,7 +285,7 @@ export const ContractClassDetails: FC = () => {
                       <hr />
                     </div>
                   ),
-                )}
+                )} */}
               </div>
             )}
           {selectedTab === "artifactJson" && selectedVersion.artifactJson && (
@@ -233,7 +293,7 @@ export const ContractClassDetails: FC = () => {
               <h4>Artifact JSON</h4>
               <pre className="overflow-auto">
                 {JSON.stringify(
-                  JSON.parse(selectedVersion.artifactJson),
+                  artifact,
                   null,
                   2,
                 )}
