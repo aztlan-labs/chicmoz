@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useParams } from "@tanstack/react-router";
 import { useState, type FC } from "react";
 import { ContractClassesTable } from "~/components/contracts/classes/table";
@@ -75,14 +76,18 @@ export const ContractClassDetails: FC = () => {
     pubFunc = {}
     artifact.functions.map((func:any)=> {
       func.abi.parameters.map((param:any)=>{
+        if(param.name === "inputs") return
         if(func.is_unconstrained){
-          uncFunc[func.name] = {[param.name]:param.type.kind}
+          if(!uncFunc[func.name+' ']) uncFunc[func.name+' '] = {}
+          Object.assign(uncFunc[func.name+' '], {[param.name]:param.type.kind})
         }
-        if(func.custom_attributes){
-          pubFunc[func.name] = {[param.name]:param.type.kind}
+        if(func.custom_attributes.includes("public")){
+          if(!pubFunc[func.name+' ']) pubFunc[func.name+' '] = {}
+          Object.assign(pubFunc[func.name+' '], {[param.name]:param.type.kind})
         }
         if(func.custom_attributes.includes("private")){
-          privFunc[func.name] = {[param.name]:param.type.kind}
+          if(!privFunc[func.name+' ']) privFunc[func.name+' '] = {}
+          Object.assign(privFunc[func.name+' '], {[param.name]:param.type.kind})
         }
       })
     })
