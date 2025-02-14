@@ -3,6 +3,7 @@ import { chicmozL2BlockSchema } from "./l2Block.js";
 import {
   chicmozL2ContractClassRegisteredEventSchema,
   chicmozL2ContractInstanceDeployedEventSchema,
+  chicmozL2ContractInstanceRegisteredSchema,
 } from "./l2Contract.js";
 import { chicmozL2TxEffectSchema } from "./l2TxEffect.js";
 import {chicmozL2RpcNodeErrorSchema, chicmozL2SequencerSchema} from "./general.js";
@@ -26,6 +27,7 @@ export const chicmozL2ContractInstanceDeluxeSchema = z.object({
   ...chicmozL2ContractClassRegisteredEventSchema.shape,
   blockHeight: chicmozL2BlockSchema.shape.height.optional(),
   verifiedInfo: chicmozL2VerifiedContractInstanceDataSchema.optional(),
+  registered: chicmozL2ContractInstanceRegisteredSchema.optional(),
 });
 
 export type ChicmozL2ContractInstanceDeluxe = z.infer<

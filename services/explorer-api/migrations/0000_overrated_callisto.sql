@@ -192,6 +192,7 @@ CREATE TABLE IF NOT EXISTS "l2_contract_instance_registered" (
 	"publicKeys" varchar NOT NULL,
 	"deployer" varchar(66) NOT NULL,
 	"salt" varchar(66) NOT NULL,
+	"initialization_hash" varchar(66) NOT NULL,
 	"artifact_json" varchar,
 	"args" varchar,
 	CONSTRAINT "contract_instance_address" PRIMARY KEY("address")

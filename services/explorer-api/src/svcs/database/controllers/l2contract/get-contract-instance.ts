@@ -8,6 +8,7 @@ import { logger } from "../../../../logger.js";
 import {
   l2ContractClassRegistered,
   l2ContractInstanceDeployed,
+  l2ContractInstanceRegistered,
 } from "../../schema/l2contract/index.js";
 import { parseDeluxe } from "./utils.js";
 
@@ -18,6 +19,7 @@ export const getL2DeployedContractInstanceByAddress = async (
     .select({
       instance: getTableColumns(l2ContractInstanceDeployed),
       class: getTableColumns(l2ContractClassRegistered),
+      registered: getTableColumns(l2ContractInstanceRegistered),
     })
     .from(l2ContractInstanceDeployed)
     .innerJoin(
@@ -33,6 +35,15 @@ export const getL2DeployedContractInstanceByAddress = async (
         )
       )
     )
+    .innerJoin(
+      l2ContractInstanceRegistered,
+      and(
+        eq(
+          l2ContractInstanceDeployed.address,
+          l2ContractInstanceRegistered.address
+        ),
+      )
+    )
     .where(eq(l2ContractInstanceDeployed.address, address))
     .orderBy(desc(l2ContractInstanceDeployed.version))
     .limit(1);
@@ -41,8 +52,7 @@ export const getL2DeployedContractInstanceByAddress = async (
     logger.info(`No contract instance found for address: ${address}`);
     return null;
   }
+  const { instance, class: contractClass, registered } = result[0];
 
-  const { instance, class: contractClass } = result[0];
-
-  return parseDeluxe(contractClass, instance);
+  return parseDeluxe(contractClass, instance, registered);
 };

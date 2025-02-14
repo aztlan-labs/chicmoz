@@ -89,6 +89,7 @@ export const l2ContractInstanceRegistered = pgTable(
     publicKeys: varchar("publicKeys").notNull(),
     deployer: generateAztecAddressColumn("deployer").notNull(),
     salt: generateFrColumn("salt").notNull(),
+    initializationHash: generateFrColumn("initialization_hash").notNull(),
     artifactJson: varchar("artifact_json"),
     args: varchar("args"),
   },

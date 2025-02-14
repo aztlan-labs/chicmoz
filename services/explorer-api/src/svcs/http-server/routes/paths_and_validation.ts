@@ -46,8 +46,8 @@ export const paths = {
 
   search: "/l2/search",
 
-  verifiedContract: `/l2/verified-contracts-instances/:${address}`,
-  verifiedContracts: "/l2/verified-contract-instances",
+  verifiedContract: `/l2/verified-contracts-instances/contact/:${address}`,
+  verifiedContracts: "/l2/verified-contract-instances/contact",
 
   feeRecipients: "/l2/fee-recipients",
 

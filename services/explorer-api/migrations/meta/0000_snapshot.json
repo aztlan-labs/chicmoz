@@ -1,5 +1,5 @@
 {
-  "id": "749d4fc3-dcb0-4801-8a63-206d72a08874",
+  "id": "da520e6a-5cfc-4b02-be1b-70abf533e2a6",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1200,6 +1200,12 @@
         },
         "salt": {
           "name": "salt",
+          "type": "varchar(66)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "initialization_hash": {
+          "name": "initialization_hash",
           "type": "varchar(66)",
           "primaryKey": false,
           "notNull": true
