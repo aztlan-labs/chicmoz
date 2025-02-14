@@ -57,7 +57,7 @@ export const GET_L2_VERIFIED_CONTRACT_INSTANCE_CONTACT: RequestHandler = (req, r
     (info) => info.address === contractInstanceAddress
   );
   if (!verifiedInfo) throw new Error("Verified contract instance not found"); // TODO: ensure this resolves in a 404
-  return res.status(200).send(JSON.stringify(verifiedInfo));
+  res.status(200).send(JSON.stringify(verifiedInfo));
 };
 
 export const openapi_GET_L2_VERIFIED_CONTRACT_INSTANCE = {
