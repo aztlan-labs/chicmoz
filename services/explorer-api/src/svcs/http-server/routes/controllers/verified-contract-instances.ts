@@ -154,12 +154,12 @@ export const POST_L2_VERIFIED_CONTRACT_INSTANCE = asyncHandler(
     }
 
     await db.l2Contract.storeContractInstanceRegistration({
-      address:computedAddress,
+      address:computedAddress.toString(),
       blockHash: contractInstance.blockHash,
       version,
-      salt,
-      initializationHash,
-      deployer,
+      salt: salt!,
+      initializationHash:initializationHash.toString(),
+      deployer: deployer!,
       publicKeys:pubKeyString,
       args: JSON.stringify(args),
       artifactJson: stringifiedArtifactJson,
