@@ -91,9 +91,9 @@ export const ContractClassDetails: FC = () => {
   const isOptionAvailable = {
     contractVersions: !!contractClasses && !!contractClasses.length,
     contractInstances: !!contractInstances && !!contractInstances.length,
-    privateFunctions: !!selectedVersion&&Object.values(privFunc).length > 1,
-    unconstrainedFunctions: !!selectedVersion&&Object.values(uncFunc).length > 1,
-    publicFunctions: !!selectedVersion&&Object.values(pubFunc).length > 1,
+    privateFunctions: !!selectedVersion&& privFunc && Object.values(privFunc).length > 1,
+    unconstrainedFunctions: !!selectedVersion&&uncFunc && Object.values(uncFunc).length > 1,
+    publicFunctions: !!selectedVersion&&pubFunc &&Object.values(pubFunc).length > 1,
     artifactJson: !!selectedVersion && !!selectedVersion.artifactJson,
     functionJson: !!selectedVersion && !!selectedVersion.artifactJson
   };
