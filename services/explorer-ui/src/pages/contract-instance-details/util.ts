@@ -1,7 +1,7 @@
 import { type ChicmozL2ContractInstanceDeluxe } from "@chicmoz-pkg/types";
 import { routes } from "~/routes/__root";
 import { API_URL, aztecExplorer } from "~/service/constants";
-import { ContactDetailsData, VerifiedDeploymentData } from "./types";
+import { DetailItem } from "~/components/info-display/key-value-display";
 
 const HARDCODED_DEPLOYER =
   "0x0000000000000000000000000000000000000000000000000000000000000000";
@@ -48,77 +48,47 @@ export const getContractData = (data: ChicmozL2ContractInstanceDeluxe) => {
 };
 
 export const tempVerifiedContractInstanceData = (): {
-  contractDetails: VerifiedDeploymentData;
-  DeployerDetails: ContactDetailsData;
+  contractDetails: DetailItem[];
+  DeployerDetails: DetailItem[];
 } => {
   return {
-    contractDetails: {
-      deployer: {
-        data: [
-          {
-            label: "address",
-            value:
-              "0x0000000000000000000000000000000000000000000000000000000000000000",
-          },
-        ],
+    contractDetails: [
+      {
+        label: "address",
+        value:
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
       },
-      salt: { data: [{ label: "value", value: "0eieieieie" }] },
-      publicKeys: {
-        data: [
-          {
-            label: "address 1",
-            value:
-              "0x0000000000000000000000000000000000000000000000000000000000000000",
-          },
-          {
-            label: "address 2",
-            value:
-              "0x0000000000000000000000000000000000000000000000000000000000000000",
-          },
-        ],
+      { label: "Salt", value: "0x0000000000000000000000000000000000000000000000000000000000000000" },
+      {
+        label: "publicKeys",
+        value:
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
       },
-      args: {
-        data: [
-          {
-            label: "Token name",
-            value: "Aztec Hackerhouse Token",
-          },
-          {
-            label: "Token Ticker",
-            value: "AHT",
-          },
-        ],
+      {
+        label: "Args",
+        value: "['hacker House Token','HHT']",
       },
-    },
-    DeployerDetails: {
-      appWebsiteUrl: {
-        data: [
-          {
-            label: "url",
-            value: "https://aztec.network",
-            extLink: "aztec.network",
-          },
-        ],
-      },
-      externalUrls: {
-        data: [
-          {
-            label: "twitter",
-            value: "https://twitter.com/aztecnetwork",
-            extLink: "https://twitter.com/aztecnetwork",
-          },
-          {
-            label: "github",
-            value: "https://github.com/AztecProtocol",
-            extLink: "https://github.com/AztecProtocol",
-          },
-        ],
-      },
-      creatorName: { data: [{ label: "name", value: "Aztec Network" }] },
-      contact: {
-        data: [{ label: "email", value: "help@aztec.ui" }],
-      },
-    },
+    ],
+    DeployerDetails:
+      [
+        {
+          label: "url",
+          value: "https://aztec.network",
+          extLink: "aztec.network",
+        },
+        {
+          label: "twitter",
+          value: "https://twitter.com/aztecnetwork",
+          extLink: "https://twitter.com/aztecnetwork",
+        },
+        {
+          label: "github",
+          value: "https://github.com/AztecProtocol",
+          extLink: "https://github.com/AztecProtocol",
+        },
+        { label: "creatorname", value: "aztec network" },
+        { label: "email", value: "help@aztec.ui" }
+      ],
   };
 };
 
