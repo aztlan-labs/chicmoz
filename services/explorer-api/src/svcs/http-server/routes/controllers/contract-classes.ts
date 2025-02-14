@@ -5,7 +5,6 @@ import {
   verifyArtifactPayload,
 } from "@chicmoz-pkg/contract-verification";
 import { setEntry } from "@chicmoz-pkg/redis-helper";
-import { chicmozL2ContractClassRegisteredEventSchema } from "@chicmoz-pkg/types";
 import asyncHandler from "express-async-handler";
 import { z } from "zod";
 import { CACHE_TTL_SECONDS } from "../../../../environment.js";
@@ -21,7 +20,7 @@ import {
   contractClassResponseArray,
   dbWrapper,
 } from "./utils/index.js";
-import {chicmozL2ContractClassRegisteredEventSchema} from "@chicmoz-pkg/types";
+import { chicmozL2ContractClassRegisteredEventSchema } from "@chicmoz-pkg/types";
 
 export const openapi_GET_L2_REGISTERED_CONTRACT_CLASS = {
   "/l2/contract-classes/{classId}/versions/{version}": {
