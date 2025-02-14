@@ -48,47 +48,82 @@ export const getContractData = (data: ChicmozL2ContractInstanceDeluxe) => {
 };
 
 export const tempVerifiedContractInstanceData = (): {
-  contractDetails: DetailItem[];
-  DeployerDetails: DetailItem[];
+  contractDetails: VerifiedDeploymentData;
+  DeployerDetails: ContactDetailsData;
 } => {
   return {
-    contractDetails: [
-      {
-        label: "address",
-        value:
-          "0x0000000000000000000000000000000000000000000000000000000000000000",
+    contractDetails: {
+      deployer: {
+        data: [
+          {
+            label: "address",
+            value:
+              "0x0000000000000000000000000000000000000000000000000000000000000000",
+          },
+        ],
       },
-      { label: "Salt", value: "0x0000000000000000000000000000000000000000000000000000000000000000" },
-      {
-        label: "publicKeys",
-        value:
-          "0x0000000000000000000000000000000000000000000000000000000000000000",
+      salt: { data: [{ label: "value", value: "0eieieieie" }] },
+      publicKeys: {
+        data: [
+          {
+            label: "address 1",
+            value:
+              "0x0000000000000000000000000000000000000000000000000000000000000000",
+          },
+          {
+            label: "address 2",
+            value:
+              "0x0000000000000000000000000000000000000000000000000000000000000000",
+          },
+        ],
       },
-      {
-        label: "Args",
-        value: "['hacker House Token','HHT']",
+      args: {
+        data: [
+          {
+            label: "token name",
+            value: "tokeTest",
+          },
+          {
+            label: "token Ticker",
+            value: "TST",
+          },
+        ],
       },
-    ],
-    DeployerDetails:
-      [
-        {
-          label: "url",
-          value: "https://aztec.network",
-          extLink: "aztec.network",
-        },
-        {
-          label: "twitter",
-          value: "https://twitter.com/aztecnetwork",
-          extLink: "https://twitter.com/aztecnetwork",
-        },
-        {
-          label: "github",
-          value: "https://github.com/AztecProtocol",
-          extLink: "https://github.com/AztecProtocol",
-        },
-        { label: "creatorname", value: "aztec network" },
-        { label: "email", value: "help@aztec.ui" }
-      ],
+    },
+    DeployerDetails: {
+      appWebsiteUrl: {
+        data: [
+          {
+            label: "url",
+            value: "https://aztec.network",
+            extLink: "aztec.network",
+          },
+        ],
+      },
+      externalUrls: {
+        data: [
+          {
+            label: "twitter",
+            value: "https://twitter.com/",
+            extLink: "https://twitter.com/",
+          },
+          {
+            label: "github",
+            value: "https://github.com/",
+            extLink: "https://github.com/",
+          },
+          {
+            label: "discord",
+            value: "https://discord.com/invite/",
+            extLink: "https://discord.com/invite/",
+          },
+        ],
+      },
+      creatorName: { data: [{ label: "name", value: "Obscura" }] },
+      contact: {
+        data: [{ label: "email", value: "https://github.com/Obscura" }],
+      },
+    },
   };
 };
 

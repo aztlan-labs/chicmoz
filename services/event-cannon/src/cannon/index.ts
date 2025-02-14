@@ -1,4 +1,5 @@
 import {
+  INIFINITE_LOOP,
   SCENARIO_DELAY,
   SCENARIO_FUNCTIONS_VOTE,
   SCENARIO_L1L2_PRIVATE_MESSAGING,
@@ -13,28 +14,13 @@ import { setup } from "./pxe.js";
 import * as scenarios from "./scenarios/index.js";
 
 let isShutdown = false;
+const scenariosToRun: {
+  envVar: string;
+  scenario: () => Promise<void>;
+}[] = [];
 
 export async function init() {
   logger.info("Initializing Cannon...");
-  await setup();
-  return {
-    id: "Cannon",
-    // eslint-disable-next-line @typescript-eslint/require-await
-    shutdownCb: async () => {
-      logger.info("Shutting down Cannon...");
-      isShutdown = true;
-    },
-  };
-}
-
-export const start = async () => {
-  logger.info("Starting Cannon...");
-
-  const scenariosToRun: {
-    envVar: string;
-    scenario: () => Promise<void>;
-  }[] = [];
-
   if (SCENARIO_SIMPLE_DEFAULT_ACCOUNT) {
     scenariosToRun.push({
       envVar: "SCENARIO_SIMPLE_DEFAULT_ACCOUNT",
@@ -84,23 +70,61 @@ export const start = async () => {
     });
   }
 
-  let index = 0;
-  let loopCount = 0;
+  logger.info(`
+SCENARIO_DELAY:                  ${SCENARIO_DELAY / 1000} seconds
+INIFINITE_LOOP:                  ${INIFINITE_LOOP ? "✅" : "❌"}
+=======================
+SCENARIO_SIMPLE_DEFAULT_ACCOUNT: ${
+    SCENARIO_SIMPLE_DEFAULT_ACCOUNT ? "✅" : "❌"
+  }
+SCENARIO_TOKEN_CONTRACT:         ${SCENARIO_TOKEN_CONTRACT ? "✅" : "❌"}
+SCENARIO_FUNCTIONS_VOTE:         ${SCENARIO_FUNCTIONS_VOTE ? "✅" : "❌"}
+SCENARIO_SIMPLE_CONTRACT:        ${SCENARIO_SIMPLE_CONTRACT ? "✅" : "❌"}
+SCENARIO_SIMPLE_LOG:             ${SCENARIO_SIMPLE_LOG ? "✅" : "❌"}
+SCENARIO_L1L2_PUBLIC_MESSAGING:  ${SCENARIO_L1L2_PUBLIC_MESSAGING ? "✅" : "❌"}
+SCENARIO_L1L2_PRIVATE_MESSAGING: ${
+    SCENARIO_L1L2_PRIVATE_MESSAGING ? "✅" : "❌"
+  }
+`);
 
-  logger.info(`Running ${scenariosToRun.length} scenarios...`);
+  await setup();
+  return {
+    id: "Cannon",
+    // eslint-disable-next-line @typescript-eslint/require-await
+    shutdownCb: async () => {
+      logger.info("Shutting down Cannon...");
+      isShutdown = true;
+    },
+  };
+}
 
-  while (!isShutdown) {
-    logger.info();
-    logger.info(`====== Loop count: ${loopCount++} ======`);
-    logger.info(`Running scenario: ${scenariosToRun[index].envVar}`);
+const runScenarios = async () => {
+  for (const scenario of scenariosToRun) {
+    if (isShutdown) return;
+    logger.info(`Running scenario: ${scenario.envVar}`);
     try {
-      await scenariosToRun[index].scenario();
+      await scenario.scenario();
     } catch (e) {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       logger.error(`Error running scenario: ${(e as Error).stack ?? e}`);
     }
-
-    index = (index + 1) % scenariosToRun.length;
+    logger.info(
+      `waiting ${SCENARIO_DELAY / 1000} seconds before next scenario...`
+    );
     await new Promise((resolve) => setTimeout(resolve, SCENARIO_DELAY));
   }
+};
+
+export const start = async () => {
+  logger.info("Starting Cannon...");
+  let loopCount = 0;
+  if (INIFINITE_LOOP) {
+    while (!isShutdown) {
+      logger.info(`Loop count: ${loopCount++}`);
+      await runScenarios();
+    }
+  } else {
+    await runScenarios();
+  }
+  logger.info("Cannon shutdown complete");
 };

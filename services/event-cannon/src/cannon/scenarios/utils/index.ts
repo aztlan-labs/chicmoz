@@ -28,7 +28,9 @@ import {
   generateVerifyArtifactPayload,
   generateVerifyArtifactUrl,
 } from "@chicmoz-pkg/contract-verification";
-import { request } from "http";
+import { NODE_ENV, NodeEnv } from "@chicmoz-pkg/types";
+import http from "http";
+import https from "https";
 import { EXPLORER_API_URL } from "../../../environment.js";
 import { logger } from "../../../logger.js";
 
@@ -58,12 +60,14 @@ export const getNewSchnorrAccount = async ({
   pxe,
   secretKey,
   salt,
+  accountName,
 }: {
   pxe: PXE;
   secretKey: Fr;
   salt: Fr;
+  accountName?: string;
 }) => {
-  logger.info("  Creating new Schnorr account...");
+  logger.info(`  Creating new Schnorr account... (${accountName})`);
   const schnorrAccount = await getSchnorrAccount(
     pxe,
     secretKey,
@@ -71,24 +75,32 @@ export const getNewSchnorrAccount = async ({
     salt
   );
   logger.info(
-    `    Schnorr account created ${schnorrAccount.getAddress().toString()}`
+    `    Schnorr account created ${schnorrAccount
+      .getAddress()
+      .toString()} (${accountName})`
   );
   const { address } = await schnorrAccount.getCompleteAddress();
-  logger.info("    Deploying Schnorr account to network...");
-  await logAndWaitForTx(schnorrAccount.deploy(), "Deploying account");
-  logger.info("    Getting Schnorr account wallet...");
+  logger.info(`    Deploying Schnorr account to network... (${accountName})`);
+  await logAndWaitForTx(
+    schnorrAccount.deploy(),
+    `Deploying account ${accountName}`
+  );
+  logger.info(`    Getting Schnorr account wallet... (${accountName})`);
   const wallet = await schnorrAccount.getWallet();
-  logger.info(`    🔐 Schnorr account created at: ${address.toString()}`);
+  logger.info(
+    `    🔐 Schnorr account created at: ${address.toString()} (${accountName})`
+  );
   return { schnorrAccount, wallet, address };
 };
 
-export const getNewAccount = async (pxe: PXE) => {
+export const getNewAccount = async (pxe: PXE, accountName?: string) => {
   const secretKey = Fr.random();
   const salt = Fr.random();
   return getNewSchnorrAccount({
     pxe,
     secretKey,
     salt,
+    accountName,
   });
 };
 
@@ -233,6 +245,10 @@ export const registerContractClassArtifact = async (
   version: number,
   skipSleep = false
 ) => {
+  if (NODE_ENV === NodeEnv.PROD) {
+    logger.info(`Sleeping for 10 seconds before registering contract class`);
+    await new Promise((resolve) => setTimeout(resolve, 10000));
+  }
   const url = new URL(
     generateVerifyArtifactUrl(EXPLORER_API_URL, contractClassId, version)
   );
@@ -249,6 +265,8 @@ export const registerContractClassArtifact = async (
     `📜 ${contractLoggingName} Trying to register artifact in explorer-api: ${url.href} (byte length: ${sizeInMB} MB)`
   );
   if (!skipSleep) await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  const request = url.protocol === "https:" ? https.request : http.request;
 
   const res: {
     statusCode: number | undefined;

@@ -69,7 +69,8 @@ export const ContractClassDetails: FC = () => {
       <div className="flex flex-col gap-4 mt-8">
         <div>
           <div>
-            <h2>Contract class details</h2>
+            <h2>Contract class details {selectedVersion.artifactContractName ? ` (${selectedVersion.artifactContractName})` : ""}
+            </h2>
           </div>
           <div className="flex flex-col gap-4 mt-8">
             <div className="bg-white rounded-lg shadow-md p-4">

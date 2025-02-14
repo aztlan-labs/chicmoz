@@ -4,6 +4,7 @@ import { ChicmozL2ContractClassRegisteredEvent } from "@chicmoz-pkg/types";
 import { ArtifactPayload } from "types.js";
 import { beforeAll, describe, expect, test } from "vitest";
 import {
+  VerificationResult,
   generateVerifyArtifactPayload,
   verifyArtifactPayload,
 } from "./index.js";
@@ -13,8 +14,8 @@ const matchingArtifact = votingContractArtifactJson;
 describe("contract verification", () => {
   let payload: ArtifactPayload;
   let error: Error;
-  let verificationResult: boolean;
-  let invalidVerificationResult: boolean;
+  let verificationResult: VerificationResult;
+  let invalidVerificationResult: VerificationResult;
   let verificationError: Error;
   beforeAll(async () => {
     try {

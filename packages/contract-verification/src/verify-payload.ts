@@ -6,10 +6,15 @@ import {
 import { ChicmozL2ContractClassRegisteredEvent } from "@chicmoz-pkg/types";
 import { ArtifactPayload } from "types.js";
 
+export type VerificationResult = {
+  isMatchingByteCode: boolean;
+  artifactContractName: string;
+};
+
 export const verifyArtifactPayload = async (
   artifactPayload: ArtifactPayload,
   storedArtifact: ChicmozL2ContractClassRegisteredEvent
-): Promise<boolean> => {
+): Promise<VerificationResult> => {
   const parsedArtifact = JSON.parse(
     artifactPayload.stringifiedArtifactJson
   ) as NoirCompiledContract;
@@ -18,5 +23,8 @@ export const verifyArtifactPayload = async (
   const isMatchingByteCode = storedArtifact.packedBytecode.equals(
     contractClass.packedBytecode
   );
-  return isMatchingByteCode;
+  return {
+    isMatchingByteCode,
+    artifactContractName: parsedArtifact.name ?? "PARSE ERROR",
+  };
 };

@@ -40,15 +40,17 @@ export const PillSection: FC<PillSectionProps> = ({
           {selectedTab === "verifiedDeployment" && (
             <div className="bg-white w-full rounded-lg">
               <KeyValueDisplay data={verifiedDeploymentData} />
-            </div>
+            </div >
           )}
-          {selectedTab === "contactDetails" && (
-            <div className="bg-white w-full rounded-lg">
-              <KeyValueDisplay data={contactDetailsData} />
-            </div>
-          )}
-        </div>
-      </div>
+          {
+            selectedTab === "contactDetails" && (
+              <div className="bg-white w-full rounded-lg">
+                <KeyValueDisplay data={contactDetailsData} />
+              </div >
+            )
+          }
+        </div >
+      </div >
     </>
   );
 };

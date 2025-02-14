@@ -648,6 +648,7 @@ __metadata:
     prettier-plugin-sort-json: "npm:3.1.0"
     typescript: "npm:5.2.2"
     vitest: "npm:0.34.6"
+    zod: "npm:^3.23.8"
   languageName: unknown
   linkType: soft
 
@@ -940,6 +941,7 @@ __metadata:
   dependencies:
     "@aztec/accounts": "npm:0.76.1"
     "@aztec/aztec.js": "npm:0.76.1"
+    "@aztec/ethereum": "npm:0.76.1"
     "@aztec/l1-artifacts": "npm:0.76.1"
     "@aztec/noir-contracts.js": "npm:0.76.1"
     "@chicmoz-pkg/contract-verification": "workspace:^"
@@ -955,6 +957,7 @@ __metadata:
     eslint-plugin-n: "npm:15.0.0 || 16.0.0 "
     eslint-plugin-promise: "npm:6.0.0"
     typescript: "npm:5.2.2"
+    viem: "npm:2.20.0"
   languageName: unknown
   linkType: soft
 

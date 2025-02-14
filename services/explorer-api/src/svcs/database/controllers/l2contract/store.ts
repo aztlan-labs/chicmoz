@@ -1,17 +1,18 @@
+import { IsTokenArtifactResult } from "@chicmoz-pkg/contract-verification";
+import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import {
   type ChicmozL2ContractClassRegisteredEvent,
   type ChicmozL2ContractInstanceDeployedEvent,
   type ChicmozL2PrivateFunctionBroadcastedEvent,
   type ChicmozL2UnconstrainedFunctionBroadcastedEvent,
 } from "@chicmoz-pkg/types";
-import { getDb as db } from "@chicmoz-pkg/postgres-helper";
+import { and, eq } from "drizzle-orm";
 import {
   l2ContractClassRegistered,
   l2ContractInstanceDeployed,
   l2PrivateFunction,
   l2UnconstrainedFunction,
 } from "../../../database/schema/l2contract/index.js";
-import { and, eq } from "drizzle-orm";
 
 export const storeContractInstance = async (
   instance: ChicmozL2ContractInstanceDeployedEvent
@@ -66,11 +67,18 @@ export const storeContractClass = async (
 export const addArtifactJson = async (
   contractClassId: string,
   version: number,
-  artifactJson: string
+  artifactJson: string,
+  artifactContractName: string,
+  tokenResult: IsTokenArtifactResult
 ): Promise<void> => {
   await db()
     .update(l2ContractClassRegistered)
-    .set({ artifactJson })
+    .set({
+      artifactJson,
+      artifactContractName,
+      isToken: tokenResult.result,
+      whyNotToken: tokenResult.details,
+    })
     .where(
       and(
         eq(l2ContractClassRegistered.contractClassId, contractClassId),
