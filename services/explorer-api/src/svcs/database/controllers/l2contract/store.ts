@@ -68,12 +68,14 @@ export const addArtifactJson = async (
   contractClassId: string,
   version: number,
   artifactJson: string,
+  artifactContractName: string,
   tokenResult: IsTokenArtifactResult
 ): Promise<void> => {
   await db()
     .update(l2ContractClassRegistered)
     .set({
       artifactJson,
+      artifactContractName,
       isToken: tokenResult.result,
       whyNotToken: tokenResult.details,
     })

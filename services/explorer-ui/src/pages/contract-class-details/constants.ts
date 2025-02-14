@@ -5,6 +5,7 @@ export type tabId =
   | "contractInstances"
   | "privateFunctions"
   | "unconstrainedFunctions"
+  | "publicFunctions"
   | "artifactJson";
 
 export const tabIds = [
@@ -13,6 +14,7 @@ export const tabIds = [
   "privateFunctions",
   "unconstrainedFunctions",
   "artifactJson",
+  "publicFunctions"
 ] as const;
 
 export const tabIdSchema = z.enum(tabIds);
@@ -29,5 +31,6 @@ export const contractClassTabs: Tab[] = [
   { id: "contractInstances", label: "Instances" },
   { id: "privateFunctions", label: "Private functions" },
   { id: "unconstrainedFunctions", label: "Unconstrained functions" },
-  { id: "artifactJson", label: "Artifact JSON" },
+  { id: "publicFunctions", label: "Public functions" },
+  { id: "artifactJson", label: "Artifact JSON" }
 ];
