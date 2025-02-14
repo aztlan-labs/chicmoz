@@ -80,12 +80,12 @@ export const tempVerifiedContractInstanceData = (): {
       args: {
         data: [
           {
-            label: "token name",
-            value: "tokeTest",
+            label: "Token name",
+            value: "Aztec Hackerhouse Token",
           },
           {
-            label: "token Ticker",
-            value: "TST",
+            label: "Token Ticker",
+            value: "AHT",
           },
         ],
       },
@@ -104,24 +104,19 @@ export const tempVerifiedContractInstanceData = (): {
         data: [
           {
             label: "twitter",
-            value: "https://twitter.com/",
-            extLink: "https://twitter.com/",
+            value: "https://twitter.com/aztecnetwork",
+            extLink: "https://twitter.com/aztecnetwork",
           },
           {
             label: "github",
-            value: "https://github.com/",
-            extLink: "https://github.com/",
-          },
-          {
-            label: "discord",
-            value: "https://discord.com/invite/",
-            extLink: "https://discord.com/invite/",
+            value: "https://github.com/AztecProtocol",
+            extLink: "https://github.com/AztecProtocol",
           },
         ],
       },
-      creatorName: { data: [{ label: "name", value: "Obscura" }] },
+      creatorName: { data: [{ label: "name", value: "Aztec Network" }] },
       contact: {
-        data: [{ label: "email", value: "https://github.com/Obscura" }],
+        data: [{ label: "email", value: "help@aztec.ui" }],
       },
     },
   };
@@ -132,32 +127,32 @@ export const getVerifiedContractInstanceData = (
 ) => {
   return data.verifiedInfo
     ? [
-        {
-          label: "CONTRACT IDENTIFIER",
-          value: data.verifiedInfo.contractIdentifier,
-        },
-        {
-          label: "DETAILS",
-          value: data.verifiedInfo.details.slice(0, 50) + "...",
-        },
-        {
-          label: "CREATOR NAME",
-          value: data.verifiedInfo.creatorName,
-        },
-        {
-          label: "CREATOR CONTACT",
-          value: data.verifiedInfo.creatorContact,
-        },
-        {
-          label: "APP URL",
-          value: data.verifiedInfo.appUrl,
-          extLink: data.verifiedInfo.appUrl,
-        },
-        {
-          label: "REPO URL",
-          value: data.verifiedInfo.repoUrl,
-          extLink: data.verifiedInfo.repoUrl,
-        },
-      ]
+      {
+        label: "CONTRACT IDENTIFIER",
+        value: data.verifiedInfo.contractIdentifier,
+      },
+      {
+        label: "DETAILS",
+        value: data.verifiedInfo.details.slice(0, 50) + "...",
+      },
+      {
+        label: "CREATOR NAME",
+        value: data.verifiedInfo.creatorName,
+      },
+      {
+        label: "CREATOR CONTACT",
+        value: data.verifiedInfo.creatorContact,
+      },
+      {
+        label: "APP URL",
+        value: data.verifiedInfo.appUrl,
+        extLink: data.verifiedInfo.appUrl,
+      },
+      {
+        label: "REPO URL",
+        value: data.verifiedInfo.repoUrl,
+        extLink: data.verifiedInfo.repoUrl,
+      },
+    ]
     : undefined;
 };

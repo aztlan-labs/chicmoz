@@ -1,12 +1,9 @@
-import { CheckCircledIcon } from "@radix-ui/react-icons";
-import { Link, useParams } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
 import { type FC } from "react";
-import { CustomTooltip } from "~/components/custom-tooltip";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { useContractInstance, useSubTitle } from "~/hooks";
 import {
   getContractData,
-  getVerifiedContractInstanceData,
   tempVerifiedContractInstanceData,
 } from "./util";
 import { PillSection } from "./pill-section";
