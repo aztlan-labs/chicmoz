@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { aztecAddressSchema } from "../general.js";
 import { chicmozL2BlockSchema } from "./l2Block.js";
-import { bufferSchema, frSchema, frLongSchema } from "./utils.js";
+import { bufferSchema, frLongSchema, frSchema } from "./utils.js";
 
 export const chicmozL2ContractInstanceDeployedEventSchema = z.object({
   address: aztecAddressSchema,
@@ -23,20 +23,18 @@ export type ChicmozL2ContractInstanceDeployedEvent = z.infer<
   typeof chicmozL2ContractInstanceDeployedEventSchema
 >;
 
-export const chicmozL2ContractInstanceRegisteredSchema = z.object({
+export const chicmozL2ContractInstanceVerifiedDeploymentInfoSchema = z.object({
+  id: z.string().uuid().optional(),
   address: aztecAddressSchema,
-  blockHash: chicmozL2BlockSchema.shape.hash,
-  version: z.number(),
   salt: frSchema,
   initializationHash: frSchema,
   deployer: aztecAddressSchema,
   publicKeys: z.string(),
-  args: z.string(),
-  artifactJson: z.string().nullable().optional(),
+  constructorArgs: z.string(),
 });
 
-export type ChicmozL2ContractInstanceRegisteredEvent = z.infer<
-  typeof chicmozL2ContractInstanceRegisteredSchema
+export type ChicmozL2ContractInstanceVerifiedDeploymentInfoSchema = z.infer<
+  typeof chicmozL2ContractInstanceVerifiedDeploymentInfoSchema
 >;
 
 export const chicmozL2ContractClassRegisteredEventSchema = z.object({

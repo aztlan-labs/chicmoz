@@ -44,7 +44,6 @@ export async function run() {
     contractLoggingName,
     contractArtifactJson,
     contract.instance.address.toString(),
-    contract.instance.version,
     contract.instance.publicKeys.toString(),
     contract.instance.deployer.toString(),
     contract.instance.salt.toString(),

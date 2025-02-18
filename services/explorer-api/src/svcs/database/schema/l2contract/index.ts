@@ -35,10 +35,18 @@ export const l2ContractInstanceDeployed = pgTable(
     contractClassId: generateFrColumn("contract_class_id").notNull(),
     initializationHash: generateFrColumn("initialization_hash").notNull(),
     deployer: generateAztecAddressColumn("deployer").notNull(),
-    masterNullifierPublicKey: generateFrLongColumn("masterNullifierPublicKey").notNull(),
-    masterIncomingViewingPublicKey:generateFrLongColumn("masterIncomingViewingPublicKey").notNull(),
-    masterOutgoingViewingPublicKey:generateFrLongColumn("masterOutgoingViewingPublicKey").notNull(),
-    masterTaggingPublicKey:generateFrLongColumn("masterTaggingPublicKey").notNull(),
+    masterNullifierPublicKey: generateFrLongColumn(
+      "masterNullifierPublicKey"
+    ).notNull(),
+    masterIncomingViewingPublicKey: generateFrLongColumn(
+      "masterIncomingViewingPublicKey"
+    ).notNull(),
+    masterOutgoingViewingPublicKey: generateFrLongColumn(
+      "masterOutgoingViewingPublicKey"
+    ).notNull(),
+    masterTaggingPublicKey: generateFrLongColumn(
+      "masterTaggingPublicKey"
+    ).notNull(),
   },
   (t) => ({
     unq: unique().on(t.contractClassId, t.address, t.version),
@@ -68,7 +76,7 @@ export const l2ContractClassRegistered = pgTable(
     artifactJson: varchar("artifact_json"),
     artifactContractName: varchar("artifact_contract_name"),
     isToken: boolean("is_token_contract").default(false),
-    whyNotToken: varchar("why_not_token")
+    whyNotToken: varchar("why_not_token"),
   },
   (t) => ({
     primaryKey: primaryKey({
@@ -78,28 +86,21 @@ export const l2ContractClassRegistered = pgTable(
   })
 );
 
-export const l2ContractInstanceRegistered = pgTable(
-  "l2_contract_instance_registered",
+export const l2ContractInstanceVerifiedDeployment = pgTable(
+  "l2_contract_instance_verified_deployment",
   {
-    blockHash: varchar("block_hash")
+    id: uuid("id").primaryKey().defaultRandom(),
+    address: generateAztecAddressColumn("address")
       .notNull()
-      .$type<HexString>()
-      .references(() => l2Block.hash, { onDelete: "cascade" }),
-    address: generateAztecAddressColumn("address").notNull(),
-    version: bigint("version", { mode: "number" }).notNull(),
+      .references(() => l2ContractInstanceDeployed.address, {
+        onDelete: "cascade",
+      }),
     publicKeys: varchar("publicKeys").notNull(),
     deployer: generateAztecAddressColumn("deployer").notNull(),
     salt: generateFrColumn("salt").notNull(),
     initializationHash: generateFrColumn("initialization_hash").notNull(),
-    artifactJson: varchar("artifact_json"),
-    args: varchar("args"),
-  },
-  (t) => ({
-    primaryKey: primaryKey({
-      name: "contract_instance_address",
-      columns: [t.address],
-    }),
-  })
+    constructorArgs: varchar("constructor_args").notNull(),
+  }
 );
 
 export const l2ContractInstanceDeployedRelations = relations(
@@ -138,9 +139,9 @@ export const l2PrivateFunction = pgTable(
     artifactFunctionTreeLeafIndex: bigint("artifact_function_tree_leaf_index", {
       mode: "number",
     }).notNull(),
-    privateFunction_selector_value: bigint(
-      "private_function_selector_value", { mode: "number" }
-    ).notNull(),
+    privateFunction_selector_value: bigint("private_function_selector_value", {
+      mode: "number",
+    }).notNull(),
     privateFunction_metadataHash: generateFrColumn(
       "private_function_metadata_hash"
     ).notNull(),
@@ -172,7 +173,8 @@ export const l2UnconstrainedFunction = pgTable(
       mode: "number",
     }).notNull(),
     unconstrainedFunction_selector_value: bigint(
-      "unconstrained_function_selector_value", { mode: "number" }
+      "unconstrained_function_selector_value",
+      { mode: "number" }
     ).notNull(),
     unconstrainedFunction_metadataHash: generateFrColumn(
       "unconstrained_function_metadata_hash"

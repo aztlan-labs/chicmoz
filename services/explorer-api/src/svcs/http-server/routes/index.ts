@@ -161,12 +161,12 @@ export const init = ({ router }: { router: Router }) => {
     bodyParser.json({
       limit: ARTIFACT_BODY_LIMIT,
     }),
-    controller.POST_L2_VERIFIED_CONTRACT_INSTANCE
+    controller.POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT
   );
   router.get(
     paths.contractInstanceVerify,
     controller.GET_L2_VERIFIED_CONTRACT_INSTANCE
-  );  
+  );
 
   router.get(
     paths.contractInstancesByBlockHash,

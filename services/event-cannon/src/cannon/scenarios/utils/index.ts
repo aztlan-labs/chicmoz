@@ -27,6 +27,8 @@ import { ContractClassRegisteredEvent } from "@aztec/protocol-contracts/class-re
 import {
   generateVerifyArtifactPayload,
   generateVerifyArtifactUrl,
+  generateVerifyInstancePayload,
+  generateVerifyInstanceUrl,
 } from "@chicmoz-pkg/contract-verification";
 import { NODE_ENV, NodeEnv } from "@chicmoz-pkg/types";
 import http from "http";
@@ -332,12 +334,10 @@ export const registerContractClassArtifact = async (
   }
 };
 
-
 export const registerContractInstance = async (
   contractLoggingName: string,
   artifactObj: { default: NoirCompiledContract } | NoirCompiledContract,
   contractInstanceAddress: string,
-  version: number,
   publicKeys: string,
   deployer: string,
   salt: string,
@@ -345,22 +345,18 @@ export const registerContractInstance = async (
   skipSleep = false
 ) => {
   const url = new URL(
-    `${EXPLORER_API_URL}/l2/contract-instance/verify/${contractInstanceAddress}`
+    generateVerifyInstanceUrl(EXPLORER_API_URL, contractInstanceAddress)
   );
-  const artifactJson = (artifactObj as { default: NoirCompiledContract })
-    .default
-    ? (artifactObj as { default: NoirCompiledContract }).default
-    : artifactObj;
-  const stringifiedArtifactJson = JSON.stringify(artifactJson);
-  const postData = JSON.stringify({
-    version,
-    publicKeys,
-    salt,
-    deployer,
-    args,
-    stringifiedArtifactJson,
-  });
 
+  const postData = JSON.stringify(
+    generateVerifyInstancePayload({
+      publicKeys,
+      deployer,
+      salt,
+      constructorArgs: args,
+      artifactObj,
+    })
+  );
   const sizeInMB = Buffer.byteLength(postData) / 1000 ** 2;
   if (sizeInMB > 10) {
     logger.warn(
@@ -438,3 +434,4 @@ export const registerContractInstance = async (
     );
   }
 };
+

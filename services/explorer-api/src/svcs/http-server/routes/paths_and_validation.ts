@@ -1,3 +1,4 @@
+import { verifyInstanceDeploymentPayloadSchema } from "@chicmoz-pkg/contract-verification";
 import {
   chicmozL2BlockSchema,
   chicmozL2SequencerSchema,
@@ -162,14 +163,7 @@ export const getVerifiedContractInstanceSchema = getContractInstanceSchema;
 export const postVerifiedContractInstanceSchema = z.lazy(() => {
   return z.object({
     ...getContractInstanceSchema.shape,
-    body: z.object({
-      stringifiedArtifactJson: z.string(),
-      version: z.coerce.number().nonnegative(),
-      publicKeys: z.string().optional(),
-      salt: z.string().optional(),
-      deployer: z.string().optional(),
-      args: z.string().array(),
-    }),
+    body: verifyInstanceDeploymentPayloadSchema,
   });
 });
 
