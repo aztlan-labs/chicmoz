@@ -1,7 +1,7 @@
 {
   "name": "chicmoz",
   "version": "1.0.0",
-  "repository": "git@github.com:aztlan-labs/chicmoz.git",
+  "repository": "git@github.com:aztec-scan/chicmoz.git",
   "license": "Apache-2.0",
   "packageManager": "yarn@4.0.1",
   "workspaces": [
