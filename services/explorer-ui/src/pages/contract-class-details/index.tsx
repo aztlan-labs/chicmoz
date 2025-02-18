@@ -69,25 +69,25 @@ export const ContractClassDetails: FC = () => {
   let privFunc
   let pubFunc
   let uncFunc
-  if(selectedVersion.artifactJson){
+  if (selectedVersion.artifactJson) {
     artifact = JSON.parse(selectedVersion.artifactJson)
     uncFunc = {}
     privFunc = {}
     pubFunc = {}
-    artifact.functions.map((func:any)=> {
-      func.abi.parameters.map((param:any)=>{
-        if(param.name === "inputs") return
-        if(func.is_unconstrained){
-          if(!uncFunc[func.name+' ']) uncFunc[func.name+' '] = {}
-          Object.assign(uncFunc[func.name+' '], {[param.name]:param.type.kind})
+    artifact.functions.map((func: any) => {
+      func.abi.parameters.map((param: any) => {
+        if (param.name === "inputs") return
+        if (func.is_unconstrained) {
+          if (!uncFunc[func.name + ' ']) uncFunc[func.name + ' '] = {}
+          Object.assign(uncFunc[func.name + ' '], { [param.name]: param.type.kind })
         }
-        if(func.custom_attributes.includes("public")){
-          if(!pubFunc[func.name+' ']) pubFunc[func.name+' '] = {}
-          Object.assign(pubFunc[func.name+' '], {[param.name]:param.type.kind})
+        if (func.custom_attributes.includes("public")) {
+          if (!pubFunc[func.name + ' ']) pubFunc[func.name + ' '] = {}
+          Object.assign(pubFunc[func.name + ' '], { [param.name]: param.type.kind })
         }
-        if(func.custom_attributes.includes("private")){
-          if(!privFunc[func.name+' ']) privFunc[func.name+' '] = {}
-          Object.assign(privFunc[func.name+' '], {[param.name]:param.type.kind})
+        if (func.custom_attributes.includes("private")) {
+          if (!privFunc[func.name + ' ']) privFunc[func.name + ' '] = {}
+          Object.assign(privFunc[func.name + ' '], { [param.name]: param.type.kind })
         }
       })
     })
@@ -96,9 +96,9 @@ export const ContractClassDetails: FC = () => {
   const isOptionAvailable = {
     contractVersions: !!contractClasses && !!contractClasses.length,
     contractInstances: !!contractInstances && !!contractInstances.length,
-    privateFunctions: !!selectedVersion&& privFunc && Object.values(privFunc).length > 1,
-    unconstrainedFunctions: !!selectedVersion&&uncFunc && Object.values(uncFunc).length > 1,
-    publicFunctions: !!selectedVersion&&pubFunc &&Object.values(pubFunc).length > 1,
+    privateFunctions: !!selectedVersion && privFunc && Object.values(privFunc).length > 1,
+    unconstrainedFunctions: !!selectedVersion && uncFunc && Object.values(uncFunc).length > 1,
+    publicFunctions: !!selectedVersion && pubFunc && Object.values(pubFunc).length > 1,
     artifactJson: !!selectedVersion && !!selectedVersion.artifactJson,
     functionJson: !!selectedVersion && !!selectedVersion.artifactJson
   };
@@ -164,69 +164,12 @@ export const ContractClassDetails: FC = () => {
               <div className="bg-white w-full rounded-lg shadow-md p-4">
                 <h4>Private Functions</h4>
                 <pre className="overflow-auto">
-                {JSON.stringify(
-                  privFunc,
-                  null,
-                  2,
-                )}
-              </pre>
-                {/* {contractClassPrivateFunctionsHookRes.data.map(
-                  (privateFunction) => (
-                    <div>
-                      <h4>
-                        {"0x" +
-                          privateFunction.privateFunction.selector.value.toString(
-                            16,
-                          )}
-                      </h4>
-                      <p>
-                        artifactMetadataHash:{" "}
-                        {privateFunction.artifactMetadataHash}
-                      </p>
-                      {privateFunction.privateFunctionTreeSiblingPath.map(
-                        (path, index) => (
-                          <p>
-                            privateFunctionTreeSiblingPath-{index}: {path}
-                          </p>
-                        ),
-                      )}
-                      <p>
-                        privateFunctionTreeLeafIndex:{" "}
-                        {privateFunction.privateFunctionTreeLeafIndex}
-                      </p>
-                      {privateFunction.artifactFunctionTreeSiblingPath.map(
-                        (path, index) => (
-                          <p>
-                            artifactFunctionTreeSiblingPath-{index}: {path}
-                          </p>
-                        ),
-                      )}
-                      <p>
-                        artifactFunctionTreeLeafIndex:{" "}
-                        {privateFunction.artifactFunctionTreeLeafIndex}
-                      </p>
-                      <div>
-                        <p>
-                          privateFunction.selector.value:{" "}
-                          {privateFunction.privateFunction.selector.value}
-                        </p>
-
-                        <p>
-                          privateFunction.metadataHash:{" "}
-                          {privateFunction.privateFunction.metadataHash}
-                        </p>
-                        <p>
-                          privateFunction.vkHash:{" "}
-                          {privateFunction.privateFunction.vkHash}
-                        </p>
-                        {
-                          //<p>privateFunction.bytecode: {privateFunction.privateFunction.bytecode}</p>
-                        }
-                      </div>
-                      <hr />
-                    </div>
-                  ),
-                )} */}
+                  {JSON.stringify(
+                    privFunc,
+                    null,
+                    2,
+                  )}
+                </pre>
               </div>
             )}
           {selectedTab === "unconstrainedFunctions" &&
@@ -240,57 +183,6 @@ export const ContractClassDetails: FC = () => {
                     2,
                   )}
                 </pre>
-                {/* {contractClassUnconstrainedFunctionsHookRes.data.map(
-                  (unconstrainedFunction) => (
-                    <div>
-                      <h4>
-                        {"0x" +
-                          unconstrainedFunction.unconstrainedFunction.selector.value.toString(
-                            16,
-                          )}
-                      </h4>
-                      <p>
-                        artifactMetadataHash:{" "}
-                        {unconstrainedFunction.artifactMetadataHash}
-                      </p>
-                      <p>
-                        privateFunctionsArtifactTreeRoot:{" "}
-                        {unconstrainedFunction.privateFunctionsArtifactTreeRoot}
-                      </p>
-                      {unconstrainedFunction.artifactFunctionTreeSiblingPath.map(
-                        (path, index) => (
-                          <p>
-                            artifactFunctionTreeSiblingPath-{index}: {path}
-                          </p>
-                        ),
-                      )}
-                      <p>
-                        artifactFunctionTreeLeafIndex:{" "}
-                        {unconstrainedFunction.artifactFunctionTreeLeafIndex}
-                      </p>
-                      <div>
-                        <p>
-                          unconstrainedFunction.selector.value:{" "}
-                          {
-                            unconstrainedFunction.unconstrainedFunction.selector
-                              .value
-                          }
-                        </p>
-                        <p>
-                          unconstrainedFunction.metadataHash:{" "}
-                          {
-                            unconstrainedFunction.unconstrainedFunction
-                              .metadataHash
-                          }
-                        </p>
-                        {
-                          //<p>unconstrainedFunction.bytecode: {unconstrainedFunction.unconstrainedFunction.bytecode}</p>
-                        }
-                      </div>
-                      <hr />
-                    </div>
-                  ),
-                )} */}
               </div>
             )}
           {selectedTab === "artifactJson" && selectedVersion.artifactJson && (
