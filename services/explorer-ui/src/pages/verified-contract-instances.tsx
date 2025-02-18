@@ -25,7 +25,7 @@ export const VerifiedContractInstances: FC = () => {
         <p>
           You can always find the latest verified contract instances by checking{" "}
           <a
-            href="https://github.com/aztlan-labs/chicmoz/blob/main/services/explorer-api/src/constants.ts"
+            href="https://github.com/aztec-scan/chicmoz/blob/main/services/explorer-api/src/constants.ts"
             className="text-purple-light hover:font-bold"
           >
             our github-repo
