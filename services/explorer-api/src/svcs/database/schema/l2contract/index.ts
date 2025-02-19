@@ -95,10 +95,9 @@ export const l2ContractInstanceVerifiedDeployment = pgTable(
       .references(() => l2ContractInstanceDeployed.address, {
         onDelete: "cascade",
       }),
-    publicKeys: varchar("publicKeys").notNull(),
+    publicKeysString: varchar("publicKeys").notNull(),
     deployer: generateAztecAddressColumn("deployer").notNull(),
     salt: generateFrColumn("salt").notNull(),
-    initializationHash: generateFrColumn("initialization_hash").notNull(),
     constructorArgs: varchar("constructor_args").notNull(),
   }
 );

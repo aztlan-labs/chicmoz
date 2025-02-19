@@ -24,7 +24,7 @@ export const storeContractInstance = async (
     .values({ ...publicKeys, ...rest });
 };
 
-export const storeContractInstanceRegistration = async (
+export const storeContractInstanceVerifiedDeployment = async (
   instance: ChicmozL2ContractInstanceVerifiedDeploymentInfoSchema
 ): Promise<void> => {
   await db()

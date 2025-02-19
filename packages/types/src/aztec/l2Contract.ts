@@ -27,9 +27,8 @@ export const chicmozL2ContractInstanceVerifiedDeploymentInfoSchema = z.object({
   id: z.string().uuid().optional(),
   address: aztecAddressSchema,
   salt: frSchema,
-  initializationHash: frSchema,
   deployer: aztecAddressSchema,
-  publicKeys: z.string(),
+  publicKeysString: z.string(),
   constructorArgs: z.string(),
 });
 

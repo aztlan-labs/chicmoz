@@ -1,15 +1,9 @@
-import { NoirCompiledContract, loadContractArtifact } from "@aztec/aztec.js";
-import {
-  AztecAddress,
-  Fr,
-  PublicKeys,
-  computeContractAddressFromInstance,
-  computeInitializationHash,
-  computeSaltedInitializationHash,
-} from "@aztec/circuits.js";
+import { NoirCompiledContract } from "@aztec/aztec.js";
 import {
   generateVerifyArtifactPayload,
+  generateVerifyInstancePayload,
   verifyArtifactPayload,
+  verifyInstanceDeploymentPayload,
 } from "@chicmoz-pkg/contract-verification";
 import { setEntry } from "@chicmoz-pkg/redis-helper";
 import {
@@ -187,7 +181,7 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
       params: { address },
       body: {
         stringifiedArtifactJson,
-        publicKeys,
+        publicKeysString,
         salt,
         deployer,
         constructorArgs,
@@ -211,7 +205,7 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
     );
     const pubKeyString = "0x".concat(pubkeySplit.join(""));
 
-    if (publicKeys && publicKeys !== pubKeyString) {
+    if (publicKeysString && publicKeysString !== pubKeyString) {
       res.status(400).send("Uploaded publicKeys do not match the DB");
       return;
     }
@@ -310,39 +304,30 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
     if (!artifactString)
       throw new Error("For some reason artifactString is undefined");
 
-    const artifact = loadContractArtifact(
-      JSON.parse(artifactString) as unknown as NoirCompiledContract
-    );
-
-    const initFn = artifact.functions.find((fn) => fn.name === "constructor");
-    const initializationHash = await computeInitializationHash(
-      initFn,
-      constructorArgs
-    );
-    const saltedHash = await computeSaltedInitializationHash({
-      initializationHash,
-      salt: Fr.fromString(salt),
-      deployer: AztecAddress.fromString(deployer),
-    });
-    const computedAddress = await computeContractAddressFromInstance({
-      contractClassId: Fr.fromString(dbContractInstance.contractClassId),
-      saltedInitializationHash: saltedHash,
-      publicKeys: PublicKeys.fromString(pubKeyString),
+    const isVerifiedDeploymentPayload = await verifyInstanceDeploymentPayload({
+      ...generateVerifyInstancePayload({
+        publicKeysString,
+        deployer,
+        salt,
+        constructorArgs,
+        artifactObj: JSON.parse(artifactString) as NoirCompiledContract,
+      }),
+      instanceAddress: address,
+      contractClassId: dbContractInstance.contractClassId,
     });
 
-    if (address !== computedAddress.toString()) {
+    if (isVerifiedDeploymentPayload) {
       res
         .status(500)
         .send("Uploaded data does not lead to correct contract address");
       return;
     }
 
-    await db.l2Contract.storeContractInstanceRegistration({
-      address: computedAddress.toString(),
-      salt: salt,
-      initializationHash: initializationHash.toString(),
-      deployer: deployer,
-      publicKeys: pubKeyString,
+    await db.l2Contract.storeContractInstanceVerifiedDeployment({
+      address,
+      salt,
+      deployer,
+      publicKeysString,
       constructorArgs: constructorArgs.join(","),
     });
 

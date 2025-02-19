@@ -2,26 +2,26 @@ import { NoirCompiledContract } from "@aztec/aztec.js";
 import { VerifyInstanceDeploymentPayload } from "types.js";
 
 export const generateVerifyInstancePayload = ({
-  publicKeys,
+  publicKeysString,
   deployer,
   salt,
   constructorArgs,
   artifactObj,
 }: {
-  publicKeys: string;
+  publicKeysString: string;
   deployer: string;
   salt: string;
   constructorArgs: string[];
   artifactObj?: { default: NoirCompiledContract } | NoirCompiledContract;
 }): VerifyInstanceDeploymentPayload => {
-  if (publicKeys.length !== 66)
-    throw new Error(`Invalid publicKeys length: ${publicKeys.length}`);
+  if (publicKeysString.length !== 66)
+    throw new Error(`Invalid publicKeys length: ${publicKeysString.length}`);
   if (deployer.length !== 42)
     throw new Error(`Invalid deployer length: ${deployer.length}`);
   if (salt.length !== 66)
     throw new Error(`Invalid salt length: ${salt.length}`);
   return {
-    publicKeys,
+    publicKeysString,
     deployer,
     salt,
     constructorArgs,

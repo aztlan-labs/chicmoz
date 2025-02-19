@@ -10,7 +10,7 @@ export type IsTokenArtifactResult = {
 };
 export const verifyInstanceDeploymentPayloadSchema = z.object({
   stringifiedArtifactJson: z.string().optional(),
-  publicKeys: z.string(),
+  publicKeysString: z.string(),
   salt: z.string(),
   deployer: z.string(),
   constructorArgs: z.string().array(),

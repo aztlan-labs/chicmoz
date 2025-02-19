@@ -338,7 +338,7 @@ export const registerContractInstance = async (
   contractLoggingName: string,
   artifactObj: { default: NoirCompiledContract } | NoirCompiledContract,
   contractInstanceAddress: string,
-  publicKeys: string,
+  publicKeysString: string,
   deployer: string,
   salt: string,
   args: string[],
@@ -350,13 +350,14 @@ export const registerContractInstance = async (
 
   const postData = JSON.stringify(
     generateVerifyInstancePayload({
-      publicKeys,
+      publicKeysString,
       deployer,
       salt,
       constructorArgs: args,
       artifactObj,
     })
   );
+  // TODO: unified explorer-calls
   const sizeInMB = Buffer.byteLength(postData) / 1000 ** 2;
   if (sizeInMB > 10) {
     logger.warn(
