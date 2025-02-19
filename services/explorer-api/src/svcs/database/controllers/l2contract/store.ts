@@ -25,11 +25,11 @@ export const storeContractInstance = async (
 };
 
 export const storeContractInstanceVerifiedDeployment = async (
-  instance: ChicmozL2ContractInstanceVerifiedDeploymentInfoSchema
+  verifiedDeploymentInfo: ChicmozL2ContractInstanceVerifiedDeploymentInfoSchema
 ): Promise<void> => {
   await db()
     .insert(l2ContractInstanceVerifiedDeployment)
-    .values({ ...instance });
+    .values({ ...verifiedDeploymentInfo });
 };
 
 export const storeContractClass = async (

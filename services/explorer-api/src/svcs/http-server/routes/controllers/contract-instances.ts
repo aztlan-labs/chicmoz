@@ -192,12 +192,14 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
       () => db.l2Contract.getL2DeployedContractInstanceByAddress(address)
     );
 
-    if (!instanceData || instanceData === undefined)
+    if (!instanceData || instanceData === undefined) {
       res.status(404).send("Contract instance not found");
+      return;
+    }
 
     const dbContractInstance =
       chicmozL2ContractInstanceDeployedEventSchema.parse(
-        JSON.parse(instanceData!)
+        JSON.parse(instanceData)
       );
 
     const pubkeySplit = Object.values(dbContractInstance.publicKeys).map(

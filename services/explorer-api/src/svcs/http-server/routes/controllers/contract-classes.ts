@@ -2,7 +2,6 @@ import { verifyArtifactPayload } from "@chicmoz-pkg/contract-verification";
 import { setEntry } from "@chicmoz-pkg/redis-helper";
 import { chicmozL2ContractClassRegisteredEventSchema } from "@chicmoz-pkg/types";
 import asyncHandler from "express-async-handler";
-import { z } from "zod";
 import { CACHE_TTL_SECONDS } from "../../../../environment.js";
 import { logger } from "../../../../logger.js";
 import { controllers as db } from "../../../database/index.js";
@@ -101,23 +100,12 @@ export const GET_L2_REGISTERED_CONTRACT_CLASSES = asyncHandler(
       ["l2", "contract-classes"],
       () => db.l2Contract.getL2RegisteredContractClasses()
     );
-    // eslint-disable-next-line no-console
-    console.log(
-      z
-        .array(chicmozL2ContractClassRegisteredEventSchema)
-        .parse(JSON.parse(contractClasses ?? "[]"))
-        .map((x) => ({
-          ...x,
-          artifactJson: "artifactJson",
-          packedBytecode: "packedBytecode",
-        }))
-    );
     res.status(200).send(contractClasses);
   }
 );
 
 export const openapi_POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT = {
-  "/l2/contract-classes/{classId}/versions/{version}/artifact": {
+  "/l2/contract-classes/{classId}/versions/{version}": {
     post: {
       summary: "Register and verify contract class artifact",
       parameters: [

@@ -43,7 +43,7 @@ export const paths = {
   contractInstancesByBlockHash: `/l2/blocks/:${blockHash}/contract-instances`,
   contractInstance: `/l2/contract-instances/:${address}`,
   contractInstances: "/l2/contract-instances",
-  contractInstanceVerify: `/l2/contract-instance/verify/:${address}`,
+  contractInstanceVerify: `/l2/contract-instances/:${address}/verified-deployment`,
 
   search: "/l2/search",
 

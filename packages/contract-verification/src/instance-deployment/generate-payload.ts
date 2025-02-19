@@ -14,9 +14,9 @@ export const generateVerifyInstancePayload = ({
   constructorArgs: string[];
   artifactObj?: { default: NoirCompiledContract } | NoirCompiledContract;
 }): VerifyInstanceDeploymentPayload => {
-  if (publicKeysString.length !== 66)
+  if (publicKeysString.length !== 514)
     throw new Error(`Invalid publicKeys length: ${publicKeysString.length}`);
-  if (deployer.length !== 42)
+  if (deployer.length !== 66)
     throw new Error(`Invalid deployer length: ${deployer.length}`);
   if (salt.length !== 66)
     throw new Error(`Invalid salt length: ${salt.length}`);

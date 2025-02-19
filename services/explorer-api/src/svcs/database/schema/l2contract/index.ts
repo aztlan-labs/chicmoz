@@ -8,7 +8,6 @@ import {
   jsonb,
   pgTable,
   primaryKey,
-  unique,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -29,9 +28,9 @@ export const l2ContractInstanceDeployed = pgTable(
       .$type<HexString>()
       .notNull()
       .references(() => l2Block.hash, { onDelete: "cascade" }),
-    address: generateAztecAddressColumn("address").notNull(),
+    address: generateAztecAddressColumn("address").notNull().unique(),
     version: integer("version").notNull(),
-    salt: generateFrColumn("salt").notNull(),
+    salt: generateFrColumn("salt").notNull(), // TODO: maybe should not be here?
     contractClassId: generateFrColumn("contract_class_id").notNull(),
     initializationHash: generateFrColumn("initialization_hash").notNull(),
     deployer: generateAztecAddressColumn("deployer").notNull(),
@@ -49,7 +48,6 @@ export const l2ContractInstanceDeployed = pgTable(
     ).notNull(),
   },
   (t) => ({
-    unq: unique().on(t.contractClassId, t.address, t.version),
     contractClass: foreignKey({
       name: "contract_class",
       columns: [t.contractClassId, t.version],

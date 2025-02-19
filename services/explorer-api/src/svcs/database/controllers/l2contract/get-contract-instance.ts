@@ -34,7 +34,7 @@ export const getL2DeployedContractInstanceByAddress = async (
         )
       )
     )
-    .innerJoin(
+    .leftJoin(
       l2ContractInstanceVerifiedDeployment,
       and(
         eq(

@@ -1,5 +1,5 @@
 {
-  "id": "6083ea0c-69d9-4a3f-9a20-4afa55c78873",
+  "id": "00f7d290-0196-41ca-8b10-5b9c6fdf5380",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1163,10 +1163,10 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "l2_contract_instance_deployed_contract_class_id_address_version_unique": {
-          "name": "l2_contract_instance_deployed_contract_class_id_address_version_unique",
+        "l2_contract_instance_deployed_address_unique": {
+          "name": "l2_contract_instance_deployed_address_unique",
           "nullsNotDistinct": false,
-          "columns": ["contract_class_id", "address", "version"]
+          "columns": ["address"]
         }
       }
     },

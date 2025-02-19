@@ -183,7 +183,7 @@ CREATE TABLE IF NOT EXISTS "l2_contract_instance_deployed" (
 	"masterIncomingViewingPublicKey" varchar(500) NOT NULL,
 	"masterOutgoingViewingPublicKey" varchar(500) NOT NULL,
 	"masterTaggingPublicKey" varchar(500) NOT NULL,
-	CONSTRAINT "l2_contract_instance_deployed_contract_class_id_address_version_unique" UNIQUE("contract_class_id","address","version")
+	CONSTRAINT "l2_contract_instance_deployed_address_unique" UNIQUE("address")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l2_contract_instance_verified_deployment" (

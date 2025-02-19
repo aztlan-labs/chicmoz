@@ -7,5 +7,5 @@ export async function run() {
   logger.info("===== SIMPLE DEFAULT ACCOUNT =====");
   const pxe = getPxe();
   await waitForPXE(pxe);
-  await getNewAccount( pxe );
+  await getNewAccount(pxe, "DEFAULT");
 }

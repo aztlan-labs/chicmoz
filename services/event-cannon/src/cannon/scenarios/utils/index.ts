@@ -67,7 +67,7 @@ export const getNewSchnorrAccount = async ({
   pxe: PXE;
   secretKey: Fr;
   salt: Fr;
-  accountName?: string;
+  accountName: string;
 }) => {
   logger.info(`  Creating new Schnorr account... (${accountName})`);
   const schnorrAccount = await getSchnorrAccount(
@@ -95,7 +95,7 @@ export const getNewSchnorrAccount = async ({
   return { schnorrAccount, wallet, address };
 };
 
-export const getNewAccount = async (pxe: PXE, accountName?: string) => {
+export const getNewAccount = async (pxe: PXE, accountName: string) => {
   const secretKey = Fr.random();
   const salt = Fr.random();
   return getNewSchnorrAccount({
@@ -361,14 +361,14 @@ export const verifyContractInstanceDeployment = async (
   const sizeInMB = Buffer.byteLength(postData) / 1000 ** 2;
   if (sizeInMB > 10) {
     logger.warn(
-      `🚨📜 ${contractLoggingName} Artifact is too large to register in explorer-api: ${url.href} (byte length: ${sizeInMB} MB)`
+      `🚨📜 ${contractLoggingName} Artifact is too large to VERIFY in explorer-api: ${url.href} (byte length: ${sizeInMB} MB)`
     );
     return;
   }
   logger.info(
-    `📜 ${contractLoggingName} Trying to register artifact in explorer-api: ${url.href} (byte length: ${sizeInMB} MB)`
+    `📜 ${contractLoggingName} Trying to VERIFY artifact in explorer-api: ${url.href} (byte length: ${sizeInMB} MB)`
   );
-  if (!skipSleep) await new Promise((resolve) => setTimeout(resolve, 1000));
+  if (!skipSleep) await new Promise((resolve) => setTimeout(resolve, 10000));
 
   const request = url.protocol === "https:" ? https.request : http.request;
 
@@ -402,7 +402,7 @@ export const verifyContractInstanceDeployment = async (
       }
     );
     req.on("error", (error) => {
-      logger.error(`🚨📜 ${contractLoggingName} Artifact registration failed.`);
+      logger.error(`🚨📜 ${contractLoggingName} Artifact VERIFICATION failed.`);
       reject(error);
     });
 
@@ -416,7 +416,7 @@ export const verifyContractInstanceDeployment = async (
   });
   if (res.statusCode === 200 || res.statusCode === 201) {
     logger.info(
-      `📜✅ ${contractLoggingName} Artifact registered in explorer-api. ${JSON.stringify(
+      `📜✅ ${contractLoggingName} Artifact VERIFIED in explorer-api. ${JSON.stringify(
         {
           statusCode: res.statusCode,
           statusMessage: res.statusMessage,
@@ -425,7 +425,7 @@ export const verifyContractInstanceDeployment = async (
     );
   } else {
     logger.error(
-      `📜🚨 ${contractLoggingName} Artifact registration failed. ${JSON.stringify(
+      `📜🚨 ${contractLoggingName} Artifact VERIFICATION failed. ${JSON.stringify(
         {
           statusCode: res.statusCode,
           statusMessage: res.statusMessage,

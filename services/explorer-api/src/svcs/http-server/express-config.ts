@@ -30,19 +30,25 @@ const isContractClassArtifactUpdate = (path: string, method: string) => {
     splitPath[4] === splitCCPath[4]
   );
 };
-const isContractInstanceArtifactUpdate = (path: string, method: string) => {
+const isContractInstanceVerifiedDeploymentUpdate = (
+  path: string,
+  method: string
+) => {
   const splitPath = path.split("/");
   return (
     method === "POST" &&
     splitPath.length === splitCIPath.length &&
     splitPath[1] === splitCIPath[1] &&
     splitPath[2] === splitCIPath[2] &&
-    splitPath[3] === splitCIPath[3]
+    splitPath[4] === splitCIPath[4]
   );
 };
-const isArtifactUpdate = (path: string, method: string) =>{
-  return isContractClassArtifactUpdate(path, method) || isContractInstanceArtifactUpdate(path, method)
-}
+const isArtifactUpdate = (path: string, method: string) => {
+  return (
+    isContractClassArtifactUpdate(path, method) ||
+    isContractInstanceVerifiedDeploymentUpdate(path, method)
+  );
+};
 
 export function setup(
   app: express.Application,
