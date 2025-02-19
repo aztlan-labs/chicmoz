@@ -334,7 +334,7 @@ export const registerContractClassArtifact = async (
   }
 };
 
-export const registerContractInstance = async (
+export const verifyContractInstanceDeployment = async (
   contractLoggingName: string,
   artifactObj: { default: NoirCompiledContract } | NoirCompiledContract,
   contractInstanceAddress: string,

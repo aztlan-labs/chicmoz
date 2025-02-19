@@ -164,6 +164,7 @@ CREATE TABLE IF NOT EXISTS "l2_contract_class_registered" (
 	"private_functions_root" varchar(66) NOT NULL,
 	"packed_bytecode" "bytea" NOT NULL,
 	"artifact_json" varchar,
+	"artifact_contract_name" varchar,
 	"is_token_contract" boolean DEFAULT false,
 	"why_not_token" varchar,
 	CONSTRAINT "contract_class_id_version" PRIMARY KEY("contract_class_id","version")
@@ -185,17 +186,13 @@ CREATE TABLE IF NOT EXISTS "l2_contract_instance_deployed" (
 	CONSTRAINT "l2_contract_instance_deployed_contract_class_id_address_version_unique" UNIQUE("contract_class_id","address","version")
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "l2_contract_instance_registered" (
-	"block_hash" varchar NOT NULL,
+CREATE TABLE IF NOT EXISTS "l2_contract_instance_verified_deployment" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"address" varchar(66) NOT NULL,
-	"version" bigint NOT NULL,
 	"publicKeys" varchar NOT NULL,
 	"deployer" varchar(66) NOT NULL,
 	"salt" varchar(66) NOT NULL,
-	"initialization_hash" varchar(66) NOT NULL,
-	"artifact_json" varchar,
-	"args" varchar,
-	CONSTRAINT "contract_instance_address" PRIMARY KEY("address")
+	"constructor_args" varchar NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l2_private_function" (
@@ -418,7 +415,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "l2_contract_instance_registered" ADD CONSTRAINT "l2_contract_instance_registered_block_hash_l2Block_hash_fk" FOREIGN KEY ("block_hash") REFERENCES "public"."l2Block"("hash") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "l2_contract_instance_verified_deployment" ADD CONSTRAINT "l2_contract_instance_verified_deployment_address_l2_contract_instance_deployed_address_fk" FOREIGN KEY ("address") REFERENCES "public"."l2_contract_instance_deployed"("address") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

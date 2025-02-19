@@ -5,7 +5,7 @@ import {
   deployContract,
   logAndWaitForTx,
   registerContractClassArtifact,
-  registerContractInstance,
+  verifyContractInstanceDeployment,
 } from "./utils/index.js";
 import {
   EasyPrivateVotingContract,
@@ -40,7 +40,7 @@ export async function run() {
     logger.error(err);
   });
 
-  registerContractInstance(
+  verifyContractInstanceDeployment(
     contractLoggingName,
     contractArtifactJson,
     contract.instance.address.toString(),
