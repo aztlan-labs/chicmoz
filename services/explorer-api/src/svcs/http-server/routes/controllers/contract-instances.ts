@@ -262,7 +262,6 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
       }
     }
 
-    let artifactString;
     if (stringifiedArtifactJson && !dbContractClass.artifactJson) {
       // TODO: this entire block should use verify contract class artifact
       const { isMatchingByteCode } = await verifyArtifactPayload(
@@ -297,12 +296,10 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
         dbContractClass.version,
         stringifiedArtifactJson
       );
-      artifactString = stringifiedArtifactJson;
     }
 
-    if (!stringifiedArtifactJson && dbContractClass.artifactJson)
-      artifactString = dbContractClass.artifactJson;
-
+    const artifactString =
+      stringifiedArtifactJson ?? dbContractClass.artifactJson;
     if (!artifactString)
       throw new Error("For some reason artifactString is undefined");
 
