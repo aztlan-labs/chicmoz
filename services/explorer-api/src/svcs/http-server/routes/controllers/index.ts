@@ -13,4 +13,3 @@ export * from "./tx-effects.js";
 export * from "./txs.js";
 export * from "./validators.js";
 export * from "./verified-contract-instances.js";
-

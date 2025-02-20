@@ -16,7 +16,7 @@ import {
   bufferType,
   generateAztecAddressColumn,
   generateFrColumn,
-  generateFrLongColumn,
+  generateConcatFrPointColumn,
 } from "../utils.js";
 
 export const l2ContractInstanceDeployed = pgTable(
@@ -34,16 +34,16 @@ export const l2ContractInstanceDeployed = pgTable(
     contractClassId: generateFrColumn("contract_class_id").notNull(),
     initializationHash: generateFrColumn("initialization_hash").notNull(),
     deployer: generateAztecAddressColumn("deployer").notNull(),
-    masterNullifierPublicKey: generateFrLongColumn(
+    masterNullifierPublicKey: generateConcatFrPointColumn(
       "masterNullifierPublicKey"
     ).notNull(),
-    masterIncomingViewingPublicKey: generateFrLongColumn(
+    masterIncomingViewingPublicKey: generateConcatFrPointColumn(
       "masterIncomingViewingPublicKey"
     ).notNull(),
-    masterOutgoingViewingPublicKey: generateFrLongColumn(
+    masterOutgoingViewingPublicKey: generateConcatFrPointColumn(
       "masterOutgoingViewingPublicKey"
     ).notNull(),
-    masterTaggingPublicKey: generateFrLongColumn(
+    masterTaggingPublicKey: generateConcatFrPointColumn(
       "masterTaggingPublicKey"
     ).notNull(),
   },
