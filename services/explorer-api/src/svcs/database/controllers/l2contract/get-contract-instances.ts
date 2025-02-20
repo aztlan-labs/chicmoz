@@ -28,7 +28,7 @@ export const getL2DeployedContractInstances = async ({
       ),
     })
     .from(l2ContractInstanceDeployed)
-    .innerJoin(
+    .leftJoin(
       l2ContractClassRegistered,
       and(
         eq(
@@ -41,7 +41,7 @@ export const getL2DeployedContractInstances = async ({
         )
       )
     )
-    .innerJoin(
+    .leftJoin(
       l2ContractInstanceVerifiedDeployment,
       and(
         eq(

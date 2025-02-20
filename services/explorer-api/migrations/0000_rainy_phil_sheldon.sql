@@ -179,10 +179,10 @@ CREATE TABLE IF NOT EXISTS "l2_contract_instance_deployed" (
 	"contract_class_id" varchar(66) NOT NULL,
 	"initialization_hash" varchar(66) NOT NULL,
 	"deployer" varchar(66) NOT NULL,
-	"masterNullifierPublicKey" varchar(500) NOT NULL,
-	"masterIncomingViewingPublicKey" varchar(500) NOT NULL,
-	"masterOutgoingViewingPublicKey" varchar(500) NOT NULL,
-	"masterTaggingPublicKey" varchar(500) NOT NULL,
+	"masterNullifierPublicKey" varchar(130) NOT NULL,
+	"masterIncomingViewingPublicKey" varchar(130) NOT NULL,
+	"masterOutgoingViewingPublicKey" varchar(130) NOT NULL,
+	"masterTaggingPublicKey" varchar(130) NOT NULL,
 	CONSTRAINT "l2_contract_instance_deployed_address_unique" UNIQUE("address")
 );
 --> statement-breakpoint

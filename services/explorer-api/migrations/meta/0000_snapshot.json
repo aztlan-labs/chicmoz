@@ -1,5 +1,5 @@
 {
-  "id": "00f7d290-0196-41ca-8b10-5b9c6fdf5380",
+  "id": "1b065604-f6be-4bc6-87fc-1cee4adbdc70",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1117,25 +1117,25 @@
         },
         "masterNullifierPublicKey": {
           "name": "masterNullifierPublicKey",
-          "type": "varchar(500)",
+          "type": "varchar(130)",
           "primaryKey": false,
           "notNull": true
         },
         "masterIncomingViewingPublicKey": {
           "name": "masterIncomingViewingPublicKey",
-          "type": "varchar(500)",
+          "type": "varchar(130)",
           "primaryKey": false,
           "notNull": true
         },
         "masterOutgoingViewingPublicKey": {
           "name": "masterOutgoingViewingPublicKey",
-          "type": "varchar(500)",
+          "type": "varchar(130)",
           "primaryKey": false,
           "notNull": true
         },
         "masterTaggingPublicKey": {
           "name": "masterTaggingPublicKey",
-          "type": "varchar(500)",
+          "type": "varchar(130)",
           "primaryKey": false,
           "notNull": true
         }

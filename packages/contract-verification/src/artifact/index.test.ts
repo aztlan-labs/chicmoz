@@ -1,7 +1,7 @@
 import { NoirCompiledContract } from "@aztec/aztec.js";
 import * as votingContractArtifactJson from "@aztec/noir-contracts.js/artifacts/easy_private_voting_contract-EasyPrivateVoting" assert { type: "json" };
 import { ChicmozL2ContractClassRegisteredEvent } from "@chicmoz-pkg/types";
-import { ArtifactPayload } from "types.js";
+import { VerifyArtifactPayload } from "types.js";
 import { beforeAll, describe, expect, test } from "vitest";
 import {
   VerificationResult,
@@ -12,7 +12,7 @@ import {
 const matchingArtifact = votingContractArtifactJson;
 
 describe("artifact verification", () => {
-  let payload: ArtifactPayload;
+  let payload: VerifyArtifactPayload;
   let error: Error;
   let verificationResult: VerificationResult;
   let invalidVerificationResult: VerificationResult;
@@ -64,11 +64,16 @@ describe("artifact verification", () => {
       expect(verificationError, "verification error").toBeUndefined();
     });
     test("should verify matching payload", () => {
-      expect(verificationResult.isMatchingByteCode, "verification result").toBe(true);
+      expect(verificationResult.isMatchingByteCode, "verification result").toBe(
+        true
+      );
     });
     test("should not verify non-matching payload", () => {
       // TODO: make the DB actually have a valid byte code and instead try verify with a valid *but incorrect* byte code
-      expect(invalidVerificationResult.isMatchingByteCode, "verification result").toBe(false);
+      expect(
+        invalidVerificationResult.isMatchingByteCode,
+        "verification result"
+      ).toBe(false);
     });
   });
 });

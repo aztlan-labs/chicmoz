@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { aztecAddressSchema } from "../general.js";
 import { chicmozL2BlockSchema } from "./l2Block.js";
-import { bufferSchema, frLongSchema, frSchema } from "./utils.js";
+import { bufferSchema, concatFrPointSchema, frSchema } from "./utils.js";
 
 export const chicmozL2ContractInstanceDeployedEventSchema = z.object({
   address: aztecAddressSchema,
@@ -12,10 +12,10 @@ export const chicmozL2ContractInstanceDeployedEventSchema = z.object({
   initializationHash: frSchema,
   deployer: aztecAddressSchema,
   publicKeys: z.object({
-    masterNullifierPublicKey: frLongSchema,
-    masterIncomingViewingPublicKey: frLongSchema,
-    masterOutgoingViewingPublicKey: frLongSchema,
-    masterTaggingPublicKey: frLongSchema,
+    masterNullifierPublicKey: concatFrPointSchema,
+    masterIncomingViewingPublicKey: concatFrPointSchema,
+    masterOutgoingViewingPublicKey: concatFrPointSchema,
+    masterTaggingPublicKey: concatFrPointSchema,
   }),
 });
 

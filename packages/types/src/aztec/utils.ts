@@ -29,34 +29,12 @@ export const frSchema = z.preprocess(
     .regex(/^0x[0-9a-fA-F]+$/)
 );
 
-export const frLongSchema = z.preprocess(
+export const concatFrPointSchema = z.preprocess(
   frToHexString,
   z
     .string()
+    .length(130)
     .regex(/^0x[0-9a-fA-F]+$/)
-);
-
-type FrPoint = {
-  x: AztecFr;
-  y: AztecFr;
-  isInfinite: boolean;
-  kind: "point";
-};
-
-const frPointToObj = (val: unknown) => {
-  if (!val) return val;
-  else if ((val as FrPoint).x) return val;
-  else return val;
-};
-
-export const frPointSchema = z.preprocess(
-  frPointToObj,
-  z.object({
-    x: frSchema,
-    y: frSchema,
-    isInfinite: z.boolean(),
-    kind: z.enum(["point"]),
-  })
 );
 
 export const frNumberSchema = z.preprocess((val) => {

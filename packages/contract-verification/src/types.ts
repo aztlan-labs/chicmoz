@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // TODO: change to VerifyArtifactPayload
-export type ArtifactPayload = {
+export type VerifyArtifactPayload = {
   stringifiedArtifactJson: string;
 };
 export type IsTokenArtifactResult = {
