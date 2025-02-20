@@ -1,5 +1,6 @@
 import { NoirCompiledContract } from "@aztec/aztec.js";
 import {
+  VerifyInstanceDeploymentPayload,
   generateVerifyArtifactPayload,
   generateVerifyInstancePayload,
   verifyArtifactPayload,
@@ -303,14 +304,17 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
     if (!artifactString)
       throw new Error("For some reason artifactString is undefined");
 
-    const isVerifiedDeploymentPayload = await verifyInstanceDeploymentPayload({
-      ...generateVerifyInstancePayload({
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const verificationPayload: VerifyInstanceDeploymentPayload =
+      generateVerifyInstancePayload({
         publicKeysString,
         deployer,
         salt,
         constructorArgs,
-        artifactObj: JSON.parse(artifactString) as NoirCompiledContract,
-      }),
+      });
+    const isVerifiedDeploymentPayload = await verifyInstanceDeploymentPayload({
+      ...verificationPayload,
+      stringifiedArtifactJson: artifactString,
       instanceAddress: address,
       contractClassId: dbContractInstance.contractClassId,
     });
