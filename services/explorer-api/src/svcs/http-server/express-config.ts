@@ -18,6 +18,7 @@ type ExpressOptions = {
 };
 
 const splitCCPath = paths.contractClass.split("/");
+const splitCIPath = paths.contractInstanceVerify.split("/");
 
 const isContractClassArtifactUpdate = (path: string, method: string) => {
   const splitPath = path.split("/");
@@ -27,6 +28,25 @@ const isContractClassArtifactUpdate = (path: string, method: string) => {
     splitPath[1] === splitCCPath[1] &&
     splitPath[2] === splitCCPath[2] &&
     splitPath[4] === splitCCPath[4]
+  );
+};
+const isContractInstanceVerifiedDeploymentUpdate = (
+  path: string,
+  method: string
+) => {
+  const splitPath = path.split("/");
+  return (
+    method === "POST" &&
+    splitPath.length === splitCIPath.length &&
+    splitPath[1] === splitCIPath[1] &&
+    splitPath[2] === splitCIPath[2] &&
+    splitPath[4] === splitCIPath[4]
+  );
+};
+const isArtifactUpdate = (path: string, method: string) => {
+  return (
+    isContractClassArtifactUpdate(path, method) ||
+    isContractInstanceVerifiedDeploymentUpdate(path, method)
   );
 };
 
@@ -39,14 +59,14 @@ export function setup(
 
   // NOTE: body parser should be configured AFTER proxy configuration https://www.npmjs.com/package/express-http-proxy#middleware-mixing
   app.use((req, res, next) => {
-    if (isContractClassArtifactUpdate(req.path, req.method)) return next();
+    if (isArtifactUpdate(req.path, req.method)) return next();
     bodyParser.json({
       limit: options.BODY_LIMIT,
     })(req, res, next);
   });
 
   app.use((req, res, next) => {
-    if (isContractClassArtifactUpdate(req.path, req.method)) return next();
+    if (isArtifactUpdate(req.path, req.method)) return next();
     bodyParser.urlencoded({
       extended: true,
       limit: options.BODY_LIMIT,
