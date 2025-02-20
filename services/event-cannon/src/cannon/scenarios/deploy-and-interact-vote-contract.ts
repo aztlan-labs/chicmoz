@@ -1,16 +1,17 @@
 import { Contract, DeploySentTx, Fr, waitForPXE } from "@aztec/aztec.js";
+import {
+  EasyPrivateVotingContract,
+  EasyPrivateVotingContractArtifact,
+} from "@aztec/noir-contracts.js/EasyPrivateVoting";
+import * as contractArtifactJson from "@aztec/noir-contracts.js/artifacts/easy_private_voting_contract-EasyPrivateVoting" assert { type: "json" };
 import { logger } from "../../logger.js";
 import { getAztecNodeClient, getPxe, getWallets } from "../pxe.js";
 import {
   deployContract,
   logAndWaitForTx,
   registerContractClassArtifact,
+  verifyContractInstanceDeployment,
 } from "./utils/index.js";
-import {
-  EasyPrivateVotingContract,
-  EasyPrivateVotingContractArtifact,
-} from "@aztec/noir-contracts.js/EasyPrivateVoting";
-import * as contractArtifactJson from "@aztec/noir-contracts.js/artifacts/easy_private_voting_contract-EasyPrivateVoting" assert { type: "json" };
 
 export async function run() {
   logger.info("===== VOTING CONTRACT =====");
@@ -35,7 +36,19 @@ export async function run() {
     contract.instance.contractClassId.toString(),
     contract.instance.version
   ).catch((err) => {
-    logger.error(err);
+    logger.error(`Failed to register contract class artifact: ${err}`);
+  });
+
+  verifyContractInstanceDeployment(
+    contractLoggingName,
+    contractArtifactJson,
+    contract.instance.address.toString(),
+    contract.instance.publicKeys.toString(),
+    contract.instance.deployer.toString(),
+    contract.instance.salt.toString(),
+    [votingAdmin.toString()]
+  ).catch((err) => {
+    logger.error(`Failed to verify contract instance deployment: ${err}`);
   });
 
   const votingContractAlice = await Contract.at(

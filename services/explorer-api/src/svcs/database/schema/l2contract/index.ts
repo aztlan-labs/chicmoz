@@ -8,7 +8,6 @@ import {
   jsonb,
   pgTable,
   primaryKey,
-  unique,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -17,6 +16,7 @@ import {
   bufferType,
   generateAztecAddressColumn,
   generateFrColumn,
+  generateConcatFrPointColumn,
 } from "../utils.js";
 
 export const l2ContractInstanceDeployed = pgTable(
@@ -28,63 +28,26 @@ export const l2ContractInstanceDeployed = pgTable(
       .$type<HexString>()
       .notNull()
       .references(() => l2Block.hash, { onDelete: "cascade" }),
-    address: generateAztecAddressColumn("address").notNull(),
+    address: generateAztecAddressColumn("address").notNull().unique(),
     version: integer("version").notNull(),
-    salt: generateFrColumn("salt").notNull(),
+    salt: generateFrColumn("salt").notNull(), // TODO: maybe should not be here?
     contractClassId: generateFrColumn("contract_class_id").notNull(),
     initializationHash: generateFrColumn("initialization_hash").notNull(),
     deployer: generateAztecAddressColumn("deployer").notNull(),
-    publicKeys_masterNullifierPublicKey_x: generateFrColumn(
-      "public_keys_master_nullifier_public_key_x"
+    masterNullifierPublicKey: generateConcatFrPointColumn(
+      "masterNullifierPublicKey"
     ).notNull(),
-    publicKeys_masterNullifierPublicKey_y: generateFrColumn(
-      "public_keys_master_nullifier_public_key_y"
+    masterIncomingViewingPublicKey: generateConcatFrPointColumn(
+      "masterIncomingViewingPublicKey"
     ).notNull(),
-    publicKeys_masterNullifierPublicKey_isInfinite: boolean(
-      "public_keys_master_nullifier_public_key_is_infinite"
+    masterOutgoingViewingPublicKey: generateConcatFrPointColumn(
+      "masterOutgoingViewingPublicKey"
     ).notNull(),
-    publicKeys_masterNullifierPublicKey_kind: varchar(
-      "public_keys_master_nullifier_public_key_kind"
-    ).notNull(),
-    publicKeys_masterIncomingViewingPublicKey_x: generateFrColumn(
-      "public_keys_master_incoming_viewing_public_key_x"
-    ).notNull(),
-    publicKeys_masterIncomingViewingPublicKey_y: generateFrColumn(
-      "public_keys_master_incoming_viewing_public_key_y"
-    ).notNull(),
-    publicKeys_masterIncomingViewingPublicKey_isInfinite: boolean(
-      "public_keys_master_incoming_viewing_public_key_is_infinite"
-    ).notNull(),
-    publicKeys_masterIncomingViewingPublicKey_kind: varchar(
-      "public_keys_master_incoming_viewing_public_key_kind"
-    ).notNull(),
-    publicKeys_masterOutgoingViewingPublicKey_x: generateFrColumn(
-      "public_keys_master_outgoing_viewing_public_key_x"
-    ).notNull(),
-    publicKeys_masterOutgoingViewingPublicKey_y: generateFrColumn(
-      "public_keys_master_outgoing_viewing_public_key_y"
-    ).notNull(),
-    publicKeys_masterOutgoingViewingPublicKey_isInfinite: boolean(
-      "public_keys_master_outgoing_viewing_public_key_is_infinite"
-    ).notNull(),
-    publicKeys_masterOutgoingViewingPublicKey_kind: varchar(
-      "public_keys_master_outgoing_viewing_public_key_kind"
-    ).notNull(),
-    publicKeys_masterTaggingPublicKey_x: generateFrColumn(
-      "public_keys_master_tagging_public_key_x"
-    ).notNull(),
-    publicKeys_masterTaggingPublicKey_y: generateFrColumn(
-      "public_keys_master_tagging_public_key_y"
-    ).notNull(),
-    publicKeys_masterTaggingPublicKey_isInfinite: boolean(
-      "public_keys_master_tagging_public_key_is_infinite"
-    ).notNull(),
-    publicKeys_masterTaggingPublicKey_kind: varchar(
-      "public_keys_master_tagging_public_key_kind"
+    masterTaggingPublicKey: generateConcatFrPointColumn(
+      "masterTaggingPublicKey"
     ).notNull(),
   },
   (t) => ({
-    unq: unique().on(t.contractClassId, t.address, t.version),
     contractClass: foreignKey({
       name: "contract_class",
       columns: [t.contractClassId, t.version],
@@ -111,7 +74,7 @@ export const l2ContractClassRegistered = pgTable(
     artifactJson: varchar("artifact_json"),
     artifactContractName: varchar("artifact_contract_name"),
     isToken: boolean("is_token_contract").default(false),
-    whyNotToken: varchar("why_not_token")
+    whyNotToken: varchar("why_not_token"),
   },
   (t) => ({
     primaryKey: primaryKey({
@@ -119,6 +82,22 @@ export const l2ContractClassRegistered = pgTable(
       columns: [t.contractClassId, t.version],
     }),
   })
+);
+
+export const l2ContractInstanceVerifiedDeployment = pgTable(
+  "l2_contract_instance_verified_deployment",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    address: generateAztecAddressColumn("address")
+      .notNull()
+      .references(() => l2ContractInstanceDeployed.address, {
+        onDelete: "cascade",
+      }),
+    publicKeysString: varchar("publicKeys").notNull(),
+    deployer: generateAztecAddressColumn("deployer").notNull(),
+    salt: generateFrColumn("salt").notNull(),
+    constructorArgs: varchar("constructor_args").notNull(),
+  }
 );
 
 export const l2ContractInstanceDeployedRelations = relations(
@@ -157,9 +136,9 @@ export const l2PrivateFunction = pgTable(
     artifactFunctionTreeLeafIndex: bigint("artifact_function_tree_leaf_index", {
       mode: "number",
     }).notNull(),
-    privateFunction_selector_value: bigint(
-      "private_function_selector_value", { mode: "number" }
-    ).notNull(),
+    privateFunction_selector_value: bigint("private_function_selector_value", {
+      mode: "number",
+    }).notNull(),
     privateFunction_metadataHash: generateFrColumn(
       "private_function_metadata_hash"
     ).notNull(),
@@ -191,7 +170,8 @@ export const l2UnconstrainedFunction = pgTable(
       mode: "number",
     }).notNull(),
     unconstrainedFunction_selector_value: bigint(
-      "unconstrained_function_selector_value", { mode: "number" }
+      "unconstrained_function_selector_value",
+      { mode: "number" }
     ).notNull(),
     unconstrainedFunction_metadataHash: generateFrColumn(
       "unconstrained_function_metadata_hash"

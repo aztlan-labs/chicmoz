@@ -1,1 +1,0 @@
-ALTER TABLE "l2_contract_class_registered" ADD COLUMN "artifact_contract_name" varchar;

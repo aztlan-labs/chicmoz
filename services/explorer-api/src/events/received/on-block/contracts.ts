@@ -107,9 +107,26 @@ export const storeContracts = async (b: L2Block, blockHash: string) => {
     )
     .map((log) => UnconstrainedFunctionBroadcastedEvent.fromLog(log.data));
 
-  logger.info(
-    `📜 Parsing and storing ${contractClasses.length} contract classes and ${contractInstances.length} contract instances, ${privateFnEvents.length} private function events, and ${unconstrainedFnEvents.length} unconstrained function events`
-  );
+  if (contractClasses.length > 0) {
+    logger.info(
+      `📜 Parsing and storing ${contractClasses.length} contract classes`
+    );
+  }
+  if (contractInstances.length > 0) {
+    logger.info(
+      `📖 Parsing and storing ${contractInstances.length} contract instances`
+    );
+  }
+  if (privateFnEvents.length > 0) {
+    logger.info(
+      `🔒 Parsing and storing ${privateFnEvents.length} private function events`
+    );
+  }
+  if (unconstrainedFnEvents.length > 0) {
+    logger.info(
+      `💪 Parsing and storing ${unconstrainedFnEvents.length} unconstrained function events`
+    );
+  }
 
   const contractClassesWithId = contractClasses.map((contractClass) => {
     return {

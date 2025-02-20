@@ -164,6 +164,9 @@ CREATE TABLE IF NOT EXISTS "l2_contract_class_registered" (
 	"private_functions_root" varchar(66) NOT NULL,
 	"packed_bytecode" "bytea" NOT NULL,
 	"artifact_json" varchar,
+	"artifact_contract_name" varchar,
+	"is_token_contract" boolean DEFAULT false,
+	"why_not_token" varchar,
 	CONSTRAINT "contract_class_id_version" PRIMARY KEY("contract_class_id","version")
 );
 --> statement-breakpoint
@@ -176,23 +179,20 @@ CREATE TABLE IF NOT EXISTS "l2_contract_instance_deployed" (
 	"contract_class_id" varchar(66) NOT NULL,
 	"initialization_hash" varchar(66) NOT NULL,
 	"deployer" varchar(66) NOT NULL,
-	"public_keys_master_nullifier_public_key_x" varchar(66) NOT NULL,
-	"public_keys_master_nullifier_public_key_y" varchar(66) NOT NULL,
-	"public_keys_master_nullifier_public_key_is_infinite" boolean NOT NULL,
-	"public_keys_master_nullifier_public_key_kind" varchar NOT NULL,
-	"public_keys_master_incoming_viewing_public_key_x" varchar(66) NOT NULL,
-	"public_keys_master_incoming_viewing_public_key_y" varchar(66) NOT NULL,
-	"public_keys_master_incoming_viewing_public_key_is_infinite" boolean NOT NULL,
-	"public_keys_master_incoming_viewing_public_key_kind" varchar NOT NULL,
-	"public_keys_master_outgoing_viewing_public_key_x" varchar(66) NOT NULL,
-	"public_keys_master_outgoing_viewing_public_key_y" varchar(66) NOT NULL,
-	"public_keys_master_outgoing_viewing_public_key_is_infinite" boolean NOT NULL,
-	"public_keys_master_outgoing_viewing_public_key_kind" varchar NOT NULL,
-	"public_keys_master_tagging_public_key_x" varchar(66) NOT NULL,
-	"public_keys_master_tagging_public_key_y" varchar(66) NOT NULL,
-	"public_keys_master_tagging_public_key_is_infinite" boolean NOT NULL,
-	"public_keys_master_tagging_public_key_kind" varchar NOT NULL,
-	CONSTRAINT "l2_contract_instance_deployed_contract_class_id_address_version_unique" UNIQUE("contract_class_id","address","version")
+	"masterNullifierPublicKey" varchar(130) NOT NULL,
+	"masterIncomingViewingPublicKey" varchar(130) NOT NULL,
+	"masterOutgoingViewingPublicKey" varchar(130) NOT NULL,
+	"masterTaggingPublicKey" varchar(130) NOT NULL,
+	CONSTRAINT "l2_contract_instance_deployed_address_unique" UNIQUE("address")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "l2_contract_instance_verified_deployment" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"address" varchar(66) NOT NULL,
+	"publicKeys" varchar NOT NULL,
+	"deployer" varchar(66) NOT NULL,
+	"salt" varchar(66) NOT NULL,
+	"constructor_args" varchar NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "l2_private_function" (
@@ -410,6 +410,12 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "l2_contract_instance_deployed" ADD CONSTRAINT "contract_class" FOREIGN KEY ("contract_class_id","version") REFERENCES "public"."l2_contract_class_registered"("contract_class_id","version") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "l2_contract_instance_verified_deployment" ADD CONSTRAINT "l2_contract_instance_verified_deployment_address_l2_contract_instance_deployed_address_fk" FOREIGN KEY ("address") REFERENCES "public"."l2_contract_instance_deployed"("address") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

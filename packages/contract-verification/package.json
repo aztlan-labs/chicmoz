@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@aztec/aztec.js": "0.76.1",
+    "@aztec/circuits.js": "0.76.1",
     "@aztec/noir-contracts.js": "0.76.1",
     "@chicmoz-pkg/types": "workspace:^",
     "zod": "^3.23.8"

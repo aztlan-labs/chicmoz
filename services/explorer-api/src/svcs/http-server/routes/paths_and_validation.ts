@@ -1,3 +1,4 @@
+import { verifyInstanceDeploymentPayloadSchema } from "@chicmoz-pkg/contract-verification";
 import {
   chicmozL2BlockSchema,
   chicmozL2SequencerSchema,
@@ -42,11 +43,12 @@ export const paths = {
   contractInstancesByBlockHash: `/l2/blocks/:${blockHash}/contract-instances`,
   contractInstance: `/l2/contract-instances/:${address}`,
   contractInstances: "/l2/contract-instances",
+  contractInstanceVerify: `/l2/contract-instances/:${address}/verified-deployment`,
 
   search: "/l2/search",
 
-  verifiedContract: `/l2/verified-contracts-instances/:${address}`,
-  verifiedContracts: "/l2/verified-contract-instances",
+  verifiedContract: `/l2/verified-contracts-instances/:${address}/contact`,
+  verifiedContracts: "/l2/verified-contract-instances/contact",
 
   feeRecipients: "/l2/fee-recipients",
 
@@ -157,6 +159,13 @@ export const getContractInstancesByContractClassIdSchema =
   getContractClassesByClassIdSchema;
 
 export const getVerifiedContractInstanceSchema = getContractInstanceSchema;
+
+export const postVerifiedContractInstanceSchema = z.lazy(() => {
+  return z.object({
+    ...getContractInstanceSchema.shape,
+    body: verifyInstanceDeploymentPayloadSchema,
+  });
+});
 
 export const getSearchSchema = z.object({
   query: chicmozSearchQuerySchema,
