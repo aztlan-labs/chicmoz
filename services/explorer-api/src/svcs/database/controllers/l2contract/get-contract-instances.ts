@@ -1,13 +1,14 @@
+import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import { ChicmozL2ContractInstanceDeluxe, HexString } from "@chicmoz-pkg/types";
 import { and, desc, eq, getTableColumns } from "drizzle-orm";
-import { getDb as db } from "@chicmoz-pkg/postgres-helper";
+import { DB_MAX_CONTRACTS } from "../../../../environment.js";
+import { l2Block } from "../../schema/index.js";
 import {
   l2ContractClassRegistered,
   l2ContractInstanceDeployed,
+  l2ContractInstanceVerifiedDeployment,
 } from "../../schema/l2contract/index.js";
 import { getBlocksWhereRange } from "../utils.js";
-import { l2Block } from "../../schema/index.js";
-import { DB_MAX_CONTRACTS } from "../../../../environment.js";
 import { parseDeluxe } from "./utils.js";
 
 export const getL2DeployedContractInstances = async ({
@@ -22,9 +23,12 @@ export const getL2DeployedContractInstances = async ({
     .select({
       instance: getTableColumns(l2ContractInstanceDeployed),
       class: getTableColumns(l2ContractClassRegistered),
+      verifiedDeploymentInfo: getTableColumns(
+        l2ContractInstanceVerifiedDeployment
+      ),
     })
     .from(l2ContractInstanceDeployed)
-    .innerJoin(
+    .leftJoin(
       l2ContractClassRegistered,
       and(
         eq(
@@ -37,12 +41,25 @@ export const getL2DeployedContractInstances = async ({
         )
       )
     )
+    .leftJoin(
+      l2ContractInstanceVerifiedDeployment,
+      and(
+        eq(
+          l2ContractInstanceDeployed.address,
+          l2ContractInstanceVerifiedDeployment.address
+        )
+      )
+    )
     .innerJoin(l2Block, eq(l2Block.hash, l2ContractInstanceDeployed.blockHash))
     .where(whereRange)
     .orderBy(desc(l2ContractInstanceDeployed.version), desc(l2Block.height))
     .limit(DB_MAX_CONTRACTS);
 
-  return result.map((r) => parseDeluxe(r.class, r.instance));
+  const parsed = result.map((r) => {
+    return parseDeluxe(r.class, r.instance, r.verifiedDeploymentInfo);
+  });
+
+  return parsed;
 };
 
 export const getL2DeployedContractInstancesByBlockHash = async (
@@ -52,6 +69,9 @@ export const getL2DeployedContractInstancesByBlockHash = async (
     .select({
       instance: getTableColumns(l2ContractInstanceDeployed),
       class: getTableColumns(l2ContractClassRegistered),
+      verifiedDeploymentInfo: getTableColumns(
+        l2ContractInstanceVerifiedDeployment
+      ),
     })
     .from(l2ContractInstanceDeployed)
     .innerJoin(
@@ -67,10 +87,21 @@ export const getL2DeployedContractInstancesByBlockHash = async (
         )
       )
     )
+    .innerJoin(
+      l2ContractInstanceVerifiedDeployment,
+      and(
+        eq(
+          l2ContractInstanceDeployed.address,
+          l2ContractInstanceVerifiedDeployment.address
+        )
+      )
+    )
     .where(eq(l2ContractInstanceDeployed.blockHash, blockHash))
     .orderBy(desc(l2ContractInstanceDeployed.version));
 
-  return result.map((r) => parseDeluxe(r.class, r.instance));
+  return result.map((r) => {
+    return parseDeluxe(r.class, r.instance, r.verifiedDeploymentInfo);
+  });
 };
 
 export const getL2DeployedContractInstancesByContractClassId = async (
@@ -80,6 +111,9 @@ export const getL2DeployedContractInstancesByContractClassId = async (
     .select({
       instance: getTableColumns(l2ContractInstanceDeployed),
       class: getTableColumns(l2ContractClassRegistered),
+      verifiedDeploymentInfo: getTableColumns(
+        l2ContractInstanceVerifiedDeployment
+      ),
     })
     .from(l2ContractInstanceDeployed)
     .innerJoin(
@@ -95,9 +129,20 @@ export const getL2DeployedContractInstancesByContractClassId = async (
         )
       )
     )
+    .innerJoin(
+      l2ContractInstanceVerifiedDeployment,
+      and(
+        eq(
+          l2ContractInstanceDeployed.address,
+          l2ContractInstanceVerifiedDeployment.address
+        )
+      )
+    )
     .where(eq(l2ContractInstanceDeployed.contractClassId, contractClassId))
     .orderBy(desc(l2ContractInstanceDeployed.version))
     .limit(DB_MAX_CONTRACTS);
 
-  return result.map((r) => parseDeluxe(r.class, r.instance));
+  return result.map((r) => {
+    return parseDeluxe(r.class, r.instance, r.verifiedDeploymentInfo);
+  });
 };

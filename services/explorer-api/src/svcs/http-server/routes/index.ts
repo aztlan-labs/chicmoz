@@ -37,7 +37,8 @@ export const openApiPaths = {
   ...controller.openapi_GET_L2_CONTRACT_INSTANCES,
 
   ...controller.openapi_GET_L2_VERIFIED_CONTRACT_INSTANCE,
-  ...controller.openapi_GET_L2_VERIFIED_CONTRACT_INSTANCES,
+  ...controller.openapi_GET_L2_VERIFIED_CONTRACT_INSTANCE_CONTACT,
+  ...controller.openapi_GET_L2_VERIFIED_CONTRACT_INSTANCES_CONTACT,
 
   ...controller.openapi_SEARCH, // TODO: rename to L2_SEARCH?
 
@@ -155,6 +156,18 @@ export const init = ({ router }: { router: Router }) => {
     controller.POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT
   );
 
+  router.post(
+    paths.contractInstanceVerify,
+    bodyParser.json({
+      limit: ARTIFACT_BODY_LIMIT,
+    }),
+    controller.POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT
+  );
+  router.get(
+    paths.contractInstanceVerify,
+    controller.GET_L2_VERIFIED_CONTRACT_INSTANCE
+  );
+
   router.get(
     paths.contractInstancesByBlockHash,
     controller.GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH
@@ -168,11 +181,11 @@ export const init = ({ router }: { router: Router }) => {
 
   router.get(
     paths.verifiedContract,
-    controller.GET_L2_VERIFIED_CONTRACT_INSTANCE
+    controller.GET_L2_VERIFIED_CONTRACT_INSTANCE_CONTACT
   );
   router.get(
     paths.verifiedContracts,
-    controller.GET_L2_VERIFIED_CONTRACT_INSTANCES
+    controller.GET_L2_VERIFIED_CONTRACT_INSTANCES_CONTACT
   );
 
   router.get(paths.search, controller.L2_SEARCH);

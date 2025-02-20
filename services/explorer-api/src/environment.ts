@@ -16,7 +16,7 @@ const verifiedContractAddresses =
     ? DEFAULT_VERIFIED_CONTRACT_INSTANCES_PROD
     : DEFAULT_VERIFIED_CONTRACT_INSTANCES_DEV;
 
-export const VERIFIED_CONTRACT_INSTANCES = verifiedContractAddresses;
+export const VERIFIED_CONTRACT_INSTANCES_CONTACT = verifiedContractAddresses;
 
 export const PUBLIC_API_KEY: ApiKey = apiKeySchema.parse(
   process.env.PUBLIC_API_KEY

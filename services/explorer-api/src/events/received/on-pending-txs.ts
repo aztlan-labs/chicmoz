@@ -29,7 +29,15 @@ const onPendingTxs = async ({ txs }: PendingTxsEvent) => {
   }
   if (staleTxs.length > 0) {
     logger.info(`🕐🕐🕐 Stale txs: ${staleTxs.length}. Deleting...`);
-    for (const tx of staleTxs) await deleteTx(tx.hash);
+    for (const tx of staleTxs) {
+      try {
+        await deleteTx(tx.hash);
+      } catch (e) {
+        logger.error(
+          `Error deleting stale tx ${tx.hash}: ${(e as Error).stack}`
+        );
+      }
+    }
   }
 };
 

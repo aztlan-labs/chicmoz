@@ -30,6 +30,8 @@ spec:
               value: "http://anvil-ethereum-node:8545"
             - name: EXPLORER_API_URL
               value: "http://explorer-api-sandbox-service:80"
+            - name: INIFINITE_LOOP
+              value: "true"
             - name: SCENARIO_SIMPLE_DEFAULT_ACCOUNT
               value: "true"
             - name: SCENARIO_TOKEN_CONTRACT

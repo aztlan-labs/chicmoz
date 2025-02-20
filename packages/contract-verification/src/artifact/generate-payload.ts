@@ -1,9 +1,9 @@
 import { NoirCompiledContract } from "@aztec/aztec.js";
-import { ArtifactPayload } from "types.js";
+import { VerifyArtifactPayload } from "types.js";
 
 export const generateVerifyArtifactPayload = (
   artifactObj: { default: NoirCompiledContract } | NoirCompiledContract
-): ArtifactPayload => {
+): VerifyArtifactPayload => {
   const artifactJson = (artifactObj as { default: NoirCompiledContract })
     .default
     ? (artifactObj as { default: NoirCompiledContract }).default

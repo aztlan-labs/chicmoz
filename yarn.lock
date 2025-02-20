@@ -637,6 +637,7 @@ __metadata:
   resolution: "@chicmoz-pkg/contract-verification@workspace:packages/contract-verification"
   dependencies:
     "@aztec/aztec.js": "npm:0.76.4"
+    "@aztec/circuits.js": "npm:0.76.4"
     "@aztec/noir-contracts.js": "npm:0.76.4"
     "@chicmoz-pkg/types": "workspace:^"
     "@typescript-eslint/eslint-plugin": "npm:6.11.0"

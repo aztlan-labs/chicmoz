@@ -1,8 +1,8 @@
-import { IsTokenArtifactResult } from "@chicmoz-pkg/contract-verification";
 import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import {
   type ChicmozL2ContractClassRegisteredEvent,
   type ChicmozL2ContractInstanceDeployedEvent,
+  type ChicmozL2ContractInstanceVerifiedDeploymentInfoSchema,
   type ChicmozL2PrivateFunctionBroadcastedEvent,
   type ChicmozL2UnconstrainedFunctionBroadcastedEvent,
 } from "@chicmoz-pkg/types";
@@ -10,6 +10,7 @@ import { and, eq } from "drizzle-orm";
 import {
   l2ContractClassRegistered,
   l2ContractInstanceDeployed,
+  l2ContractInstanceVerifiedDeployment,
   l2PrivateFunction,
   l2UnconstrainedFunction,
 } from "../../../database/schema/l2contract/index.js";
@@ -20,40 +21,17 @@ export const storeContractInstance = async (
   const { publicKeys, ...rest } = instance;
   await db()
     .insert(l2ContractInstanceDeployed)
-    .values({
-      ...rest,
-      publicKeys_masterNullifierPublicKey_x:
-        publicKeys.masterNullifierPublicKey.x,
-      publicKeys_masterNullifierPublicKey_y:
-        publicKeys.masterNullifierPublicKey.y,
-      publicKeys_masterNullifierPublicKey_isInfinite:
-        publicKeys.masterNullifierPublicKey.isInfinite,
-      publicKeys_masterNullifierPublicKey_kind:
-        publicKeys.masterNullifierPublicKey.kind,
-      publicKeys_masterIncomingViewingPublicKey_x:
-        publicKeys.masterIncomingViewingPublicKey.x,
-      publicKeys_masterIncomingViewingPublicKey_y:
-        publicKeys.masterIncomingViewingPublicKey.y,
-      publicKeys_masterIncomingViewingPublicKey_isInfinite:
-        publicKeys.masterIncomingViewingPublicKey.isInfinite,
-      publicKeys_masterIncomingViewingPublicKey_kind:
-        publicKeys.masterIncomingViewingPublicKey.kind,
-      publicKeys_masterOutgoingViewingPublicKey_x:
-        publicKeys.masterOutgoingViewingPublicKey.x,
-      publicKeys_masterOutgoingViewingPublicKey_y:
-        publicKeys.masterOutgoingViewingPublicKey.y,
-      publicKeys_masterOutgoingViewingPublicKey_isInfinite:
-        publicKeys.masterOutgoingViewingPublicKey.isInfinite,
-      publicKeys_masterOutgoingViewingPublicKey_kind:
-        publicKeys.masterOutgoingViewingPublicKey.kind,
-      publicKeys_masterTaggingPublicKey_x: publicKeys.masterTaggingPublicKey.x,
-      publicKeys_masterTaggingPublicKey_y: publicKeys.masterTaggingPublicKey.y,
-      publicKeys_masterTaggingPublicKey_isInfinite:
-        publicKeys.masterTaggingPublicKey.isInfinite,
-      publicKeys_masterTaggingPublicKey_kind:
-        publicKeys.masterTaggingPublicKey.kind,
-    });
+    .values({ ...publicKeys, ...rest });
 };
+
+export const storeContractInstanceVerifiedDeployment = async (
+  verifiedDeploymentInfo: ChicmozL2ContractInstanceVerifiedDeploymentInfoSchema
+): Promise<void> => {
+  await db()
+    .insert(l2ContractInstanceVerifiedDeployment)
+    .values({ ...verifiedDeploymentInfo });
+};
+
 export const storeContractClass = async (
   contractClass: ChicmozL2ContractClassRegisteredEvent
 ): Promise<void> => {
@@ -67,17 +45,12 @@ export const storeContractClass = async (
 export const addArtifactJson = async (
   contractClassId: string,
   version: number,
-  artifactJson: string,
-  artifactContractName: string,
-  tokenResult: IsTokenArtifactResult
+  artifactJson: string
 ): Promise<void> => {
   await db()
     .update(l2ContractClassRegistered)
     .set({
       artifactJson,
-      artifactContractName,
-      isToken: tokenResult.result,
-      whyNotToken: tokenResult.details,
     })
     .where(
       and(

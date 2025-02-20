@@ -4,7 +4,7 @@ import {
   loadContractArtifact,
 } from "@aztec/aztec.js";
 import { ChicmozL2ContractClassRegisteredEvent } from "@chicmoz-pkg/types";
-import { ArtifactPayload } from "types.js";
+import { VerifyArtifactPayload } from "types.js";
 
 export type VerificationResult = {
   isMatchingByteCode: boolean;
@@ -12,7 +12,7 @@ export type VerificationResult = {
 };
 
 export const verifyArtifactPayload = async (
-  artifactPayload: ArtifactPayload,
+  artifactPayload: VerifyArtifactPayload,
   storedArtifact: ChicmozL2ContractClassRegisteredEvent
 ): Promise<VerificationResult> => {
   const parsedArtifact = JSON.parse(

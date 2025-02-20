@@ -1,4 +1,3 @@
-export * from "./generate-payload.js";
-export * from "./is-token-artifact.js";
+export * from "./instance-deployment/index.js";
+export * from "./artifact/index.js";
 export * from "./types.js";
-export * from "./verify-payload.js";
