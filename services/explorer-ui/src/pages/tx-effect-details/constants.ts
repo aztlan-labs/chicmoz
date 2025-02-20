@@ -1,13 +1,5 @@
 import { z } from "zod";
 
-export type tabId =
-  | "privateLogs"
-  | "publicLogs"
-  | "nullifiers"
-  | "noteHashes"
-  | "l2ToL1Msgs"
-  | "publicDataWrites";
-
 // Define the tab IDs array
 export const tabIds = [
   "privateLogs",
