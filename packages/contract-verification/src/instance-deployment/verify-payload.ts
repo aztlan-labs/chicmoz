@@ -1,13 +1,16 @@
-import { NoirCompiledContract, loadContractArtifact } from "@aztec/aztec.js";
 import {
   AztecAddress,
   Fr,
+  NoirCompiledContract,
+  loadContractArtifact,
+} from "@aztec/aztec.js";
+import {
   PublicKeys,
   computeContractAddressFromInstance,
   computeInitializationHash,
   computeSaltedInitializationHash,
 } from "@aztec/circuits.js";
-import { VerifyInstanceDeploymentPayload } from "types.js";
+import { VerifyInstanceDeploymentPayload } from "../types.js";
 
 export const verifyInstanceDeploymentPayload = async (
   payload: VerifyInstanceDeploymentPayload & {
@@ -43,5 +46,5 @@ export const verifyInstanceDeploymentPayload = async (
     saltedInitializationHash: saltedHash,
     publicKeys: PublicKeys.fromString(publicKeysString),
   });
-  return computedAddress === AztecAddress.fromString(payload.instanceAddress);
+  return computedAddress.toString() === payload.instanceAddress;
 };
