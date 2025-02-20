@@ -14,9 +14,26 @@ import {
   frTimestampSchema,
 } from "./utils.js";
 
+export enum ChicmozL2BlockFinalizationStatus {
+  L2_NODE_SEEN_PROPOSED = 0,
+  L2_NODE_SEEN_POVEN = 1,
+  L1_SEEN_PROPOSED = 2,
+  L1_SEEN_PROVEN = 3,
+  L1_MINED_PROPOED = 4,
+  L1_MINED_PROVEN = 5,
+}
+
+export const LAST_FINALIZATION_STATUS =
+  ChicmozL2BlockFinalizationStatus.L1_MINED_PROVEN;
+
+export const chicmozL2BlockFinalizationStatusSchema = z
+  .nativeEnum(ChicmozL2BlockFinalizationStatus)
+  .default(0);
+
 export const chicmozL2BlockSchema = z.object({
   hash: hexStringSchema,
   height: z.coerce.bigint().nonnegative(),
+  finalizationStatus: chicmozL2BlockFinalizationStatusSchema,
   proposedOnL1: z.lazy(() =>
     l1L2BlockProposedSchema.omit({ l2BlockNumber: true }).optional()
   ),
