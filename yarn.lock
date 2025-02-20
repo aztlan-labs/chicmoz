@@ -887,6 +887,7 @@ __metadata:
     pg: "npm:8.11.3"
     tslib: "npm:2.6.3"
     typescript: "npm:5.2.2"
+    zod: "npm:^3.23.8"
   languageName: unknown
   linkType: soft
 

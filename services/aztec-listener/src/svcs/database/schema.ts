@@ -1,9 +1,12 @@
 import { pgTable, varchar, integer } from "drizzle-orm/pg-core";
 
-export const latestProcessedHeight = pgTable(
-  "latest_processed_height",
+export const heightsTable = pgTable(
+  "heights",
   {
     networkId: varchar("networkId").primaryKey().notNull(),
-    height: integer("height"),
+    processedProposedBlockHeight: integer("processedProposedBlockHeight").notNull(),
+    chainProposedBlockHeight: integer("chainProposedBlockHeight").notNull(),
+    processedProvenBlockHeight: integer("processedProvenBlockHeight").notNull(),
+    chainProvenBlockHeight: integer("chainProvenBlockHeight").notNull(),
   }
 );
