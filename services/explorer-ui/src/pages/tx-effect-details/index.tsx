@@ -5,10 +5,10 @@ import { OptionButtons } from "~/components/option-buttons";
 import { useGetTxEffectByHash, useSubTitle } from "~/hooks";
 import { txEffectTabs, type TabId } from "./constants";
 import { getTxEffectData, mapTxEffectsData } from "./utils";
-import { PrivateLogs } from "./private-logs";
-import { PublicLogs } from "./public-logs";
+import { PrivateLogs } from "./tabs/private-logs";
+import { PublicLogs } from "./tabs/public-logs";
 import { GenericListDisplay } from "~/components/info-display/generic-list-display";
-import { PublicDataWrites } from "./public-data-write";
+import { PublicDataWrites } from "./tabs/public-data-write";
 
 export const TxEffectDetails: FC = () => {
   const [selectedTab, setSelectedTab] = useState<TabId>("nullifiers");
