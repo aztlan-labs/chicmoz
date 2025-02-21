@@ -1,7 +1,7 @@
 import { type ChicmozL2TxEffectDeluxe } from "@chicmoz-pkg/types";
 import { formatTimeSince } from "~/lib/utils";
 import { API_URL, aztecExplorer } from "~/service/constants";
-import { TabId } from "./constants";
+import { TabId } from "./types";
 
 export type TxEffectDataType =
   | string[][]

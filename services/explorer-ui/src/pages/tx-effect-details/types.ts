@@ -1,7 +1,6 @@
 import { z } from "zod";
-
 // Define the tab IDs array
-export const tabIds = [
+export const TabIds = [
   "privateLogs",
   "publicLogs",
   "nullifiers",
@@ -10,7 +9,7 @@ export const tabIds = [
   "publicDataWrites",
 ] as const;
 
-export const tabIdSchema = z.enum(tabIds);
+export const tabIdSchema = z.enum(TabIds);
 export type TabId = z.infer<typeof tabIdSchema>;
 
 export const tabSchema = z.object({
