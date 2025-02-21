@@ -6,7 +6,7 @@ import { bufferSchema, concatFrPointSchema, frSchema } from "./utils.js";
 export const chicmozL2ContractInstanceDeployedEventSchema = z.object({
   address: aztecAddressSchema,
   blockHash: chicmozL2BlockSchema.shape.hash,
-  version: z.number(),
+  version: z.number(), // TODO: rename to contractClassVersion
   salt: frSchema,
   contractClassId: frSchema,
   initializationHash: frSchema,
