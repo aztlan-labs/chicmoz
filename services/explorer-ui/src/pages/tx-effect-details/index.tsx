@@ -35,11 +35,11 @@ export const TxEffectDetails: FC = () => {
       case "publicLogs":
         return <PublicLogs logs={txEffects.publicLogs} />;
       case "nullifiers":
-        return <GenericListDisplay title="Nullifiers" itemLabel="Nullifiers" items={txEffects.nullifiers} />;
+        return <GenericListDisplay title="Nullifiers" itemLabel="Nullifier" items={txEffects.nullifiers} />;
       case "noteHashes":
         return <GenericListDisplay title="Note hashes" itemLabel="Note hashes" items={txEffects.noteHashes} />;
       case "l2ToL1Msgs":
-        return <GenericListDisplay title="L2 to L1 messages" itemLabel="L2 to L1 messages" items={txEffects.l2ToL1Msgs} />;
+        return <GenericListDisplay title="L2 to L1 messages" itemLabel="L2 to L1 message" items={txEffects.l2ToL1Msgs} />;
       case "publicDataWrites":
         return <PublicDataWrites writes={txEffects.publicDataWrites} />;
       default:

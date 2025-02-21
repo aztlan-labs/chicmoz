@@ -8,7 +8,6 @@ interface PublicDataWrite {
 
 export const PublicDataWrites: FC<{ writes: PublicDataWrite[] }> = ({ writes }) => (
   <div>
-    <h3>Public Data Writes</h3>
     {writes.map((write, index) => (
       <div key={index}>
         <h4>Write {index + 1}</h4>
