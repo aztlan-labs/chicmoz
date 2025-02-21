@@ -3,9 +3,11 @@ import {
   ChicmozL2BlockLight,
   HexString,
   chicmozL2BlockLightSchema,
+  jsonStringify,
 } from "@chicmoz-pkg/types";
 import { and, asc, desc, eq, getTableColumns } from "drizzle-orm";
 import { DB_MAX_BLOCKS } from "../../../../environment.js";
+import { logger } from "../../../../logger.js";
 import {
   archive,
   body,
@@ -166,9 +168,20 @@ const _getBlocks = async (
       .select(getTableColumns(l2BlockFinalizationStatusTable))
       .from(l2BlockFinalizationStatusTable)
       .where(eq(l2BlockFinalizationStatusTable.l2BlockHash, result.hash))
-      .orderBy(desc(l2BlockFinalizationStatusTable.timestamp))
+      .orderBy(
+        desc(l2BlockFinalizationStatusTable.status),
+        desc(l2BlockFinalizationStatusTable.l2BlockNumber)
+      )
       .limit(1);
 
+    const allFinalizationStatus = await db()
+      .select(getTableColumns(l2BlockFinalizationStatusTable))
+      .from(l2BlockFinalizationStatusTable)
+      .where(eq(l2BlockFinalizationStatusTable.l2BlockHash, result.hash))
+      .orderBy(desc(l2BlockFinalizationStatusTable.timestamp));
+
+    logger.info(`REMOVEME:
+                ${allFinalizationStatus.map(jsonStringify).join("\n")}`);
     const blockData = {
       hash: result.hash,
       height: result.height,

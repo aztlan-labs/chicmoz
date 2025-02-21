@@ -1,5 +1,5 @@
 {
-  "id": "b756b85c-e7cf-4fa7-b664-152f08052bd1",
+  "id": "9a7c35f1-ee25-4cef-ae26-fe6788111f6c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1899,21 +1899,11 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "l2BlockFinalizationStatus_l2_block_hash_l2Block_hash_fk": {
-          "name": "l2BlockFinalizationStatus_l2_block_hash_l2Block_hash_fk",
-          "tableFrom": "l2BlockFinalizationStatus",
-          "tableTo": "l2Block",
-          "columnsFrom": ["l2_block_hash"],
-          "columnsTo": ["hash"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {
         "l2_block_finalization_status_pk": {
           "name": "l2_block_finalization_status_pk",
-          "columns": ["l2_block_hash", "status", "timestamp"]
+          "columns": ["l2_block_hash", "status", "l2_block_number"]
         }
       },
       "uniqueConstraints": {}

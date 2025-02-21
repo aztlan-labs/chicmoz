@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 
 import { body, publicDataWrite, txEffect } from "./body.js";
+import { l2BlockFinalizationStatusTable } from "./finalization-status.js";
 import {
   contentCommitment,
   gasFees,
@@ -165,5 +166,12 @@ export const publicDataWriteRelations = relations(
   publicDataWrite,
   ({ one }) => ({
     txEffect: one(txEffect),
+  })
+);
+
+export const finalizationStatusRelations = relations(
+  l2BlockFinalizationStatusTable,
+  ({ one }) => ({
+    l2Block: one(l2Block),
   })
 );

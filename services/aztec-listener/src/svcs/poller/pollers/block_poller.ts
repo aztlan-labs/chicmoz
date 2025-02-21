@@ -51,59 +51,72 @@ const syncRecursivePolling = (isFirstRun: boolean) => {
 };
 
 const recursivePolling = async (isFirstRun = false) => {
-  const [chainProposedBlockHeight, chainProvenBlockHeight] = await Promise.all([
-    getLatestProposedHeight(),
-    getLatestProvenHeight(),
-  ]);
-  let heights = {
-    ...(await getBlockHeights()),
-    chainProposedBlockHeight,
-    chainProvenBlockHeight,
-  };
+  try {
+    const [chainProposedBlockHeight, chainProvenBlockHeight] =
+      await Promise.all([getLatestProposedHeight(), getLatestProvenHeight()]);
+    let heights = {
+      ...(await getBlockHeights()),
+      chainProposedBlockHeight,
+      chainProvenBlockHeight,
+    };
 
-  heights = await ensureSaneValues(heights);
-  logger.info(`🐱 ==== poller state ==== 🐱
+    heights = await ensureSaneValues(heights);
+    const proposedProvenDiff =
+      heights.chainProposedBlockHeight - heights.chainProvenBlockHeight;
+    logger.info(`🐱 ==== poller state ==== 🐱 ${
+      proposedProvenDiff > 0
+        ? `| ${proposedProvenDiff} proposed blocks ahead of proven`
+        : ""
+    }
 Proposed height PROCESSED ${heights.processedProposedBlockHeight} | CHAIN ${
-    heights.chainProposedBlockHeight
-  } | DIFF ${
-    heights.chainProposedBlockHeight - heights.processedProposedBlockHeight
-  }
-Proven   height PROCESSED ${heights.processedProvenBlockHeight} | CHAIN ${
-    heights.chainProvenBlockHeight
-  } | DIFF ${
-    heights.chainProvenBlockHeight - heights.processedProvenBlockHeight
-  }`);
-  try {
-    while (
-      !cancelPolling &&
-      heights.processedProposedBlockHeight < chainProposedBlockHeight &&
-      !AZTEC_DISABLE_LISTEN_FOR_PROPOSED_BLOCKS
-    ) {
-      heights.processedProposedBlockHeight++;
-      await pollProposedBlock(heights.processedProposedBlockHeight, isFirstRun);
+      heights.chainProposedBlockHeight
+    } | DIFF ${
+      heights.chainProposedBlockHeight - heights.processedProposedBlockHeight
+    }
+Proven height   PROCESSED ${heights.processedProvenBlockHeight} | CHAIN ${
+      heights.chainProvenBlockHeight
+    } | DIFF ${
+      heights.chainProvenBlockHeight - heights.processedProvenBlockHeight
+    }`);
+    try {
+      while (
+        !cancelPolling &&
+        heights.processedProposedBlockHeight < chainProposedBlockHeight &&
+        !AZTEC_DISABLE_LISTEN_FOR_PROPOSED_BLOCKS
+      ) {
+        heights.processedProposedBlockHeight++;
+        await pollProposedBlock(
+          heights.processedProposedBlockHeight,
+          isFirstRun
+        );
+      }
+    } catch (e) {
+      logger.error(
+        `🐼 error while processing proposed blocks: ${(e as Error).stack}`
+      );
+    }
+    try {
+      while (
+        !cancelPolling &&
+        heights.processedProvenBlockHeight < chainProvenBlockHeight &&
+        !AZTEC_DISABLE_LISTEN_FOR_PROVEN_BLOCKS
+      ) {
+        heights.processedProvenBlockHeight++;
+        await pollProvenBlock(heights.processedProvenBlockHeight, isFirstRun);
+      }
+    } catch (e) {
+      logger.error(
+        `🐹 error while processing proven blocks: ${(e as Error).stack}`
+      );
     }
   } catch (e) {
-    logger.error(
-      `🐼 error while processing proposed blocks: ${(e as Error).stack}`
+    logger.error(`🐱 error while processing blocks: ${(e as Error).stack}`);
+  } finally {
+    logger.info(
+      `🐱 waiting ${BLOCK_POLL_INTERVAL_MS / 1000}s for next poll...`
     );
+    timoutId = setTimeout(syncRecursivePolling, BLOCK_POLL_INTERVAL_MS);
   }
-  try {
-    while (
-      !cancelPolling &&
-      heights.processedProvenBlockHeight < chainProvenBlockHeight &&
-      !AZTEC_DISABLE_LISTEN_FOR_PROVEN_BLOCKS
-    ) {
-      heights.processedProvenBlockHeight++;
-      await pollProvenBlock(heights.processedProvenBlockHeight, isFirstRun);
-    }
-  } catch (e) {
-    logger.error(
-      `🐹 error while processing proven blocks: ${(e as Error).stack}`
-    );
-  }
-
-  logger.info(`🐱 waiting ${BLOCK_POLL_INTERVAL_MS / 1000}s for next poll...`);
-  timoutId = setTimeout(syncRecursivePolling, BLOCK_POLL_INTERVAL_MS);
 };
 
 const pollProposedBlock = async (height: number, isCatchup: boolean) => {
@@ -146,19 +159,19 @@ const ensureSaneValues = async (
 ) => {
   if (heights.processedProvenBlockHeight > heights.chainProvenBlockHeight) {
     logger.warn(
-      `🐱🐷 processed proven block height is higher than chain proven height: ${heights.processedProvenBlockHeight} > ${heights.chainProvenBlockHeight}. This might be L1 reorg. Backing up DB-value to match chain proven height.`
+      `🐷 processed proven block height is higher than chain proven height: ${heights.processedProvenBlockHeight} > ${heights.chainProvenBlockHeight}. This might be L1 reorg. Backing up DB-value to match chain proven height.`
     );
     heights.processedProvenBlockHeight = heights.chainProvenBlockHeight;
   }
   if (heights.processedProposedBlockHeight > heights.chainProposedBlockHeight) {
     logger.warn(
-      `🐱🐷 processed proposed block height is higher than chain proposed height: ${heights.processedProvenBlockHeight} > ${heights.chainProvenBlockHeight}. This might be L1 (or even L2?) reorg. Backing up DB-value to match chain proposed height.`
+      `🐷 processed proposed block height is higher than chain proposed height: ${heights.processedProvenBlockHeight} > ${heights.chainProvenBlockHeight}. This might be L2 (or even L1?) reorg. Backing up DB-value to match chain proposed height.`
     );
     heights.processedProposedBlockHeight = heights.chainProposedBlockHeight;
   }
   if (heights.processedProposedBlockHeight < heights.chainProvenBlockHeight) {
     logger.debug(
-      `🐱🐷 processed proposed block height is lower than chain proven height: ${heights.processedProvenBlockHeight} < ${heights.chainProvenBlockHeight}. Adjusting DB-value so that block is not fetched twice.`
+      `🐷 processed proposed block height is lower than chain proven height: ${heights.processedProvenBlockHeight} < ${heights.chainProvenBlockHeight}. Adjusting DB-value so that block is not fetched twice.`
     );
     heights.processedProposedBlockHeight = heights.chainProvenBlockHeight;
   }

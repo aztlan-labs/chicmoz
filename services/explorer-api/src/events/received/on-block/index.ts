@@ -10,7 +10,7 @@ import { ChicmozL2Block, ChicmozL2TxEffect } from "@chicmoz-pkg/types";
 import { SERVICE_NAME } from "../../../constants.js";
 import { L2_NETWORK_ID } from "../../../environment.js";
 import { logger } from "../../../logger.js";
-import { deleteL2BlockByHash } from "../../../svcs/database/controllers/l2block/delete.js";
+import { deleteL2BlockByHeight } from "../../../svcs/database/controllers/l2block/delete.js";
 import { controllers } from "../../../svcs/database/index.js";
 import { handleDuplicateBlockError } from "../utils.js";
 import { storeContracts } from "./contracts.js";
@@ -68,11 +68,16 @@ const onBlock = async ({
   await pendingTxsHook(parsedBlock.body.txEffects);
 };
 
-const storeBlock = async (parsedBlock: ChicmozL2Block) => {
+const storeBlock = async (parsedBlock: ChicmozL2Block, haveRetried = false) => {
   logger.info(
     `🧢 Storing block ${parsedBlock.height} (hash: ${parsedBlock.hash})`
   );
   await controllers.l2Block.store(parsedBlock).catch(async (e) => {
+    if (haveRetried) {
+      throw new Error(
+        `Failed to store block ${parsedBlock.height} after retry: ${e}`
+      );
+    }
     const shouldRetry = await handleDuplicateBlockError(
       e as Error,
       `block ${parsedBlock.height}`,
@@ -80,10 +85,10 @@ const storeBlock = async (parsedBlock: ChicmozL2Block) => {
         logger.warn(
           `Deleting block ${parsedBlock.height} (hash: ${parsedBlock.hash})`
         );
-        await deleteL2BlockByHash(parsedBlock.hash);
+        await deleteL2BlockByHeight(parsedBlock.height);
       }
     );
-    if (shouldRetry) return storeBlock(parsedBlock);
+    if (shouldRetry) return storeBlock(parsedBlock, true);
   });
 };
 

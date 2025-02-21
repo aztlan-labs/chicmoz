@@ -311,7 +311,7 @@ CREATE TABLE IF NOT EXISTS "l2BlockFinalizationStatus" (
 	"l2_block_number" bigint NOT NULL,
 	"status" smallint NOT NULL,
 	"timestamp" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "l2_block_finalization_status_pk" PRIMARY KEY("l2_block_hash","status","timestamp")
+	CONSTRAINT "l2_block_finalization_status_pk" PRIMARY KEY("l2_block_hash","status","l2_block_number")
 );
 --> statement-breakpoint
 DO $$ BEGIN
@@ -460,12 +460,6 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "l2_sequencer" ADD CONSTRAINT "l2_sequencer_rpc_node_id_l2_rpc_node_id_fk" FOREIGN KEY ("rpc_node_id") REFERENCES "public"."l2_rpc_node"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "l2BlockFinalizationStatus" ADD CONSTRAINT "l2BlockFinalizationStatus_l2_block_hash_l2Block_hash_fk" FOREIGN KEY ("l2_block_hash") REFERENCES "public"."l2Block"("hash") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

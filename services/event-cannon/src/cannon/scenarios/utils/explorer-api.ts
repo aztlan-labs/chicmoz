@@ -21,7 +21,7 @@ export const callExplorerApi = async ({
 
   const sizeInMB = Buffer.byteLength(postData) / 1000 ** 2;
   logger.info(
-    `📲📡 CALLING EXPLORER API: "${loggingString}" but first sleeping for ${
+    `📲📡 "${loggingString}" CALLING EXPLORER API: but first sleeping for ${
       SLEEP_TIME / 1000
     } seconds... (byte length: ${sizeInMB} MB)`
   );
@@ -56,7 +56,7 @@ export const callExplorerApi = async ({
       }
     );
     req.on("error", (error) => {
-      logger.error(`📲❌ REQUEST FAILED! "${loggingString}" rejecting...`);
+      logger.error(`📲❌ "${loggingString}" REQUEST FAILED! rejecting...`);
       reject(error);
     });
 
@@ -69,14 +69,14 @@ export const callExplorerApi = async ({
   });
   if (res.statusCode === 200 || res.statusCode === 201) {
     logger.info(
-      `📲✅ SUCCESS! "${loggingString}" ${JSON.stringify({
+      `📲✅ "${loggingString}" SUCCESS! ${JSON.stringify({
         statusCode: res.statusCode,
         statusMessage: res.statusMessage,
       })}`
     );
   } else {
     logger.error(
-      `📲🚨 FAILED! "${loggingString}" ${JSON.stringify({
+      `📲🚨 "${loggingString}" FAILED! ${JSON.stringify({
         statusCode: res.statusCode,
         statusMessage: res.statusMessage,
         data: res.data,
