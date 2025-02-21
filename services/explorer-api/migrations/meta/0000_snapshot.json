@@ -1,5 +1,5 @@
 {
-  "id": "1b065604-f6be-4bc6-87fc-1cee4adbdc70",
+  "id": "b756b85c-e7cf-4fa7-b664-152f08052bd1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1866,6 +1866,56 @@
         }
       },
       "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.l2BlockFinalizationStatus": {
+      "name": "l2BlockFinalizationStatus",
+      "schema": "",
+      "columns": {
+        "l2_block_hash": {
+          "name": "l2_block_hash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "l2_block_number": {
+          "name": "l2_block_number",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "l2BlockFinalizationStatus_l2_block_hash_l2Block_hash_fk": {
+          "name": "l2BlockFinalizationStatus_l2_block_hash_l2Block_hash_fk",
+          "tableFrom": "l2BlockFinalizationStatus",
+          "tableTo": "l2Block",
+          "columnsFrom": ["l2_block_hash"],
+          "columnsTo": ["hash"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "l2_block_finalization_status_pk": {
+          "name": "l2_block_finalization_status_pk",
+          "columns": ["l2_block_hash", "status", "timestamp"]
+        }
+      },
       "uniqueConstraints": {}
     }
   },

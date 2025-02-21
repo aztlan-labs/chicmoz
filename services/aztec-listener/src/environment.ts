@@ -17,20 +17,22 @@ export const MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS = z.coerce
   .number()
   .default(50)
   .parse(process.env.MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS);
-export const AZTEC_LISTEN_FOR_PROPOSED_BLOCKS =
-  process.env.AZTEC_LISTEN_FOR_PROPOSED_BLOCKS === "true";
+export const AZTEC_DISABLE_LISTEN_FOR_PROPOSED_BLOCKS =
+  process.env.AZTEC_DISABLE_LISTEN_FOR_PROPOSED_BLOCKS === "true";
 export const AZTEC_LISTEN_FOR_PROPOSED_BLOCKS_FORCED_START_FROM_HEIGHT =
   z.coerce
     .number()
     .gt(0)
+    .optional()
     .parse(
       process.env.AZTEC_LISTEN_FOR_PROPOSED_BLOCKS_FORCED_START_FROM_HEIGHT
     );
-export const AZTEC_LISTEN_FOR_PROVEN_BLOCKS =
-  process.env.AZTEC_LISTEN_FOR_PROVEN_BLOCKS === "true";
+export const AZTEC_DISABLE_LISTEN_FOR_PROVEN_BLOCKS =
+  process.env.AZTEC_DISABLE_LISTEN_FOR_PROVEN_BLOCKS === "true";
 export const AZTEC_LISTEN_FOR_PROVEN_BLOCKS_FORCED_START_FROM_HEIGHT = z.coerce
   .number()
   .gt(0)
+  .optional()
   .parse(process.env.AZTEC_LISTEN_FOR_PROVEN_BLOCKS_FORCED_START_FROM_HEIGHT);
 export const AZTEC_LISTEN_FOR_PENDING_TXS =
   process.env.AZTEC_LISTEN_FOR_PENDING_TXS === "true";
@@ -55,42 +57,35 @@ AZTEC_DISABLED:                                            ${
 L2_NETWORK_ID:                                             ${L2_NETWORK_ID}
 AZTEC_RPC_URL:                                             ${AZTEC_RPC_URL}
 =======================
-AZTEC_LISTEN_FOR_PROPOSED_BLOCKS:                          ${
-  AZTEC_LISTEN_FOR_PROPOSED_BLOCKS ? "✅" : "❌"
+AZTEC_DISABLE_LISTEN_FOR_PROPOSED_BLOCKS:                  ${
+  AZTEC_DISABLE_LISTEN_FOR_PROPOSED_BLOCKS ? "✅" : "❌"
 }
 AZTEC_LISTEN_FOR_PROPOSED_BLOCKS_FORCED_START_FROM_HEIGHT: ${
   AZTEC_LISTEN_FOR_PROPOSED_BLOCKS_FORCED_START_FROM_HEIGHT
     ? AZTEC_LISTEN_FOR_PROPOSED_BLOCKS_FORCED_START_FROM_HEIGHT + "⚠️"
     : "❌"
 }
-
-AZTEC_LISTEN_FOR_PROVEN_BLOCKS:                            ${
-  AZTEC_LISTEN_FOR_PROVEN_BLOCKS ? "✅" : "❌"
+AZTEC_DISABLE_LISTEN_FOR_PROVEN_BLOCKS:                    ${
+  AZTEC_DISABLE_LISTEN_FOR_PROVEN_BLOCKS ? "✅" : "❌"
 }
 AZTEC_LISTEN_FOR_PROVEN_BLOCKS_FORCED_START_FROM_HEIGHT:   ${
   AZTEC_LISTEN_FOR_PROVEN_BLOCKS_FORCED_START_FROM_HEIGHT
     ? AZTEC_LISTEN_FOR_PROVEN_BLOCKS_FORCED_START_FROM_HEIGHT + "⚠️"
     : "❌"
 }
-
-
 AZTEC_LISTEN_FOR_PENDING_TXS:                              ${
   AZTEC_LISTEN_FOR_PENDING_TXS ? "✅" : "❌"
 }
 TX_POLL_INTERVAL_MS:                                       ${
   TX_POLL_INTERVAL_MS / 1000
 }s
-
 AZTEC_LISTEN_FOR_CHAIN_INFO:                               ${
   AZTEC_LISTEN_FOR_CHAIN_INFO ? "✅" : "❌"
 }
 CHAIN_INFO_POLL_INTERVAL_MS:                               ${
   CHAIN_INFO_POLL_INTERVAL_MS / 1000
 }s
-
 IGNORE_PROCESSED_HEIGHT:                                   ${
   IGNORE_PROCESSED_HEIGHT ? "✅" : "❌"
 }
-
-MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS:                        ${MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS}
-})}`;
+MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS:                        ${MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS}`;

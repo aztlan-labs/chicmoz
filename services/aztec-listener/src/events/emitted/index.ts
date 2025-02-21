@@ -15,9 +15,16 @@ import {
 } from "../../svcs/message-bus/index.js";
 import { onL2RpcNodeAlive } from "./on-node-alive.js";
 
-export const onBlock = async (block: L2Block, finalizationStatus: ChicmozL2BlockFinalizationStatus) => {
+export const onBlock = async (
+  block: L2Block,
+  finalizationStatus: ChicmozL2BlockFinalizationStatus
+) => {
   const height = Number(block.header.globalVariables.blockNumber);
-  logger.info(`🦊 publishing block ${height}...`);
+  logger.info(
+    `🦊 publishing block ${height} (hash: ${(
+      await block.hash()
+    ).toString()})...`
+  );
   const blockStr = block.toString();
   await publishMessage("NEW_BLOCK_EVENT", {
     block: blockStr,
@@ -26,7 +33,10 @@ export const onBlock = async (block: L2Block, finalizationStatus: ChicmozL2Block
   });
 };
 
-export const onCatchupBlock = async (block: L2Block, finalizationStatus: ChicmozL2BlockFinalizationStatus) => {
+export const onCatchupBlock = async (
+  block: L2Block,
+  finalizationStatus: ChicmozL2BlockFinalizationStatus
+) => {
   const blockStr = block.toString();
   await publishMessage("CATCHUP_BLOCK_EVENT", {
     block: blockStr,

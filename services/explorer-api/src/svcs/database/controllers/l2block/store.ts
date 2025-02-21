@@ -19,6 +19,7 @@ import {
   state,
   txEffect,
 } from "../../../database/schema/l2block/index.js";
+import { l2BlockFinalizationStatusTable } from "../../schema/l2block/finalization-status.js";
 
 export const store = async (block: ChicmozL2Block): Promise<void> => {
   return await db().transaction(async (dbTx) => {
@@ -174,6 +175,16 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
           leafSlot: pdw.leafSlot,
           value: pdw.value,
         });
+      }
+      if (0 <= block.finalizationStatus.valueOf()) {
+        await dbTx
+          .insert(l2BlockFinalizationStatusTable)
+          .values({
+            l2BlockHash: block.hash,
+            l2BlockNumber: block.height,
+            status: block.finalizationStatus,
+          })
+          .onConflictDoNothing();
       }
     }
   });

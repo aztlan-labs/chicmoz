@@ -1,7 +1,7 @@
 import { ChicmozL2BlockFinalizationStatus } from "@chicmoz-pkg/types";
 import {
-  AZTEC_LISTEN_FOR_PROPOSED_BLOCKS,
-  AZTEC_LISTEN_FOR_PROVEN_BLOCKS,
+  AZTEC_DISABLE_LISTEN_FOR_PROPOSED_BLOCKS,
+  AZTEC_DISABLE_LISTEN_FOR_PROVEN_BLOCKS,
   BLOCK_POLL_INTERVAL_MS,
 } from "../../../environment.js";
 import { onBlock, onCatchupBlock } from "../../../events/emitted/index.js";
@@ -30,9 +30,9 @@ export const startPolling = async ({
 } = {}) => {
   if (timoutId) throw new Error("Poller already started");
   if (forceStartFromProposedHeight)
-    await storeProcessedProposedBlockHeight(forceStartFromProposedHeight);
+    await storeProcessedProposedBlockHeight(forceStartFromProposedHeight - 1);
   if (forceStartFromProvenHeight)
-    await storeProcessedProvenBlockHeight(forceStartFromProvenHeight);
+    await storeProcessedProvenBlockHeight(forceStartFromProvenHeight - 1);
   syncRecursivePolling(true);
 };
 
@@ -51,33 +51,33 @@ const syncRecursivePolling = (isFirstRun: boolean) => {
 };
 
 const recursivePolling = async (isFirstRun = false) => {
-  const [chainProposedHeight, chainProvenHeight] = await Promise.all([
+  const [chainProposedBlockHeight, chainProvenBlockHeight] = await Promise.all([
     getLatestProposedHeight(),
     getLatestProvenHeight(),
   ]);
-  const heights = {
+  let heights = {
     ...(await getBlockHeights()),
-    chainProvenHeight,
-    chainProposedHeight,
+    chainProposedBlockHeight,
+    chainProvenBlockHeight,
   };
 
-  await ensureSaneValues(heights);
-  logger.info(`🐱 heights:
-Processed proposed height: ${heights.processedProposedBlockHeight}
-Chain proposed height: ${heights.chainProposedBlockHeight}
-  Diff: ${
+  heights = await ensureSaneValues(heights);
+  logger.info(`🐱 ==== poller state ==== 🐱
+Proposed height PROCESSED ${heights.processedProposedBlockHeight} | CHAIN ${
+    heights.chainProposedBlockHeight
+  } | DIFF ${
     heights.chainProposedBlockHeight - heights.processedProposedBlockHeight
   }
-Processed proven height: ${heights.processedProvenBlockHeight}
-Chain proven height: ${heights.chainProvenBlockHeight}
-  Diff: ${
+Proven   height PROCESSED ${heights.processedProvenBlockHeight} | CHAIN ${
+    heights.chainProvenBlockHeight
+  } | DIFF ${
     heights.chainProvenBlockHeight - heights.processedProvenBlockHeight
   }`);
   try {
     while (
       !cancelPolling &&
-      heights.processedProposedBlockHeight < chainProposedHeight &&
-      AZTEC_LISTEN_FOR_PROPOSED_BLOCKS
+      heights.processedProposedBlockHeight < chainProposedBlockHeight &&
+      !AZTEC_DISABLE_LISTEN_FOR_PROPOSED_BLOCKS
     ) {
       heights.processedProposedBlockHeight++;
       await pollProposedBlock(heights.processedProposedBlockHeight, isFirstRun);
@@ -90,8 +90,8 @@ Chain proven height: ${heights.chainProvenBlockHeight}
   try {
     while (
       !cancelPolling &&
-      heights.processedProvenBlockHeight < chainProvenHeight &&
-      AZTEC_LISTEN_FOR_PROVEN_BLOCKS
+      heights.processedProvenBlockHeight < chainProvenBlockHeight &&
+      !AZTEC_DISABLE_LISTEN_FOR_PROVEN_BLOCKS
     ) {
       heights.processedProvenBlockHeight++;
       await pollProvenBlock(heights.processedProvenBlockHeight, isFirstRun);
@@ -163,4 +163,5 @@ const ensureSaneValues = async (
     heights.processedProposedBlockHeight = heights.chainProvenBlockHeight;
   }
   await storeBlockHeights(heights);
+  return heights;
 };

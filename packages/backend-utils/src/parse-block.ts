@@ -1,6 +1,10 @@
 // TODO: perhaps move this file to chicmoz-types?
 import { L2Block } from "@aztec/aztec.js";
-import { ChicmozL2Block, chicmozL2BlockSchema } from "@chicmoz-pkg/types";
+import {
+  ChicmozL2Block,
+  ChicmozL2BlockFinalizationStatus,
+  chicmozL2BlockSchema,
+} from "@chicmoz-pkg/types";
 
 const getTxEffectWithHashes = (txEffects: L2Block["body"]["txEffects"]) => {
   return txEffects.map((txEffect) => {
@@ -18,7 +22,10 @@ export const blockFromString = (stringifiedBlock: string): L2Block => {
   return L2Block.fromString(stringifiedBlock);
 };
 
-export const parseBlock = async (b: L2Block): Promise<ChicmozL2Block> => {
+export const parseBlock = async (
+  b: L2Block,
+  finalizationStatus: ChicmozL2BlockFinalizationStatus
+): Promise<ChicmozL2Block> => {
   const blockHash = await b.hash();
 
   const blockWithTxEffectsHashesAdded = {
@@ -31,6 +38,7 @@ export const parseBlock = async (b: L2Block): Promise<ChicmozL2Block> => {
   return chicmozL2BlockSchema.parse({
     hash: blockHash.toString(),
     height: b.number,
+    finalizationStatus,
     ...blockWithTxEffectsHashesAdded,
     header: {
       ...blockWithTxEffectsHashesAdded.header,

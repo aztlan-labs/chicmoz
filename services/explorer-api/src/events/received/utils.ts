@@ -1,5 +1,4 @@
 import { logger } from "../../logger.js";
-import { onNewChainDetected } from "./on-new-chain-detected.js";
 
 export type PartialDbError = {
   code: string;
@@ -8,13 +7,14 @@ export type PartialDbError = {
 
 export const handleDuplicateBlockError = async (
   e: Error | PartialDbError,
-  additionalInfo: string
+  additionalInfo: string,
+  deleteBlockCallback: () => Promise<void>
 ): Promise<boolean> => {
   if ((e as PartialDbError).code === "23505") {
     if ((e as PartialDbError).detail.includes("hash")) {
-      logger.warn(`DB Duplicate Block: ${additionalInfo}`);
+      logger.warn(` ⚠️ ⚠️ DB duplicate handler for "${additionalInfo}" ⚠️ ⚠️ [${(e as PartialDbError).detail}]`); // TODO: can it be that the hash gets 1. registered on one height, then 2. reorged out and then 3. regisered later on another height?
     } else if ((e as PartialDbError).detail.includes("height")) {
-      await onNewChainDetected();
+      await deleteBlockCallback();
       return true;
     }
   } else {

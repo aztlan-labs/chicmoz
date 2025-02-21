@@ -10,6 +10,7 @@ import { ChicmozL2Block, ChicmozL2TxEffect } from "@chicmoz-pkg/types";
 import { SERVICE_NAME } from "../../../constants.js";
 import { L2_NETWORK_ID } from "../../../environment.js";
 import { logger } from "../../../logger.js";
+import { deleteL2BlockByHash } from "../../../svcs/database/controllers/l2block/delete.js";
 import { controllers } from "../../../svcs/database/index.js";
 import { handleDuplicateBlockError } from "../utils.js";
 import { storeContracts } from "./contracts.js";
@@ -40,7 +41,11 @@ const hackyLogBlock = (b: L2Block) => {
   });
 };
 
-const onBlock = async ({ block, blockNumber }: NewBlockEvent) => {
+const onBlock = async ({
+  block,
+  blockNumber,
+  finalizationStatus,
+}: NewBlockEvent) => {
   if (!block) {
     logger.error("🚫 Block is empty");
     return;
@@ -49,7 +54,7 @@ const onBlock = async ({ block, blockNumber }: NewBlockEvent) => {
   const b = blockFromString(block);
   let parsedBlock;
   try {
-    parsedBlock = await parseBlock(b);
+    parsedBlock = await parseBlock(b, finalizationStatus);
   } catch (e) {
     logger.error(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -68,11 +73,17 @@ const storeBlock = async (parsedBlock: ChicmozL2Block) => {
     `🧢 Storing block ${parsedBlock.height} (hash: ${parsedBlock.hash})`
   );
   await controllers.l2Block.store(parsedBlock).catch(async (e) => {
-    const isNewChain = await handleDuplicateBlockError(
+    const shouldRetry = await handleDuplicateBlockError(
       e as Error,
-      `block ${parsedBlock.height}`
+      `block ${parsedBlock.height}`,
+      async () => {
+        logger.warn(
+          `Deleting block ${parsedBlock.height} (hash: ${parsedBlock.hash})`
+        );
+        await deleteL2BlockByHash(parsedBlock.hash);
+      }
     );
-    if (isNewChain) return storeBlock(parsedBlock);
+    if (shouldRetry) return storeBlock(parsedBlock);
   });
 };
 

@@ -25,6 +25,7 @@ import {
   state,
   txEffect,
 } from "../../../database/schema/l2block/index.js";
+import { l2BlockFinalizationStatusTable } from "../../schema/l2block/finalization-status.js";
 import { getBlocksWhereRange, getTableColumnsWithoutId } from "../utils.js";
 
 enum GetTypes {
@@ -160,12 +161,18 @@ const _getBlocks = async (
       })
       .from(txEffect)
       .where(eq(txEffect.bodyId, result.bodyId))
-      .orderBy(asc(txEffect.index))
-      .execute();
+      .orderBy(asc(txEffect.index));
+    const finalizationStatus = await db()
+      .select(getTableColumns(l2BlockFinalizationStatusTable))
+      .from(l2BlockFinalizationStatusTable)
+      .where(eq(l2BlockFinalizationStatusTable.l2BlockHash, result.hash))
+      .orderBy(desc(l2BlockFinalizationStatusTable.timestamp))
+      .limit(1);
 
     const blockData = {
       hash: result.hash,
       height: result.height,
+      finalizationStatus: finalizationStatus[0].status,
       archive: result.archive,
       proposedOnL1: result.l1L2BlockProposed?.l1BlockTimestamp
         ? result.l1L2BlockProposed
