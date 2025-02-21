@@ -19,7 +19,6 @@ export const storeContractInstance = async (
   instance: ChicmozL2ContractInstanceDeployedEvent
 ): Promise<void> => {
   const { publicKeys, ...rest } = instance;
-
   await db()
     .insert(l2ContractInstanceDeployed)
     .values({ ...publicKeys, ...rest });

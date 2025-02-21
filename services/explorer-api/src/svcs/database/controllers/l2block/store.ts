@@ -177,7 +177,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
         });
       }
       if (0 <= block.finalizationStatus.valueOf()) {
-        await db() // NOTE: purposly not using dbTx
+        await db() // NOTE: purposly not using dbTx, it should always be stored
           .insert(l2BlockFinalizationStatusTable)
           .values({
             l2BlockHash: block.hash,
