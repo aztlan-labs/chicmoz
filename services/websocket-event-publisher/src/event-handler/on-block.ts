@@ -1,9 +1,13 @@
+import { blockFromString, parseBlock } from "@chicmoz-pkg/backend-utils";
 import { NewBlockEvent } from "@chicmoz-pkg/message-registry";
-import { parseBlock, blockFromString } from "@chicmoz-pkg/backend-utils";
 import { logger } from "../logger.js";
 import { sendBlockToClients } from "../ws-server/index.js";
 
-export const onBlock = async ({ block, blockNumber }: NewBlockEvent) => {
+export const onBlock = async ({
+  block,
+  blockNumber,
+  finalizationStatus,
+}: NewBlockEvent) => {
   if (!block) {
     logger.error("🚫 Block is empty");
     return;
@@ -12,7 +16,7 @@ export const onBlock = async ({ block, blockNumber }: NewBlockEvent) => {
   let parsedBlock;
   try {
     const b = blockFromString(block);
-    parsedBlock = await parseBlock(b);
+    parsedBlock = await parseBlock(b, finalizationStatus);
   } catch (e) {
     logger.error(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions

@@ -12,14 +12,14 @@ import {
   AZTEC_RPC_URL,
   L2_NETWORK_ID,
   MAX_BATCH_SIZE_FETCH_MISSED_BLOCKS,
-} from "../../environment.js";
+} from "../../../environment.js";
 import {
   onChainInfo,
   onL2RpcNodeAlive,
   onL2RpcNodeError,
   onL2SequencerInfo,
-} from "../../events/emitted/index.js";
-import { logger } from "../../logger.js";
+} from "../../../events/emitted/index.js";
+import { logger } from "../../../logger.js";
 import {
   getChicmozChainInfoFromNodeInfo,
   getSequencerFromNodeInfo,
@@ -178,18 +178,12 @@ export const getBlocks = async (fromHeight: number, toHeight: number) => {
   return blocks;
 };
 
-export const getLatestHeight = async () => {
-  const [bn, provenBn] = await Promise.all([
-    callNodeFunction("getBlockNumber"),
-    callNodeFunction("getProvenBlockNumber"),
-  ]);
-  // TODO: if provenBn is constantly behind, we should start storing and displaying it in the UI
-  if (bn - provenBn > 0) {
-    logger.warn(
-      `🃏 Difference between block and proven block: ${bn - provenBn}`
-    );
-  }
-  return bn;
+export const getLatestProposedHeight = async () => {
+  return callNodeFunction("getBlockNumber");
+};
+
+export const getLatestProvenHeight = async () => {
+  return await callNodeFunction("getProvenBlockNumber");
 };
 
 export const getPendingTxs = async () => callNodeFunction("getPendingTxs");

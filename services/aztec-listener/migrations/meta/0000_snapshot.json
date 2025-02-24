@@ -1,11 +1,11 @@
 {
-  "id": "bafd02d5-ae3f-4c5d-8299-4d27cda33fac",
+  "id": "fe801f44-c496-4e6f-9d0a-07a41d6e6c68",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.latest_processed_height": {
-      "name": "latest_processed_height",
+    "public.heights": {
+      "name": "heights",
       "schema": "",
       "columns": {
         "networkId": {
@@ -14,11 +14,29 @@
           "primaryKey": true,
           "notNull": true
         },
-        "height": {
-          "name": "height",
+        "processedProposedBlockHeight": {
+          "name": "processedProposedBlockHeight",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "chainProposedBlockHeight": {
+          "name": "chainProposedBlockHeight",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "processedProvenBlockHeight": {
+          "name": "processedProvenBlockHeight",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "chainProvenBlockHeight": {
+          "name": "chainProvenBlockHeight",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},

@@ -1,5 +1,6 @@
 import {
   ChicmozChainInfo,
+  ChicmozL2BlockFinalizationStatus,
   ChicmozL2PendingTx,
   ChicmozL2RpcNode,
   ChicmozL2RpcNodeError,
@@ -9,6 +10,7 @@ import {
 
 export type NewBlockEvent = {
   blockNumber: number;
+  finalizationStatus: ChicmozL2BlockFinalizationStatus;
   block?: string;
 };
 

@@ -1,4 +1,7 @@
-import { L2NetworkId } from "@chicmoz-pkg/types";
+import {
+  ChicmozL2BlockFinalizationStatus,
+  L2NetworkId,
+} from "@chicmoz-pkg/types";
 import { ColumnBuilderBaseConfig, ColumnDataType } from "drizzle-orm";
 import {
   PgColumnBuilderBase,
@@ -7,14 +10,15 @@ import {
   integer,
   numeric,
   pgTable,
+  smallint,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
 
 // TODO: this should be changed to be the same as generateUint256Column
 export const generateFrColumn = (name: string) => varchar(name, { length: 66 });
-export const generateConcatFrPointColumn = (name: string) => varchar(name, { length: 130 });
-
+export const generateConcatFrPointColumn = (name: string) =>
+  varchar(name, { length: 130 });
 
 export const generateUint256Column = (name: string) =>
   numeric(name, { precision: 77, scale: 0 });
@@ -52,4 +56,7 @@ export const bufferType = customType<{
   },
 });
 
-export const l2NetworkIdDbEnum = (name: string) => varchar(name).$type<L2NetworkId>();
+export const l2NetworkIdDbEnum = (name: string) =>
+  varchar(name).$type<L2NetworkId>();
+export const l2BlockFinalizationStatusDbEnum = (name: string) =>
+  smallint(name).$type<ChicmozL2BlockFinalizationStatus>();

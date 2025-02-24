@@ -120,7 +120,7 @@ export const start = async () => {
   let loopCount = 0;
   if (INIFINITE_LOOP) {
     while (!isShutdown) {
-      logger.info(`Loop count: ${loopCount++}`);
+      logger.info(`\nLoop count: ${loopCount++}`);
       await runScenarios();
     }
   } else {

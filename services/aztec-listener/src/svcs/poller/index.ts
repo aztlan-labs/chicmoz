@@ -2,33 +2,20 @@ import { NodeInfo } from "@aztec/aztec.js";
 import { MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
 import { NODE_ENV, NodeEnv } from "@chicmoz-pkg/types";
 import {
-  AZTEC_GENESIS_CATCHUP,
-  AZTEC_LISTEN_FOR_BLOCKS,
+  AZTEC_LISTEN_FOR_CHAIN_INFO,
   AZTEC_LISTEN_FOR_PENDING_TXS,
+  AZTEC_LISTEN_FOR_PROVEN_BLOCKS_FORCED_START_FROM_HEIGHT,
   getConfigStr,
 } from "../../environment.js";
 import { onL2RpcNodeError } from "../../events/emitted/index.js";
 import { logger } from "../../logger.js";
-import {
-  getHeight as getLatestProcessedHeight,
-  storeHeight,
-} from "../database/latestProcessedHeight.controller.js";
-import * as blockPoller from "./block_poller.js";
-import * as chainInfoPoller from "./chain-info-poller.js";
-import { startCatchup } from "./genesis-catchup.js";
-import {
-  getLatestHeight,
-  init as initNetworkClient,
-} from "./network-client.js";
-import * as pendingTxsPoller from "./txs_poller.js";
+import { ensureInitializedBlockHeights } from "../database/heights.controller.js";
+import { init as initNetworkClient } from "./network-client/index.js";
+import * as blockPoller from "./pollers/block_poller.js";
+import * as chainInfoPoller from "./pollers/chain-info-poller.js";
+import * as pendingTxsPoller from "./pollers/txs_poller.js";
 
 let nodeInfo: NodeInfo;
-
-const getHeights = async () => {
-  const latestProcessedHeight = (await getLatestProcessedHeight()) ?? 0;
-  const chainHeight = await getLatestHeight();
-  return { latestProcessedHeight, chainHeight };
-};
 
 export const init = async () => {
   if (NODE_ENV === NodeEnv.DEV) {
@@ -40,30 +27,21 @@ export const init = async () => {
       data: {},
     });
   }
+  await ensureInitializedBlockHeights();
   const initResult = await initNetworkClient();
   logger.info(`Aztec chain info: ${JSON.stringify(initResult.chainInfo)}`);
   logger.info(`Aztec sequencer info: ${JSON.stringify(initResult.sequencer)}`);
 };
 
 export const startPoller = async () => {
-  logger.info(`🤡 POLLER: starting...`);
-  const { latestProcessedHeight, chainHeight } = await getHeights();
+  await blockPoller.startPolling({
+    forceStartFromProposedHeight:
+      AZTEC_LISTEN_FOR_PROVEN_BLOCKS_FORCED_START_FROM_HEIGHT,
+    forceStartFromProvenHeight:
+      AZTEC_LISTEN_FOR_PROVEN_BLOCKS_FORCED_START_FROM_HEIGHT,
+  });
   if (AZTEC_LISTEN_FOR_PENDING_TXS) pendingTxsPoller.startPolling();
-  const isOffSync = chainHeight < latestProcessedHeight;
-  if (isOffSync) {
-    logger.warn(
-      `🤡 POLLER: chain height is ${chainHeight} but we've processed up to ${latestProcessedHeight}`
-    );
-    await storeHeight(0);
-  }
-  if (AZTEC_GENESIS_CATCHUP) await startCatchup({ from: 1, to: chainHeight });
-  const pollFromHeight =
-    !isOffSync && latestProcessedHeight
-      ? latestProcessedHeight + 1
-      : chainHeight;
-  if (AZTEC_LISTEN_FOR_BLOCKS)
-    blockPoller.startPolling({ fromHeight: pollFromHeight });
-  chainInfoPoller.startPolling();
+  if (AZTEC_LISTEN_FOR_CHAIN_INFO) chainInfoPoller.startPolling();
 };
 
 export const getNodeInfo = () => nodeInfo;

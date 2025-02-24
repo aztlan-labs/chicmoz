@@ -64,9 +64,8 @@ export const l1L2ProofVerifiedHandler: EventHandler = {
   cb: onVerf as (arg0: unknown) => Promise<void>,
 };
 
-// eslint-disable-next-line @typescript-eslint/require-await
 const onGeneric = async (event: ChicmozL1GenericContractEvent) => {
-  logger.info(`🍔 L1GenericContractEvent`);
+  logger.info(`🍔 L1GenericContractEvent | ${event.eventName}`);
   await store(event);
 };
 
