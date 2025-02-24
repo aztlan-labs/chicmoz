@@ -17,12 +17,13 @@ const onLogs = (name: string) => (logs: unknown[]) => {
 };
 
 export const watchRollupEvents = (
-  contract: RollupContract
+  contract: RollupContract,
+  startFromHeight: bigint
 ): UnwatchCallback => {
   const unwatches: UnwatchCallback[] = [];
   unwatches.push(
     contract.watchEvent.L2BlockProposed(emptyFilterArgs, {
-      fromBlock: 1n,
+      fromBlock: startFromHeight,
       onError: onError("L2BlockProposed"),
       onLogs: (logs) => {
         asyncForEach(logs, async (log) => {
@@ -46,7 +47,7 @@ export const watchRollupEvents = (
   );
   unwatches.push(
     contract.watchEvent.L2ProofVerified(emptyFilterArgs, {
-      fromBlock: 1n,
+      fromBlock: startFromHeight,
       onError: onError("L2ProofVerified"),
       onLogs: (logs) => {
         asyncForEach(logs, async (log) => {
@@ -71,28 +72,28 @@ export const watchRollupEvents = (
   // staking events
   unwatches.push(
     contract.watchEvent.Deposit(emptyFilterArgs, {
-      fromBlock: 1n,
+      fromBlock: startFromHeight,
       onError: onError("Deposit"),
       onLogs: onLogs("Deposit"),
     })
   );
   unwatches.push(
     contract.watchEvent.Slashed(emptyFilterArgs, {
-      fromBlock: 1n,
+      fromBlock: startFromHeight,
       onError: onError("Slashed"),
       onLogs: onLogs("Slashed"),
     })
   );
   unwatches.push(
     contract.watchEvent.WithdrawInitiated(emptyFilterArgs, {
-      fromBlock: 1n,
+      fromBlock: startFromHeight,
       onError: onError("WithdrawInitiated"),
       onLogs: onLogs("WithdrawInitiated"),
     })
   );
   unwatches.push(
     contract.watchEvent.WithdrawFinalised(emptyFilterArgs, {
-      fromBlock: 1n,
+      fromBlock: startFromHeight,
       onError: onError("WithdrawFinalised"),
       onLogs: onLogs("WithdrawFinalised"),
     })

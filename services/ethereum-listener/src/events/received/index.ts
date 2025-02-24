@@ -6,15 +6,14 @@ import {
 import { SERVICE_NAME } from "../../constants.js";
 import { L2_NETWORK_ID } from "../../environment.js";
 import { logger } from "../../logger.js";
-import { onL1ContractAddresses } from "../../svcs/network-client/index.js";
-import { startPolling } from "../../svcs/poller-contract-changes/index.js";
+import { storeL1ContractAddresses } from "../../svcs/database/controllers.js";
+import { ensureStarted } from "../../svcs/events-watcher/index.js";
 const groupId = `${SERVICE_NAME}-${L2_NETWORK_ID}`;
 
 export const onChainInfo = async (event: ChicmozChainInfoEvent) => {
   logger.info(`🔗 chain info event ${JSON.stringify(event)}`);
-  // TODO: start polling based on stored info from DB and connection to RPC (don't wait for Aztec connection event)
-  onL1ContractAddresses(event.chainInfo.l1ContractAddresses);
-  await startPolling();
+  await storeL1ContractAddresses(event.chainInfo.l1ContractAddresses);
+  await ensureStarted();
 };
 
 export const connectedToAztec: EventHandler = {

@@ -10,6 +10,7 @@ export type MicroserviceBaseSvc = {
   svcId: string;
   getConfigStr: () => string;
   init: () => Promise<void>;
+  postInit?: () => Promise<void>;
   health: () => boolean;
   shutdown: () => Promise<void>;
 };

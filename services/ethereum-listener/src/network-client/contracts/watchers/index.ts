@@ -2,6 +2,7 @@ import { chicmozL1GenericContractEventSchema } from "@chicmoz-pkg/types";
 import { Log } from "viem";
 import { emit } from "../../../events/index.js";
 import { logger } from "../../../logger.js";
+import { setPendingHeight } from "../../../svcs/database/controllers.js";
 import { AztecContract, UnwatchCallback } from "../utils.js";
 
 export * from "./rollup.js";
@@ -32,9 +33,11 @@ type ContractEventMap = Record<string, WatchEventFunction>;
 export const watchContractEventsGeneric = <T extends AztecContract>({
   name,
   contract,
+  startFromHeight,
 }: {
   name: string;
   contract: T;
+  startFromHeight: bigint;
 }): UnwatchCallback => {
   const eventNames = contract.abi.filter(
     (item) => item.type === "event" && typeof item.name === "string"
@@ -47,11 +50,12 @@ export const watchContractEventsGeneric = <T extends AztecContract>({
     return watchEvents[eventName](
       {},
       {
-        fromBlock: 1n,
+        fromBlock: startFromHeight,
         onError: (e) => {
           logger.error(`🍔 ${name}.${eventName}: ${e.stack}`);
         },
         onLogs: (logs) => {
+          let heighestBlockNumber = startFromHeight;
           asyncForEach(logs, async (log) => {
             await emit.genericContractEvent(
               chicmozL1GenericContractEventSchema.parse({
@@ -68,9 +72,15 @@ export const watchContractEventsGeneric = <T extends AztecContract>({
                 eventArgs: log.args,
               })
             );
-          }).catch((e) => {
-            logger.error(`🍔🍔 ${name}.${eventName}: ${(e as Error).stack}`);
-          });
+            heighestBlockNumber =
+              log.blockNumber && log.blockNumber > heighestBlockNumber
+                ? log.blockNumber
+                : heighestBlockNumber;
+          })
+            .then(() => setPendingHeight(heighestBlockNumber))
+            .catch((e) => {
+              logger.error(`🍔🍔 ${name}.${eventName}: ${(e as Error).stack}`);
+            });
         },
       }
     );

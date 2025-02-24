@@ -11,7 +11,8 @@ const init = async () => {
   started = true;
   timoutId = setInterval(() => {
     getFinalizedContractEvents().catch((e) => {
-      logger.error(`🐻 error in recursive polling: ${(e as Error).stack}`);
+      if (!(e instanceof Error && e.message === "L1 contracts not initialized"))
+        logger.error(`🐻 error in recursive polling: ${(e as Error).stack}`);
     });
   }, 5000);
   //await queryStakingStateAndEmitUpdates();
@@ -25,7 +26,7 @@ const shutdown = async () => {
   }
 };
 
-export const finalizedEventsPoller: MicroserviceBaseSvc = {
+export const finalizedEventsPollerService: MicroserviceBaseSvc = {
   svcId: "finalizedEventsPoller",
   init,
   shutdown,

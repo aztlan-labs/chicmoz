@@ -1,6 +1,5 @@
 import { RollupAbi } from "@aztec/l1-artifacts";
 import {
-  ChicmozChainInfo,
   ChicmozL1L2Validator,
   NODE_ENV,
   NodeEnv,
@@ -16,16 +15,10 @@ import {
 } from "../environment.js";
 import { emit } from "../events/index.js";
 import { logger } from "../logger.js";
-import { getL1Contracts, init as initC } from "./contracts/index.js";
+import { getL1Contracts } from "./contracts/index.js";
 export { watchContractsEvents } from "./contracts/index.js";
 
 let publicClient: PublicClient | undefined = undefined;
-
-export const initContracts = (
-  l1ContractAddresses: ChicmozChainInfo["l1ContractAddresses"]
-) => {
-  initC(l1ContractAddresses, getPublicClient());
-};
 
 export const getPublicClient = () => {
   if (!publicClient) throw new Error("Client not initialized");

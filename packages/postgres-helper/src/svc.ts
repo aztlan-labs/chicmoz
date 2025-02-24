@@ -31,7 +31,8 @@ export const getDb = () => {
 };
 
 export const generateSvc: (
-  drizzleConf: DrizzleConfig<Record<string, unknown>>
+  drizzleConf: DrizzleConfig<Record<string, unknown>>,
+  postInit?: () => Promise<void>
 ) => MicroserviceBaseSvc = (drizzleConf) => ({
   svcId: "DB",
   init: () => init(drizzleConf),
