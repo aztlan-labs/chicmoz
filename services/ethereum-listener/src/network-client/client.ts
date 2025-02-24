@@ -13,9 +13,9 @@ import {
   ETHEREUM_HTTP_RPC_URL,
   ETHEREUM_WS_RPC_URL,
   L2_NETWORK_ID,
-} from "../../environment.js";
-import { emit } from "../../events/index.js";
-import { logger } from "../../logger.js";
+} from "../environment.js";
+import { emit } from "../events/index.js";
+import { logger } from "../logger.js";
 import { getL1Contracts, init as initC } from "./contracts/index.js";
 export { watchContractsEvents } from "./contracts/index.js";
 
@@ -27,7 +27,7 @@ export const initContracts = (
   initC(l1ContractAddresses, getPublicClient());
 };
 
-const getPublicClient = () => {
+export const getPublicClient = () => {
   if (!publicClient) throw new Error("Client not initialized");
   return publicClient;
 };
@@ -135,7 +135,7 @@ export const emitRandomizedChangeWithinRandomizedTime = async (
 
 export const queryStakingStateAndEmitUpdates = async () => {
   // TODO: this entire function should be replaced with a watch on the contract (and some initial state query)
-  const l1Contracts = getL1Contracts();
+  const l1Contracts = await getL1Contracts();
   if (!l1Contracts) throw new Error("Contracts not initialized");
   const attesterCount = await getPublicClient().readContract({
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion

@@ -2,8 +2,8 @@ import {
   l1L2BlockProposedSchema,
   l1L2ProofVerifiedSchema,
 } from "@chicmoz-pkg/types";
-import { emit } from "../../../../events/index.js";
-import { logger } from "../../../../logger.js";
+import { emit } from "../../../events/index.js";
+import { logger } from "../../../logger.js";
 import { RollupContract, UnwatchCallback } from "../utils.js";
 import { asyncForEach } from "./index.js";
 

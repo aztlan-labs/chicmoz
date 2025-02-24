@@ -1,7 +1,7 @@
 import { chicmozL1GenericContractEventSchema } from "@chicmoz-pkg/types";
 import { Log } from "viem";
-import { emit } from "../../../../events/index.js";
-import { logger } from "../../../../logger.js";
+import { emit } from "../../../events/index.js";
+import { logger } from "../../../logger.js";
 import { AztecContract, UnwatchCallback } from "../utils.js";
 
 export * from "./rollup.js";

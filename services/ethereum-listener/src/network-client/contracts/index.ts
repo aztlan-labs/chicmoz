@@ -6,9 +6,10 @@ import {
   RegistryAbi,
   RollupAbi,
 } from "@aztec/l1-artifacts";
-import { ChicmozChainInfo } from "@chicmoz-pkg/types";
+import { ChicmozChainInfo, jsonStringify } from "@chicmoz-pkg/types";
 import { PublicClient } from "viem";
-import { logger } from "../../../logger.js";
+import { logger } from "../../logger.js";
+import { getPublicClient } from "../client.js";
 import {
   AztecContract,
   AztecContracts,
@@ -32,7 +33,9 @@ const contractWatchers: {
   ) => UnwatchCallback,
 };
 
-export const getL1Contracts = (): AztecContracts => {
+// eslint-disable-next-line @typescript-eslint/require-await
+export const getL1Contracts = async (): Promise<AztecContracts> => {
+  // TODO: get contracts from DB
   if (!l1Contracts) throw new Error("Contracts not initialized");
   return l1Contracts;
 };
@@ -71,8 +74,9 @@ export const init = (
   };
 };
 
-export const watchContractsEvents = (): UnwatchCallback => {
-  const contracts = getL1Contracts();
+export const watchContractsEvents = async (): Promise<UnwatchCallback> => {
+  // TODO: getStartFromBlock from DB
+  const contracts = await getL1Contracts();
   const unwatches = (
     Object.entries(contracts) as [keyof AztecContracts, AztecContract][]
   ).map(([name, contract]) => {
@@ -90,6 +94,7 @@ export const watchContractsEvents = (): UnwatchCallback => {
       unwatches.push(specificWatcher(contract as any));
     }
     return () => {
+      logger.info(`Unwatching events for ${name}`);
       unwatches.forEach((unwatch) => unwatch());
     };
   });
@@ -97,4 +102,25 @@ export const watchContractsEvents = (): UnwatchCallback => {
   return () => {
     unwatches.forEach((unwatch) => unwatch());
   };
+};
+
+let currentBlockNumber = 1n;
+
+export const getFinalizedContractEvents = async () => {
+  logger.info(`🐻 Getting finalized events from block ${currentBlockNumber}`);
+  const contracts = await getL1Contracts();
+  // TODO: getStartFromBlock from DB
+  for (const contract of Object.values(contracts)) {
+    const client = getPublicClient();
+    const events = await client.getContractEvents({
+      fromBlock: currentBlockNumber,
+      toBlock: "finalized",
+      address: contract.address,
+      abi: contract.abi,
+    });
+    for (const event of events)
+      logger.info(`🐻 Finalized event: ${jsonStringify(event)}`);
+    if (events.at(-1)?.blockNumber ?? 0 > currentBlockNumber)
+      currentBlockNumber = BigInt(events.at(-1)!.blockNumber) + 1n;
+  }
 };
