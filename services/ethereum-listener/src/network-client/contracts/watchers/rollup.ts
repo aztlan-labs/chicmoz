@@ -1,6 +1,6 @@
 import {
-  l1L2BlockProposedSchema,
-  l1L2ProofVerifiedSchema,
+  chicmozL1L2BlockProposedSchema,
+  chicmozL1L2ProofVerifiedSchema,
 } from "@chicmoz-pkg/types";
 import { emit } from "../../../events/index.js";
 import { logger } from "../../../logger.js";
@@ -28,8 +28,10 @@ export const watchRollupEvents = (
       onLogs: (logs) => {
         asyncForEach(logs, async (log) => {
           await emit.l2BlockProposed(
-            l1L2BlockProposedSchema.parse({
+            chicmozL1L2BlockProposedSchema.parse({
+              l1ContractAddress: log.address,
               l1BlockNumber: log.blockNumber,
+              l1BlockHash: log.blockHash,
               l2BlockNumber: log.args.blockNumber,
               archive: log.args.archive,
               l1BlockTimestamp: Number.parseInt(
@@ -52,8 +54,10 @@ export const watchRollupEvents = (
       onLogs: (logs) => {
         asyncForEach(logs, async (log) => {
           await emit.l2ProofVerified(
-            l1L2ProofVerifiedSchema.parse({
+            chicmozL1L2ProofVerifiedSchema.parse({
+              l1ContractAddress: log.address,
               l1BlockNumber: log.blockNumber,
+              l1BlockHash: log.blockHash,
               l2BlockNumber: log.args.blockNumber,
               proverId: log.args.proverId,
               l1BlockTimestamp: Number.parseInt(

@@ -1,5 +1,5 @@
 import { getDb as db } from "@chicmoz-pkg/postgres-helper";
-import { L1L2BlockProposed, L1L2ProofVerified } from "@chicmoz-pkg/types";
+import { ChicmozL1L2BlockProposed, ChicmozL1L2ProofVerified } from "@chicmoz-pkg/types";
 import { QueryResult } from "pg";
 import {
   l1L2BlockProposedTable,
@@ -7,7 +7,7 @@ import {
 } from "../../schema/index.js";
 
 export const addL1L2BlockProposed = async (
-  proposedData: L1L2BlockProposed
+  proposedData: ChicmozL1L2BlockProposed
 ): Promise<QueryResult> => {
   return await db()
     .insert(l1L2BlockProposedTable)
@@ -16,10 +16,13 @@ export const addL1L2BlockProposed = async (
 };
 
 export const addL1L2ProofVerified = async (
-  proofVerifiedData: L1L2ProofVerified
+  proofVerifiedData: ChicmozL1L2ProofVerified
 ): Promise<QueryResult> => {
   return await db()
     .insert(l1L2ProofVerifiedTable)
     .values(proofVerifiedData)
     .onConflictDoNothing();
 };
+
+// TODO: update finalization status to block
+// TODO: update finalization status to block (proof verified)

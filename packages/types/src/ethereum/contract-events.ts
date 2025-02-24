@@ -1,27 +1,28 @@
 import { z } from "zod";
 import { frSchema } from "../aztec/utils.js";
+import { ethAddressSchema } from "../index.js";
 
-export const l1L2BlockProposedSchema = z.object({
-  // TODO: add Chicmoz to name
-  // TODO: add address key
+export const chicmozL1L2BlockProposedSchema = z.object({
+  l1ContractAddress: ethAddressSchema,
   l2BlockNumber: z.coerce.bigint(),
   l1BlockNumber: z.coerce.bigint(),
   l1BlockTimestamp: z.number(),
+  l1BlockHash: z.string().startsWith("0x"),
   archive: frSchema,
 });
 
-export type L1L2BlockProposed = z.infer<typeof l1L2BlockProposedSchema>;
+export type ChicmozL1L2BlockProposed = z.infer<typeof chicmozL1L2BlockProposedSchema>;
 
-export const l1L2ProofVerifiedSchema = z.object({
-  // TODO: add Chicmoz to name
-  // TODO: add address key
+export const chicmozL1L2ProofVerifiedSchema = z.object({
+  l1ContractAddress: ethAddressSchema,
   l2BlockNumber: z.coerce.bigint(),
   l1BlockNumber: z.coerce.bigint(),
   l1BlockTimestamp: z.number(),
+  l1BlockHash: z.string().startsWith("0x"),
   proverId: frSchema,
 });
 
-export type L1L2ProofVerified = z.infer<typeof l1L2ProofVerifiedSchema>;
+export type ChicmozL1L2ProofVerified = z.infer<typeof chicmozL1L2ProofVerifiedSchema>;
 
 export const chicmozL1GenericContractEventSchema = z.object({
   id: z.string().uuid().optional(),

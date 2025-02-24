@@ -1,8 +1,8 @@
 import {
   ChicmozL1GenericContractEvent,
+  ChicmozL1L2BlockProposed,
+  ChicmozL1L2ProofVerified,
   ChicmozL1L2Validator,
-  L1L2BlockProposed,
-  L1L2ProofVerified,
   jsonStringify,
 } from "@chicmoz-pkg/types";
 import { logger } from "../../logger.js";
@@ -16,7 +16,9 @@ export const l1Validator = async (validator: ChicmozL1L2Validator) => {
   await publishMessage("L1_L2_VALIDATOR_EVENT", { validator: objToSend });
 };
 
-export const l2BlockProposed = async (blockProposed: L1L2BlockProposed) => {
+export const l2BlockProposed = async (
+  blockProposed: ChicmozL1L2BlockProposed
+) => {
   // TODO: add finalization status
   await publishMessage("L1_L2_BLOCK_PROPOSED_EVENT", {
     ...blockProposed,
@@ -25,7 +27,9 @@ export const l2BlockProposed = async (blockProposed: L1L2BlockProposed) => {
   });
 };
 
-export const l2ProofVerified = async (proofVerified: L1L2ProofVerified) => {
+export const l2ProofVerified = async (
+  proofVerified: ChicmozL1L2ProofVerified
+) => {
   // TODO: add finalization status
   await publishMessage("L1_L2_PROOF_VERIFIED_EVENT", {
     ...proofVerified,

@@ -5,11 +5,11 @@ import {
 } from "@chicmoz-pkg/message-registry";
 import {
   ChicmozL1GenericContractEvent,
-  L1L2BlockProposed,
-  L1L2ProofVerified,
+  ChicmozL1L2BlockProposed,
+  ChicmozL1L2ProofVerified,
   getL1NetworkId,
-  l1L2BlockProposedSchema,
-  l1L2ProofVerifiedSchema,
+  chicmozL1L2BlockProposedSchema,
+  chicmozL1L2ProofVerifiedSchema,
 } from "@chicmoz-pkg/types";
 import { SERVICE_NAME } from "../../constants.js";
 import { L2_NETWORK_ID } from "../../environment.js";
@@ -20,11 +20,11 @@ import {
   addL1L2ProofVerified,
 } from "../../svcs/database/controllers/l2block/add_l1_data.js";
 
-const onProp = async (event: L1L2BlockProposed) => {
+const onProp = async (event: ChicmozL1L2BlockProposed) => {
   logger.info(
     `🎓 L1L2BlockProposed l2BlockNumber: ${event.l2BlockNumber} l1BlockNumber: ${event.l1BlockNumber}`
   );
-  const parsed = l1L2BlockProposedSchema.parse(event);
+  const parsed = chicmozL1L2BlockProposedSchema.parse(event);
   await addL1L2BlockProposed(parsed);
 };
 
@@ -42,11 +42,11 @@ export const l1L2BlockProposedHandler: EventHandler = {
   cb: onProp as (arg0: unknown) => Promise<void>,
 };
 
-const onVerf = async (event: L1L2ProofVerified) => {
+const onVerf = async (event: ChicmozL1L2ProofVerified) => {
   logger.info(
     `🎩 L1L2ProofVerified l2BlockNumber: ${event.l2BlockNumber} l1BlockNumber: ${event.l1BlockNumber}`
   );
-  const parsed = l1L2ProofVerifiedSchema.parse(event);
+  const parsed = chicmozL1L2ProofVerifiedSchema.parse(event);
   await addL1L2ProofVerified(parsed);
 };
 
