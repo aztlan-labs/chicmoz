@@ -27,7 +27,6 @@ export const ContractClassDetails: FC = () => {
   const contractClassesData = useContractClasses(id);
   const contractInstanceData = useDeployedContractInstances(id);
 
-  console.log("contractClassesData", contractClassesData)
   const selectedVersion = contractClassesData.data?.find(
     (contract) => contract.version === Number(version),
   );
