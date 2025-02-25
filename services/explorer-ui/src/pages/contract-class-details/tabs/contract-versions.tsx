@@ -1,4 +1,4 @@
-import { ChicmozL2ContractClassRegisteredEvent, ChicmozL2ContractInstanceDeluxe } from "@chicmoz-pkg/types";
+import { ChicmozL2ContractClassRegisteredEvent } from "@chicmoz-pkg/types";
 import { UseQueryResult } from "@tanstack/react-query";
 import { FC } from "react";
 import { ContractClassesTable } from "~/components/contracts/classes/table";
