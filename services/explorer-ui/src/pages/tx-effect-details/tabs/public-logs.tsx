@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { routes } from "~/routes/__root";
-import { naiveDecode } from "./utils";
+import { naiveDecode } from "../utils";
 
 interface PuclicLogsArgs {
   logs: string[][]
