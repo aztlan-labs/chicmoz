@@ -103,6 +103,60 @@ export const ContractClassDetails: FC = () => {
     functionJson: !!selectedVersion && !!selectedVersion.artifactJson
   };
 
+  const renderTabContent = () => {
+    switch (selectedTab) {
+      case "contractVersions":
+        return <ContractClassesTable
+          title="Latest Contract Classes"
+          contracts={mapContractClasses(classesData)}
+          isLoading={isLoadingClasses}
+          error={errorClasses}
+          showContractVersions={true}
+        />
+      case "contractInstances":
+        return <ContractInstancesTable
+          title="Latest Contract Instances"
+          contracts={mapContractInstances(instancesData)}
+          isLoading={isLoadingInstances}
+          error={errorInstances}
+        />
+      case "privateFunctions":
+        return <pre className="overflow-auto">
+          {JSON.stringify(
+            privFunc,
+            null,
+            2,
+          )}
+        </pre>
+      case "unconstrainedFunctions":
+        return <pre className="overflow-auto">
+          {JSON.stringify(
+            uncFunc,
+            null,
+            2,
+          )}
+        </pre>
+      case "publicFunctions":
+        return <pre className="overflow-auto">
+          {JSON.stringify(
+            pubFunc,
+            null,
+            2,
+          )}
+        </pre>
+      case "artifactJson":
+        return <pre className="overflow-auto">
+          {JSON.stringify(
+            artifact,
+            null,
+            2,
+          )}
+        </pre>
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="mx-auto px-[70px] max-w-[1440px]">
       <div className="flex flex-col gap-4 mt-8">
@@ -126,77 +180,7 @@ export const ContractClassDetails: FC = () => {
           selectedItem={selectedTab}
         />
         <div className="flex flex-col gap-4 md:flex-row ">
-          {selectedTab === "contractVersions" && (
-            <div className="bg-white w-full rounded-lg">
-              <ContractClassesTable
-                title="Latest Contract Classes"
-                contracts={mapContractClasses(classesData)}
-                isLoading={isLoadingClasses}
-                error={errorClasses}
-                showContractVersions={true}
-              />
-            </div>
-          )}
-          {selectedTab === "contractInstances" && (
-            <div className="bg-white w-full rounded-lg">
-              <ContractInstancesTable
-                title="Latest Contract Instances"
-                contracts={mapContractInstances(instancesData)}
-                isLoading={isLoadingInstances}
-                error={errorInstances}
-              />
-            </div>
-          )}
-          {selectedTab === "publicFunctions" && pubFunc && (
-            <div className="bg-white w-full rounded-lg shadow-md p-4">
-              <h4>Public Functions</h4>
-              <pre className="overflow-auto">
-                {JSON.stringify(
-                  pubFunc,
-                  null,
-                  2,
-                )}
-              </pre>
-            </div>
-          )}
-          {selectedTab === "privateFunctions" &&
-            privFunc && (
-              <div className="bg-white w-full rounded-lg shadow-md p-4">
-                <h4>Private Functions</h4>
-                <pre className="overflow-auto">
-                  {JSON.stringify(
-                    privFunc,
-                    null,
-                    2,
-                  )}
-                </pre>
-              </div>
-            )}
-          {selectedTab === "unconstrainedFunctions" &&
-            uncFunc && (
-              <div className="bg-white w-full rounded-lg shadow-md p-4">
-                <h4>Unconstrained Functions</h4>
-                <pre className="overflow-auto">
-                  {JSON.stringify(
-                    uncFunc,
-                    null,
-                    2,
-                  )}
-                </pre>
-              </div>
-            )}
-          {selectedTab === "artifactJson" && selectedVersion.artifactJson && (
-            <div className="bg-white w-full rounded-lg shadow-md p-4">
-              <h4>Artifact JSON</h4>
-              <pre className="overflow-auto">
-                {JSON.stringify(
-                  artifact,
-                  null,
-                  2,
-                )}
-              </pre>
-            </div>
-          )}
+          {renderTabContent()}
         </div>
       </div>
     </div>

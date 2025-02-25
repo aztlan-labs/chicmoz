@@ -4,7 +4,6 @@ import { PrivateLogs } from "./tabs/private-logs";
 import { PublicLogs } from "./tabs/public-logs";
 import { GenericListDisplay } from "~/components/info-display/generic-list-display";
 import { PublicDataWrites } from "./tabs/public-data-write";
-import { Loader } from "~/components/loader";
 import { ChicmozL2TxEffectDeluxe } from "@chicmoz-pkg/types";
 import { mapTxEffectsData } from "./utils";
 import { txEffectTabs, TabId } from "./types";
