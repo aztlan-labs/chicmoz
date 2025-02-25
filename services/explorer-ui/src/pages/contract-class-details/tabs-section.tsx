@@ -6,7 +6,7 @@ import { getArtifactData } from "./util";
 import { ContractInstancesTab } from "./tabs/contract-instances";
 import { UseQueryResult } from "@tanstack/react-query";
 import { ContractVersionsTab } from "./tabs/contract-versions";
-import { ShowJson } from "./tabs/show-json";
+import { JsonTab } from "./tabs/json-tab";
 
 interface TabSectionProps {
   contractInstances: UseQueryResult<ChicmozL2ContractInstanceDeluxe[], Error>
@@ -40,13 +40,13 @@ export const TabSection: FC<TabSectionProps> = ({ contractClasses, contractInsta
       case "contractInstances":
         return <ContractInstancesTab data={contractInstances} />
       case "privateFunctions":
-        return <ShowJson data={privFunc} />
+        return <JsonTab data={privFunc} />
       case "unconstrainedFunctions":
-        return <ShowJson data={uncFunc} />
+        return <JsonTab data={uncFunc} />
       case "publicFunctions":
-        return <ShowJson data={pubFunc} />
+        return <JsonTab data={pubFunc} />
       case "artifactJson":
-        return <ShowJson data={artifact} />
+        return <JsonTab data={artifact} />
       default:
         return null;
     }
