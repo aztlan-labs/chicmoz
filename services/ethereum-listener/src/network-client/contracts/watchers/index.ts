@@ -46,13 +46,13 @@ export const watchContractEventsGeneric = <T extends AztecContract>({
 
   const unwatches = eventNames.map((event) => {
     const eventName = (event as { name: string }).name;
-    logger.info(`🍔🍔 ${name}.${eventName}`);
+    logger.info(`🍔🥓 ${name}.${eventName}`);
     return watchEvents[eventName](
       {},
       {
         fromBlock: startFromHeight,
         onError: (e) => {
-          logger.error(`🍔 ${name}.${eventName}: ${e.stack}`);
+          logger.error(`🍔🥓 ${name}.${eventName}: ${e.stack}`);
         },
         onLogs: (logs) => {
           let heighestBlockNumber = startFromHeight;
@@ -68,6 +68,7 @@ export const watchContractEventsGeneric = <T extends AztecContract>({
                 ),
                 l1ContractAddress: log.address,
                 l1TransactionHash: log.transactionHash,
+                isFinalized: false,
                 eventName: log.eventName,
                 eventArgs: log.args,
               })
@@ -79,7 +80,7 @@ export const watchContractEventsGeneric = <T extends AztecContract>({
           })
             .then(() => setPendingHeight(heighestBlockNumber))
             .catch((e) => {
-              logger.error(`🍔🍔 ${name}.${eventName}: ${(e as Error).stack}`);
+              logger.error(`🍔🥓 ${name}.${eventName}: ${(e as Error).stack}`);
             });
         },
       }

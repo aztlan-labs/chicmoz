@@ -16,7 +16,7 @@ import {
 import { emit } from "../events/index.js";
 import { logger } from "../logger.js";
 import { getL1Contracts } from "./contracts/index.js";
-export { watchContractsEvents } from "./contracts/index.js";
+export { startContractWatchers as watchContractsEvents } from "./contracts/index.js";
 
 let publicClient: PublicClient | undefined = undefined;
 

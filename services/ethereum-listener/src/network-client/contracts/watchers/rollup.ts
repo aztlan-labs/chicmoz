@@ -33,6 +33,7 @@ export const watchRollupEvents = (
               l1BlockNumber: log.blockNumber,
               l1BlockHash: log.blockHash,
               l2BlockNumber: log.args.blockNumber,
+              isFinalized: false,
               archive: log.args.archive,
               l1BlockTimestamp: Number.parseInt(
                 (log as unknown as { blockTimestamp: `0x${string}` })
@@ -59,6 +60,7 @@ export const watchRollupEvents = (
               l1BlockNumber: log.blockNumber,
               l1BlockHash: log.blockHash,
               l2BlockNumber: log.args.blockNumber,
+              isFinalized: false,
               proverId: log.args.proverId,
               l1BlockTimestamp: Number.parseInt(
                 (log as unknown as { blockTimestamp: `0x${string}` })

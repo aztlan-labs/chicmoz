@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   FeeJuicePortalAbi,
   InboxAbi,
@@ -6,37 +5,11 @@ import {
   RegistryAbi,
   RollupAbi,
 } from "@aztec/l1-artifacts";
-import { jsonStringify } from "@chicmoz-pkg/types";
-import { logger } from "../../logger.js";
-import {
-  getL1Contracts as dbGetL1Contracts,
-  getFinalizedHeight,
-  getPendingHeight,
-  setFinalizedHeight,
-} from "../../svcs/database/controllers.js";
+import { getL1Contracts as dbGetL1Contracts } from "../../svcs/database/controllers.js";
 import { getPublicClient } from "../client.js";
-import {
-  AztecContract,
-  AztecContracts,
-  UnwatchCallback,
-  getTypedContract,
-} from "./utils.js";
-import {
-  watchContractEventsGeneric,
-  watchRollupEvents,
-} from "./watchers/index.js";
-
-const contractWatchers: {
-  [K in keyof AztecContracts]?: (
-    contract: AztecContracts[K],
-    startFromHeight: bigint
-  ) => UnwatchCallback;
-} = {
-  rollup: watchRollupEvents as (
-    contract: AztecContracts["rollup"],
-    startFromHeight: bigint
-  ) => UnwatchCallback,
-};
+import { getAllContractsEvents } from "./get-events.js";
+import { AztecContracts, UnwatchCallback, getTypedContract } from "./utils.js";
+import { watchAllContractsEvents } from "./watch-events.js";
 
 export const getL1Contracts = async (): Promise<AztecContracts> => {
   const dbContracts = await dbGetL1Contracts();
@@ -70,57 +43,12 @@ export const getL1Contracts = async (): Promise<AztecContracts> => {
   };
 };
 
-export const watchContractsEvents = async (): Promise<UnwatchCallback> => {
-  const startFromHeight = await getPendingHeight();
+export const startContractWatchers = async (): Promise<UnwatchCallback> => {
   const contracts = await getL1Contracts();
-  const unwatches = (
-    Object.entries(contracts) as [keyof AztecContracts, AztecContract][]
-  ).map(([name, contract]) => {
-    logger.info(`🍔 Generic watcher:  ${name}`);
-    const unwatches = [
-      watchContractEventsGeneric({
-        name,
-        contract,
-        startFromHeight,
-      }),
-    ];
-    const specificWatcher = contractWatchers[name];
-    if (specificWatcher) {
-      logger.info(`🍟 Specific watcher: ${name}`);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      unwatches.push(specificWatcher(contract as any, startFromHeight));
-    }
-    return () => {
-      logger.info(`Unwatching events for ${name}`);
-      unwatches.forEach((unwatch) => unwatch());
-    };
-  });
-
-  return () => {
-    unwatches.forEach((unwatch) => unwatch());
-  };
+  return watchAllContractsEvents({ contracts });
 };
 
 export const getFinalizedContractEvents = async () => {
   const contracts = await getL1Contracts();
-  const startFromHeight = await getFinalizedHeight();
-  logger.info(`🐻 Getting finalized events from block ${startFromHeight}`);
-  let heighestBlockNumber = startFromHeight;
-  for (const contract of Object.values(contracts)) {
-    const client = getPublicClient();
-    const events = await client.getContractEvents({
-      fromBlock: startFromHeight,
-      toBlock: "finalized",
-      address: contract.address,
-      abi: contract.abi,
-    });
-    for (const event of events) {
-      logger.info(`🐻 Finalized event: ${jsonStringify(event)}`);
-      heighestBlockNumber =
-        event.blockNumber && event.blockNumber > heighestBlockNumber
-          ? event.blockNumber
-          : heighestBlockNumber;
-    }
-  }
-  await setFinalizedHeight(heighestBlockNumber);
+  return getAllContractsEvents({ contracts, toBlock: "finalized" });
 };
