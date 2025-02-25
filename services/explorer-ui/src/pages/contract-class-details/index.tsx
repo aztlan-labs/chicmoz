@@ -52,7 +52,11 @@ export const ContractClassDetails: FC = () => {
             </div>
           </div>
           <div className="mt-5">
-            <TabSection contractClassesData={contractClassesData} contractInstanceData={contractInstanceData} selectedVersion={selectedVersion} />
+            <TabSection
+              contractClasses={contractClassesData}
+              contractInstances={contractInstanceData}
+              selectedVersion={selectedVersion}
+            />
           </div>
         </div>
       </div>

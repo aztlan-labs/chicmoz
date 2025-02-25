@@ -20,7 +20,6 @@ export const TabSection: FC<TabSectionProps> = ({ contractClasses, contractInsta
     setSelectedTab(value as TabId);
   };
 
-  console.log("lol", contractClasses)
   const { artifact, privFunc, uncFunc, pubFunc } = getArtifactData(selectedVersion)
 
   const isOptionAvailable = {
