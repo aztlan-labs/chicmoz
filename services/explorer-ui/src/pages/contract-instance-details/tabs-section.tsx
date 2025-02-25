@@ -11,7 +11,7 @@ interface PillSectionProps {
   verifiedDeploymentData?: DetailItem[];
   contactDetailsData?: DetailItem[];
 }
-export const PillSection: FC<PillSectionProps> = ({
+export const TabsSection: FC<PillSectionProps> = ({
   verifiedDeploymentData,
   contactDetailsData,
 }) => {
@@ -27,6 +27,16 @@ export const PillSection: FC<PillSectionProps> = ({
   if (!verifiedDeploymentData || !contactDetailsData)
     return <Loader amount={1} />;
 
+  const renderTabContent = () => {
+    switch (selectedTab) {
+      case "contactDetails":
+        return <KeyValueDisplay data={contactDetailsData} />
+      case "verifiedDeployment":
+        return <KeyValueDisplay data={verifiedDeploymentData} />
+      default:
+        return null;
+    }
+  };
   return (
     <>
       <OptionButtons
@@ -37,18 +47,9 @@ export const PillSection: FC<PillSectionProps> = ({
       />
       <div className="bg-white rounded-lg shadow-md p-4">
         <div className="flex flex-col gap-4 md:flex-row ">
-          {selectedTab === "verifiedDeployment" && (
-            <div className="bg-white w-full rounded-lg">
-              <KeyValueDisplay data={verifiedDeploymentData} />
-            </div >
-          )}
-          {
-            selectedTab === "contactDetails" && (
-              <div className="bg-white w-full rounded-lg">
-                <KeyValueDisplay data={contactDetailsData} />
-              </div >
-            )
-          }
+          <div className="bg-white w-full rounded-lg">
+            {renderTabContent()}
+          </div>
         </div >
       </div >
     </>
