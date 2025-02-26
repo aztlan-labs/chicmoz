@@ -68,8 +68,9 @@ const tokenSchema = z.object({
     ),
 });
 const customErrorMap: z.ZodErrorMap = (_error, ctx: z.ErrorMapCtx) => {
-  if (ctx?.data?.toString()?.length < 100)
+  if (ctx?.data?.toString()?.length < 100) {
     return { message: `${ctx.defaultError} (with data: ${ctx.data})` };
+  }
   return { message: ctx.defaultError };
 };
 
@@ -80,10 +81,12 @@ export const isTokenArtifact = (
   try {
     tokenSchema.parse(artifact, { errorMap: customErrorMap });
   } catch (err) {
-    if (err instanceof z.ZodError)
+    if (err instanceof z.ZodError) {
       details = err.errors.map((e) => JSON.stringify(e)).join("\n");
-    // eslint-disable-next-line no-console
-    else console.error(err);
+    } else {
+      // eslint-disable-next-line no-console
+      console.error(err);
+    }
   }
   return {
     result: details === "",

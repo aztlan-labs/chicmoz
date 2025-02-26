@@ -27,7 +27,9 @@ export const setSvcState = (svcId: string, state: MicroserviceBaseSvcState) => {
 };
 
 export const getSvcState = (svcId: string) => {
-  if (!svcsStates[svcId]) throw new Error(`Service ${svcId} not found`);
+  if (!svcsStates[svcId]) {
+    throw new Error(`Service ${svcId} not found`);
+  }
   return svcsStates[svcId];
 };
 

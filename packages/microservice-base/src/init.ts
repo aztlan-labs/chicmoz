@@ -8,8 +8,9 @@ export const init = async (logger: Logger) => {
     logger.warn("No services to initialize.");
     return;
   }
-  for (const svc of conf.services)
+  for (const svc of conf.services) {
     setSvcState(svc.svcId, MicroserviceBaseSvcState.INITIALIZING);
+  }
 
   for (const [index, svc] of conf.services.entries()) {
     logger.info(

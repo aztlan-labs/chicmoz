@@ -33,7 +33,7 @@ const config = {
     "@typescript-eslint/array-type": "off",
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/no-misused-promises": "warn",
-    curly: ["warn", "multi-or-nest", "consistent"],
+    curly: ["warn", "all"],
     "import/no-cycle": "off",
     "import/no-default-export": "off",
     "react-refresh/only-export-components": [
