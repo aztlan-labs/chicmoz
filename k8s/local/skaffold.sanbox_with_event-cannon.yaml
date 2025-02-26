@@ -1,8 +1,6 @@
 apiVersion: skaffold/v4beta6
 kind: Config
 requires:
-  - path: ./common/skaffold.infra.yaml
+  - path: ./common/skaffold.base.yaml
   - path: ./common/skaffold.aztec_sanbox_nodes.yaml
-  - path: ./ethereum-listener/skaffold.sandbox.yaml
   - path: ./event-cannon/skaffold.yaml
-  - path: ./aztec-listener/skaffold.sandbox.yaml
