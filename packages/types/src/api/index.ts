@@ -1,9 +1,9 @@
 import { z } from "zod";
 import {
   chicmozL2BlockSchema,
-  chicmozL2TxEffectSchema,
   chicmozL2ContractClassRegisteredEventSchema,
   chicmozL2ContractInstanceDeployedEventSchema,
+  chicmozL2TxEffectSchema,
   hexStringSchema,
 } from "../index.js";
 
@@ -11,9 +11,13 @@ export const chicmozSearchQuerySchema = z.lazy(() =>
   z.object({
     q: z.preprocess((val: unknown) => {
       if (typeof val === "string") {
-        if (val.startsWith("0x")) return val;
-        else if (val.match(/^\d+$/)?.length) return parseInt(val);
-        else return `0x${val}`;
+        if (val.startsWith("0x")) {
+          return val;
+        } else if (val.match(/^\d+$/)?.length) {
+          return parseInt(val);
+        } else {
+          return `0x${val}`;
+        }
       }
       return val;
     }, hexStringSchema.or(chicmozL2BlockSchema.shape.height)),

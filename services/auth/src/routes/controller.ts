@@ -25,8 +25,16 @@ export class Controller {
   GET_EXISTS: RequestHandler = async (req, res) => {
     const originalRoute = req.headers["x-auth-request-redirect"];
 
-    if (!originalRoute) throw new Error("x-auth-request-redirect not set by nginx");
-    if (Array.isArray(originalRoute)) throw new Error(`x-auth-request-redirect array; not single string: ${originalRoute.join(", ")}`);
+    if (!originalRoute) {
+      throw new Error("x-auth-request-redirect not set by nginx");
+    }
+    if (Array.isArray(originalRoute)) {
+      throw new Error(
+        `x-auth-request-redirect array; not single string: ${originalRoute.join(
+          ", "
+        )}`
+      );
+    }
 
     const [found, apiKey] = this.core.extractApiKey(originalRoute);
     if (!found) {
@@ -74,14 +82,20 @@ export class Controller {
 
     const overrideLimitsForNow = true;
 
-    const isSecLimitReached = await this.core.checkRequestLimitReached("seconds", apiKey);
+    const isSecLimitReached = await this.core.checkRequestLimitReached(
+      "seconds",
+      apiKey
+    );
     if (isSecLimitReached && !overrideLimitsForNow) {
       this.logger.info("Reached request limit per second");
       res.status(403).send("Reached request limit per second");
       return;
     }
 
-    const isMonthLimitReached = await this.core.checkRequestLimitReached("month", apiKey);
+    const isMonthLimitReached = await this.core.checkRequestLimitReached(
+      "month",
+      apiKey
+    );
     if (isMonthLimitReached && !overrideLimitsForNow) {
       this.logger.info("Reached request limit per month");
       res.status(403).send("Reached request limit per month");

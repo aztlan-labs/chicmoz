@@ -3,7 +3,8 @@ import autoBind from "auto-bind";
 import { DB } from "./database/db.js";
 import { Period, RateLimitDb } from "./database/rate-limit.js";
 
-const UUID_REGEX = "([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})";
+const UUID_REGEX =
+  "([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})";
 
 export class Core {
   private readonly logger: Logger;
@@ -24,7 +25,9 @@ export class Core {
   extractApiKey(url: string): [true, string] | [false, undefined] {
     const re = RegExp("^/(v1|api)/(.+?)(/|$)");
     const apiUrl = re.exec(url);
-    if (!apiUrl || apiUrl.length < 3) return [false, undefined];
+    if (!apiUrl || apiUrl.length < 3) {
+      return [false, undefined];
+    }
     return [true, apiUrl[2]];
   }
 

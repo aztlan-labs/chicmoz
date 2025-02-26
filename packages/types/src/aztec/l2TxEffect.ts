@@ -28,7 +28,9 @@ export const chicmozL2PendingTxSchema = z.object({
 export const chicmozL2TxEffectSchema = z.object({
   revertCode: z.preprocess(
     (val) => {
-      if (typeof val === "number") return { code: val };
+      if (typeof val === "number") {
+        return { code: val };
+      }
       return val;
     },
     z.object({ code: z.number() })

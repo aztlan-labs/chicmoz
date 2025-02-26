@@ -25,7 +25,7 @@ const config = {
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/no-misused-promises": "warn",
     "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
-    curly: ["warn", "multi-or-nest", "consistent"],
+    curly: ["warn", "all"],
     "import/no-cycle": "error",
     "import/no-default-export": "error",
     "import/no-unresolved": "off",

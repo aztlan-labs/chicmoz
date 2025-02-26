@@ -64,7 +64,9 @@ async function run(
     },
   });
   console.log("🤩 Migrations complete!");
-  if (TOTAL_DB_RESET) console.log("🔥🔥🔥 Total DB reset!");
+  if (TOTAL_DB_RESET) {
+    console.log("🔥🔥🔥 Total DB reset!");
+  }
 }
 
 async function dropAllTables(client: PoolClient) {

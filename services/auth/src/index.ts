@@ -30,47 +30,62 @@ const config = () => {
 
   app.disable("etag");
 
-  if (NODE_ENV === "production") app.use(helmet());
+  if (NODE_ENV === "production") {
+    app.use(helmet());
+  }
   app.use(cors({ credentials: true }));
 
   app.use(
     bodyParser.json({
       limit: BODY_LIMIT,
-    }),
+    })
   );
   app.use(
     bodyParser.urlencoded({
       extended: true,
       limit: BODY_LIMIT,
       parameterLimit: PARAMETER_LIMIT,
-    }),
+    })
   );
   app.use(morgan("common"));
 
   return app;
 };
 
-const shutdown = (deps: { sequelize: Sequelize; server: http.Server; rateLimitDb: RateLimitDb }) => async () => {
-  const { server, sequelize, rateLimitDb } = deps;
+const shutdown =
+  (deps: {
+    sequelize: Sequelize;
+    server: http.Server;
+    rateLimitDb: RateLimitDb;
+  }) =>
+  async () => {
+    const { server, sequelize, rateLimitDb } = deps;
 
-  logger.info(`Stopping server`);
+    logger.info(`Stopping server`);
 
-  await sequelize.close();
-  await rateLimitDb.disconnect();
+    await sequelize.close();
+    await rateLimitDb.disconnect();
 
-  server.close((error) => {
-    if (error) throw error;
-    logger.info("Stopped server");
-    process.exit(0);
-  });
-};
+    server.close((error) => {
+      if (error) {
+        throw error;
+      }
+      logger.info("Stopped server");
+      process.exit(0);
+    });
+  };
 
 const startup = async () => {
-  const sequelize = new Sequelize(POSTGRES_DB_NAME, POSTGRES_ADMIN, POSTGRES_PASSWORD, {
-    dialect: "postgres",
-    host: POSTGRES_IP,
-    port: POSTGRES_PORT,
-  });
+  const sequelize = new Sequelize(
+    POSTGRES_DB_NAME,
+    POSTGRES_ADMIN,
+    POSTGRES_PASSWORD,
+    {
+      dialect: "postgres",
+      host: POSTGRES_IP,
+      port: POSTGRES_PORT,
+    }
+  );
 
   await sequelize.authenticate();
   const db = new DB({ sequelize, logger });
