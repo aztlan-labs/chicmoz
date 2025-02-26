@@ -1,5 +1,6 @@
 import {
   ChicmozChainInfo,
+  ChicmozL2Block,
   ChicmozL2BlockFinalizationStatus,
   ChicmozL2PendingTx,
   ChicmozL2RpcNode,
@@ -37,6 +38,11 @@ export type ChicmozChainInfoEvent = {
   chainInfo: ChicmozChainInfo;
 };
 
+export type ChicmozL2BlockFinalizationUpdateEvent = {
+  l2BlockHash: ChicmozL2Block["hash"];
+  status: ChicmozL2BlockFinalizationStatus;
+};
+
 export function generateL2TopicName(
   networkId: L2NetworkId,
   topic: keyof L2_MESSAGES
@@ -52,6 +58,7 @@ export type L2_MESSAGES = {
   L2_RPC_NODE_ALIVE_EVENT: ChicmozL2RpcNodeAliveEvent;
   SEQUENCER_INFO_EVENT: ChicmozSequencerEvent;
   CHAIN_INFO_EVENT: ChicmozChainInfoEvent;
+  L2_BLOCK_FINALIZATION_UPDATE_EVENT: ChicmozL2BlockFinalizationUpdateEvent;
 };
 
 export type L2Topic = `${L2NetworkId}__${keyof L2_MESSAGES}`;

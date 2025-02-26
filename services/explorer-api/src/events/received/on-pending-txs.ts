@@ -28,6 +28,7 @@ const onPendingTxs = async ({ txs }: PendingTxsEvent) => {
     });
   }
   if (staleTxs.length > 0) {
+    // TODO: perhaps emit an event to websockets?
     logger.info(`🕐🕐🕐 Stale txs: ${staleTxs.length}. Deleting...`);
     for (const tx of staleTxs) {
       try {
