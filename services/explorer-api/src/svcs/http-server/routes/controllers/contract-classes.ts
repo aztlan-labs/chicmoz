@@ -199,7 +199,9 @@ export const POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT = asyncHandler(
       body,
       dbContractClass
     );
-    if (!isMatchingByteCode) {throw new Error("Incorrect artifact");}
+    if (!isMatchingByteCode) {
+      throw new Error("Incorrect artifact");
+    }
     const completeContractClass = {
       ...dbContractClass,
       artifactJson: body.stringifiedArtifactJson,
