@@ -1,54 +1,164 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Log } from "viem";
 import { logger } from "../../logger.js";
-import { getPendingHeight } from "../../svcs/database/controllers.js";
-import { AztecContract, AztecContracts, UnwatchCallback } from "./utils.js";
+import { controllers as dbControllers } from "../../svcs/database/index.js";
 import {
-  watchContractEventsGeneric,
-  watchRollupEvents,
-} from "./watchers/index.js";
+  genericOnError,
+  genericOnLogs,
+  l2BlockProposedEventCallbacks,
+  l2ProofVerifiedEventCallbacks,
+} from "./callbacks/index.js";
+import { AztecContract, AztecContracts, UnwatchCallback } from "./utils.js";
 
-const contractWatchers: {
-  [K in keyof AztecContracts]?: (
-    contract: AztecContracts[K],
-    startFromHeight: bigint
-  ) => UnwatchCallback;
-} = {
-  rollup: watchRollupEvents as (
-    contract: AztecContracts["rollup"],
-    startFromHeight: bigint
-  ) => UnwatchCallback,
-};
+const emptyFilterArgs = {};
+const WATCH_DEFAULT_IS_FINALIZED = false;
 
-export const watchAllContractsEvents= async ({
+type WatchEventFunction = (
+  args: Record<string, unknown>,
+  options: {
+    onLogs: (
+      logs: (Log & {
+        eventName: string | null;
+        args: Record<string, unknown> | null;
+      })[]
+    ) => void;
+    onError: (e: Error) => void;
+    fromBlock: bigint;
+  }
+) => UnwatchCallback;
+
+type ContractEventMap = Record<string, WatchEventFunction>;
+
+const watchRollupL2BlockProposed = async ({
   contracts,
 }: {
   contracts: AztecContracts;
 }): Promise<UnwatchCallback> => {
-  const startFromHeight = await getPendingHeight();
-  const unwatches = (
-    Object.entries(contracts) as [keyof AztecContracts, AztecContract][]
-  ).map(([name, contract]) => {
-    logger.info(`🍔 Generic watcher:  ${name}`);
-    const unwatches = [
-      watchContractEventsGeneric({
-        name,
-        contract,
-        startFromHeight,
-      }),
-    ];
-    const specificWatcher = contractWatchers[name];
-    if (specificWatcher) {
-      logger.info(`🍟 Specific watcher: ${name}`);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      unwatches.push(specificWatcher(contract as any, startFromHeight));
-    }
-    return () => {
-      logger.info(`Unwatching events for ${name}`);
-      unwatches.forEach((unwatch) => unwatch());
-    };
+  const { fromBlock, updateHeight, storeHeight } =
+    await dbControllers.inMemoryHeightTracker({
+      contractName: "rollup",
+      contractAddress: contracts.rollup.address,
+      eventName: "L2BlockProposed",
+      isFinalized: WATCH_DEFAULT_IS_FINALIZED,
+    });
+  const callbacks = l2BlockProposedEventCallbacks({
+    isFinalized: WATCH_DEFAULT_IS_FINALIZED,
+    updateHeight,
+    storeHeight,
+  });
+  return contracts.rollup.watchEvent.L2BlockProposed(emptyFilterArgs, {
+    fromBlock,
+    onError: callbacks.onError,
+    onLogs: callbacks.onLogs,
+  });
+};
+
+export const watchRollupL2ProofVerified = async ({
+  contracts,
+}: {
+  contracts: AztecContracts;
+}): Promise<UnwatchCallback> => {
+  const { fromBlock, updateHeight, storeHeight } =
+    await dbControllers.inMemoryHeightTracker({
+      contractName: "rollup",
+      contractAddress: contracts.rollup.address,
+      eventName: "L2ProofVerified",
+      isFinalized: WATCH_DEFAULT_IS_FINALIZED,
+    });
+  const callbacks = l2ProofVerifiedEventCallbacks({
+    isFinalized: WATCH_DEFAULT_IS_FINALIZED,
+    updateHeight,
+    storeHeight,
+  });
+  return contracts.rollup.watchEvent.L2ProofVerified(emptyFilterArgs, {
+    fromBlock,
+    onError: callbacks.onError,
+    onLogs: callbacks.onLogs,
+  });
+};
+
+export const watchAllContractsEvents = async ({
+  contracts,
+}: {
+  contracts: AztecContracts;
+}): Promise<UnwatchCallback> => {
+  const genericUnwatches = await Promise.all(
+    (Object.entries(contracts) as [keyof AztecContracts, AztecContract][]).map(
+      async ([name, contract]) => {
+        const unwatches = [
+          await watchContractEventsGeneric({
+            name,
+            contract,
+          }),
+        ];
+
+        return () => {
+          logger.info(`Unwatching events for ${name}`);
+          unwatches.forEach((unwatch) => unwatch());
+        };
+      }
+    )
+  );
+
+  const unwatchRollupL2BlockProposed = await watchRollupL2BlockProposed({
+    contracts,
+  });
+  const unwatchRollupL2ProofVerified = await watchRollupL2ProofVerified({
+    contracts,
   });
 
   return () => {
-    unwatches.forEach((unwatch) => unwatch());
+    logger.info(`Unwatching generic events`);
+    genericUnwatches.forEach((unwatch) => unwatch());
+    logger.info(`Unwatching rollup events`);
+    unwatchRollupL2BlockProposed();
+    logger.info(`Unwatching rollup events`);
+    unwatchRollupL2ProofVerified();
   };
+};
+
+export const watchContractEventsGeneric = async <T extends AztecContract>({
+  name,
+  contract,
+}: {
+  name: string;
+  contract: T;
+}): Promise<UnwatchCallback> => {
+  const eventNames = contract.abi.filter(
+    (item) => item.type === "event" && typeof item.name === "string"
+  );
+  const watchEvents = contract.watchEvent as unknown as ContractEventMap;
+
+  const unwatches = await Promise.all(
+    eventNames.map(async (event) => {
+      const { fromBlock, updateHeight, storeHeight } =
+        await dbControllers.inMemoryHeightTracker({
+          contractName: name,
+          contractAddress: contract.address,
+          eventName: (event as { name: string }).name + "(generic)",
+          isFinalized: WATCH_DEFAULT_IS_FINALIZED,
+        });
+      const eventName = (event as { name: string }).name;
+      return watchEvents[eventName](
+        {},
+        {
+          fromBlock,
+          onError: (e) => {
+            return genericOnError({ e, name, eventName });
+          },
+          onLogs: (logs) => {
+            return genericOnLogs({
+              logs,
+              name,
+              eventName,
+              updateHeight,
+              storeHeight,
+            });
+          },
+        }
+      );
+    })
+  );
+
+  return () => unwatches.forEach((unwatch) => unwatch());
 };

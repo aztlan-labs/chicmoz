@@ -10,7 +10,6 @@ import {
 import { generateFrColumn } from "../utils.js";
 
 export const l1L2BlockProposedTable = pgTable(
-  // TODO: these might be removed and just stored in the generic contract events
   "l1L2BlockProposed",
   {
     l1ContractAddress: varchar("l1ContractAddress").notNull(),
@@ -31,7 +30,6 @@ export const l1L2BlockProposedTable = pgTable(
 
 export const l1L2ProofVerifiedTable = pgTable(
   "l1L2ProofVerified",
-  // TODO: these might be removed and just stored in the generic contract events
   {
     l1ContractAddress: varchar("l1ContractAddress").notNull(),
     l2BlockNumber: bigint("l2BlockNumber", { mode: "bigint" }).notNull(),

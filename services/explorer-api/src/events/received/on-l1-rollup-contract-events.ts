@@ -7,9 +7,9 @@ import {
   ChicmozL1GenericContractEvent,
   ChicmozL1L2BlockProposed,
   ChicmozL1L2ProofVerified,
-  getL1NetworkId,
   chicmozL1L2BlockProposedSchema,
   chicmozL1L2ProofVerifiedSchema,
+  getL1NetworkId,
 } from "@chicmoz-pkg/types";
 import { SERVICE_NAME } from "../../constants.js";
 import { L2_NETWORK_ID } from "../../environment.js";
@@ -19,13 +19,30 @@ import {
   addL1L2BlockProposed,
   addL1L2ProofVerified,
 } from "../../svcs/database/controllers/l2block/add_l1_data.js";
+import { emit } from "../index.js";
+
+const getLogStr = (
+  prefix: string,
+  l1BlockNumber: bigint,
+  isFinalized: boolean,
+  suffix: string
+) => {
+  const isFinalizedStr = isFinalized ? "✅" : "💤";
+  return `${prefix} l1BlockNumber: ${l1BlockNumber} ${isFinalizedStr} ${suffix}`;
+};
 
 const onProp = async (event: ChicmozL1L2BlockProposed) => {
   logger.info(
-    `🎓 L1L2BlockProposed l2BlockNumber: ${event.l2BlockNumber} l1BlockNumber: ${event.l1BlockNumber}`
+    getLogStr(
+      "🎓",
+      event.l1BlockNumber,
+      event.isFinalized,
+      `L1L2BlockProposed l2BlockNumber: ${event.l2BlockNumber} archive: ${event.archive}`
+    )
   );
   const parsed = chicmozL1L2BlockProposedSchema.parse(event);
-  await addL1L2BlockProposed(parsed);
+  const updateFinalizationEvent = await addL1L2BlockProposed(parsed);
+  await emit.l2BlockFinalizationUpdate(updateFinalizationEvent);
 };
 
 export const l1L2BlockProposedHandler: EventHandler = {
@@ -44,10 +61,16 @@ export const l1L2BlockProposedHandler: EventHandler = {
 
 const onVerf = async (event: ChicmozL1L2ProofVerified) => {
   logger.info(
-    `🎩 L1L2ProofVerified l2BlockNumber: ${event.l2BlockNumber} l1BlockNumber: ${event.l1BlockNumber}`
+    getLogStr(
+      "🎩",
+      event.l1BlockNumber,
+      event.isFinalized,
+      `L1L2ProofVerified l2BlockNumber: ${event.l2BlockNumber} proverId: ${event.proverId}`
+    )
   );
   const parsed = chicmozL1L2ProofVerifiedSchema.parse(event);
-  await addL1L2ProofVerified(parsed);
+  const updateFinalizationEvent = await addL1L2ProofVerified(parsed);
+  await emit.l2BlockFinalizationUpdate(updateFinalizationEvent);
 };
 
 export const l1L2ProofVerifiedHandler: EventHandler = {
@@ -65,7 +88,14 @@ export const l1L2ProofVerifiedHandler: EventHandler = {
 };
 
 const onGeneric = async (event: ChicmozL1GenericContractEvent) => {
-  logger.info(`🍔 L1GenericContractEvent | ${event.eventName}`);
+  logger.info(
+    getLogStr(
+      "🍔",
+      event.l1BlockNumber,
+      event.isFinalized,
+      `${event.eventName}(generic) args: [${Object.keys(event.eventArgs ?? {}).join(", ")}]`
+    )
+  );
   await store(event);
 };
 

@@ -91,7 +91,7 @@ const checkDocsStatus = () => {
   } catch (e) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     logger.error(
-      `STARTING SERVER WITHOUT SUFFICIENT DOCS! ${totalPaths} - ${totalStatsPaths} !== ${totalOpenApiPaths}`
+      `⚠️  STARTING SERVER WITHOUT SUFFICIENT DOCS! ${totalPaths} - ${totalStatsPaths} !== ${totalOpenApiPaths} ⚠️`
     );
   }
 };

@@ -6,7 +6,7 @@ import {
 import { SERVICE_NAME } from "../../constants.js";
 import { L2_NETWORK_ID } from "../../environment.js";
 import { logger } from "../../logger.js";
-import { storeL1ContractAddresses } from "../../svcs/database/controllers.js";
+import { storeL1ContractAddresses } from "../../svcs/database/controllers/index.js";
 import { ensureStarted } from "../../svcs/events-watcher/index.js";
 const groupId = `${SERVICE_NAME}-${L2_NETWORK_ID}`;
 

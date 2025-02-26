@@ -5,14 +5,14 @@ import {
   RegistryAbi,
   RollupAbi,
 } from "@aztec/l1-artifacts";
-import { getL1Contracts as dbGetL1Contracts } from "../../svcs/database/controllers.js";
+import { controllers as dbControllers } from "../../svcs/database/index.js";
 import { getPublicClient } from "../client.js";
 import { getAllContractsEvents } from "./get-events.js";
 import { AztecContracts, UnwatchCallback, getTypedContract } from "./utils.js";
 import { watchAllContractsEvents } from "./watch-events.js";
 
 export const getL1Contracts = async (): Promise<AztecContracts> => {
-  const dbContracts = await dbGetL1Contracts();
+  const dbContracts = await dbControllers.getL1Contracts();
   const publicClient = getPublicClient();
   return {
     rollup: getTypedContract(

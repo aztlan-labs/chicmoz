@@ -32,7 +32,7 @@ export const eventsWatcherService: MicroserviceBaseSvc = {
     } catch (e) {
       if (e instanceof Error && e.message === "L1 contracts not initialized") {
         logger.info(
-          "L1 contracts not initialized, waiting for chain info event"
+          "⚠️  L1 contracts not initialized, waiting for chain info event"
         );
       } else {
         throw e;

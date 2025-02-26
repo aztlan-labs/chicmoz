@@ -27,7 +27,7 @@ spec:
                 name: postgres-config-ethereum-listener-sandbox
           env:
             - name: TOTAL_DB_RESET
-              value: "true"
+              value: "false"
       containers:
         - image: ethereum-listener:latest
           resources:
@@ -39,7 +39,7 @@ spec:
             - configMapRef:
                 name: postgres-config-global
             - configMapRef:
-                name: postgres-config-aztec-listener-sandbox
+                name: postgres-config-ethereum-listener-sandbox
           env:
             - name: INSTANCE_NAME
               value: "sandbox_ethereum_listener"
