@@ -32,8 +32,11 @@ export const createErrorMiddleware = (logger: Logger): ErrorRequestHandler => {
       logger.error(
         `Error-handler: name: ${err.name}, message: ${err.message} (for route: ${_req.originalUrl})`
       );
-      if (err.stack) logger.error(`Error-handler: stack: ${err.stack}`);
-      else logger.error(err);
+      if (err.stack) {
+        logger.error(`Error-handler: stack: ${err.stack}`);
+      } else {
+        logger.error(err);
+      }
     }
 
     if (

@@ -4,7 +4,9 @@ export const addNonProdDefault = <T>(
   schema: z.ZodSchema<T>,
   defaultValue: T extends undefined ? never : T
 ): z.ZodSchema<T> | z.ZodDefault<z.ZodType<T, z.ZodTypeDef, T>> => {
-  if (NODE_ENV === NodeEnv.PROD) return schema;
+  if (NODE_ENV === NodeEnv.PROD) {
+    return schema;
+  }
   return schema.default(defaultValue);
 };
 

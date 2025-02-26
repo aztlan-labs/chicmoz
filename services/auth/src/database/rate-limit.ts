@@ -66,14 +66,20 @@ export class RateLimitDb {
     return `apiKeySubscription:${apiKey}`;
   }
 
-  private requestsRedisId(subscriptionId: string, periodKey: PeriodKey, periodNum: number) {
+  private requestsRedisId(
+    subscriptionId: string,
+    periodKey: PeriodKey,
+    periodNum: number
+  ) {
     return `requests:${subscriptionId}:${periodKey}:${periodNum}`;
   }
 
   private async getTier(tierId: string, periodKey: PeriodKey) {
     const redisId = this.tierRedisId(tierId, periodKey);
     const tier = await this.client.get(redisId);
-    if (!tier) return 0;
+    if (!tier) {
+      return 0;
+    }
     return Number(tier);
   }
 
@@ -95,7 +101,11 @@ export class RateLimitDb {
     const redisIdMonth = this.tierRedisId(id, "m");
     const redisIdSeconds = this.tierRedisId(id, "s");
 
-    await this.client.multi().set(redisIdMonth, requestsPerMonth).set(redisIdSeconds, requestsPer10Seconds).exec();
+    await this.client
+      .multi()
+      .set(redisIdMonth, requestsPerMonth)
+      .set(redisIdSeconds, requestsPer10Seconds)
+      .exec();
   }
 
   async setSubscriptionTier(subscriptionId: string, tierId: string) {
@@ -109,10 +119,22 @@ export class RateLimitDb {
   }
 
   async resetRequests(subscriptionId: string) {
-    const redisIdMonth = this.requestsRedisId(subscriptionId, "m", this.getPeriodNum("month"));
-    const redisIdSeconds = this.requestsRedisId(subscriptionId, "s", this.getPeriodNum("seconds"));
+    const redisIdMonth = this.requestsRedisId(
+      subscriptionId,
+      "m",
+      this.getPeriodNum("month")
+    );
+    const redisIdSeconds = this.requestsRedisId(
+      subscriptionId,
+      "s",
+      this.getPeriodNum("seconds")
+    );
 
-    await this.client.multi().set(redisIdMonth, 0).set(redisIdSeconds, 0).exec();
+    await this.client
+      .multi()
+      .set(redisIdMonth, 0)
+      .set(redisIdSeconds, 0)
+      .exec();
   }
 
   async deleteApiKey(apiKey: string) {
@@ -134,15 +156,23 @@ export class RateLimitDb {
     const periodNum = this.getPeriodNum(period);
 
     const subscriptionId = await this.getApiKeySubscription(apiKey);
-    if (!subscriptionId) return true;
+    if (!subscriptionId) {
+      return true;
+    }
 
     const redisId = this.requestsRedisId(subscriptionId, periodKey, periodNum);
-    const requestsInPeriod = await this.client.get(redisId).then((val) => Number(val));
+    const requestsInPeriod = await this.client
+      .get(redisId)
+      .then((val) => Number(val));
     const tierId = await this.getSubscriptionTier(subscriptionId);
-    if (!tierId) return true;
+    if (!tierId) {
+      return true;
+    }
 
     const periodLimit = await this.getTier(tierId, periodKey);
-    if (requestsInPeriod >= periodLimit) return true;
+    if (requestsInPeriod >= periodLimit) {
+      return true;
+    }
 
     const expSeconds = PERIOD_TO_EXP[period];
     await this.client.multi().incr(redisId).expire(redisId, expSeconds).exec();
