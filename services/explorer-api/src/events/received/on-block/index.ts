@@ -12,6 +12,7 @@ import { L2_NETWORK_ID } from "../../../environment.js";
 import { logger } from "../../../logger.js";
 import { deleteL2BlockByHeight } from "../../../svcs/database/controllers/l2block/delete.js";
 import { controllers } from "../../../svcs/database/index.js";
+import { emit } from "../../index.js";
 import { handleDuplicateBlockError } from "../utils.js";
 import { storeContracts } from "./contracts.js";
 
@@ -72,24 +73,27 @@ const storeBlock = async (parsedBlock: ChicmozL2Block, haveRetried = false) => {
   logger.info(
     `🧢 Storing block ${parsedBlock.height} (hash: ${parsedBlock.hash})`
   );
-  await controllers.l2Block.store(parsedBlock).catch(async (e) => {
-    if (haveRetried) {
-      throw new Error(
-        `Failed to store block ${parsedBlock.height} after retry: ${e}`
-      );
-    }
-    const shouldRetry = await handleDuplicateBlockError(
-      e as Error,
-      `block ${parsedBlock.height}`,
-      async () => {
-        logger.warn(
-          `Deleting block ${parsedBlock.height} (hash: ${parsedBlock.hash})`
+  const storeRes = await controllers.l2Block
+    .store(parsedBlock)
+    .catch(async (e) => {
+      if (haveRetried) {
+        throw new Error(
+          `Failed to store block ${parsedBlock.height} after retry: ${e}`
         );
-        await deleteL2BlockByHeight(parsedBlock.height);
       }
-    );
-    if (shouldRetry) return storeBlock(parsedBlock, true);
-  });
+      const shouldRetry = await handleDuplicateBlockError(
+        e as Error,
+        `block ${parsedBlock.height}`,
+        async () => {
+          logger.warn(
+            `Deleting block ${parsedBlock.height} (hash: ${parsedBlock.hash})`
+          );
+          await deleteL2BlockByHeight(parsedBlock.height);
+        }
+      );
+      if (shouldRetry) return storeBlock(parsedBlock, true);
+    });
+  await emit.l2BlockFinalizationUpdate(storeRes?.finalizationUpdate ?? null);
 };
 
 const pendingTxsHook = async (txEffects: ChicmozL2TxEffect[]) => {

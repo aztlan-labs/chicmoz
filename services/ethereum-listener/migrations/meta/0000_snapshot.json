@@ -1,0 +1,120 @@
+{
+  "id": "3d667e66-af59-4159-958d-ab6d23910ad5",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.heights": {
+      "name": "heights",
+      "schema": "",
+      "columns": {
+        "contractName": {
+          "name": "contractName",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contractAddress": {
+          "name": "contractAddress",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "eventName": {
+          "name": "eventName",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "latestWatchedHeight": {
+          "name": "latestWatchedHeight",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "0::bigint"
+        },
+        "pendingHeightLastUpdated": {
+          "name": "pendingHeightLastUpdated",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "latestFinalizedHeight": {
+          "name": "latestFinalizedHeight",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "0::bigint"
+        },
+        "finalizedHeightLastUpdated": {
+          "name": "finalizedHeightLastUpdated",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "pending_height_pk": {
+          "name": "pending_height_pk",
+          "columns": ["contractName", "contractAddress", "eventName"]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.l1ContractAddresses": {
+      "name": "l1ContractAddresses",
+      "schema": "",
+      "columns": {
+        "addresses": {
+          "name": "addresses",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "networkId": {
+          "name": "networkId",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "lastUpdated": {
+          "name": "lastUpdated",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

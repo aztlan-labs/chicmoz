@@ -1,3 +1,4 @@
+import { ChicmozL2BlockFinalizationUpdateEvent } from "@chicmoz-pkg/message-registry";
 import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import { HexString, type ChicmozL2Block } from "@chicmoz-pkg/types";
 import { v4 as uuidv4 } from "uuid";
@@ -20,8 +21,13 @@ import {
   txEffect,
 } from "../../../database/schema/l2block/index.js";
 import { l2BlockFinalizationStatusTable } from "../../schema/l2block/finalization-status.js";
+import { ensureFinalizationStatusStored } from "./add_l1_data.js";
 
-export const store = async (block: ChicmozL2Block): Promise<void> => {
+export const store = async (
+  block: ChicmozL2Block
+): Promise<{
+  finalizationUpdate: ChicmozL2BlockFinalizationUpdateEvent | null;
+}> => {
   return await db().transaction(async (dbTx) => {
     // Insert l2Block
     await dbTx.insert(l2Block).values({
@@ -176,7 +182,7 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
           value: pdw.value,
         });
       }
-      if (0 <= block.finalizationStatus.valueOf()) {
+      if (block.finalizationStatus.valueOf() >= 0) {
         await db() // NOTE: purposly not using dbTx, it should always be stored
           .insert(l2BlockFinalizationStatusTable)
           .values({
@@ -187,5 +193,11 @@ export const store = async (block: ChicmozL2Block): Promise<void> => {
           .onConflictDoNothing();
       }
     }
+    const finalizationUpdate = await ensureFinalizationStatusStored(
+      block.hash,
+      block.height,
+      block.archive.root
+    );
+    return { finalizationUpdate };
   });
 };

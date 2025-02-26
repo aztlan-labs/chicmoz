@@ -1,5 +1,6 @@
 import {
   bigint,
+  boolean,
   integer,
   jsonb,
   pgTable,
@@ -19,6 +20,7 @@ export const l1GenericContractEventTable = pgTable(
       "l1_contract_address"
     ).notNull(),
     l1TransactionHash: varchar("l1_transaction_hash"),
+    isFinalized: boolean("is_finalized").notNull().default(false),
     eventName: varchar("event_name").notNull(),
     eventArgs: jsonb("event_args"),
   },

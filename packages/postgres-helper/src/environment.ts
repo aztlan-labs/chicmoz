@@ -15,13 +15,14 @@ export const dbCredentials = {
 
 export const getConfigStr = () => {
   if (!POSTGRES_DB_NAME) throw new Error("POSTGRES_DB_NAME is not set");
-  return `POSTGRES\n${JSON.stringify({
-    POSTGRES_IP,
-    POSTGRES_PORT,
-    POSTGRES_DB_NAME,
-    POSTGRES_ADMIN,
-    POSTGRES_PASSWORD: POSTGRES_PASSWORD
-      ? "❌❌❌❌❌"
-      : "⚠️ No password provided ⚠️",
-  })}`;
+  return `POSTGRES
+POSTGRES_IP        ${POSTGRES_IP}
+POSTGRES_PORT      ${POSTGRES_PORT}
+POSTGRES_DB_NAME   ${POSTGRES_DB_NAME}
+POSTGRES_ADMIN     ${POSTGRES_ADMIN}
+POSTGRES_PASSWORD  ${
+    POSTGRES_PASSWORD
+      ? POSTGRES_PASSWORD.slice(0, 10).replace(/./g, "*")
+      : "⚠️ No password provided ⚠️"
+  }`;
 };

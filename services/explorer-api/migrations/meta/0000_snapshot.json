@@ -1,5 +1,5 @@
 {
-  "id": "6c71c2ed-98fb-4cd5-86a2-9f2865029d7b",
+  "id": "595c3060-d38a-4e4a-ac39-0874e258df34",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -811,6 +811,12 @@
       "name": "l1L2BlockProposed",
       "schema": "",
       "columns": {
+        "l1ContractAddress": {
+          "name": "l1ContractAddress",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
         "l2BlockNumber": {
           "name": "l2BlockNumber",
           "type": "bigint",
@@ -828,6 +834,19 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "l1BlockHash": {
+          "name": "l1BlockHash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "isFinalized": {
+          "name": "isFinalized",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         },
         "archive": {
           "name": "archive",
@@ -850,10 +869,16 @@
       "name": "l1L2ProofVerified",
       "schema": "",
       "columns": {
+        "l1ContractAddress": {
+          "name": "l1ContractAddress",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
         "l2BlockNumber": {
           "name": "l2BlockNumber",
           "type": "bigint",
-          "primaryKey": true,
+          "primaryKey": false,
           "notNull": true
         },
         "l1BlockNumber": {
@@ -868,6 +893,19 @@
           "primaryKey": false,
           "notNull": true
         },
+        "l1BlockHash": {
+          "name": "l1BlockHash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "isFinalized": {
+          "name": "isFinalized",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
         "proverId": {
           "name": "proverId",
           "type": "varchar(66)",
@@ -877,7 +915,12 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "proof_verified": {
+          "name": "proof_verified",
+          "columns": ["l2BlockNumber", "proverId"]
+        }
+      },
       "uniqueConstraints": {}
     },
     "public.archive": {
@@ -1414,6 +1457,13 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
+        },
+        "is_finalized": {
+          "name": "is_finalized",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         },
         "event_name": {
           "name": "event_name",
