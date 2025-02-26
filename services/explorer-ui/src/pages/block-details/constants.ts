@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-export type tabId = "txEffects" | "contracts";
-
 export const tabIds = ["txEffects", "contracts"] as const;
 
 export const tabIdSchema = z.enum(tabIds);

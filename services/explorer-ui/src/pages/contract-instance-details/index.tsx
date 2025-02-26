@@ -6,7 +6,7 @@ import {
   getContractData,
   tempVerifiedContractInstanceData,
 } from "./util";
-import { PillSection } from "./pill-section";
+import { TabsSection } from "./tabs-section";
 
 export const ContractInstanceDetails: FC = () => {
   const { address } = useParams({
@@ -45,7 +45,7 @@ export const ContractInstanceDetails: FC = () => {
           </div>
         </div>
         <div className="mt-5">
-          <PillSection
+          <TabsSection
             verifiedDeploymentData={verfiedData.contractDetails}
             contactDetailsData={verfiedData.DeployerDetails}
           />

@@ -35,6 +35,20 @@ export const BlockDetails: FC = () => {
 
   if (!latestBlock) return <div> No block hash</div>;
 
+
+  const renderTabContent = () => {
+    switch (selectedTab) {
+      case "txEffects":
+        const isTxLoading = isLoading || txEffectsLoading || blockTxEffects?.length !== latestBlock.body?.txEffects?.length;
+        return <TxEffectsTable txEffects={getTxEffects(blockTxEffects, latestBlock)} isLoading={isTxLoading} error={error ?? txEffectsError} />
+      case "contracts":
+        //TODO:Implement contract in a block
+        return null
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="mx-auto px-7 max-w-[1440px] md:px-[70px]">
       <div>
@@ -56,17 +70,7 @@ export const BlockDetails: FC = () => {
           selectedItem={selectedTab}
         />
         <div className="bg-white rounded-lg shadow-md p-4">
-          {selectedTab === "txEffects" && (
-            <TxEffectsTable
-              txEffects={getTxEffects(blockTxEffects, latestBlock)}
-              isLoading={
-                isLoading ||
-                txEffectsLoading ||
-                blockTxEffects?.length !== latestBlock.body?.txEffects?.length
-              }
-              error={error ?? txEffectsError}
-            />
-          )}
+          {renderTabContent()}
         </div>
       </div>
     </div>
