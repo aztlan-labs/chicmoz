@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Log } from "viem";
 import { logger } from "../../logger.js";
 import { controllers as dbControllers } from "../../svcs/database/index.js";
