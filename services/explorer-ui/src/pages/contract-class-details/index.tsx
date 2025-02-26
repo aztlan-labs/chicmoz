@@ -6,6 +6,7 @@ import { ContractInstancesTable } from "~/components/contracts/instances/table";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { OptionButtons } from "~/components/option-buttons";
 import {
+  useContractClass,
   useContractClassPrivateFunctions,
   useContractClassUnconstrainedFunctions,
   useContractClasses,
@@ -27,12 +28,18 @@ export const ContractClassDetails: FC = () => {
   const contractClassesData = useContractClasses(id);
   const contractInstanceData = useDeployedContractInstances(id);
 
-  const selectedVersion = contractClassesData.data?.find(
-    (contract) => contract.version === Number(version),
-  );
+  const {
+    data: selectedVersionWithArtifact,
+    isLoading,
+    error,
+  } = useContractClass({
+    classId: id,
+    version: version,
+    includeArtifactJson: true,
+  });
 
   if (!id) return <div>No classId</div>;
-  if (!selectedVersion) return <div>No version provided</div>;
+  if (!selectedVersionWithArtifact) return <div>No version provided</div>;
 
 
   return (
@@ -40,13 +47,15 @@ export const ContractClassDetails: FC = () => {
       <div className="flex flex-col gap-4 mt-8">
         <div>
           <div>
-            <h2>Contract class details {selectedVersion.artifactContractName ? `` : ""}
+            <h2>Contract class details {selectedVersionWithArtifact.artifactContractName ? `` : ""}
             </h2>
+            { isLoading && <div>Loading artifact...</div>}
+            { error && <div>Error artifact: {error.message}</div>}
           </div>
           <div className="flex flex-col gap-4 mt-8">
             <div className="bg-white rounded-lg shadow-md p-4">
               <KeyValueDisplay
-                data={getContractClassKeyValueData(selectedVersion)}
+                data={getContractClassKeyValueData(selectedVersionWithArtifact)}
               />
             </div>
           </div>
@@ -54,7 +63,7 @@ export const ContractClassDetails: FC = () => {
             <TabSection
               contractClasses={contractClassesData}
               contractInstances={contractInstanceData}
-              selectedVersion={selectedVersion}
+              selectedVersion={selectedVersionWithArtifact}
             />
           </div>
         </div>

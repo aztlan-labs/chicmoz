@@ -17,7 +17,13 @@ export const queryKeyGenerator = {
   totalContractsLast24h: [statsKey, "totalContractsLast24h"],
   averageFees: [statsKey, "averageFees"],
   averageBlockTime: [statsKey, "averageBlockTime"],
-  contractClass: (classId?: string) => ["contractClass", classId],
+  contractClass: ({
+    classId,
+    version,
+  }: {
+    classId?: string;
+    version?: string;
+  }) => ["contractClass", classId, version],
   contractClassPrivateFunctions: (classId: string) => [
     "contractClassPrivateFunctions",
     classId,

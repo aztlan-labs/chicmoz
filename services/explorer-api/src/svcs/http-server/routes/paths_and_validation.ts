@@ -102,10 +102,15 @@ export const getTxEffectsByTxHashSchema = z.object({
   }),
 });
 
+const contractIncludeArtifactJson = z.object({
+  includeArtifactJson: z.coerce.boolean().optional(),
+});
+
 export const getContractInstanceSchema = z.object({
   params: z.object({
     [address]: hexStringSchema,
   }),
+  query: contractIncludeArtifactJson,
 });
 
 export const getContractInstancesSchema = z.object({
@@ -119,6 +124,7 @@ export const getContractInstancesByBlockHashSchema = z.object({
   params: z.object({
     [blockHash]: hexStringSchema,
   }),
+  query: contractIncludeArtifactJson,
 });
 
 export const getContractClassSchema = z.object({
@@ -126,16 +132,20 @@ export const getContractClassSchema = z.object({
     [classId]: hexStringSchema,
     [version]: z.coerce.number().nonnegative(),
   }),
+  query: contractIncludeArtifactJson,
 });
 
 export const getContractClassesByClassIdSchema = z.object({
   params: z.object({
     [classId]: hexStringSchema,
-  }),
+  })
 });
 
-export const getContractClassPrivateFunctionsSchema =
-  getContractClassesByClassIdSchema;
+export const getContractClassPrivateFunctionsSchema = z.object({
+  params: z.object({
+    [classId]: hexStringSchema,
+  }),
+});
 export const getContractClassPrivateFunctionSchema = z.object({
   params: z.object({
     [classId]: hexStringSchema,

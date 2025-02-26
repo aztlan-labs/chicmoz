@@ -14,15 +14,23 @@ export const getL2RegisteredContractClass = async (
   version: ChicmozL2ContractClassRegisteredEvent["version"],
   includeArtifactJson?: boolean
 ): Promise<ChicmozL2ContractClassRegisteredEvent | null> => {
-  const res = await getL2RegisteredContractClasses(classId, version, includeArtifactJson);
+  const res = await getL2RegisteredContractClasses({
+    classId,
+    version,
+    includeArtifactJson,
+  });
   return res.length > 0 ? res[0] : null;
 };
 
-export const getL2RegisteredContractClasses = async (
-  classId?: ChicmozL2ContractClassRegisteredEvent["contractClassId"],
-  version?: ChicmozL2ContractClassRegisteredEvent["version"],
-  includeArtifactJson?: boolean
-): Promise<Array<ChicmozL2ContractClassRegisteredEvent>> => {
+export const getL2RegisteredContractClasses = async ({
+  classId,
+  version,
+  includeArtifactJson,
+}: {
+  classId?: ChicmozL2ContractClassRegisteredEvent["contractClassId"];
+  version?: ChicmozL2ContractClassRegisteredEvent["version"];
+  includeArtifactJson?: boolean;
+}): Promise<Array<ChicmozL2ContractClassRegisteredEvent>> => {
   if (classId === undefined && version !== undefined) {
     throw new Error("Specifying version but not classId is not allowed");
   }
