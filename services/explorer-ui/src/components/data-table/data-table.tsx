@@ -15,7 +15,7 @@ import {
   useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { DataTablePagination } from "~/components/data-table/data-table-pagination.tsx";
 import {
   Table,
@@ -48,6 +48,7 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [expanded, setExpanded] = useState<ExpandedState>({});
+  const skipPageResetRef = useRef(true)
 
   const tableData = useMemo(() => data, [data]);
   const table = useReactTable({
@@ -60,6 +61,8 @@ export function DataTable<TData, TValue>({
       rowSelection,
       columnFilters,
     },
+    autoResetExpanded: skipPageResetRef.current,
+    autoResetPageIndex: skipPageResetRef.current,
     enableRowSelection: true,
     enableExpanding: true,
     enableSubRowSelection: true,
@@ -79,9 +82,15 @@ export function DataTable<TData, TValue>({
     getExpandedRowModel: getExpandedRowModel(),
   });
 
+  useEffect(() => {
+    if (table.getState().pagination.pageIndex !== 1) {
+      skipPageResetRef.current = true;
+    }
+    skipPageResetRef.current = false;
+  }, [table.getState().pagination.pageIndex])
   return (
     <div className="space-y-4 bg-white rounded-lg p-5">
-      { title && <h3 className="ml-0.5">{title}</h3> }
+      {title && <h3 className="ml-0.5">{title}</h3>}
       <div className="min-w-full">
         {isLoading && <Loader amount={10} />}
         {!isLoading && (
@@ -125,9 +134,8 @@ function DataTableHeader<TData, TValue>({
                     onDoubleClick: () => header.column.resetSize(),
                     onMouseDown: header.getResizeHandler(),
                     onTouchStart: header.getResizeHandler(),
-                    className: `resizer ${
-                      table.options.columnResizeDirection
-                    } ${header.column.getIsResizing() ? "isResizing" : ""}`,
+                    className: `resizer ${table.options.columnResizeDirection
+                      } ${header.column.getIsResizing() ? "isResizing" : ""}`,
                   }}
                 />
               </TableHead>

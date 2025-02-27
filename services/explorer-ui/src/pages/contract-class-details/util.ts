@@ -4,7 +4,8 @@ import { API_URL, aztecExplorer } from "~/service/constants";
 
 export const getContractClassKeyValueData = (
   data: ChicmozL2ContractClassRegisteredEvent
-) => [
+) => {
+  return [
     {
       label: "BLOCK HASH",
       value: data.blockHash,
@@ -44,6 +45,7 @@ export const getContractClassKeyValueData = (
       value: data.whyNotToken ? data.whyNotToken : "N/A",
     },
   ];
+}
 
 export const getArtifactData = (selectedVersion: ChicmozL2ContractClassRegisteredEvent) => {
   let artifact;
