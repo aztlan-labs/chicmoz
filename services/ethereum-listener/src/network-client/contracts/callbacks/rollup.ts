@@ -64,8 +64,7 @@ const l2BlockProposedOnLogs: OnLogsWrapper<L2BlockProposedEventParameters> =
           l2BlockNumber: log.args.blockNumber,
           archive: log.args.archive,
           l1BlockTimestamp: getEventL1Timestamp(
-            log as unknown as { blockTimestamp: `0x${string}` },
-            "L2BlockProposed"
+            log as unknown as { blockTimestamp: `0x${string}` }
           ),
         })
       );
@@ -95,8 +94,7 @@ const l2BlockVerifiedOnLogs: OnLogsWrapper<L2ProofVerifiedEventParameters> =
           l2BlockNumber: log.args.blockNumber,
           proverId: log.args.proverId,
           l1BlockTimestamp: getEventL1Timestamp(
-            log as unknown as { blockTimestamp: `0x${string}` },
-            "L2ProofVerified"
+            log as unknown as { blockTimestamp: `0x${string}` }
           ),
         })
       );

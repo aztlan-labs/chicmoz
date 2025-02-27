@@ -39,8 +39,7 @@ export const genericOnLogs = ({
         l1BlockNumber: log.blockNumber,
         l1BlockHash: log.blockHash,
         l1BlockTimestamp: getEventL1Timestamp(
-          log as unknown as { blockTimestamp: `0x${string}` },
-          `genericOnLogs ${eventName}`
+          log as unknown as { blockTimestamp: `0x${string}` }
         ),
         l1ContractAddress: log.address,
         l1TransactionHash: log.transactionHash,
