@@ -1,70 +1,107 @@
-import { FC, useState } from "react";
+import {
+  type ChicmozL2ContractClassRegisteredEvent,
+  type ChicmozL2ContractInstanceDeluxe,
+} from "@chicmoz-pkg/types";
+import { type UseQueryResult } from "@tanstack/react-query";
+import { useState, type FC } from "react";
+import { Loader } from "~/components/loader";
 import { OptionButtons } from "~/components/option-buttons";
-import { ChicmozL2ContractClassRegisteredEvent, ChicmozL2ContractInstanceDeluxe, } from "@chicmoz-pkg/types";
-import { contractClassTabs, TabId } from "./constants";
-import { getArtifactData } from "./util";
+import { contractClassTabs, type TabId } from "./constants";
 import { ContractInstancesTab } from "./tabs/contract-instances";
-import { UseQueryResult } from "@tanstack/react-query";
 import { ContractVersionsTab } from "./tabs/contract-versions";
 import { JsonTab } from "./tabs/json-tab";
+import {
+  getArtifactData,
+  type SimpleArtifactData,
+  type SimplifiedViewOfFunc,
+} from "./util";
 
 interface TabSectionProps {
-  contractInstances: UseQueryResult<ChicmozL2ContractInstanceDeluxe[], Error>
-  contractClasses: UseQueryResult<ChicmozL2ContractClassRegisteredEvent[], Error>
-  selectedVersion: UseQueryResult<ChicmozL2ContractClassRegisteredEvent[], Error>
+  contractInstances: UseQueryResult<ChicmozL2ContractInstanceDeluxe[], Error>;
+  contractClasses: UseQueryResult<
+    ChicmozL2ContractClassRegisteredEvent[],
+    Error
+  >;
+  selectedVersion: ChicmozL2ContractClassRegisteredEvent | undefined;
+  isContractArtifactLoading: boolean;
+  contractArtifactError: Error | null;
 }
 
-export const TabSection: FC<TabSectionProps> = ({ contractClasses, contractInstances, selectedVersion }) => {
+export const TabSection: FC<TabSectionProps> = ({
+  contractClasses,
+  contractInstances,
+  selectedVersion,
+  isContractArtifactLoading,
+}) => {
   const [selectedTab, setSelectedTab] = useState<TabId>("contractVersions");
   const onOptionSelect = (value: string) => {
     setSelectedTab(value as TabId);
   };
 
-  const { artifact, privFunc, uncFunc, pubFunc } = getArtifactData(selectedVersion.data);
+  let artifact: SimpleArtifactData;
+  let privFunc: SimplifiedViewOfFunc = {};
+  let pubFunc: SimplifiedViewOfFunc = {};
+  let uncFunc: SimplifiedViewOfFunc = {};
+
+  if (selectedVersion?.artifactJson) {
+    const artifactData = getArtifactData(selectedVersion);
+    artifact = artifactData.artifact;
+    privFunc = artifactData.privFunc;
+    pubFunc = artifactData.pubFunc;
+    uncFunc = artifactData.uncFunc;
+  }
 
   const isOptionAvailable = {
     contractVersions: !!contractClasses && !!contractClasses.data?.length,
     contractInstances: !!contractInstances && !!contractInstances.data?.length,
 
-    privateFunctions: !!selectedVersion && privFunc && Object.values(privFunc).length > 1,
-    unconstrainedFunctions: !!selectedVersion && uncFunc && Object.values(uncFunc).length > 1,
-    publicFunctions: !!selectedVersion && pubFunc && Object.values(pubFunc).length > 1,
-    artifactJson: !!selectedVersion && !!selectedVersion.artifactJson,
-    functionJson: !!selectedVersion && !!selectedVersion.artifactJson
+    privateFunctions:
+      !!selectedVersion && privFunc && Object.values(privFunc).length > 1,
+    unconstrainedFunctions:
+      !!selectedVersion && uncFunc && Object.values(uncFunc).length > 1,
+    publicFunctions:
+      !!selectedVersion && pubFunc && Object.values(pubFunc).length > 1,
+    artifactJson:
+      !!selectedVersion &&
+      (!!selectedVersion.artifactJson || isContractArtifactLoading),
+    functionJson: !!selectedVersion && !!selectedVersion.artifactJson,
   };
 
   const renderTabContent = () => {
     switch (selectedTab) {
       case "contractVersions":
-        return <ContractVersionsTab data={contractClasses} />
+        return <ContractVersionsTab data={contractClasses} />;
       case "contractInstances":
-        return <ContractInstancesTab data={contractInstances} />
+        return <ContractInstancesTab data={contractInstances} />;
       case "privateFunctions":
-        return <JsonTab data={privFunc} />
+        return <JsonTab data={privFunc} />;
       case "unconstrainedFunctions":
-        return <JsonTab data={uncFunc} />
+        return <JsonTab data={uncFunc} />;
       case "publicFunctions":
-        return <JsonTab data={pubFunc} />
+        return <JsonTab data={pubFunc} />;
       case "artifactJson":
-        return <JsonTab data={artifact} />
+        return isContractArtifactLoading ? (
+          <Loader amount={1} />
+        ) : (
+          <JsonTab data={artifact} />
+        );
       default:
         return null;
     }
   };
-  return (<>
-
-    <OptionButtons
-      options={contractClassTabs}
-      availableOptions={isOptionAvailable}
-      onOptionSelect={onOptionSelect}
-      selectedItem={selectedTab}
-    />
-    <div className="bg-white rounded-lg shadow-md p-4">
-      <div className="flex flex-col gap-4 md:flex-row ">
-        <div className="bg-white w-full rounded-lg">
-          {renderTabContent()}
+  return (
+    <>
+      <OptionButtons
+        options={contractClassTabs}
+        availableOptions={isOptionAvailable}
+        onOptionSelect={onOptionSelect}
+        selectedItem={selectedTab}
+      />
+      <div className="bg-white rounded-lg shadow-md p-4">
+        <div className="flex flex-col gap-4 md:flex-row ">
+          <div className="bg-white w-full rounded-lg">{renderTabContent()}</div>
         </div>
       </div>
-    </div>
-  </>)
-}
+    </>
+  );
+};

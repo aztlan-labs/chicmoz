@@ -29,23 +29,15 @@ export const ContractClassDetails: FC = () => {
   if (!id) return <div>No classId</div>;
   if (!version) return <div>No version provided</div>;
 
-  const selectedVersionRes = selectedVersionWithArtifactRes?.data
-    ? {
-        ...selectedVersionWithArtifactRes,
-        data: [selectedVersionWithArtifactRes.data],
-      }
-    : {
-        ...contractClassesRes,
-        data: contractClassesRes.data?.filter(
-          (contract) => contract.version === Number(version)
-        ),
-      };
-
-  if (!selectedVersionRes?.data?.[0]) return <div>No data</div>;
+  const selectedVersion = selectedVersionWithArtifactRes?.data
+    ? selectedVersionWithArtifactRes.data
+    : contractClassesRes.data?.find(
+        (contract) => contract.version === Number(version)
+      );
 
   const headerStr = `Contract class details ${
-    selectedVersionRes?.data?.[0]?.artifactContractName
-      ? selectedVersionRes?.data?.[0]?.artifactContractName
+    selectedVersion?.artifactContractName
+      ? selectedVersion?.artifactContractName
       : ""
   }`;
 
@@ -58,11 +50,11 @@ export const ContractClassDetails: FC = () => {
 
       <div className="flex flex-col gap-4 mt-8">
         <div className="bg-white rounded-lg shadow-md p-4">
-          {selectedVersionRes.isLoading && <Loader amount={1} />}
-          {selectedVersionRes.error && <div>error</div>}
-          {selectedVersionRes.data && (
+          {contractClassesRes.isLoading && <Loader amount={1} />}
+          {contractClassesRes.error && <div>error</div>}
+          {selectedVersion && (
             <KeyValueDisplay
-              data={getContractClassKeyValueData(selectedVersionRes.data[0])}
+              data={getContractClassKeyValueData(selectedVersion)}
             />
           )}
         </div>
@@ -71,7 +63,9 @@ export const ContractClassDetails: FC = () => {
         <TabSection
           contractClasses={contractClassesRes}
           contractInstances={contractInstanceRes}
-          selectedVersion={selectedVersionRes}
+          selectedVersion={selectedVersion}
+          isContractArtifactLoading={selectedVersionWithArtifactRes.isLoading}
+          contractArtifactError={selectedVersionWithArtifactRes.error}
         />
       </div>
     </div>
