@@ -1,10 +1,10 @@
 import {
-  type ChicmozL2PrivateFunctionBroadcastedEvent,
   type ChicmozL2ContractClassRegisteredEvent,
   type ChicmozL2ContractInstanceDeluxe,
+  type ChicmozL2PrivateFunctionBroadcastedEvent,
   type ChicmozL2UnconstrainedFunctionBroadcastedEvent,
 } from "@chicmoz-pkg/types";
-import { type UseQueryResult, useQuery } from "@tanstack/react-query";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { ContractL2API } from "~/api";
 import { REFETCH_INTERVAL, queryKeyGenerator } from "./utils";
 
@@ -12,7 +12,7 @@ export const useContractClasses = (
   classId?: string
 ): UseQueryResult<ChicmozL2ContractClassRegisteredEvent[], Error> => {
   return useQuery<ChicmozL2ContractClassRegisteredEvent[], Error>({
-    queryKey: queryKeyGenerator.contractClass(classId),
+    queryKey: queryKeyGenerator.contractClass({ classId }),
     queryFn: () => ContractL2API.getContractClasses(classId),
   });
 };
@@ -27,23 +27,43 @@ export const useLatestContractClasses = (
   });
 };
 
+export const useContractClass = ({
+  classId,
+  version,
+  includeArtifactJson,
+}: {
+  classId: string;
+  version: string;
+  includeArtifactJson?: boolean;
+}): UseQueryResult<ChicmozL2ContractClassRegisteredEvent, Error> => {
+  return useQuery<ChicmozL2ContractClassRegisteredEvent, Error>({
+    queryKey: queryKeyGenerator.contractClass({
+      classId,
+      version,
+    }),
+    queryFn: () =>
+      ContractL2API.getContractClass({ classId, version, includeArtifactJson }),
+  });
+};
+
 export const useContractClassPrivateFunctions = (
-  classId: string,
+  classId: string
 ): UseQueryResult<ChicmozL2PrivateFunctionBroadcastedEvent[], Error> => {
   return useQuery<ChicmozL2PrivateFunctionBroadcastedEvent[], Error>({
     queryKey: queryKeyGenerator.contractClassPrivateFunctions(classId),
     queryFn: () => ContractL2API.getContractClassPrivateFunctions(classId),
   });
-}
+};
 
 export const useContractClassUnconstrainedFunctions = (
-  classId: string,
+  classId: string
 ): UseQueryResult<ChicmozL2UnconstrainedFunctionBroadcastedEvent[], Error> => {
   return useQuery<ChicmozL2UnconstrainedFunctionBroadcastedEvent[], Error>({
     queryKey: queryKeyGenerator.contractClassUnconstrainedFunctions(classId),
-    queryFn: () => ContractL2API.getL2ContractClassUnconstrainedFunctions(classId),
+    queryFn: () =>
+      ContractL2API.getL2ContractClassUnconstrainedFunctions(classId),
   });
-}
+};
 
 export const useContractInstance = (
   address: string

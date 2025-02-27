@@ -12,12 +12,22 @@ import { aztecExplorer } from "~/service/constants";
 import client, { validateResponse } from "./client";
 
 export const ContractL2API = {
-  getContractClass: async (
-    address: string,
-    version: string
-  ): Promise<ChicmozL2ContractClassRegisteredEvent> => {
+  getContractClass: async ({
+    classId,
+    version,
+    includeArtifactJson,
+  }: {
+    classId: string;
+    version: string;
+    includeArtifactJson?: boolean;
+  }): Promise<ChicmozL2ContractClassRegisteredEvent> => {
     const response = await client.get(
-      aztecExplorer.getL2ContractClassByIdAndVersion(address, version)
+      aztecExplorer.getL2ContractClassByIdAndVersion(classId, version),
+      {
+        params: {
+          includeArtifactJson,
+        },
+      }
     );
     return validateResponse(
       chicmozL2ContractClassRegisteredEventSchema,

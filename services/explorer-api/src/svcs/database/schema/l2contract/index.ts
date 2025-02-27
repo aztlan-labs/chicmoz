@@ -2,7 +2,6 @@ import { HexString } from "@chicmoz-pkg/types";
 import { relations } from "drizzle-orm";
 import {
   bigint,
-  boolean,
   foreignKey,
   integer,
   jsonb,
@@ -15,8 +14,8 @@ import { l2Block } from "../index.js";
 import {
   bufferType,
   generateAztecAddressColumn,
-  generateFrColumn,
   generateConcatFrPointColumn,
+  generateFrColumn,
 } from "../utils.js";
 
 export const l2ContractInstanceDeployed = pgTable(
@@ -73,8 +72,6 @@ export const l2ContractClassRegistered = pgTable(
     packedBytecode: bufferType("packed_bytecode").notNull(),
     artifactJson: varchar("artifact_json"),
     artifactContractName: varchar("artifact_contract_name"),
-    isToken: boolean("is_token_contract").default(false),
-    whyNotToken: varchar("why_not_token"),
   },
   (t) => ({
     primaryKey: primaryKey({

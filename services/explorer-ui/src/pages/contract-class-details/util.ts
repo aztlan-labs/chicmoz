@@ -47,30 +47,50 @@ export const getContractClassKeyValueData = (
   ];
 }
 
-export const getArtifactData = (selectedVersion: ChicmozL2ContractClassRegisteredEvent) => {
-  let artifact;
-  let privFunc: { [functionName: string]: { [paramName: string]: string } } = {};
-  let pubFunc: { [functionName: string]: { [paramName: string]: string } } = {};
-  let uncFunc: { [functionName: string]: { [paramName: string]: string } } = {};
+export type SimpleArtifactData = {
+  functions: {
+    name: string;
+    abi: {
+      parameters: {
+        name: string;
+        type: {
+          kind: string;
+        };
+      }[];
+    };
+    custom_attributes: string[];
+    is_unconstrained: boolean;
+  }[];
+};
+
+export type SimplifiedViewOfFunc = Record<string, Record<string, string>>;
+
+export const getArtifactData = (
+  selectedVersion: ChicmozL2ContractClassRegisteredEvent
+) => {
+  let artifact: SimpleArtifactData = { functions: [] };
+  const privFunc: SimplifiedViewOfFunc = {};
+  const pubFunc: SimplifiedViewOfFunc = {};
+  const uncFunc: SimplifiedViewOfFunc = {};
 
   if (selectedVersion.artifactJson) {
     try {
-      artifact = JSON.parse(selectedVersion.artifactJson);
+      artifact = JSON.parse(selectedVersion.artifactJson) as SimpleArtifactData;
 
-      artifact.functions.forEach((func: any) => {
-        if (!func.abi || !func.abi.parameters) return;
-        func.abi.parameters.forEach((param: any) => {
+      artifact.functions.forEach((func) => {
+        if (!func.abi?.parameters) return;
+        func.abi.parameters.forEach((param) => {
           if (param.name === "inputs") return;
           const paramType = param.type?.kind || "unknown";
           if (func.is_unconstrained) {
             if (!uncFunc[func.name]) uncFunc[func.name] = {};
             uncFunc[func.name][param.name] = paramType;
           }
-          if (func.custom_attributes && func.custom_attributes.includes("public")) {
+          if (func.custom_attributes?.includes("public")) {
             if (!pubFunc[func.name]) pubFunc[func.name] = {};
             pubFunc[func.name][param.name] = paramType;
           }
-          if (func.custom_attributes && func.custom_attributes.includes("private")) {
+          if (func.custom_attributes?.includes("private")) {
             if (!privFunc[func.name]) privFunc[func.name] = {};
             privFunc[func.name][param.name] = paramType;
           }
@@ -84,6 +104,6 @@ export const getArtifactData = (selectedVersion: ChicmozL2ContractClassRegistere
     artifact,
     privFunc,
     pubFunc,
-    uncFunc
+    uncFunc,
   };
 };
