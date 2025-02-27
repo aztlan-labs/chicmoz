@@ -1,3 +1,8 @@
+import { NoirCompiledContract } from "@aztec/aztec.js";
+import {
+  IsTokenArtifactResult,
+  isTokenArtifact,
+} from "@chicmoz-pkg/contract-verification";
 import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import {
   chicmozL2ContractClassRegisteredEventSchema,
@@ -52,9 +57,35 @@ export const getL2RegisteredContractClasses = async ({
     .limit(limit)
     .orderBy(desc(l2ContractClassRegistered.version));
 
-  return result.map((r) =>
-    chicmozL2ContractClassRegisteredEventSchema.parse(r)
-  );
+  return result.map((r) => {
+    let tokenData = {
+      isToken: false,
+      whyNotToken: "No artifactJson found",
+    };
+    if (includeArtifactJson && r.artifactJson) {
+      const parsedArtifactJson = JSON.parse(
+        r.artifactJson
+      ) as unknown as NoirCompiledContract;
+      const isTokenResult = isTokenArtifact(
+        parsedArtifactJson
+      ) as IsTokenArtifactResult;
+      if (isTokenResult.result) {
+        tokenData = {
+          isToken: true,
+          whyNotToken: isTokenResult.details,
+        };
+      } else {
+        tokenData = {
+          isToken: false,
+          whyNotToken: isTokenResult.details,
+        };
+      }
+    }
+    return chicmozL2ContractClassRegisteredEventSchema.parse({
+      ...r,
+      ...tokenData,
+    });
+  });
 };
 
 export const getLatestL2RegisteredContractClasses = async (): Promise<

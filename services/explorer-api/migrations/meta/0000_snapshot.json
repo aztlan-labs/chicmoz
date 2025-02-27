@@ -1,5 +1,5 @@
 {
-  "id": "595c3060-d38a-4e4a-ac39-0874e258df34",
+  "id": "31e9620b-506b-4c01-9a95-9bddf3817de7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1067,19 +1067,6 @@
         },
         "artifact_contract_name": {
           "name": "artifact_contract_name",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "is_token_contract": {
-          "name": "is_token_contract",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "why_not_token": {
-          "name": "why_not_token",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
