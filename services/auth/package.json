@@ -50,6 +50,7 @@
     "dev": "yarn node build/index.js",
     "start": "yarn node build/index.js",
     "test": "yarn run vitest",
+    "test-once": "yarn run vitest run",
     "lint": "yarn run lint-base --ext .ts .",
     "lint-base": "yarn run g:lint"
   },
