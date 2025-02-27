@@ -1,28 +1,47 @@
+import { NoirCompiledContract } from "@aztec/aztec.js";
+import {
+  IsTokenArtifactResult,
+  isTokenArtifact,
+} from "@chicmoz-pkg/contract-verification";
+import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import {
   chicmozL2ContractClassRegisteredEventSchema,
   type ChicmozL2ContractClassRegisteredEvent,
 } from "@chicmoz-pkg/types";
-import { and, desc, eq, getTableColumns } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { DB_MAX_CONTRACTS } from "../../../../environment.js";
-import { getDb as db } from "@chicmoz-pkg/postgres-helper";
-import { l2ContractClassRegistered } from "../../schema/l2contract/index.js";
 import { l2Block } from "../../schema/index.js";
+import { l2ContractClassRegistered } from "../../schema/l2contract/index.js";
+import { getContractClassRegisteredColumns } from "./utils.js";
 
 export const getL2RegisteredContractClass = async (
   classId: ChicmozL2ContractClassRegisteredEvent["contractClassId"],
-  version: ChicmozL2ContractClassRegisteredEvent["version"]
+  version: ChicmozL2ContractClassRegisteredEvent["version"],
+  includeArtifactJson?: boolean
 ): Promise<ChicmozL2ContractClassRegisteredEvent | null> => {
-  const res = await getL2RegisteredContractClasses(classId, version);
+  const res = await getL2RegisteredContractClasses({
+    classId,
+    version,
+    includeArtifactJson,
+  });
   return res.length > 0 ? res[0] : null;
 };
 
-export const getL2RegisteredContractClasses = async (
-  classId?: ChicmozL2ContractClassRegisteredEvent["contractClassId"],
-  version?: ChicmozL2ContractClassRegisteredEvent["version"]
-): Promise<Array<ChicmozL2ContractClassRegisteredEvent>> => {
-  if (classId === undefined && version !== undefined)
+export const getL2RegisteredContractClasses = async ({
+  classId,
+  version,
+  includeArtifactJson,
+}: {
+  classId?: ChicmozL2ContractClassRegisteredEvent["contractClassId"];
+  version?: ChicmozL2ContractClassRegisteredEvent["version"];
+  includeArtifactJson?: boolean;
+}): Promise<Array<ChicmozL2ContractClassRegisteredEvent>> => {
+  if (classId === undefined && version !== undefined) {
     throw new Error("Specifying version but not classId is not allowed");
-  if (classId === undefined) return getLatestL2RegisteredContractClasses();
+  }
+  if (classId === undefined) {
+    return getLatestL2RegisteredContractClasses();
+  }
   const whereQuery = version
     ? and(
         eq(l2ContractClassRegistered.contractClassId, classId),
@@ -32,15 +51,41 @@ export const getL2RegisteredContractClasses = async (
   const limit = version ? 1 : DB_MAX_CONTRACTS;
 
   const result = await db()
-    .select(getTableColumns(l2ContractClassRegistered))
+    .select(getContractClassRegisteredColumns(includeArtifactJson))
     .from(l2ContractClassRegistered)
     .where(whereQuery)
     .limit(limit)
     .orderBy(desc(l2ContractClassRegistered.version));
 
-  return result.map((r) =>
-    chicmozL2ContractClassRegisteredEventSchema.parse(r)
-  );
+  return result.map((r) => {
+    let tokenData = {
+      isToken: false,
+      whyNotToken: "No artifactJson found",
+    };
+    if (includeArtifactJson && r.artifactJson) {
+      const parsedArtifactJson = JSON.parse(
+        r.artifactJson
+      ) as unknown as NoirCompiledContract;
+      const isTokenResult = isTokenArtifact(
+        parsedArtifactJson
+      ) as IsTokenArtifactResult;
+      if (isTokenResult.result) {
+        tokenData = {
+          isToken: true,
+          whyNotToken: isTokenResult.details,
+        };
+      } else {
+        tokenData = {
+          isToken: false,
+          whyNotToken: isTokenResult.details,
+        };
+      }
+    }
+    return chicmozL2ContractClassRegisteredEventSchema.parse({
+      ...r,
+      ...tokenData,
+    });
+  });
 };
 
 export const getLatestL2RegisteredContractClasses = async (): Promise<
