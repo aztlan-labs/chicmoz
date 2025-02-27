@@ -2,9 +2,6 @@ apiVersion: skaffold/v4beta6
 kind: Config
 metadata:
   name: chicmoz
-requires:
-  #- path: ./common/skaffold.infra.yaml
-  # TODO: - path: ./common/postgres-config.yaml
 deploy:
   kubectl:
     flags:
