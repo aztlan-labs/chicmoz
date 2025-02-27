@@ -30,26 +30,23 @@ export const ContractInstanceDetails: FC = () => {
   return (
     <div className="mx-auto px-[70px] max-w-[1440px]">
       <div className="flex flex-col gap-4 mt-8">
-        <div>
-          <div>
-            <h2 className="flex items-center gap-2">
-              Contract instance details
-            </h2>
-          </div>
-          <div className="flex flex-col gap-4 mt-8">
-            <div className="bg-white rounded-lg shadow-md p-4">
-              <KeyValueDisplay
-                data={getContractData(contractInstanceDetails)}
-              />
-            </div>
+        <div className="flex flex-wrap m-3">
+          <h3 className="mt-2 text-primary md:hidden">Contract instance details</h3>
+          <h2 className="hidden md:block md:mt-6 md:text-primary">Contract instance details</h2>
+        </div>
+        <div className="flex flex-col gap-4 mt-8">
+          <div className="bg-white rounded-lg shadow-md p-4">
+            <KeyValueDisplay
+              data={getContractData(contractInstanceDetails)}
+            />
           </div>
         </div>
-        <div className="mt-5">
-          <TabsSection
-            verifiedDeploymentData={verfiedData.contractDetails}
-            contactDetailsData={verfiedData.DeployerDetails}
-          />
-        </div>
+      </div>
+      <div className="mt-5">
+        <TabsSection
+          verifiedDeploymentData={verfiedData.contractDetails}
+          contactDetailsData={verfiedData.DeployerDetails}
+        />
       </div>
     </div>
   );
