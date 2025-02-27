@@ -15,8 +15,8 @@ import { pendingTxHandler } from "./on-pending-txs.js";
 import { sequencerInfoHandler } from "./on-sequencer-info.js";
 
 export const subscribeHandlers = async () => {
-  await startSubscribe(chainInfoHandler);
   await Promise.all([
+    startSubscribe(chainInfoHandler),
     startSubscribe(sequencerInfoHandler),
     startSubscribe(l2RpcNodeAliveHandler),
     startSubscribe(l2RpcNodeErrorHandler),
