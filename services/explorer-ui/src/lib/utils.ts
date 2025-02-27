@@ -1,4 +1,4 @@
-import { type ClassValue, clsx } from "clsx";
+import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -18,9 +18,13 @@ export const hslToHex = (h: number, s: number, l: number) => {
   return `#${f(0)}${f(8)}${f(4)}`;
 };
 export const hexToHSL = (hex: string): string => {
-  if (hex === "#fff" || hex === "#ffffff") return "hsl(0, 0%, 100%)";
+  if (hex === "#fff" || hex === "#ffffff") {
+    return "hsl(0, 0%, 100%)";
+  }
 
-  if (hex === "#000" || hex === "#000000") return "hsl(0, 0%, 0%)";
+  if (hex === "#000" || hex === "#000000") {
+    return "hsl(0, 0%, 0%)";
+  }
 
   const r = parseInt(hex.substring(1, 3), 16) / 255;
   const g = parseInt(hex.substring(3, 5), 16) / 255;
@@ -80,15 +84,21 @@ export const formatDuration = (durationSeconds: number, short?: boolean) => {
   return "just now";
 };
 
-export const formatTimeSince = (unixTimestamp: number | null, short = true) => {
-  if (unixTimestamp === null) return "no timestamp";
+export const formatTimeSince = (
+  unixTimestamp: number | null | undefined,
+  short = true
+) => {
+  if (!unixTimestamp) {
+    return "no timestamp";
+  }
   const now = new Date().getTime();
   const secondsSince = Math.round((now - unixTimestamp) / 1000);
   const duration = formatDuration(secondsSince, short);
-  if (duration === "just now") return duration;
+  if (duration === "just now") {
+    return duration;
+  }
   return `${duration}`;
 };
-
 
 const feesPrefix = [
   { label: "", value: 1 },
@@ -98,7 +108,9 @@ const feesPrefix = [
 ];
 
 export const formatFees = (fees: string | undefined) => {
-  if (fees === undefined) return { denomination: "", value: "No data" };
+  if (fees === undefined) {
+    return { denomination: "", value: "No data" };
+  }
   const feesNumber = Number(fees);
   for (let i = feesPrefix.length - 1; i >= 0; i--) {
     const prefix = feesPrefix[i];

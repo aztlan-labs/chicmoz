@@ -13,21 +13,18 @@ export const getBlockDetails = (
   const l2BlockTimestamp = latestBlock.header.globalVariables.timestamp;
   const l2BlockTimeSince = formatTimeSince(l2BlockTimestamp);
 
-  let proposedTimeSince: string | undefined = undefined;
-  let proposedOnL1Timestamp: number | undefined = undefined;
-  if (latestBlock?.proposedOnL1?.l1BlockTimestamp) {
-    proposedOnL1Timestamp =
-      (latestBlock?.proposedOnL1?.l1BlockTimestamp as number) * 1000;
-    proposedTimeSince = formatTimeSince(proposedOnL1Timestamp);
-  }
+  const proposedOnL1Date: Date | undefined =
+    latestBlock?.proposedOnL1?.l1BlockTimestamp;
+  const proposedTimeSince: string | undefined = formatTimeSince(
+    proposedOnL1Date?.getTime()
+  );
 
-  let proofVerifiedTimeSince: string | undefined = undefined;
-  let proofVerifiedOnL1Timestamp: number | undefined = undefined;
-  if (latestBlock?.proofVerifiedOnL1?.l1BlockTimestamp) {
-    proofVerifiedOnL1Timestamp =
-      (latestBlock?.proofVerifiedOnL1?.l1BlockTimestamp as number) * 1000;
-    proofVerifiedTimeSince = formatTimeSince(proofVerifiedOnL1Timestamp);
-  }
+  const proofVerifiedOnL1Date: Date | undefined =
+    latestBlock?.proofVerifiedOnL1?.l1BlockTimestamp;
+  const proofVerifiedTimeSince: string | undefined = formatTimeSince(
+    proofVerifiedOnL1Date?.getTime()
+  );
+
   return [
     { label: "Block Number", value: "" + latestBlock.height },
     { label: "Block Hash", value: latestBlock.hash },
@@ -71,18 +68,14 @@ export const getBlockDetails = (
     },
     {
       label: "Proposed on L1",
-      value: proposedOnL1Timestamp
-        ? `${new Date(
-            proposedOnL1Timestamp
-          ).toLocaleString()} (${proposedTimeSince})`
+      value: proposedOnL1Date
+        ? `${proposedOnL1Date.toLocaleString()} (${proposedTimeSince})`
         : "Not yet proposed",
     },
     {
       label: "Proof Verified on L1",
-      value: proofVerifiedOnL1Timestamp
-        ? `${new Date(
-            proofVerifiedOnL1Timestamp
-          ).toLocaleString()} (${proofVerifiedTimeSince})`
+      value: proofVerifiedOnL1Date
+        ? `${proofVerifiedOnL1Date.toLocaleString()} (${proofVerifiedTimeSince})`
         : "Not yet verified",
     },
     {

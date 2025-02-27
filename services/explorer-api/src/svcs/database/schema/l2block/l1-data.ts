@@ -1,9 +1,9 @@
 import {
   bigint,
   boolean,
-  integer,
   pgTable,
   primaryKey,
+  timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
 
@@ -15,7 +15,7 @@ export const l1L2BlockProposedTable = pgTable(
     l1ContractAddress: varchar("l1ContractAddress").notNull(),
     l2BlockNumber: bigint("l2BlockNumber", { mode: "bigint" }).notNull(),
     l1BlockNumber: bigint("l1BlockNumber", { mode: "bigint" }).notNull(),
-    l1BlockTimestamp: integer("l1BlockTimestamp").notNull(),
+    l1BlockTimestamp: timestamp("l1BlockTimestamp").notNull(),
     l1BlockHash: varchar("l1BlockHash").notNull(),
     isFinalized: boolean("isFinalized").default(false),
     archive: generateFrColumn("archive").notNull(),
@@ -34,7 +34,7 @@ export const l1L2ProofVerifiedTable = pgTable(
     l1ContractAddress: varchar("l1ContractAddress").notNull(),
     l2BlockNumber: bigint("l2BlockNumber", { mode: "bigint" }).notNull(),
     l1BlockNumber: bigint("l1BlockNumber", { mode: "bigint" }).notNull(),
-    l1BlockTimestamp: integer("l1BlockTimestamp").notNull(),
+    l1BlockTimestamp: timestamp("l1BlockTimestamp").notNull(),
     l1BlockHash: varchar("l1BlockHash").notNull(),
     isFinalized: boolean("isFinalized").default(false),
     proverId: generateFrColumn("proverId").notNull(),

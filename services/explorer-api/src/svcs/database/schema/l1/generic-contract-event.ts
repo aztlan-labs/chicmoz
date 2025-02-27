@@ -1,9 +1,9 @@
 import {
   bigint,
   boolean,
-  integer,
   jsonb,
   pgTable,
+  timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -15,7 +15,7 @@ export const l1GenericContractEventTable = pgTable(
     id: uuid("id").defaultRandom().primaryKey(),
     l1BlockHash: varchar("l1_block_hash").notNull(),
     l1BlockNumber: bigint("l1_block_number", { mode: "bigint" }).notNull(),
-    l1BlockTimestamp: integer("l1_block_timestamp").notNull(),
+    l1BlockTimestamp: timestamp("l1_block_timestamp").notNull(),
     l1ContractAddress: generateEthAddressColumn(
       "l1_contract_address"
     ).notNull(),

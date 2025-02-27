@@ -6,6 +6,7 @@ import { emit } from "../../../events/index.js";
 import { logger } from "../../../logger.js";
 import { RollupContract } from "../utils.js";
 import { asyncForEach } from "./index.js";
+import { getEventL1Timestamp } from "./utils.js";
 
 // TODO: Move to a more appropriate location
 const onError = (name: string) => (e: Error) => {
@@ -62,10 +63,9 @@ const l2BlockProposedOnLogs: OnLogsWrapper<L2BlockProposedEventParameters> =
           isFinalized: wrapperArgs.isFinalized,
           l2BlockNumber: log.args.blockNumber,
           archive: log.args.archive,
-          l1BlockTimestamp: Number.parseInt(
-            (log as unknown as { blockTimestamp: `0x${string}` })
-              .blockTimestamp,
-            16
+          l1BlockTimestamp: getEventL1Timestamp(
+            log as unknown as { blockTimestamp: `0x${string}` },
+            "L2BlockProposed"
           ),
         })
       );
@@ -94,10 +94,9 @@ const l2BlockVerifiedOnLogs: OnLogsWrapper<L2ProofVerifiedEventParameters> =
           isFinalized: wrapperArgs.isFinalized,
           l2BlockNumber: log.args.blockNumber,
           proverId: log.args.proverId,
-          l1BlockTimestamp: Number.parseInt(
-            (log as unknown as { blockTimestamp: `0x${string}` })
-              .blockTimestamp,
-            16
+          l1BlockTimestamp: getEventL1Timestamp(
+            log as unknown as { blockTimestamp: `0x${string}` },
+            "L2ProofVerified"
           ),
         })
       );

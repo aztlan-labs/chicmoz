@@ -1,5 +1,5 @@
 {
-  "id": "595c3060-d38a-4e4a-ac39-0874e258df34",
+  "id": "1099228f-1bd9-44a0-809c-09e29e732122",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -831,7 +831,7 @@
         },
         "l1BlockTimestamp": {
           "name": "l1BlockTimestamp",
-          "type": "integer",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },
@@ -889,7 +889,7 @@
         },
         "l1BlockTimestamp": {
           "name": "l1BlockTimestamp",
-          "type": "integer",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },
@@ -1442,7 +1442,7 @@
         },
         "l1_block_timestamp": {
           "name": "l1_block_timestamp",
-          "type": "integer",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },

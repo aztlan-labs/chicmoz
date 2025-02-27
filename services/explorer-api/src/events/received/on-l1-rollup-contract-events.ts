@@ -87,6 +87,7 @@ export const l1L2ProofVerifiedHandler: EventHandler = {
   cb: onVerf as (arg0: unknown) => Promise<void>,
 };
 
+// TODO: move to separate file
 const onGeneric = async (event: ChicmozL1GenericContractEvent) => {
   logger.info(
     getLogStr(
