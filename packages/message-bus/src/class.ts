@@ -28,6 +28,7 @@ export type MBConsumer = {
 export class MessageBus {
   #client: Kafka;
   #producer: Producer | undefined;
+  #producerConnectingPromise: Promise<void> | undefined;
   #consumers: Record<string, MBConsumer | undefined>;
   #shutdown = false;
   logger: Logger;
@@ -39,16 +40,16 @@ export class MessageBus {
       brokers: options.connection.split(","),
       sasl: options.saslConfig,
       logCreator: () => {
-        return ({ log }) => {
+        return ({ log, label }) => {
           const { message, error, stack, retryCount } = log;
-          if (stack) this.logger.error(`Kafka: ${stack}`);
-          else if (error) this.logger.error(`Kafka: ${error} (message: ${message})`);
-          else if (retryCount) this.logger.warn(`Kafka: ${message} (retrying ${retryCount}...)`);
-          else this.logger.info(`Kafka: ${message}`);
+          if (stack) {this.logger.error(`Kafka: ${stack}`);}
+          else if (error) {this.logger.error(`Kafka: ${error} (message: ${message})`);}
+          else if (retryCount) {this.logger.warn(`Kafka: ${message} (retrying ${retryCount}...)`);}
+          else {this.logger.info(`Kafka[${label}]: ${message}`);}
         };
       },
     };
-    if (options.ssl) kafkaConfig.ssl = true;
+    if (options.ssl) {kafkaConfig.ssl = true;}
 
     this.#client = new Kafka(kafkaConfig);
     this.#consumers = {};
@@ -69,9 +70,12 @@ export class MessageBus {
     );
   }
 
-  private async connectProducer() {
-    this.#producer = this.#client.producer();
-    await this.#producer.connect();
+  private async ensureProducerConnected() {
+    if (!this.#producerConnectingPromise) {
+      this.#producer = this.#client.producer();
+      this.#producerConnectingPromise = this.#producer.connect();
+    }
+    await this.#producerConnectingPromise;
   }
 
   private async connectConsumer(groupId: string) {
@@ -83,13 +87,13 @@ export class MessageBus {
   }
 
   async publish<T>(topic: string, ...messages: T[]) {
-    if (this.#shutdown) throw new Error("MessageBus is already shutdown");
+    if (this.#shutdown) {throw new Error("MessageBus is already shutdown");}
 
-    if (!this.#producer) await this.connectProducer();
+    await this.ensureProducerConnected();
 
     const kafkaMessages: Message[] = [];
     for (const m of messages)
-      kafkaMessages.push({ value: Buffer.from(BSON.serialize({ data: m })) }); // double check
+      {kafkaMessages.push({ value: Buffer.from(BSON.serialize({ data: m })) });} // double check
 
     await this.#producer!.send({ topic, messages: kafkaMessages });
   }
@@ -101,7 +105,7 @@ export class MessageBus {
     cb: ((event: T) => Promise<void>) | ((event: T) => void)
   ) {
     this.logger.info(`Kafka (sub): connecting to consumer group ${groupId}`);
-    if (!this.#consumers[groupId]) await this.connectConsumer(groupId);
+    if (!this.#consumers[groupId]) {await this.connectConsumer(groupId);}
 
     this.logger.info(`Kafka (sub): subscribing to topic ${topic}`);
     await this.#consumers[groupId]!.consumer.subscribe({
@@ -149,7 +153,7 @@ export class MessageBus {
 
   async runConsumer(groupId: string) {
     if (!this.#consumers[groupId])
-      throw new Error(`No consumer exists with groupId: ${groupId}`);
+      {throw new Error(`No consumer exists with groupId: ${groupId}`);}
 
     this.nonRetriableWrapper(groupId);
 
@@ -184,6 +188,6 @@ export class MessageBus {
     this.#shutdown = true;
     await this.#producer?.disconnect();
     for (const consumer of Object.values(this.#consumers))
-      await consumer?.consumer.disconnect();
+      {await consumer?.consumer.disconnect();}
   }
 }
