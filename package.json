@@ -26,6 +26,7 @@
     "lint:packages": "yarn workspaces foreach --parallel --all --topological-dev --verbose --include '@chicmoz-pkg/*' run lint",
     "build": "yarn workspaces foreach --parallel --all --topological-dev --verbose run build",
     "lint": "yarn workspaces foreach --parallel --all --topological-dev --verbose run lint",
+    "test": "yarn workspaces foreach --parallel --all --topological-dev --verbose run test-once",
     "g:lint": "cd $INIT_CWD && eslint --fix",
     "postinstall": "husky install",
     "prepare": "husky install"

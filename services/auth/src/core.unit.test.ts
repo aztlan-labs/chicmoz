@@ -7,20 +7,23 @@ import { RateLimitDb } from "./database/rate-limit.js";
 describe("core unit tests", () => {
   // FIXME: Mock these things better most likely
   const infoMock = vi.fn(() => "");
-  
+
   const logger = {
     info: infoMock,
   } as unknown as Logger;
-  
+
   const mockApiKey = "9ccca684-28f8-4897-af71-5f85fcbd60bd";
-  
+
   const registerMock = vi.fn(() => [{ id: "1", apiKey: mockApiKey }, true]);
-  const registerWithDiscordIdMock = vi.fn(() => [{ id: "2", apiKey: mockApiKey }, true]);
+  const registerWithDiscordIdMock = vi.fn(() => [
+    { id: "2", apiKey: mockApiKey },
+    true,
+  ]);
   const deleteMock = vi.fn(() => 1);
   const deleteMockRateLimitDb = vi.fn(() => Promise<void>);
 
   const setApiKeySubscriptionMock = vi.fn();
-  
+
   const rateLimitDb = {
     setApiKeySubscription: setApiKeySubscriptionMock,
     deleteApiKey: deleteMockRateLimitDb,
@@ -31,7 +34,6 @@ describe("core unit tests", () => {
     registerWithDiscordId: registerWithDiscordIdMock,
     delete: deleteMock,
   } as unknown as DB;
-
 
   describe("extractApiKey", () => {
     test("success; multiple sub-paths", () => {

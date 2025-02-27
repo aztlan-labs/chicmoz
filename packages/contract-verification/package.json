@@ -12,7 +12,8 @@
     "start": "yarn node build/index.js",
     "lint": "yarn run lint-base --ext .ts .",
     "lint-base": "yarn run g:lint",
-    "test": "yarn run vitest"
+    "test": "yarn run vitest",
+    "test-once": "yarn run vitest run"
   },
   "dependencies": {
     "@aztec/aztec.js": "0.76.4",
