@@ -52,8 +52,9 @@ export const BlockDetails: FC = () => {
   return (
     <div className="mx-auto px-7 max-w-[1440px] md:px-[70px]">
       <div>
-        <div>
-          <h2>Block Details </h2>
+        <div className="flex flex-wrap m-5">
+          <h2 className="mt-2 text-primary md:hidden">Block Details</h2>
+          <h1 className="hidden md:block md:mt-8">Block Details</h1>
         </div>
         <div className="flex flex-col gap-4 mt-8 pb-4">
           <div className="bg-white rounded-lg shadow-md p-4">

@@ -11,7 +11,7 @@ import { JsonTab } from "./tabs/json-tab";
 interface TabSectionProps {
   contractInstances: UseQueryResult<ChicmozL2ContractInstanceDeluxe[], Error>
   contractClasses: UseQueryResult<ChicmozL2ContractClassRegisteredEvent[], Error>
-  selectedVersion: ChicmozL2ContractClassRegisteredEvent
+  selectedVersion: UseQueryResult<ChicmozL2ContractClassRegisteredEvent[], Error>
 }
 
 export const TabSection: FC<TabSectionProps> = ({ contractClasses, contractInstances, selectedVersion }) => {
@@ -20,7 +20,7 @@ export const TabSection: FC<TabSectionProps> = ({ contractClasses, contractInsta
     setSelectedTab(value as TabId);
   };
 
-  const { artifact, privFunc, uncFunc, pubFunc } = getArtifactData(selectedVersion)
+  const { artifact, privFunc, uncFunc, pubFunc } = getArtifactData(selectedVersion.data);
 
   const isOptionAvailable = {
     contractVersions: !!contractClasses && !!contractClasses.data?.length,
