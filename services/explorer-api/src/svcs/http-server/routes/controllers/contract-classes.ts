@@ -1,4 +1,9 @@
-import { verifyArtifactPayload } from "@chicmoz-pkg/contract-verification";
+import { NoirCompiledContract } from "@aztec/aztec.js";
+import {
+  IsTokenArtifactResult,
+  isTokenArtifact,
+  verifyArtifactPayload,
+} from "@chicmoz-pkg/contract-verification";
 import { setEntry } from "@chicmoz-pkg/redis-helper";
 import { chicmozL2ContractClassRegisteredEventSchema } from "@chicmoz-pkg/types";
 import asyncHandler from "express-async-handler";
@@ -199,10 +204,18 @@ export const POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT = asyncHandler(
       body,
       dbContractClass
     );
-    if (!isMatchingByteCode) {throw new Error("Incorrect artifact");}
+    if (!isMatchingByteCode) {
+      throw new Error("Incorrect artifact");
+    }
+    const parsed = JSON.parse(
+      body.stringifiedArtifactJson
+    ) as unknown as NoirCompiledContract;
+    const isTokenArtifactRes = isTokenArtifact(parsed) as IsTokenArtifactResult;
     const completeContractClass = {
       ...dbContractClass,
       artifactJson: body.stringifiedArtifactJson,
+      isToken: isTokenArtifactRes.result,
+      whyNotToken: isTokenArtifactRes.details,
     };
 
     setEntry(
