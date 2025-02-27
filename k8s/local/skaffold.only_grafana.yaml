@@ -1,0 +1,37 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+metadata:
+  name: chicmoz
+requires:
+  #- path: ./common/skaffold.infra.yaml
+  # TODO: - path: ./common/postgres-config.yaml
+deploy:
+  kubectl:
+    flags:
+      apply: ["--force"]
+manifests:
+  rawYaml:
+    - k8s/local/grafana/ingress.yaml
+    - k8s/local/grafana/datasources_secret.yaml
+    - k8s/local/grafana/dashboards/sandbox_overview.yaml
+  helm:
+    releases:
+      # GRAFANA
+      - name: grafana
+        version: 11.3.26
+        remoteChart: grafana
+        repo: https://charts.bitnami.com/bitnami
+        namespace: chicmoz
+        createNamespace: false
+        recreatePods: true
+        skipBuildDependencies: false
+        useHelmSecrets: false
+        wait: true
+        setValues:
+          admin.user: "admin123"
+          admin.password: "abc123"
+          persistence.enabled: false
+          dashboardsProvider.enabled: true
+          datasources.secretName: grafana-datasources
+          dashboardsConfigMaps[0].configMapName: sandbox-overview
+          dashboardsConfigMaps[0].fileName: sandbox-overview.json
