@@ -9,20 +9,22 @@ import {
   l2ContractInstanceVerifiedDeployment,
 } from "../../schema/l2contract/index.js";
 import { getBlocksWhereRange } from "../utils.js";
-import { parseDeluxe } from "./utils.js";
+import { getContractClassRegisteredColumns, parseDeluxe } from "./utils.js";
 
 export const getL2DeployedContractInstances = async ({
   fromHeight,
   toHeight,
+  includeArtifactJson,
 }: {
   fromHeight?: bigint;
   toHeight?: bigint;
+  includeArtifactJson?: boolean;
 }): Promise<ChicmozL2ContractInstanceDeluxe[]> => {
   const whereRange = getBlocksWhereRange({ from: fromHeight, to: toHeight });
   const result = await db()
     .select({
       instance: getTableColumns(l2ContractInstanceDeployed),
-      class: getTableColumns(l2ContractClassRegistered),
+      class: getContractClassRegisteredColumns(includeArtifactJson),
       verifiedDeploymentInfo: getTableColumns(
         l2ContractInstanceVerifiedDeployment
       ),
@@ -63,12 +65,13 @@ export const getL2DeployedContractInstances = async ({
 };
 
 export const getL2DeployedContractInstancesByBlockHash = async (
-  blockHash: HexString
+  blockHash: HexString,
+  includeArtifactJson?: boolean
 ): Promise<ChicmozL2ContractInstanceDeluxe[]> => {
   const result = await db()
     .select({
       instance: getTableColumns(l2ContractInstanceDeployed),
-      class: getTableColumns(l2ContractClassRegistered),
+      class: getContractClassRegisteredColumns(includeArtifactJson),
       verifiedDeploymentInfo: getTableColumns(
         l2ContractInstanceVerifiedDeployment
       ),
@@ -105,12 +108,13 @@ export const getL2DeployedContractInstancesByBlockHash = async (
 };
 
 export const getL2DeployedContractInstancesByContractClassId = async (
-  contractClassId: string
+  contractClassId: string,
+  includeArtifactJson?: boolean
 ): Promise<ChicmozL2ContractInstanceDeluxe[]> => {
   const result = await db()
     .select({
       instance: getTableColumns(l2ContractInstanceDeployed),
-      class: getTableColumns(l2ContractClassRegistered),
+      class: getContractClassRegisteredColumns(includeArtifactJson),
       verifiedDeploymentInfo: getTableColumns(
         l2ContractInstanceVerifiedDeployment
       ),

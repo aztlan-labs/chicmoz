@@ -37,6 +37,13 @@ export const openapi_GET_L2_REGISTERED_CONTRACT_CLASS = {
             type: "string",
           },
         },
+        {
+          name: "includeArtifactJson",
+          in: "query",
+          schema: {
+            type: "boolean",
+          },
+        },
       ],
       responses: contractClassResponse,
     },
@@ -46,9 +53,15 @@ export const openapi_GET_L2_REGISTERED_CONTRACT_CLASS = {
 export const GET_L2_REGISTERED_CONTRACT_CLASS = asyncHandler(
   async (req, res) => {
     const { classId, version } = getContractClassSchema.parse(req).params;
+    const { includeArtifactJson } = getContractClassSchema.parse(req).query;
     const contractClass = await dbWrapper.get(
       ["l2", "contract-classes", classId, version],
-      () => db.l2Contract.getL2RegisteredContractClass(classId, version)
+      () =>
+        db.l2Contract.getL2RegisteredContractClass(
+          classId,
+          version,
+          includeArtifactJson
+        )
     );
     res.status(200).send(contractClass);
   }
@@ -77,9 +90,14 @@ export const openapi_GET_L2_REGISTERED_CONTRACT_CLASSES_ALL_VERSIONS = {
 export const GET_L2_REGISTERED_CONTRACT_CLASSES_ALL_VERSIONS = asyncHandler(
   async (req, res) => {
     const { classId } = getContractClassesByClassIdSchema.parse(req).params;
+    const includeArtifactJson = false;
     const contractClasses = await dbWrapper.getLatest(
       ["l2", "contract-classes", classId],
-      () => db.l2Contract.getL2RegisteredContractClasses(classId)
+      () =>
+        db.l2Contract.getL2RegisteredContractClasses({
+          classId,
+          includeArtifactJson,
+        })
     );
     res.status(200).send(contractClasses);
   }
@@ -96,9 +114,11 @@ export const openapi_GET_L2_REGISTERED_CONTRACT_CLASSES = {
 
 export const GET_L2_REGISTERED_CONTRACT_CLASSES = asyncHandler(
   async (_req, res) => {
+    const includeArtifactJson = false;
     const contractClasses = await dbWrapper.getLatest(
       ["l2", "contract-classes"],
-      () => db.l2Contract.getL2RegisteredContractClasses()
+      () =>
+        db.l2Contract.getL2RegisteredContractClasses({ includeArtifactJson })
     );
     res.status(200).send(contractClasses);
   }
@@ -179,7 +199,7 @@ export const POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT = asyncHandler(
       body,
       dbContractClass
     );
-    if (!isMatchingByteCode) throw new Error("Incorrect artifact");
+    if (!isMatchingByteCode) {throw new Error("Incorrect artifact");}
     const completeContractClass = {
       ...dbContractClass,
       artifactJson: body.stringifiedArtifactJson,
