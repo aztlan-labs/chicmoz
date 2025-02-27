@@ -1,11 +1,9 @@
-import {
-  type ChicmozL2ContractClassRegisteredEvent,
-  type ChicmozL2ContractInstanceDeluxe,
-} from "@chicmoz-pkg/types";
+import { type ChicmozL2ContractClassRegisteredEvent } from "@chicmoz-pkg/types";
 import { type UseQueryResult } from "@tanstack/react-query";
 import { useState, type FC } from "react";
 import { Loader } from "~/components/loader";
 import { OptionButtons } from "~/components/option-buttons";
+import { useDeployedContractInstances } from "~/hooks";
 import { contractClassTabs, type TabId } from "./constants";
 import { ContractInstancesTab } from "./tabs/contract-instances";
 import { ContractVersionsTab } from "./tabs/contract-versions";
@@ -17,11 +15,11 @@ import {
 } from "./util";
 
 interface TabSectionProps {
-  contractInstances: UseQueryResult<ChicmozL2ContractInstanceDeluxe[], Error>;
   contractClasses: UseQueryResult<
     ChicmozL2ContractClassRegisteredEvent[],
     Error
   >;
+  contractClassId: string;
   selectedVersion: ChicmozL2ContractClassRegisteredEvent | undefined;
   isContractArtifactLoading: boolean;
   contractArtifactError: Error | null;
@@ -29,11 +27,12 @@ interface TabSectionProps {
 
 export const TabSection: FC<TabSectionProps> = ({
   contractClasses,
-  contractInstances,
+  contractClassId,
   selectedVersion,
   isContractArtifactLoading,
 }) => {
   const [selectedTab, setSelectedTab] = useState<TabId>("contractVersions");
+  const contractInstances = useDeployedContractInstances(contractClassId);
   const onOptionSelect = (value: string) => {
     setSelectedTab(value as TabId);
   };

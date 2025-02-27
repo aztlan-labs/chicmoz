@@ -2,12 +2,7 @@ import { useParams } from "@tanstack/react-router";
 import { type FC } from "react";
 import { KeyValueDisplay } from "~/components/info-display/key-value-display";
 import { Loader } from "~/components/loader";
-import {
-  useContractClass,
-  useContractClasses,
-  useDeployedContractInstances,
-  useSubTitle,
-} from "~/hooks";
+import { useContractClass, useContractClasses, useSubTitle } from "~/hooks";
 import { TabSection } from "./tabs-section";
 import { getContractClassKeyValueData } from "./util";
 
@@ -18,7 +13,6 @@ export const ContractClassDetails: FC = () => {
   useSubTitle(`Ctrct cls ${id}`);
 
   const contractClassesRes = useContractClasses(id);
-  const contractInstanceRes = useDeployedContractInstances(id);
 
   const selectedVersionWithArtifactRes = useContractClass({
     classId: id,
@@ -62,7 +56,7 @@ export const ContractClassDetails: FC = () => {
       <div className="mt-5">
         <TabSection
           contractClasses={contractClassesRes}
-          contractInstances={contractInstanceRes}
+          contractClassId={id}
           selectedVersion={selectedVersion}
           isContractArtifactLoading={selectedVersionWithArtifactRes.isLoading}
           contractArtifactError={selectedVersionWithArtifactRes.error}
