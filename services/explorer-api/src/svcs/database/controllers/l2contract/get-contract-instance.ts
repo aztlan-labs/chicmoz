@@ -7,15 +7,16 @@ import {
   l2ContractInstanceDeployed,
   l2ContractInstanceVerifiedDeployment,
 } from "../../schema/l2contract/index.js";
-import { parseDeluxe } from "./utils.js";
+import { getContractClassRegisteredColumns, parseDeluxe } from "./utils.js";
 
 export const getL2DeployedContractInstanceByAddress = async (
-  address: HexString
+  address: HexString,
+  includeArtifactJson?: boolean
 ): Promise<ChicmozL2ContractInstanceDeluxe | null> => {
   const result = await db()
     .select({
       instance: getTableColumns(l2ContractInstanceDeployed),
-      class: getTableColumns(l2ContractClassRegistered),
+      class: getContractClassRegisteredColumns(includeArtifactJson),
       verifiedDeploymentInfo: getTableColumns(
         l2ContractInstanceVerifiedDeployment
       ),

@@ -41,6 +41,13 @@ export const openapi_GET_L2_CONTRACT_INSTANCE = {
             type: "string",
           },
         },
+        {
+          name: "includeArtifactJson",
+          in: "query",
+          schema: {
+            type: "boolean",
+          },
+        },
       ],
       responses: contractInstanceResponse,
     },
@@ -49,9 +56,14 @@ export const openapi_GET_L2_CONTRACT_INSTANCE = {
 
 export const GET_L2_CONTRACT_INSTANCE = asyncHandler(async (req, res) => {
   const { address } = getContractInstanceSchema.parse(req).params;
+  const { includeArtifactJson } = getContractInstanceSchema.parse(req).query;
   const instanceData = await dbWrapper.get(
     ["l2", "contract-instances", address],
-    () => db.l2Contract.getL2DeployedContractInstanceByAddress(address)
+    () =>
+      db.l2Contract.getL2DeployedContractInstanceByAddress(
+        address,
+        includeArtifactJson
+      )
   );
   res.status(200).send(instanceData);
 });
@@ -83,12 +95,14 @@ export const openapi_GET_L2_CONTRACT_INSTANCES = {
 
 export const GET_L2_CONTRACT_INSTANCES = asyncHandler(async (req, res) => {
   const { fromHeight, toHeight } = getContractInstancesSchema.parse(req).query;
+  const includeArtifactJson = false;
   const instances = await dbWrapper.getLatest(
     ["l2", "contract-instances", fromHeight, toHeight],
     () =>
       db.l2Contract.getL2DeployedContractInstances({
         fromHeight,
         toHeight,
+        includeArtifactJson,
       })
   );
   res.status(200).send(instances);
@@ -107,6 +121,13 @@ export const openapi_GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH = {
             type: "string",
           },
         },
+        {
+          name: "includeArtifactJson",
+          in: "query",
+          schema: {
+            type: "boolean",
+          },
+        },
       ],
       responses: contractInstanceResponseArray,
     },
@@ -117,9 +138,15 @@ export const GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH = asyncHandler(
   async (req, res) => {
     const { blockHash } =
       getContractInstancesByBlockHashSchema.parse(req).params;
+    const { includeArtifactJson } =
+      getContractInstancesByBlockHashSchema.parse(req).query;
     const instances = await dbWrapper.get(
       ["l2", "contract-instances", "block", blockHash],
-      () => db.l2Contract.getL2DeployedContractInstancesByBlockHash(blockHash)
+      () =>
+        db.l2Contract.getL2DeployedContractInstancesByBlockHash(
+          blockHash,
+          includeArtifactJson
+        )
     );
     res.status(200).send(instances);
   }
@@ -138,6 +165,13 @@ export const openapi_GET_L2_CONTRACT_INSTANCES_BY_CONTRACT_CLASS_ID = {
             type: "string",
           },
         },
+        {
+          name: "includeArtifactJson",
+          in: "query",
+          schema: {
+            type: "boolean",
+          },
+        },
       ],
       responses: contractInstanceResponseArray,
     },
@@ -148,10 +182,14 @@ export const GET_L2_CONTRACT_INSTANCES_BY_CONTRACT_CLASS_ID = asyncHandler(
   async (req, res) => {
     const { classId } =
       getContractInstancesByContractClassIdSchema.parse(req).params;
+    const includeArtifactJson = false;
     const instances = await dbWrapper.getLatest(
       ["l2", "contract-instances", "class", classId],
       () =>
-        db.l2Contract.getL2DeployedContractInstancesByContractClassId(classId)
+        db.l2Contract.getL2DeployedContractInstancesByContractClassId(
+          classId,
+          includeArtifactJson
+        )
     );
     res.status(200).send(instances);
   }
@@ -302,7 +340,7 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
     const artifactString =
       stringifiedArtifactJson ?? dbContractClass.artifactJson;
     if (!artifactString)
-      throw new Error("For some reason artifactString is undefined");
+      {throw new Error("For some reason artifactString is undefined");}
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const verificationPayload: VerifyInstanceDeploymentPayload =
