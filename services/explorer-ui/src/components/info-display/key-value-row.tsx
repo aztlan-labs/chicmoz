@@ -49,7 +49,7 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
           to={link}
           className={`${commonTextClasses} text-primary-600 text-primary cursor-pointer`}
         >
-          {truncateHashString(value)}
+          {value.startsWith("0x") ? truncateHashString(value) : value}
           <span className="ml-1">🔗</span>
         </Link>
       )}
