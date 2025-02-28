@@ -37,12 +37,15 @@ export const init = async (instanceName: string, logger: Logger) => {
 
 const checkReady = () => {
   const state = getSvcState(svcId);
-  if (state === MicroserviceBaseSvcState.SHUTTING_DOWN)
-    {throw new Error("MessageBus is shutting down");}
-  if (state === MicroserviceBaseSvcState.DOWN)
-    {throw new Error("MessageBus is down");}
-  if (state === MicroserviceBaseSvcState.INITIALIZING)
-    {throw new Error("MessageBus is initializing");}
+  if (state === MicroserviceBaseSvcState.SHUTTING_DOWN) {
+    throw new Error("MessageBus is shutting down");
+  }
+  if (state === MicroserviceBaseSvcState.DOWN) {
+    throw new Error("MessageBus is down");
+  }
+  if (state === MicroserviceBaseSvcState.INITIALIZING) {
+    throw new Error("MessageBus is initializing");
+  }
   return state;
 };
 
