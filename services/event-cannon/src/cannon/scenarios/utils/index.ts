@@ -25,6 +25,7 @@ import { deriveSigningKey } from "@aztec/circuits.js";
 import { FunctionType } from "@aztec/foundation/abi";
 import { ContractClassRegisteredEvent } from "@aztec/protocol-contracts/class-registerer";
 import {
+  VerifyInstanceDeploymentPayload,
   generateVerifyArtifactPayload,
   generateVerifyArtifactUrl,
   generateVerifyInstancePayload,
@@ -51,8 +52,8 @@ export const logAndWaitForTx = async (tx: SentTx, additionalInfo: string) => {
 };
 
 export const getFunctionSpacer = (type: FunctionType) => {
-  if (type === FunctionType.PRIVATE) return type + "       ";
-  if (type === FunctionType.UNCONSTRAINED) return type + " ";
+  if (type === FunctionType.PRIVATE) {return type + "       ";}
+  if (type === FunctionType.UNCONSTRAINED) {return type + " ";}
   return type + "        ";
 };
 
@@ -105,9 +106,9 @@ export const getNewAccount = async (pxe: PXE, accountName: string) => {
 };
 
 const getNewContractClassId = async (node: AztecNode, blockNumber?: number) => {
-  if (!blockNumber) return undefined;
+  if (!blockNumber) {return undefined;}
   const block = await node.getBlock(blockNumber);
-  if (!block) throw new Error(`Block ${blockNumber} not found`);
+  if (!block) {throw new Error(`Block ${blockNumber} not found`);}
   const contractClassLogs = block.body.txEffects
     .flatMap((txEffect) => (txEffect ? [txEffect.contractClassLogs] : []))
     .flatMap((txLog) => txLog.unrollLogs());
@@ -213,7 +214,7 @@ export const publicDeployAccounts = async (
   ).then((results) =>
     results.filter((result) => !result.isContractPubliclyDeployed)
   );
-  if (notPubliclyDeployedAccounts.length === 0) return;
+  if (notPubliclyDeployedAccounts.length === 0) {return;}
   const deployCalls: FunctionCall[] = [
     await (
       await registerContractClass(sender, SchnorrAccountContractArtifact)
@@ -258,28 +259,36 @@ export const registerContractClassArtifact = async (
   });
 };
 
-export const verifyContractInstanceDeployment = async (
-  contractLoggingName: string,
-  artifactObj: { default: NoirCompiledContract } | NoirCompiledContract,
-  contractInstanceAddress: string,
-  publicKeysString: string,
-  deployer: string,
-  salt: string,
-  args: string[]
-) => {
+export const verifyContractInstanceDeployment = async ({
+  contractLoggingName,
+  artifactObj,
+  contractInstanceAddress,
+  publicKeysString,
+  deployer,
+  salt,
+  args,
+}: {
+  contractLoggingName: string;
+  artifactObj: { default: NoirCompiledContract } | NoirCompiledContract;
+  contractInstanceAddress: string;
+  publicKeysString: string;
+  deployer: string;
+  salt: string;
+  args: string[];
+}) => {
   const url = generateVerifyInstanceUrl(
     EXPLORER_API_URL,
     contractInstanceAddress
   );
-  const postData = JSON.stringify(
-    generateVerifyInstancePayload({
-      publicKeysString,
-      deployer,
-      salt,
-      constructorArgs: args,
-      artifactObj,
-    })
-  );
+
+  const payload = generateVerifyInstancePayload({
+    publicKeysString,
+    deployer,
+    salt,
+    constructorArgs: args,
+    artifactObj,
+  }) as VerifyInstanceDeploymentPayload;
+  const postData = JSON.stringify(payload);
   await callExplorerApi({
     loggingString: `🧐 verifyContractInstanceDeployment ${contractLoggingName}`,
     urlStr: url,

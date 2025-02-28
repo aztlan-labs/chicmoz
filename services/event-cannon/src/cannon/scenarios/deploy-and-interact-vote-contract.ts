@@ -36,19 +36,23 @@ export async function run() {
     contract.instance.contractClassId.toString(),
     contract.instance.version
   ).catch((err) => {
-    logger.error(`Failed to register contract class artifact: ${err}`);
+    logger.error(
+      `Failed to register contract class artifact: ${(err as Error).stack}`
+    );
   });
 
-  verifyContractInstanceDeployment(
+  verifyContractInstanceDeployment({
     contractLoggingName,
-    contractArtifactJson,
-    contract.instance.address.toString(),
-    contract.instance.publicKeys.toString(),
-    contract.instance.deployer.toString(),
-    contract.instance.salt.toString(),
-    [votingAdmin.toString()]
-  ).catch((err) => {
-    logger.error(`Failed to verify contract instance deployment: ${err}`);
+    artifactObj: contractArtifactJson,
+    contractInstanceAddress: contract.address.toString(),
+    publicKeysString: contract.instance.publicKeys.toString(),
+    deployer: contract.instance.deployer.toString(),
+    salt: contract.instance.salt.toString(),
+    args: [votingAdmin.toString()]
+  }).catch((err) => {
+    logger.error(
+      `Failed to verify contract instance deployment: ${(err as Error).stack}`
+    );
   });
 
   const votingContractAlice = await Contract.at(
