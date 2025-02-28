@@ -357,7 +357,7 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
       contractClassId: dbContractInstance.contractClassId,
     });
 
-    if (isVerifiedDeploymentPayload) {
+    if (!isVerifiedDeploymentPayload) {
       res
         .status(500)
         .send("Uploaded data does not lead to correct contract address");
