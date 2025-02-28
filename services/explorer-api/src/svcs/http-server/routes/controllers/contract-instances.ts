@@ -370,7 +370,7 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
       salt,
       deployer,
       publicKeysString,
-      constructorArgs: constructorArgs.join(","),
+      constructorArgs: JSON.stringify(constructorArgs),
     });
 
     res.status(200).send("Contract instance registered");
