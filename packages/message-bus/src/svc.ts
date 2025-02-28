@@ -9,6 +9,7 @@ import {
   type MicroserviceBaseSvc,
 } from "@chicmoz-pkg/microservice-base";
 import { backOff } from "exponential-backoff";
+import { KafkaJSProtocolError } from "kafkajs";
 import { MessageBus } from "./class.js";
 import {
   KAFKA_CONNECTION,
@@ -36,12 +37,15 @@ export const init = async (instanceName: string, logger: Logger) => {
 
 const checkReady = () => {
   const state = getSvcState(svcId);
-  if (state === MicroserviceBaseSvcState.SHUTTING_DOWN)
+  if (state === MicroserviceBaseSvcState.SHUTTING_DOWN) {
     throw new Error("MessageBus is shutting down");
-  if (state === MicroserviceBaseSvcState.DOWN)
+  }
+  if (state === MicroserviceBaseSvcState.DOWN) {
     throw new Error("MessageBus is down");
-  if (state === MicroserviceBaseSvcState.INITIALIZING)
+  }
+  if (state === MicroserviceBaseSvcState.INITIALIZING) {
     throw new Error("MessageBus is initializing");
+  }
   return state;
 };
 
@@ -77,8 +81,17 @@ export const startSubscribe = async (
         logger.info("Trying to subscribe before MessageBus is initialized...");
         return false;
       }
+      if (
+        (e as KafkaJSProtocolError).message ===
+        "This server does not host this topic-partition"
+      ) {
+        logger.info(
+          "If this happens during the first mins of starting the cluster it's fine..."
+        );
+      } else {
+        logger.warn(e);
+      }
       // TODO: probably not infinite retries?
-      logger.warn(e);
       logger.info(`Retrying attempt ${attemptNumber}...`);
       return true;
     },

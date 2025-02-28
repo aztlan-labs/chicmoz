@@ -15,15 +15,17 @@ import { pendingTxHandler } from "./on-pending-txs.js";
 import { sequencerInfoHandler } from "./on-sequencer-info.js";
 
 export const subscribeHandlers = async () => {
-  await startSubscribe(chainInfoHandler);
-  await startSubscribe(sequencerInfoHandler);
-  await startSubscribe(l2RpcNodeAliveHandler);
-  await startSubscribe(l2RpcNodeErrorHandler);
-  await startSubscribe(blockHandler);
-  await startSubscribe(catchupHandler);
-  await startSubscribe(pendingTxHandler);
-  await startSubscribe(l1L2ValidatorHandler);
-  await startSubscribe(l1L2BlockProposedHandler);
-  await startSubscribe(l1L2ProofVerifiedHandler);
-  await startSubscribe(l1GenericContractEventHandler);
+  await Promise.all([
+    startSubscribe(chainInfoHandler),
+    startSubscribe(sequencerInfoHandler),
+    startSubscribe(l2RpcNodeAliveHandler),
+    startSubscribe(l2RpcNodeErrorHandler),
+    startSubscribe(blockHandler),
+    startSubscribe(catchupHandler),
+    startSubscribe(pendingTxHandler),
+    startSubscribe(l1L2ValidatorHandler),
+    startSubscribe(l1L2BlockProposedHandler),
+    startSubscribe(l1L2ProofVerifiedHandler),
+    startSubscribe(l1GenericContractEventHandler),
+  ]);
 };
