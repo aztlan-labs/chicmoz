@@ -47,6 +47,7 @@ const requiredFunctions = z.union([
 ]);
 
 const tokenSchema = z.object({
+  name: z.string(),
   functions: z
     .array(requiredFunctions.or(anyFunction))
     .superRefine(
@@ -78,8 +79,10 @@ export const isTokenArtifact = (
   artifact: NoirCompiledContract
 ): IsTokenArtifactResult => {
   let details = "";
+  let contractName = "";
   try {
-    tokenSchema.parse(artifact, { errorMap: customErrorMap });
+    const { name } = tokenSchema.parse(artifact, { errorMap: customErrorMap });
+    contractName = name;
   } catch (err) {
     if (err instanceof z.ZodError) {
       details = err.errors.map((e) => JSON.stringify(e)).join("\n");
@@ -90,6 +93,7 @@ export const isTokenArtifact = (
   }
   return {
     result: details === "",
+    contractName,
     details,
   };
 };

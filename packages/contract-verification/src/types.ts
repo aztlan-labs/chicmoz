@@ -5,6 +5,7 @@ export type VerifyArtifactPayload = {
 };
 export type IsTokenArtifactResult = {
   result: boolean;
+  contractName: string;
   details: string;
 };
 export const verifyInstanceDeploymentPayloadSchema = z.object({

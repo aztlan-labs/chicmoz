@@ -11,18 +11,26 @@ import { VERIFIED_CONTRACT_INSTANCES_CONTACT } from "../../../../environment.js"
 import { l2ContractClassRegistered } from "../../schema/index.js";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const parseDeluxe = (
-  contractClass: any,
-  instance: any,
-  registered: any
-): ChicmozL2ContractInstanceDeluxe => {
-  const verifiedInfo = VERIFIED_CONTRACT_INSTANCES_CONTACT.find(
-    (info) => info.address === instance.address
-  );
+export const parseDeluxe = ({
+  contractClass,
+  instance,
+  verifiedInfo,
+  verifiedDeploymentInfo,
+}: {
+  contractClass: any;
+  instance: any;
+  verifiedInfo?: any;
+  verifiedDeploymentInfo?: any;
+}): ChicmozL2ContractInstanceDeluxe => {
   return chicmozL2ContractInstanceDeluxeSchema.parse({
     ...contractClass,
-    verifiedInfo,
-    registered,
+    verifiedInfo:
+      verifiedInfo ??
+      VERIFIED_CONTRACT_INSTANCES_CONTACT.find(
+        (info) => info.address === instance.address
+      ) ??
+      undefined,
+    verifiedDeploymentInfo: verifiedDeploymentInfo ?? undefined,
     blockHash: instance.blockHash,
     packedBytecode: Buffer.from(contractClass.packedBytecode),
     address: instance.address,

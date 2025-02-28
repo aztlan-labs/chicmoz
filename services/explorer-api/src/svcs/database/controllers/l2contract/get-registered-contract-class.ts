@@ -60,6 +60,7 @@ export const getL2RegisteredContractClasses = async ({
   return result.map((r) => {
     let tokenData = {
       isToken: false,
+      artifactContractName: "",
       whyNotToken: "No artifactJson found",
     };
     if (includeArtifactJson && r.artifactJson) {
@@ -72,11 +73,13 @@ export const getL2RegisteredContractClasses = async ({
       if (isTokenResult.result) {
         tokenData = {
           isToken: true,
+          artifactContractName: isTokenResult.contractName,
           whyNotToken: isTokenResult.details,
         };
       } else {
         tokenData = {
           isToken: false,
+          artifactContractName: isTokenResult.contractName,
           whyNotToken: isTokenResult.details,
         };
       }

@@ -54,5 +54,9 @@ export const getL2DeployedContractInstanceByAddress = async (
   }
   const { instance, class: contractClass, verifiedDeploymentInfo } = result[0];
 
-  return parseDeluxe(contractClass, instance, verifiedDeploymentInfo);
+  return parseDeluxe({
+    contractClass,
+    instance,
+    verifiedDeploymentInfo,
+  });
 };

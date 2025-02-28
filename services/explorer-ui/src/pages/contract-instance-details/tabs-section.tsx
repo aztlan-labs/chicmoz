@@ -1,11 +1,10 @@
 import { FC, useState } from "react";
-import { OptionButtons } from "~/components/option-buttons";
 import {
-  TabId,
-  verifiedDeploymentTabs,
-} from "./types";
-import { DetailItem, KeyValueDisplay } from "~/components/info-display/key-value-display";
-import { Loader } from "~/components/loader";
+  DetailItem,
+  KeyValueDisplay,
+} from "~/components/info-display/key-value-display";
+import { OptionButtons } from "~/components/option-buttons";
+import { TabId, verifiedDeploymentTabs } from "./types";
 
 interface PillSectionProps {
   verifiedDeploymentData?: DetailItem[];
@@ -24,15 +23,13 @@ export const TabsSection: FC<PillSectionProps> = ({
     verifiedDeployment: !!verifiedDeploymentData,
     contactDetails: !!contactDetailsData,
   };
-  if (!verifiedDeploymentData || !contactDetailsData)
-    return <Loader amount={1} />;
 
   const renderTabContent = () => {
     switch (selectedTab) {
       case "contactDetails":
-        return <KeyValueDisplay data={contactDetailsData} />
+        return <KeyValueDisplay data={contactDetailsData ?? []} />;
       case "verifiedDeployment":
-        return <KeyValueDisplay data={verifiedDeploymentData} />
+        return <KeyValueDisplay data={verifiedDeploymentData ?? []} />;
       default:
         return null;
     }
@@ -47,11 +44,9 @@ export const TabsSection: FC<PillSectionProps> = ({
       />
       <div className="bg-white rounded-lg shadow-md p-4">
         <div className="flex flex-col gap-4 md:flex-row ">
-          <div className="bg-white w-full rounded-lg">
-            {renderTabContent()}
-          </div>
-        </div >
-      </div >
+          <div className="bg-white w-full rounded-lg">{renderTabContent()}</div>
+        </div>
+      </div>
     </>
   );
 };
