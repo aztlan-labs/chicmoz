@@ -10,4 +10,4 @@ FROM node:20-alpine
 WORKDIR /usr/main/services/auth
 COPY --from=BUILD /usr/main /usr/main
 
-CMD ["yarn", "node", "--unhandled-rejections=strict", "--enable-source-maps", "./build/index.js"]
+CMD ["yarn", "run", "start"]

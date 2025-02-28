@@ -891,28 +891,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@chicmoz/dummy-node@workspace:services/dummy-node":
-  version: 0.0.0-use.local
-  resolution: "@chicmoz/dummy-node@workspace:services/dummy-node"
-  dependencies:
-    "@chicmoz-pkg/logger-server": "workspace:^"
-    "@types/body-parser": "npm:1.19.5"
-    "@types/express": "npm:4.17.21"
-    "@types/node": "npm:20.9.0"
-    "@typescript-eslint/eslint-plugin": "npm:6.11.0"
-    "@typescript-eslint/parser": "npm:6.11.0"
-    body-parser: "npm:1.20.2"
-    eslint: "npm:8.53.0"
-    eslint-config-prettier: "npm:9.0.0"
-    eslint-plugin-import: "npm:2.29.0"
-    express: "npm:4.18.2"
-    prettier: "npm:3.1.0"
-    prettier-plugin-organize-imports: "npm:3.2.4"
-    prettier-plugin-sort-json: "npm:3.1.0"
-    typescript: "npm:5.2.2"
-  languageName: unknown
-  linkType: soft
-
 "@chicmoz/ethereum-listener@workspace:services/ethereum-listener":
   version: 0.0.0-use.local
   resolution: "@chicmoz/ethereum-listener@workspace:services/ethereum-listener"
@@ -4057,7 +4035,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:*, @types/express@npm:4.17.21":
+"@types/express@npm:*":
   version: 4.17.21
   resolution: "@types/express@npm:4.17.21"
   dependencies:
@@ -4170,15 +4148,6 @@ __metadata:
   version: 20.5.0
   resolution: "@types/node@npm:20.5.0"
   checksum: 3288e2dbffdf5ae1a96c8938ef9f9b5403237d74b28795c630f8db36176139725f86b2d534bbbaa8b456986fe841d24241a7850247353edbd2c9b8d180a9de0e
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:20.9.0":
-  version: 20.9.0
-  resolution: "@types/node@npm:20.9.0"
-  dependencies:
-    undici-types: "npm:~5.26.4"
-  checksum: 755d07de735eafda4e20af75ad9d03bdbfddef327d790e9a896142eac7493db5d8501591376e1c8227aa12eeb88e522bc727c6024504842ed40e539e8a466db9
   languageName: node
   linkType: hard
 
