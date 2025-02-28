@@ -24,10 +24,13 @@ export const parseDeluxe = ({
 }): ChicmozL2ContractInstanceDeluxe => {
   return chicmozL2ContractInstanceDeluxeSchema.parse({
     ...contractClass,
-    verifiedInfo: verifiedInfo || VERIFIED_CONTRACT_INSTANCES_CONTACT.find(
-      (info) => info.address === instance.address
-    ),
-    verifiedDeploymentInfo,
+    verifiedInfo:
+      verifiedInfo ??
+      VERIFIED_CONTRACT_INSTANCES_CONTACT.find(
+        (info) => info.address === instance.address
+      ) ??
+      undefined,
+    verifiedDeploymentInfo: verifiedDeploymentInfo ?? undefined,
     blockHash: instance.blockHash,
     packedBytecode: Buffer.from(contractClass.packedBytecode),
     address: instance.address,

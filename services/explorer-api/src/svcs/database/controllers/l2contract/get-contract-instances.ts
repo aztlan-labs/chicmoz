@@ -94,7 +94,7 @@ export const getL2DeployedContractInstancesByBlockHash = async (
         )
       )
     )
-    .innerJoin(
+    .leftJoin(
       l2ContractInstanceVerifiedDeployment,
       and(
         eq(
