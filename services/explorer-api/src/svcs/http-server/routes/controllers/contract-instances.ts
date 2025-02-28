@@ -339,8 +339,9 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
 
     const artifactString =
       stringifiedArtifactJson ?? dbContractClass.artifactJson;
-    if (!artifactString)
-      {throw new Error("For some reason artifactString is undefined");}
+    if (!artifactString) {
+      throw new Error("For some reason artifactString is undefined");
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const verificationPayload: VerifyInstanceDeploymentPayload =

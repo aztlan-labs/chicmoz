@@ -58,7 +58,11 @@ export const getL2DeployedContractInstances = async ({
     .limit(DB_MAX_CONTRACTS);
 
   const parsed = result.map((r) => {
-    return parseDeluxe(r.class, r.instance, r.verifiedDeploymentInfo);
+    return parseDeluxe({
+      contractClass: r.class,
+      instance: r.instance,
+      verifiedDeploymentInfo: r.verifiedDeploymentInfo,
+    });
   });
 
   return parsed;
@@ -103,7 +107,11 @@ export const getL2DeployedContractInstancesByBlockHash = async (
     .orderBy(desc(l2ContractInstanceDeployed.version));
 
   return result.map((r) => {
-    return parseDeluxe(r.class, r.instance, r.verifiedDeploymentInfo);
+    return parseDeluxe({
+      contractClass: r.class,
+      instance: r.instance,
+      verifiedDeploymentInfo: r.verifiedDeploymentInfo,
+    });
   });
 };
 
@@ -147,6 +155,10 @@ export const getL2DeployedContractInstancesByContractClassId = async (
     .limit(DB_MAX_CONTRACTS);
 
   return result.map((r) => {
-    return parseDeluxe(r.class, r.instance, r.verifiedDeploymentInfo);
+    return parseDeluxe({
+      contractClass: r.class,
+      instance: r.instance,
+      verifiedDeploymentInfo: r.verifiedDeploymentInfo,
+    });
   });
 };
