@@ -29,11 +29,11 @@ export const ContractClassDetails: FC = () => {
         (contract) => contract.version === Number(version)
       );
 
-  const headerStr = `Contract class details ${
+  const headerStr = `Contract class details - "${
     selectedVersion?.artifactContractName
       ? selectedVersion?.artifactContractName
       : ""
-  }`;
+  }"`;
 
   return (
     <div className="mx-auto px-[70px] max-w-[1440px]">
