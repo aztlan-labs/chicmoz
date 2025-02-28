@@ -27,6 +27,9 @@ export const ContractInstanceDetails: FC = () => {
 
   // const verfiedData = getVerifiedContractInstanceData(contractInstanceDetails);
   const mockedVerfiedData = tempVerifiedContractInstanceData();
+  const verifiedDeploymentData = getVerifiedContractInstanceDeploymentData(
+    contractInstanceDetails
+  );
 
   return (
     <div className="mx-auto px-[70px] max-w-[1440px]">
@@ -47,9 +50,7 @@ export const ContractInstanceDetails: FC = () => {
       </div>
       <div className="mt-5">
         <TabsSection
-          verifiedDeploymentData={getVerifiedContractInstanceDeploymentData(
-            contractInstanceDetails
-          )}
+          verifiedDeploymentData={verifiedDeploymentData}
           contactDetailsData={mockedVerfiedData.DeployerDetails}
         />
       </div>

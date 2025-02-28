@@ -48,49 +48,27 @@ export const getContractData = (data: ChicmozL2ContractInstanceDeluxe) => {
 };
 
 export const tempVerifiedContractInstanceData = (): {
-  contractDetails: DetailItem[];
   DeployerDetails: DetailItem[];
 } => {
   return {
-    contractDetails: [
-      {
-        label: "address",
-        value:
-          "0x0000000000000000000000000000000000000000000000000000000000000000",
-      },
-      {
-        label: "Salt",
-        value:
-          "0x0000000000000000000000000000000000000000000000000000000000000000",
-      },
-      {
-        label: "publicKeys",
-        value:
-          "0x0000000000000000000000000000000000000000000000000000000000000000",
-      },
-      {
-        label: "Args",
-        value: "['hacker House Token','HHT']",
-      },
-    ],
     DeployerDetails: [
       {
         label: "url",
-        value: "https://aztec.network",
-        extLink: "aztec.network",
+        value: "https://example.com",
+        extLink: "https://example.com",
       },
       {
         label: "twitter",
-        value: "https://twitter.com/aztecnetwork",
-        extLink: "https://twitter.com/aztecnetwork",
+        value: "https://twitter.com/example",
+        extLink: "https://twitter.com/example",
       },
       {
         label: "github",
-        value: "https://github.com/AztecProtocol",
-        extLink: "https://github.com/AztecProtocol",
+        value: "https://github.com/example",
+        extLink: "https://github.com/example",
       },
-      { label: "creatorname", value: "aztec network" },
-      { label: "email", value: "help@aztec.ui" },
+      { label: "creatorname", value: "Mr. Mock" },
+      { label: "email", value: "mock@example.com" },
     ],
   };
 };
