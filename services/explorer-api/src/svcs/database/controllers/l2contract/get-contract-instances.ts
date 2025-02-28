@@ -133,7 +133,7 @@ export const getL2DeployedContractInstancesByContractClassId = async (
         )
       )
     )
-    .innerJoin(
+    .leftJoin(
       l2ContractInstanceVerifiedDeployment,
       and(
         eq(
