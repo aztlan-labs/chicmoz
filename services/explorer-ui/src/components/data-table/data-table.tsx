@@ -48,7 +48,6 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [expanded, setExpanded] = useState<ExpandedState>({});
-  const skipPageResetRef = useRef(true)
 
   const tableData = useMemo(() => data, [data]);
   const table = useReactTable({
@@ -61,8 +60,8 @@ export function DataTable<TData, TValue>({
       rowSelection,
       columnFilters,
     },
-    autoResetExpanded: skipPageResetRef.current,
-    autoResetPageIndex: skipPageResetRef.current,
+    autoResetExpanded: false,
+    autoResetPageIndex: false,
     enableRowSelection: true,
     enableExpanding: true,
     enableSubRowSelection: true,
@@ -82,12 +81,6 @@ export function DataTable<TData, TValue>({
     getExpandedRowModel: getExpandedRowModel(),
   });
 
-  useEffect(() => {
-    if (table.getState().pagination.pageIndex !== 1) {
-      skipPageResetRef.current = true;
-    }
-    skipPageResetRef.current = false;
-  }, [table.getState().pagination.pageIndex])
   return (
     <div className="space-y-4 bg-white rounded-lg p-5">
       {title && <h3 className="ml-0.5">{title}</h3>}
