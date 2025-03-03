@@ -6,7 +6,7 @@ import { l2Block } from "../../schema/index.js";
 import {
   l2ContractClassRegistered,
   l2ContractInstanceDeployed,
-  l2ContractInstanceVerifiedDeployment,
+  l2ContractInstanceVerifiedDeploymentArguments,
 } from "../../schema/l2contract/index.js";
 import { getBlocksWhereRange } from "../utils.js";
 import { getContractClassRegisteredColumns, parseDeluxe } from "./utils.js";
@@ -26,7 +26,7 @@ export const getL2DeployedContractInstances = async ({
       instance: getTableColumns(l2ContractInstanceDeployed),
       class: getContractClassRegisteredColumns(includeArtifactJson),
       verifiedDeploymentArguments: getTableColumns(
-        l2ContractInstanceVerifiedDeployment
+        l2ContractInstanceVerifiedDeploymentArguments
       ),
     })
     .from(l2ContractInstanceDeployed)
@@ -44,11 +44,11 @@ export const getL2DeployedContractInstances = async ({
       )
     )
     .leftJoin(
-      l2ContractInstanceVerifiedDeployment,
+      l2ContractInstanceVerifiedDeploymentArguments,
       and(
         eq(
           l2ContractInstanceDeployed.address,
-          l2ContractInstanceVerifiedDeployment.address
+          l2ContractInstanceVerifiedDeploymentArguments.address
         )
       )
     )
@@ -77,7 +77,7 @@ export const getL2DeployedContractInstancesByBlockHash = async (
       instance: getTableColumns(l2ContractInstanceDeployed),
       class: getContractClassRegisteredColumns(includeArtifactJson),
       verifiedDeploymentArguments: getTableColumns(
-        l2ContractInstanceVerifiedDeployment
+        l2ContractInstanceVerifiedDeploymentArguments
       ),
     })
     .from(l2ContractInstanceDeployed)
@@ -95,11 +95,11 @@ export const getL2DeployedContractInstancesByBlockHash = async (
       )
     )
     .leftJoin(
-      l2ContractInstanceVerifiedDeployment,
+      l2ContractInstanceVerifiedDeploymentArguments,
       and(
         eq(
           l2ContractInstanceDeployed.address,
-          l2ContractInstanceVerifiedDeployment.address
+          l2ContractInstanceVerifiedDeploymentArguments.address
         )
       )
     )
@@ -124,7 +124,7 @@ export const getL2DeployedContractInstancesByContractClassId = async (
       instance: getTableColumns(l2ContractInstanceDeployed),
       class: getContractClassRegisteredColumns(includeArtifactJson),
       verifiedDeploymentArguments: getTableColumns(
-        l2ContractInstanceVerifiedDeployment
+        l2ContractInstanceVerifiedDeploymentArguments
       ),
     })
     .from(l2ContractInstanceDeployed)
@@ -142,11 +142,11 @@ export const getL2DeployedContractInstancesByContractClassId = async (
       )
     )
     .leftJoin(
-      l2ContractInstanceVerifiedDeployment,
+      l2ContractInstanceVerifiedDeploymentArguments,
       and(
         eq(
           l2ContractInstanceDeployed.address,
-          l2ContractInstanceVerifiedDeployment.address
+          l2ContractInstanceVerifiedDeploymentArguments.address
         )
       )
     )

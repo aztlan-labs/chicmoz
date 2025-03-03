@@ -13,8 +13,10 @@ import {
   verifyContractInstanceDeployment,
 } from "./utils/index.js";
 
+const contractId = "VotingContract";
+
 export async function run() {
-  logger.info("===== VOTING CONTRACT =====");
+  logger.info(`===== ${contractId} =====`);
   const pxe = getPxe();
   await waitForPXE(pxe);
   const namedWallets = getWallets();
@@ -22,7 +24,7 @@ export async function run() {
   const deployerWallet = namedWallets.alice;
   const votingAdmin = namedWallets.alice.getAddress();
 
-  const contractLoggingName = "Voting Contract";
+  const contractLoggingName = contractId;
   const contract = await deployContract({
     contractLoggingName,
     deployFn: (): DeploySentTx<EasyPrivateVotingContract> =>
@@ -34,41 +36,53 @@ export async function run() {
     contractLoggingName,
     contractArtifactJson,
     contract.instance.contractClassId.toString(),
-    contract.instance.version
+    contract.instance.version,
   ).catch((err) => {
     logger.error(
-      `Failed to register contract class artifact: ${(err as Error).stack}`
+      `Failed to register contract class artifact: ${(err as Error).stack}`,
     );
   });
 
   verifyContractInstanceDeployment({
     contractLoggingName,
-    artifactObj: contractArtifactJson,
     contractInstanceAddress: contract.address.toString(),
-    publicKeysString: contract.instance.publicKeys.toString(),
-    deployer: contract.instance.deployer.toString(),
-    salt: contract.instance.salt.toString(),
-    args: [votingAdmin.toString()]
+    verifyArgs: {
+      artifactObj: contractArtifactJson,
+      publicKeysString: contract.instance.publicKeys.toString(),
+      deployer: contract.instance.deployer.toString(),
+      salt: contract.instance.salt.toString(),
+      constructorArgs: [votingAdmin.toString()],
+    },
+    deployerMetadata: {
+      contractIdentifier: contractId,
+      details: "Easy private voting contract",
+      creatorName: "Event Cannon",
+      creatorContact:
+        "email: test@test.com, discord: test#1234, telegram: @test",
+      appUrl: "https://aztec.network",
+      repoUrl: "https://github.com/AztecProtocol/aztec-packages",
+      reviewedAt: new Date(),
+    },
   }).catch((err) => {
     logger.error(
-      `Failed to verify contract instance deployment: ${(err as Error).stack}`
+      `Failed to verify contract instance deployment: ${(err as Error).stack}`,
     );
   });
 
   const votingContractAlice = await Contract.at(
     contract.address,
     EasyPrivateVotingContractArtifact,
-    namedWallets.alice
+    namedWallets.alice,
   );
   const votingContractBob = await Contract.at(
     contract.address,
     EasyPrivateVotingContractArtifact,
-    namedWallets.bob
+    namedWallets.bob,
   );
   const votingContractCharlie = await Contract.at(
     contract.address,
     EasyPrivateVotingContractArtifact,
-    namedWallets.charlie
+    namedWallets.charlie,
   );
 
   const candidateA = new Fr(1);
@@ -77,15 +91,15 @@ export async function run() {
   await Promise.all([
     logAndWaitForTx(
       votingContractAlice.methods.cast_vote(candidateA).send(),
-      "Cast vote 1 - candidate A"
+      "Cast vote 1 - candidate A",
     ),
     logAndWaitForTx(
       votingContractBob.methods.cast_vote(candidateA).send(),
-      "Cast vote 2 - candidate A"
+      "Cast vote 2 - candidate A",
     ),
     await logAndWaitForTx(
       votingContractCharlie.methods.cast_vote(candidateB).send(),
-      "Cast vote 3 - candidate B"
+      "Cast vote 3 - candidate B",
     ),
   ]);
 

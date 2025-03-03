@@ -1,6 +1,7 @@
 import { verifyInstanceDeploymentPayloadSchema } from "@chicmoz-pkg/contract-verification";
 import {
   chicmozL2BlockSchema,
+  chicmozL2ContractInstanceDeployerMetadataSchema,
   chicmozL2SequencerSchema,
   chicmozSearchQuerySchema,
   ethAddressSchema,
@@ -43,12 +44,8 @@ export const paths = {
   contractInstancesByBlockHash: `/l2/blocks/:${blockHash}/contract-instances`,
   contractInstance: `/l2/contract-instances/:${address}`,
   contractInstances: "/l2/contract-instances",
-  contractInstanceVerify: `/l2/contract-instances/:${address}/verified-deployment`,
 
   search: "/l2/search",
-
-  verifiedContract: `/l2/verified-contracts-instances/:${address}/contact`,
-  verifiedContracts: "/l2/verified-contract-instances/contact",
 
   feeRecipients: "/l2/fee-recipients",
 
@@ -138,7 +135,7 @@ export const getContractClassSchema = z.object({
 export const getContractClassesByClassIdSchema = z.object({
   params: z.object({
     [classId]: hexStringSchema,
-  })
+  }),
 });
 
 export const getContractClassPrivateFunctionsSchema = z.object({
@@ -173,7 +170,15 @@ export const getVerifiedContractInstanceSchema = getContractInstanceSchema;
 export const postVerifiedContractInstanceSchema = z.lazy(() => {
   return z.object({
     ...getContractInstanceSchema.shape,
-    body: verifyInstanceDeploymentPayloadSchema,
+    body: z.object({
+      deployerMetadata: chicmozL2ContractInstanceDeployerMetadataSchema
+        .omit({
+          address: true,
+          uploadedAt: true,
+        })
+        .optional(),
+      verifiedDeploymentArguments: verifyInstanceDeploymentPayloadSchema
+    }),
   });
 });
 
