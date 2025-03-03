@@ -120,6 +120,15 @@ export const getL2DeployedContractInstancesByBlockHash = async (
         ),
       ),
     )
+    .leftJoin(
+      l2ContractInstanceDeployerMetadataTable,
+      and(
+        eq(
+          l2ContractInstanceDeployed.address,
+          l2ContractInstanceDeployerMetadataTable.address,
+        ),
+      ),
+    )
     .where(eq(l2ContractInstanceDeployed.blockHash, blockHash))
     .orderBy(desc(l2ContractInstanceDeployed.version));
 
@@ -168,6 +177,15 @@ export const getL2DeployedContractInstancesByContractClassId = async (
         eq(
           l2ContractInstanceDeployed.address,
           l2ContractInstanceVerifiedDeploymentArguments.address,
+        ),
+      ),
+    )
+    .leftJoin(
+      l2ContractInstanceDeployerMetadataTable,
+      and(
+        eq(
+          l2ContractInstanceDeployed.address,
+          l2ContractInstanceDeployerMetadataTable.address,
         ),
       ),
     )
