@@ -1,5 +1,4 @@
 import { type ChicmozL2ContractInstanceDeluxe } from "@chicmoz-pkg/types";
-import { DetailItem } from "~/components/info-display/key-value-display";
 import { routes } from "~/routes/__root";
 import { API_URL, aztecExplorer } from "~/service/constants";
 
@@ -47,31 +46,6 @@ export const getContractData = (data: ChicmozL2ContractInstanceDeluxe) => {
   return displayData;
 };
 
-export const tempVerifiedContractInstanceData = (): {
-  DeployerDetails: DetailItem[];
-} => {
-  return {
-    DeployerDetails: [
-      {
-        label: "url",
-        value: "https://example.com",
-        extLink: "https://example.com",
-      },
-      {
-        label: "twitter",
-        value: "https://twitter.com/example",
-        extLink: "https://twitter.com/example",
-      },
-      {
-        label: "github",
-        value: "https://github.com/example",
-        extLink: "https://github.com/example",
-      },
-      { label: "creatorname", value: "Mr. Mock" },
-      { label: "email", value: "mock@example.com" },
-    ],
-  };
-};
 export const getVerifiedContractInstanceData = (
   data: ChicmozL2ContractInstanceDeluxe,
 ) => {
@@ -110,7 +84,7 @@ export const getVerifiedContractInstanceData = (
 export const getVerifiedContractInstanceDeploymentData = (
   data: ChicmozL2ContractInstanceDeluxe,
 ) => {
-  return data.verifiedDeploymentArguments
+  const verifiedDeploymentArguments = data.verifiedDeploymentArguments
     ? [
         {
           label: "ADDRESS",
@@ -134,4 +108,35 @@ export const getVerifiedContractInstanceDeploymentData = (
         },
       ]
     : undefined;
+  const deployerMetadata = data.deployerMetadata
+    ? [
+        {
+          label: "CONTRACT IDENTIFIER",
+          value: data.deployerMetadata.contractIdentifier,
+        },
+        {
+          label: "DETAILS",
+          value: data.deployerMetadata.details,
+        },
+        {
+          label: "CREATOR NAME",
+          value: data.deployerMetadata.creatorName,
+        },
+        {
+          label: "CREATOR CONTACT",
+          value: data.deployerMetadata.creatorContact,
+        },
+        {
+          label: "APP URL",
+          value: data.deployerMetadata.appUrl,
+          extLink: data.deployerMetadata.appUrl,
+        },
+        {
+          label: "REPO URL",
+          value: data.deployerMetadata.repoUrl,
+          extLink: data.deployerMetadata.repoUrl,
+        },
+      ]
+    : undefined;
+  return { verifiedDeploymentArguments, deployerMetadata };
 };

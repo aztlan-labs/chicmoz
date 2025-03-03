@@ -2,9 +2,11 @@ import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import {
   NODE_ENV,
   NodeEnv,
+  chicmozL2ContractInstanceDeployerMetadataSchema,
   type ChicmozL2ContractInstanceDeployerMetadata,
 } from "@chicmoz-pkg/types";
 import { and, eq, isNull } from "drizzle-orm";
+import { z } from "zod";
 import { logger } from "../../../../logger.js";
 import { l2ContractInstanceDeployerMetadataTable } from "../../../database/schema/l2contract/index.js";
 
@@ -13,7 +15,7 @@ export const updateContractInstanceDeployerMetadata = async (
     ChicmozL2ContractInstanceDeployerMetadata,
     "uploadedAt"
   >,
-): Promise<void> => {
+): Promise<ChicmozL2ContractInstanceDeployerMetadata | undefined> => {
   if (NODE_ENV === NodeEnv.PROD) {
     if (contractDeployerMetadata.reviewedAt) {
       throw new Error("ContractDeployerMetadata.reviewedAt should not be set");
@@ -23,7 +25,7 @@ export const updateContractInstanceDeployerMetadata = async (
       `manually setting reviewedAt for non-prod environment contract address: ${contractDeployerMetadata.address}`,
     );
   }
-  await db().transaction(async (dbTx) => {
+  const res = await db().transaction(async (dbTx) => {
     const unReviewdMetadata = await dbTx
       .select({
         latestMetadataId: l2ContractInstanceDeployerMetadataTable.id,
@@ -40,7 +42,7 @@ export const updateContractInstanceDeployerMetadata = async (
       )
       .limit(1);
     if (unReviewdMetadata.length > 0) {
-      await dbTx
+      return await dbTx
         .update(l2ContractInstanceDeployerMetadataTable)
         .set({
           ...contractDeployerMetadata,
@@ -51,17 +53,28 @@ export const updateContractInstanceDeployerMetadata = async (
             l2ContractInstanceDeployerMetadataTable.id,
             unReviewdMetadata[0].latestMetadataId,
           ),
-        );
+        )
+        .returning();
     } else {
-      await dbTx.insert(l2ContractInstanceDeployerMetadataTable).values({
-        address: contractDeployerMetadata.address,
-        contractIdentifier: contractDeployerMetadata.contractIdentifier,
-        details: contractDeployerMetadata.details,
-        creatorName: contractDeployerMetadata.creatorName,
-        creatorContact: contractDeployerMetadata.creatorContact,
-        appUrl: contractDeployerMetadata.appUrl,
-        repoUrl: contractDeployerMetadata.repoUrl,
-      });
+      return await dbTx
+        .insert(l2ContractInstanceDeployerMetadataTable)
+        .values({
+          address: contractDeployerMetadata.address,
+          contractIdentifier: contractDeployerMetadata.contractIdentifier,
+          details: contractDeployerMetadata.details,
+          creatorName: contractDeployerMetadata.creatorName,
+          creatorContact: contractDeployerMetadata.creatorContact,
+          appUrl: contractDeployerMetadata.appUrl,
+          repoUrl: contractDeployerMetadata.repoUrl,
+        })
+        .returning();
     }
   });
+  logger.info(
+    `updated contract instance deployer metadata: ${JSON.stringify(res)}`,
+  );
+  return z
+    .array(chicmozL2ContractInstanceDeployerMetadataSchema)
+    .parse(res)
+    .at(0);
 };

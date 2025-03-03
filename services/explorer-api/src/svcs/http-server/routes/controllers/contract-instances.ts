@@ -9,6 +9,7 @@ import {
 import { setEntry } from "@chicmoz-pkg/redis-helper";
 import {
   chicmozL2ContractClassRegisteredEventSchema,
+  chicmozL2ContractInstanceDeluxeSchema,
   chicmozL2ContractInstanceDeployedEventSchema,
 } from "@chicmoz-pkg/types";
 import asyncHandler from "express-async-handler";
@@ -54,16 +55,20 @@ export const openapi_GET_L2_CONTRACT_INSTANCE = {
   },
 };
 
+const contractInstanceKeys = (address: string) => [
+  "l2",
+  "contract-instances",
+  address,
+];
+
 export const GET_L2_CONTRACT_INSTANCE = asyncHandler(async (req, res) => {
   const { address } = getContractInstanceSchema.parse(req).params;
   const { includeArtifactJson } = getContractInstanceSchema.parse(req).query;
-  const instanceData = await dbWrapper.get(
-    ["l2", "contract-instances", address],
-    () =>
-      db.l2Contract.getL2DeployedContractInstanceByAddress(
-        address,
-        includeArtifactJson,
-      ),
+  const instanceData = await dbWrapper.get(contractInstanceKeys(address), () =>
+    db.l2Contract.getL2DeployedContractInstanceByAddress(
+      address,
+      includeArtifactJson,
+    ),
   );
   res.status(200).send(instanceData);
 });
@@ -383,9 +388,39 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
       return;
     }
 
-    await db.l2Contract.updateContractInstanceDeployerMetadata({
+    const metaDataStoreRes = await db.l2Contract.updateContractInstanceDeployerMetadata({
       address,
       ...deployerMetadata,
+    });
+
+    if (!metaDataStoreRes) {
+      res.status(500).send("Failed to update deployer metadata");
+      return;
+    }
+
+    const newContractInstance = JSON.stringify(
+      chicmozL2ContractInstanceDeluxeSchema.parse({
+        ...dbContractInstance,
+        ...dbContractClass,
+        verifiedDeploymentArguments: {
+          ...verificationPayload,
+          address,
+          stringifiedArtifactJson: artifactString,
+        },
+        deployerMetadata: {
+          ...deployerMetadata,
+          address,
+          uploadedAt: metaDataStoreRes.uploadedAt,
+        },
+      }),
+    );
+
+    await setEntry(
+      contractInstanceKeys(address),
+      newContractInstance,
+      CACHE_TTL_SECONDS,
+    ).catch((err) => {
+      logger.warn(`Failed to cache contract instance(${address}): ${err}`);
     });
 
     res.status(200).send("Contract instance registered");
