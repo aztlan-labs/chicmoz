@@ -29,7 +29,7 @@ export const getContractData = (data: ChicmozL2ContractInstanceDeluxe) => {
       label: "RAW DATA",
       value: "View raw data",
       extLink: `${API_URL}/${aztecExplorer.getL2ContractInstance(
-        data.address
+        data.address,
       )}`,
     },
   ];
@@ -73,7 +73,7 @@ export const tempVerifiedContractInstanceData = (): {
   };
 };
 export const getVerifiedContractInstanceData = (
-  data: ChicmozL2ContractInstanceDeluxe
+  data: ChicmozL2ContractInstanceDeluxe,
 ) => {
   return data.deployerMetadata
     ? [
@@ -108,7 +108,7 @@ export const getVerifiedContractInstanceData = (
 };
 
 export const getVerifiedContractInstanceDeploymentData = (
-  data: ChicmozL2ContractInstanceDeluxe
+  data: ChicmozL2ContractInstanceDeluxe,
 ) => {
   return data.verifiedDeploymentArguments
     ? [
@@ -130,7 +130,7 @@ export const getVerifiedContractInstanceDeploymentData = (
         },
         {
           label: "CONSTRUCTOR ARGS",
-          value: data.verifiedDeploymentArguments.constructorArgs,
+          value: data.verifiedDeploymentArguments.constructorArgs.join(", "),
         },
       ]
     : undefined;
