@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
+import { Menu, MoonIcon, SunsetIcon, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SearchInput } from "~/components/ui/input";
 import { useSearch } from "~/hooks";
@@ -13,6 +13,7 @@ export const Header = () => {
   const [searchValue, setSearchValue] = useState("");
   const [hasNoResults, setHasNoResults] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const navigationItems = [
     { name: routes.home.title, path: routes.home.route },
@@ -22,6 +23,11 @@ export const Header = () => {
   ];
   const { data, isLoading, error, refetch, isSuccess, fetchStatus } =
     useSearch(searchValue);
+
+  const handleOnClickTheme = () => {
+    setIsDarkMode(!isDarkMode);
+    document.body.classList.toggle("dark");
+  }
 
   useEffect(() => {
     if (data) {
@@ -48,8 +54,8 @@ export const Header = () => {
         setHasNoResults(true);
       }
     }
-    if (error) setHasNoResults(true);
-    if (!data && isSuccess) setHasNoResults(true);
+    if (error) { setHasNoResults(true); }
+    if (!data && isSuccess) { setHasNoResults(true); }
   }, [data, error, isSuccess, navigate, fetchStatus]);
 
   const handleOnChange = (value: string) => {
@@ -65,9 +71,8 @@ export const Header = () => {
     <div className="mx-auto px-4 mt-10 max-w-[1440px] md:px-[70px]">
       <div className="flex flex-col w-full items-center bg-purple-light rounded-[40px] py-4 pr-4 md:pl-10">
         <div
-          className={`w-full transition-all duration-300 ease-in-out ${
-            isMenuOpen ? "rounded-b-3xl" : ""
-          }`}
+          className={`w-full transition-all duration-300 ease-in-out ${isMenuOpen ? "rounded-b-3xl" : ""
+            }`}
         >
           {/* Header */}
           <div className="w-full mx-auto">
@@ -99,6 +104,11 @@ export const Header = () => {
                   </Link>
                 ))}
               </div>
+              <div className="flex items-center space-x-4">
+                {isDarkMode ?
+                  <MoonIcon className="h-6 w-6" color="white" onClick={handleOnClickTheme} /> :
+                  <SunsetIcon className="h-6 w-6" color="white" onClick={handleOnClickTheme} />}
+              </div>
             </div>
 
             {/* Mobile Navigation Header */}
@@ -126,9 +136,8 @@ export const Header = () => {
             {/* Mobile Menu Content */}
             <div
               className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out
-              ${
-                isMenuOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
-              }`}
+              ${isMenuOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
+                }`}
             >
               <div className="px-4 py-4 space-y-3">
                 {/* Search bar */}
