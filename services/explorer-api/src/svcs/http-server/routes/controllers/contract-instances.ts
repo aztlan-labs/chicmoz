@@ -1,4 +1,4 @@
-import {NoirCompiledContract} from "@aztec/aztec.js";
+import { NoirCompiledContract } from "@aztec/aztec.js";
 import {
   VerifyInstanceDeploymentPayload,
   generateVerifyArtifactPayload,
@@ -6,15 +6,15 @@ import {
   verifyArtifactPayload,
   verifyInstanceDeploymentPayload,
 } from "@chicmoz-pkg/contract-verification";
-import {setEntry} from "@chicmoz-pkg/redis-helper";
+import { setEntry } from "@chicmoz-pkg/redis-helper";
 import {
   chicmozL2ContractClassRegisteredEventSchema,
   chicmozL2ContractInstanceDeployedEventSchema,
 } from "@chicmoz-pkg/types";
 import asyncHandler from "express-async-handler";
-import {CACHE_TTL_SECONDS} from "../../../../environment.js";
-import {logger} from "../../../../logger.js";
-import {controllers as db} from "../../../database/index.js";
+import { CACHE_TTL_SECONDS } from "../../../../environment.js";
+import { logger } from "../../../../logger.js";
+import { controllers as db } from "../../../database/index.js";
 import {
   getContractInstanceSchema,
   getContractInstancesByBlockHashSchema,
@@ -377,7 +377,9 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
     });
 
     if (!deployerMetadata) {
-      res.status(200).send("Contract instance deployment arguments verified and stored");
+      res
+        .status(200)
+        .send("Contract instance deployment arguments verified and stored");
       return;
     }
 
