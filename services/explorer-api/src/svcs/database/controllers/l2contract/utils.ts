@@ -14,23 +14,23 @@ import { l2ContractClassRegistered } from "../../schema/index.js";
 export const parseDeluxe = ({
   contractClass,
   instance,
-  verifiedInfo,
-  verifiedDeploymentInfo,
+  deployerMetadata,
+  verifiedDeploymentArguments,
 }: {
   contractClass: any;
   instance: any;
-  verifiedInfo?: any;
-  verifiedDeploymentInfo?: any;
+  deployerMetadata?: any;
+  verifiedDeploymentArguments?: any;
 }): ChicmozL2ContractInstanceDeluxe => {
   return chicmozL2ContractInstanceDeluxeSchema.parse({
     ...contractClass,
-    verifiedInfo:
-      verifiedInfo ??
+    deployerMetadata:
+      deployerMetadata ??
       VERIFIED_CONTRACT_INSTANCES_CONTACT.find(
         (info) => info.address === instance.address
       ) ??
       undefined,
-    verifiedDeploymentInfo: verifiedDeploymentInfo ?? undefined,
+    verifiedDeploymentArguments: verifiedDeploymentArguments ?? undefined,
     blockHash: instance.blockHash,
     packedBytecode: Buffer.from(contractClass.packedBytecode),
     address: instance.address,
