@@ -62,8 +62,8 @@ export const GET_L2_CONTRACT_INSTANCE = asyncHandler(async (req, res) => {
     () =>
       db.l2Contract.getL2DeployedContractInstanceByAddress(
         address,
-        includeArtifactJson
-      )
+        includeArtifactJson,
+      ),
   );
   res.status(200).send(instanceData);
 });
@@ -103,7 +103,7 @@ export const GET_L2_CONTRACT_INSTANCES = asyncHandler(async (req, res) => {
         fromHeight,
         toHeight,
         includeArtifactJson,
-      })
+      }),
   );
   res.status(200).send(instances);
 });
@@ -145,11 +145,11 @@ export const GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH = asyncHandler(
       () =>
         db.l2Contract.getL2DeployedContractInstancesByBlockHash(
           blockHash,
-          includeArtifactJson
-        )
+          includeArtifactJson,
+        ),
     );
     res.status(200).send(instances);
-  }
+  },
 );
 
 export const openapi_GET_L2_CONTRACT_INSTANCES_BY_CONTRACT_CLASS_ID = {
@@ -188,11 +188,11 @@ export const GET_L2_CONTRACT_INSTANCES_BY_CONTRACT_CLASS_ID = asyncHandler(
       () =>
         db.l2Contract.getL2DeployedContractInstancesByContractClassId(
           classId,
-          includeArtifactJson
-        )
+          includeArtifactJson,
+        ),
     );
     res.status(200).send(instances);
-  }
+  },
 );
 
 export const openapi_POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = {
@@ -220,15 +220,18 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
       params: { address },
       body: {
         stringifiedArtifactJson,
-        publicKeysString,
-        salt,
-        deployer,
-        constructorArgs,
+        deployerMetadata,
+        verifiedDeploymentArguments: {
+          publicKeysString,
+          salt,
+          deployer,
+          constructorArgs,
+        },
       },
     } = postVerifiedContractInstanceSchema.parse(req);
     const instanceData = await dbWrapper.get(
       ["l2", "contract-instances", address],
-      () => db.l2Contract.getL2DeployedContractInstanceByAddress(address)
+      () => db.l2Contract.getL2DeployedContractInstanceByAddress(address),
     );
 
     if (!instanceData || instanceData === undefined) {
@@ -238,11 +241,11 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
 
     const dbContractInstance =
       chicmozL2ContractInstanceDeployedEventSchema.parse(
-        JSON.parse(instanceData)
+        JSON.parse(instanceData),
       );
 
     const pubkeySplit = Object.values(dbContractInstance.publicKeys).map(
-      (key) => key.split("0x")[1]
+      (key) => key.split("0x")[1],
     );
     const pubKeyString = "0x".concat(pubkeySplit.join(""));
 
@@ -270,11 +273,11 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
       () =>
         db.l2Contract.getL2RegisteredContractClass(
           dbContractInstance.contractClassId,
-          dbContractInstance.version
-        )
+          dbContractInstance.version,
+        ),
     );
     const dbContractClass = chicmozL2ContractClassRegisteredEventSchema.parse(
-      JSON.parse(contractClassString!)
+      JSON.parse(contractClassString!),
     );
     if (!dbContractClass) {
       res.status(500).send("Contract class found in DB is not valid");
@@ -285,7 +288,7 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
       res
         .status(400)
         .send(
-          `artifactJson is missing in the request and could not be found for contract class ${dbContractInstance.contractClassId} version ${dbContractInstance.version}`
+          `artifactJson is missing in the request and could not be found for contract class ${dbContractInstance.contractClassId} version ${dbContractInstance.version}`,
         );
       return;
     }
@@ -295,7 +298,7 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
         res
           .status(400)
           .send(
-            "Contract class already has a registered artifact that does not match the uploaded artifact"
+            "Contract class already has a registered artifact that does not match the uploaded artifact",
           );
         return;
       }
@@ -305,9 +308,9 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
       // TODO: this entire block should use verify contract class artifact
       const { isMatchingByteCode } = await verifyArtifactPayload(
         generateVerifyArtifactPayload(
-          JSON.parse(stringifiedArtifactJson ?? "{}") as NoirCompiledContract
+          JSON.parse(stringifiedArtifactJson ?? "{}") as NoirCompiledContract,
         ),
-        dbContractClass
+        dbContractClass,
       );
       if (!isMatchingByteCode) {
         res.status(500).send("Uploaded artifact does not match contract class");
@@ -326,14 +329,14 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
           dbContractInstance.version,
         ],
         JSON.stringify(completeContractClass),
-        CACHE_TTL_SECONDS
+        CACHE_TTL_SECONDS,
       ).catch((err) => {
         logger.warn(`Failed to cache contract class: ${err}`);
       });
       await db.l2Contract.addArtifactJson(
         dbContractClass.contractClassId,
         dbContractClass.version,
-        stringifiedArtifactJson
+        stringifiedArtifactJson,
       );
     }
 
@@ -365,7 +368,7 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
       return;
     }
 
-    await db.l2Contract.storeContractInstanceVerifiedDeployment({
+    await db.l2Contract.storeContractInstanceVerifiedDeploymentArguments({
       address,
       salt,
       deployer,
@@ -373,6 +376,16 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
       constructorArgs: JSON.stringify(constructorArgs),
     });
 
+    if (!deployerMetadata) {
+      res.status(200).send("Contract instance deployment arguments verified and stored");
+      return;
+    }
+
+    await db.l2Contract.updateContractInstanceDeployerMetadata({
+      address,
+      ...deployerMetadata,
+    });
+
     res.status(200).send("Contract instance registered");
-  }
+  },
 );

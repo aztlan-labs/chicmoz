@@ -11,7 +11,8 @@ import {
 } from "./l2Contract.js";
 import { chicmozL2TxEffectSchema } from "./l2TxEffect.js";
 
-export const chicmozL2ContractInstanceDeployerMetadata = z.object({
+export const chicmozL2ContractInstanceDeployerMetadataSchema = z.object({
+  // TODO: update schema with better/more info
   address: z.lazy(
     () => chicmozL2ContractInstanceDeployedEventSchema.shape.address
   ),
@@ -21,17 +22,19 @@ export const chicmozL2ContractInstanceDeployerMetadata = z.object({
   creatorContact: z.string(),
   appUrl: z.string(),
   repoUrl: z.string(),
+  uploadedAt: z.date(),
+  reviewedAt: z.date().optional(),
 });
 
-export type ChicmozL2VerifiedContractInctanceData = z.infer<
-  typeof chicmozL2ContractInstanceDeployerMetadata
+export type ChicmozL2ContractInstanceDeployerMetadata = z.infer<
+  typeof chicmozL2ContractInstanceDeployerMetadataSchema
 >;
 
 export const chicmozL2ContractInstanceDeluxeSchema = z.object({
   ...chicmozL2ContractInstanceDeployedEventSchema.shape,
   ...chicmozL2ContractClassRegisteredEventSchema.shape,
   blockHeight: chicmozL2BlockSchema.shape.height.optional(),
-  deployerMetadata: chicmozL2ContractInstanceDeployerMetadata.optional(),
+  deployerMetadata: chicmozL2ContractInstanceDeployerMetadataSchema.optional(),
   verifiedDeploymentArguments:
     chicmozL2ContractInstanceVerifiedDeploymentArguments.optional(),
 });

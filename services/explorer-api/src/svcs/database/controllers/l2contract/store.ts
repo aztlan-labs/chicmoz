@@ -10,13 +10,13 @@ import { and, eq } from "drizzle-orm";
 import {
   l2ContractClassRegistered,
   l2ContractInstanceDeployed,
-  l2ContractInstanceVerifiedDeployment,
+  l2ContractInstanceVerifiedDeploymentArguments,
   l2PrivateFunction,
   l2UnconstrainedFunction,
 } from "../../../database/schema/l2contract/index.js";
 
 export const storeContractInstance = async (
-  instance: ChicmozL2ContractInstanceDeployedEvent
+  instance: ChicmozL2ContractInstanceDeployedEvent,
 ): Promise<void> => {
   const { publicKeys, ...rest } = instance;
   await db()
@@ -24,16 +24,17 @@ export const storeContractInstance = async (
     .values({ ...publicKeys, ...rest });
 };
 
-export const storeContractInstanceVerifiedDeployment = async (
-  verifiedDeploymentArguments: ChicmozL2ContractInstanceVerifiedDeploymentArgumnetsSchema
+export const storeContractInstanceVerifiedDeploymentArguments = async (
+  verifiedDeploymentArguments: ChicmozL2ContractInstanceVerifiedDeploymentArgumnetsSchema,
 ): Promise<void> => {
   await db()
-    .insert(l2ContractInstanceVerifiedDeployment)
-    .values({ ...verifiedDeploymentArguments });
+    .insert(l2ContractInstanceVerifiedDeploymentArguments)
+    .values({ ...verifiedDeploymentArguments })
+    .onConflictDoNothing();
 };
 
 export const storeContractClass = async (
-  contractClass: ChicmozL2ContractClassRegisteredEvent
+  contractClass: ChicmozL2ContractClassRegisteredEvent,
 ): Promise<void> => {
   await db()
     .insert(l2ContractClassRegistered)
@@ -45,7 +46,7 @@ export const storeContractClass = async (
 export const addArtifactJson = async (
   contractClassId: string,
   version: number,
-  artifactJson: string
+  artifactJson: string,
 ): Promise<void> => {
   await db()
     .update(l2ContractClassRegistered)
@@ -55,14 +56,14 @@ export const addArtifactJson = async (
     .where(
       and(
         eq(l2ContractClassRegistered.contractClassId, contractClassId),
-        eq(l2ContractClassRegistered.version, version)
-      )
+        eq(l2ContractClassRegistered.version, version),
+      ),
     )
     .execute();
 };
 
 export const storePrivateFunction = async (
-  privateFunctionBroadcast: ChicmozL2PrivateFunctionBroadcastedEvent
+  privateFunctionBroadcast: ChicmozL2PrivateFunctionBroadcastedEvent,
 ): Promise<void> => {
   const { privateFunction, ...rest } = privateFunctionBroadcast;
   await db()
@@ -77,7 +78,7 @@ export const storePrivateFunction = async (
 };
 
 export const storeUnconstrainedFunction = async (
-  unconstrainedFunctionBroadcast: ChicmozL2UnconstrainedFunctionBroadcastedEvent
+  unconstrainedFunctionBroadcast: ChicmozL2UnconstrainedFunctionBroadcastedEvent,
 ): Promise<void> => {
   const { unconstrainedFunction, ...rest } = unconstrainedFunctionBroadcast;
   await db()
