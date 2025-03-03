@@ -29,7 +29,7 @@ export async function run() {
     contractLoggingName,
     deployFn: (): DeploySentTx<EasyPrivateVotingContract> =>
       EasyPrivateVotingContract.deploy(deployerWallet, votingAdmin).send(),
-    //broadcastWithWallet: deployerWallet, // NOTE: comment this out to not broadcast
+    broadcastWithWallet: deployerWallet, // NOTE: comment this out to not broadcast
     node: getAztecNodeClient(),
   });
   registerContractClassArtifact(
