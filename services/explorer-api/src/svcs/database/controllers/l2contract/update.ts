@@ -9,11 +9,11 @@ import { logger } from "../../../../logger.js";
 import { l2ContractInstanceDeployerMetadataTable } from "../../../database/schema/l2contract/index.js";
 
 export const updateContractInstanceDeployerMetadata = async (
-  contractDeployerMetadata: ChicmozL2ContractInstanceDeployerMetadata,
+  contractDeployerMetadata: Omit<
+    ChicmozL2ContractInstanceDeployerMetadata,
+    "uploadedAt"
+  >,
 ): Promise<void> => {
-  if (contractDeployerMetadata.uploadedAt) {
-    throw new Error("ContractDeployerMetadata.uploadedAt should not be set");
-  }
   if (NODE_ENV === NodeEnv.PROD) {
     if (contractDeployerMetadata.reviewedAt) {
       throw new Error("ContractDeployerMetadata.reviewedAt should not be set");

@@ -114,7 +114,7 @@ export const l2ContractInstanceVerifiedDeploymentArguments = pgTable(
     publicKeysString: varchar("publicKeys").notNull(),
     deployer: generateAztecAddressColumn("deployer").notNull(),
     salt: generateFrColumn("salt").notNull(),
-    constructorArgs: varchar("constructor_args").notNull(),
+    constructorArgs: jsonb("constructor_args").notNull(),
   },
 );
 

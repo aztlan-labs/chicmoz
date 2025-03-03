@@ -171,15 +171,13 @@ export const postVerifiedContractInstanceSchema = z.lazy(() => {
   return z.object({
     ...getContractInstanceSchema.shape,
     body: z.object({
-      stringifiedArtifactJson: z.string(),
-      deployerMetadata: z.lazy(() =>
-        z.object({
-          ...chicmozL2ContractInstanceDeployerMetadataSchema.omit({
-            address: true,
-          }).shape,
-        }),
-      ).optional(),
-      verifiedDeploymentArguments: verifyInstanceDeploymentPayloadSchema,
+      deployerMetadata: chicmozL2ContractInstanceDeployerMetadataSchema
+        .omit({
+          address: true,
+          uploadedAt: true,
+        })
+        .optional(),
+      verifiedDeploymentArguments: verifyInstanceDeploymentPayloadSchema
     }),
   });
 });

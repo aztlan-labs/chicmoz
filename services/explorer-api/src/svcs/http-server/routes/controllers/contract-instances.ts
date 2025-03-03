@@ -1,4 +1,4 @@
-import { NoirCompiledContract } from "@aztec/aztec.js";
+import {NoirCompiledContract} from "@aztec/aztec.js";
 import {
   VerifyInstanceDeploymentPayload,
   generateVerifyArtifactPayload,
@@ -6,15 +6,15 @@ import {
   verifyArtifactPayload,
   verifyInstanceDeploymentPayload,
 } from "@chicmoz-pkg/contract-verification";
-import { setEntry } from "@chicmoz-pkg/redis-helper";
+import {setEntry} from "@chicmoz-pkg/redis-helper";
 import {
   chicmozL2ContractClassRegisteredEventSchema,
   chicmozL2ContractInstanceDeployedEventSchema,
 } from "@chicmoz-pkg/types";
 import asyncHandler from "express-async-handler";
-import { CACHE_TTL_SECONDS } from "../../../../environment.js";
-import { logger } from "../../../../logger.js";
-import { controllers as db } from "../../../database/index.js";
+import {CACHE_TTL_SECONDS} from "../../../../environment.js";
+import {logger} from "../../../../logger.js";
+import {controllers as db} from "../../../database/index.js";
 import {
   getContractInstanceSchema,
   getContractInstancesByBlockHashSchema,
@@ -219,13 +219,13 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
     const {
       params: { address },
       body: {
-        stringifiedArtifactJson,
         deployerMetadata,
         verifiedDeploymentArguments: {
           publicKeysString,
           salt,
           deployer,
           constructorArgs,
+          stringifiedArtifactJson,
         },
       },
     } = postVerifiedContractInstanceSchema.parse(req);
@@ -373,7 +373,7 @@ export const POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT = asyncHandler(
       salt,
       deployer,
       publicKeysString,
-      constructorArgs: JSON.stringify(constructorArgs),
+      constructorArgs,
     });
 
     if (!deployerMetadata) {
