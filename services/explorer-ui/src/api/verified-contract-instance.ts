@@ -1,5 +1,5 @@
 import {
-  chicmozL2VerifiedContractInstanceDataSchema,
+  chicmozL2ContractInstanceDeployerMetadata,
   type ChicmozL2VerifiedContractInctanceData,
 } from "@chicmoz-pkg/types";
 import { aztecExplorer } from "~/service/constants";
@@ -13,7 +13,7 @@ export const VerifiedContractInstanceL2API = {
       aztecExplorer.getL2VerifiedContractByInstanceAddress(address)
     );
     return validateResponse(
-      chicmozL2VerifiedContractInstanceDataSchema,
+      chicmozL2ContractInstanceDeployerMetadata,
       response.data
     );
   },
@@ -22,7 +22,7 @@ export const VerifiedContractInstanceL2API = {
   > => {
     const response = await client.get(aztecExplorer.getL2VerifiedContracts);
     return validateResponse(
-      chicmozL2VerifiedContractInstanceDataSchema.array(),
+      chicmozL2ContractInstanceDeployerMetadata.array(),
       response.data
     );
   },

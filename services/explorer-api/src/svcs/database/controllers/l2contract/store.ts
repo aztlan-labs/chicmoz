@@ -2,7 +2,7 @@ import { getDb as db } from "@chicmoz-pkg/postgres-helper";
 import {
   type ChicmozL2ContractClassRegisteredEvent,
   type ChicmozL2ContractInstanceDeployedEvent,
-  type ChicmozL2ContractInstanceVerifiedDeploymentInfoSchema,
+  type ChicmozL2ContractInstanceVerifiedDeploymentArgumnetsSchema,
   type ChicmozL2PrivateFunctionBroadcastedEvent,
   type ChicmozL2UnconstrainedFunctionBroadcastedEvent,
 } from "@chicmoz-pkg/types";
@@ -25,11 +25,11 @@ export const storeContractInstance = async (
 };
 
 export const storeContractInstanceVerifiedDeployment = async (
-  verifiedDeploymentInfo: ChicmozL2ContractInstanceVerifiedDeploymentInfoSchema
+  verifiedDeploymentArguments: ChicmozL2ContractInstanceVerifiedDeploymentArgumnetsSchema
 ): Promise<void> => {
   await db()
     .insert(l2ContractInstanceVerifiedDeployment)
-    .values({ ...verifiedDeploymentInfo });
+    .values({ ...verifiedDeploymentArguments });
 };
 
 export const storeContractClass = async (

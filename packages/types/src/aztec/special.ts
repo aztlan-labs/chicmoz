@@ -7,11 +7,11 @@ import { chicmozL2BlockSchema } from "./l2Block.js";
 import {
   chicmozL2ContractClassRegisteredEventSchema,
   chicmozL2ContractInstanceDeployedEventSchema,
-  chicmozL2ContractInstanceVerifiedDeploymentInfoSchema,
+  chicmozL2ContractInstanceVerifiedDeploymentArguments,
 } from "./l2Contract.js";
 import { chicmozL2TxEffectSchema } from "./l2TxEffect.js";
 
-export const chicmozL2VerifiedContractInstanceDataSchema = z.object({
+export const chicmozL2ContractInstanceDeployerMetadata = z.object({
   address: z.lazy(
     () => chicmozL2ContractInstanceDeployedEventSchema.shape.address
   ),
@@ -24,16 +24,16 @@ export const chicmozL2VerifiedContractInstanceDataSchema = z.object({
 });
 
 export type ChicmozL2VerifiedContractInctanceData = z.infer<
-  typeof chicmozL2VerifiedContractInstanceDataSchema
+  typeof chicmozL2ContractInstanceDeployerMetadata
 >;
 
 export const chicmozL2ContractInstanceDeluxeSchema = z.object({
   ...chicmozL2ContractInstanceDeployedEventSchema.shape,
   ...chicmozL2ContractClassRegisteredEventSchema.shape,
   blockHeight: chicmozL2BlockSchema.shape.height.optional(),
-  verifiedInfo: chicmozL2VerifiedContractInstanceDataSchema.optional(),
-  verifiedDeploymentInfo:
-    chicmozL2ContractInstanceVerifiedDeploymentInfoSchema.optional(),
+  deployerMetadata: chicmozL2ContractInstanceDeployerMetadata.optional(),
+  verifiedDeploymentArguments:
+    chicmozL2ContractInstanceVerifiedDeploymentArguments.optional(),
 });
 
 export type ChicmozL2ContractInstanceDeluxe = z.infer<
