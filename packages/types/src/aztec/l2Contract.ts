@@ -32,7 +32,7 @@ export const chicmozL2ContractInstanceVerifiedDeploymentArguments = z.object({
   constructorArgs: z.string(),
 });
 
-export type ChicmozL2ContractInstanceVerifiedDeploymentInfoSchema = z.infer<
+export type ChicmozL2ContractInstanceVerifiedDeploymentArgumnetsSchema = z.infer<
   typeof chicmozL2ContractInstanceVerifiedDeploymentArguments
 >;
 

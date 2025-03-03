@@ -25,7 +25,7 @@ export const getL2DeployedContractInstances = async ({
     .select({
       instance: getTableColumns(l2ContractInstanceDeployed),
       class: getContractClassRegisteredColumns(includeArtifactJson),
-      verifiedDeploymentInfo: getTableColumns(
+      verifiedDeploymentArguments: getTableColumns(
         l2ContractInstanceVerifiedDeployment
       ),
     })
@@ -61,7 +61,7 @@ export const getL2DeployedContractInstances = async ({
     return parseDeluxe({
       contractClass: r.class,
       instance: r.instance,
-      verifiedDeploymentInfo: r.verifiedDeploymentInfo,
+      verifiedDeploymentArguments: r.verifiedDeploymentArguments,
     });
   });
 
@@ -76,7 +76,7 @@ export const getL2DeployedContractInstancesByBlockHash = async (
     .select({
       instance: getTableColumns(l2ContractInstanceDeployed),
       class: getContractClassRegisteredColumns(includeArtifactJson),
-      verifiedDeploymentInfo: getTableColumns(
+      verifiedDeploymentArguments: getTableColumns(
         l2ContractInstanceVerifiedDeployment
       ),
     })
@@ -110,7 +110,7 @@ export const getL2DeployedContractInstancesByBlockHash = async (
     return parseDeluxe({
       contractClass: r.class,
       instance: r.instance,
-      verifiedDeploymentInfo: r.verifiedDeploymentInfo,
+      verifiedDeploymentArguments: r.verifiedDeploymentArguments,
     });
   });
 };
@@ -123,7 +123,7 @@ export const getL2DeployedContractInstancesByContractClassId = async (
     .select({
       instance: getTableColumns(l2ContractInstanceDeployed),
       class: getContractClassRegisteredColumns(includeArtifactJson),
-      verifiedDeploymentInfo: getTableColumns(
+      verifiedDeploymentArguments: getTableColumns(
         l2ContractInstanceVerifiedDeployment
       ),
     })
@@ -158,7 +158,7 @@ export const getL2DeployedContractInstancesByContractClassId = async (
     return parseDeluxe({
       contractClass: r.class,
       instance: r.instance,
-      verifiedDeploymentInfo: r.verifiedDeploymentInfo,
+      verifiedDeploymentArguments: r.verifiedDeploymentArguments,
     });
   });
 };

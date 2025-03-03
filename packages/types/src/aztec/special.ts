@@ -32,7 +32,7 @@ export const chicmozL2ContractInstanceDeluxeSchema = z.object({
   ...chicmozL2ContractClassRegisteredEventSchema.shape,
   blockHeight: chicmozL2BlockSchema.shape.height.optional(),
   deployerMetadata: chicmozL2ContractInstanceDeployerMetadata.optional(),
-  verifiedDeploymentInfo:
+  verifiedDeploymentArguments:
     chicmozL2ContractInstanceVerifiedDeploymentArguments.optional(),
 });
 

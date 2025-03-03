@@ -17,7 +17,7 @@ export const getL2DeployedContractInstanceByAddress = async (
     .select({
       instance: getTableColumns(l2ContractInstanceDeployed),
       class: getContractClassRegisteredColumns(includeArtifactJson),
-      verifiedDeploymentInfo: getTableColumns(
+      verifiedDeploymentArguments: getTableColumns(
         l2ContractInstanceVerifiedDeployment
       ),
     })
@@ -52,11 +52,11 @@ export const getL2DeployedContractInstanceByAddress = async (
     logger.info(`No contract instance found for address: ${address}`);
     return null;
   }
-  const { instance, class: contractClass, verifiedDeploymentInfo } = result[0];
+  const { instance, class: contractClass, verifiedDeploymentArguments } = result[0];
 
   return parseDeluxe({
     contractClass,
     instance,
-    verifiedDeploymentInfo,
+    verifiedDeploymentArguments,
   });
 };
