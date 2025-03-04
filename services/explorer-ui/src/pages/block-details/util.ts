@@ -1,5 +1,4 @@
 import {
-  ChicmozL2BlockFinalizationStatus,
   type ChicmozL2Block,
   type ChicmozL2BlockLight,
 } from "@chicmoz-pkg/types";
