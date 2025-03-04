@@ -1,4 +1,5 @@
 import { PublicClient } from "viem";
+import { logger } from "../../logger.js";
 import { controllers as dbControllers } from "../../svcs/database/index.js";
 import { getPublicHttpClient } from "../client.js";
 import {
@@ -8,6 +9,22 @@ import {
 import { AztecContracts } from "./utils.js";
 
 const GET_EVENETS_DEFAULT_IS_FINALIZED = true;
+const DEFAULT_BLOCK_CHUNK_SIZE = 100n;
+
+const getActualToBlock = (
+  fromBlock: bigint,
+  latestHeight: bigint,
+  toBlock: "finalized",
+) => {
+  const actualToBlock =
+    latestHeight - fromBlock > DEFAULT_BLOCK_CHUNK_SIZE
+      ? fromBlock + DEFAULT_BLOCK_CHUNK_SIZE
+      : toBlock;
+  logger.info(
+    `fromBlock: ${fromBlock}, latestHeight: ${latestHeight}, actualToBlock: ${actualToBlock}`,
+  );
+  return actualToBlock;
+};
 
 const getRollupL2BlockProposedLogs = async ({
   client,
@@ -20,17 +37,26 @@ const getRollupL2BlockProposedLogs = async ({
   toBlock: "finalized";
   latestHeight: bigint;
 }) => {
-  const { fromBlock, updateHeight, storeHeight } =
-    await dbControllers.inMemoryHeightTracker({
-      contractName: "rollup",
-      contractAddress: contracts.rollup.address,
-      eventName: "L2BlockProposed",
-      isFinalized: GET_EVENETS_DEFAULT_IS_FINALIZED,
-      latestHeight,
-    });
+  const {
+    fromBlock,
+    updateHeight,
+    storeHeight,
+    getMemoryHeight,
+    setOverrideStoreHeight,
+  } = await dbControllers.inMemoryHeightTracker({
+    contractName: "rollup",
+    contractAddress: contracts.rollup.address,
+    eventName: "L2BlockProposed",
+    isFinalized: GET_EVENETS_DEFAULT_IS_FINALIZED,
+    latestHeight,
+  });
+  const actualToBlock = getActualToBlock(fromBlock, latestHeight, toBlock);
+  if (actualToBlock !== toBlock) {
+    setOverrideStoreHeight(actualToBlock);
+  }
   const rollupL2BlockProposedLogs = await client.getContractEvents({
-    fromBlock: fromBlock === 1n ? "finalized" : fromBlock,
-    toBlock,
+    fromBlock,
+    toBlock: actualToBlock,
     eventName: "L2BlockProposed",
     address: contracts.rollup.address,
     abi: contracts.rollup.abi,
@@ -40,6 +66,7 @@ const getRollupL2BlockProposedLogs = async ({
     updateHeight,
     storeHeight,
   }).onLogs(rollupL2BlockProposedLogs);
+  return latestHeight - getMemoryHeight();
 };
 
 const getRollupL2ProofVerifiedLogs = async ({
@@ -53,17 +80,26 @@ const getRollupL2ProofVerifiedLogs = async ({
   toBlock: "finalized";
   latestHeight: bigint;
 }) => {
-  const { fromBlock, updateHeight, storeHeight } =
-    await dbControllers.inMemoryHeightTracker({
-      contractName: "rollup",
-      contractAddress: contracts.rollup.address,
-      eventName: "L2ProofVerified",
-      isFinalized: GET_EVENETS_DEFAULT_IS_FINALIZED,
-      latestHeight,
-    });
+  const {
+    fromBlock,
+    updateHeight,
+    storeHeight,
+    getMemoryHeight,
+    setOverrideStoreHeight,
+  } = await dbControllers.inMemoryHeightTracker({
+    contractName: "rollup",
+    contractAddress: contracts.rollup.address,
+    eventName: "L2ProofVerified",
+    isFinalized: GET_EVENETS_DEFAULT_IS_FINALIZED,
+    latestHeight,
+  });
+  const actualToBlock = getActualToBlock(fromBlock, latestHeight, toBlock);
+  if (actualToBlock !== toBlock) {
+    setOverrideStoreHeight(actualToBlock);
+  }
   const rollupL2ProofVerifiedLogs = await client.getContractEvents({
-    fromBlock: fromBlock === 1n ? "finalized" : fromBlock,
-    toBlock,
+    fromBlock,
+    toBlock: actualToBlock,
     eventName: "L2ProofVerified",
     address: contracts.rollup.address,
     abi: contracts.rollup.abi,
@@ -73,6 +109,7 @@ const getRollupL2ProofVerifiedLogs = async ({
     updateHeight,
     storeHeight,
   }).onLogs(rollupL2ProofVerifiedLogs);
+  return latestHeight - getMemoryHeight();
 };
 
 export const getAllContractsEvents = async ({
@@ -85,17 +122,19 @@ export const getAllContractsEvents = async ({
   latestHeight: bigint;
 }) => {
   const client = getPublicHttpClient();
-  // TODO: batch-query if genesis-catcup
-  await getRollupL2BlockProposedLogs({
-    client,
-    contracts,
-    toBlock,
-    latestHeight,
-  });
-  await getRollupL2ProofVerifiedLogs({
-    client,
-    contracts,
-    toBlock,
-    latestHeight,
-  });
+  const pollResults: bigint[] = await Promise.all([
+    getRollupL2BlockProposedLogs({
+      client,
+      contracts,
+      toBlock,
+      latestHeight,
+    }),
+    getRollupL2ProofVerifiedLogs({
+      client,
+      contracts,
+      toBlock,
+      latestHeight,
+    }),
+  ]);
+  return pollResults;
 };

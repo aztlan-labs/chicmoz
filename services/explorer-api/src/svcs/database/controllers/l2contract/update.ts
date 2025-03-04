@@ -70,9 +70,6 @@ export const updateContractInstanceDeployerMetadata = async (
         .returning();
     }
   });
-  logger.info(
-    `updated contract instance deployer metadata: ${JSON.stringify(res)}`,
-  );
   return z
     .array(chicmozL2ContractInstanceDeployerMetadataSchema)
     .parse(res)

@@ -27,28 +27,36 @@ export const inMemoryHeightTracker = async ({
     eventName,
     latestHeight,
   });
+  let overrideStoreHeight: bigint | undefined;
+  const setOverrideStoreHeight = (height: bigint) => {
+    overrideStoreHeight = height;
+  };
+
   const lastProcessedHeight = isFinalized
     ? latestFinalizedHeight
     : latestPendingHeight;
-  let height = lastProcessedHeight;
+
+  let memoryHeight = lastProcessedHeight;
   const finalizedString = isFinalized ? "✅" : "💤";
   logger.info(
     `START ${lastProcessedHeight} ${finalizedString} ${contractName} ${eventName}`,
   );
   const updateMemory = (newHeight: bigint) => {
-    if (newHeight > height) {
-      height = newHeight;
+    if (newHeight > memoryHeight) {
+      memoryHeight = newHeight;
     }
   };
+  const getMemoryHeight = () => memoryHeight;
+
   const updateDb = async () => {
     logger.info(
-      `END   ${height} ${finalizedString} ${contractName} ${eventName}`,
+      `END   ${memoryHeight} ${finalizedString} ${contractName} ${eventName}`,
     );
     await setHeight({
       contractName,
       contractAddress,
       eventName,
-      hight: height,
+      height: overrideStoreHeight ?? memoryHeight,
       isFinalized,
     });
   };
@@ -56,6 +64,8 @@ export const inMemoryHeightTracker = async ({
     updateHeight: updateMemory,
     storeHeight: updateDb,
     fromBlock: lastProcessedHeight + 1n,
+    getMemoryHeight,
+    setOverrideStoreHeight,
   };
 };
 
@@ -63,13 +73,13 @@ export const setHeight = async ({
   contractName,
   contractAddress,
   eventName,
-  hight: height,
+  height,
   isFinalized,
 }: {
   contractName: string;
   contractAddress: string;
   eventName: string;
-  hight: bigint;
+  height: bigint;
   isFinalized: boolean;
 }) => {
   const update = isFinalized
@@ -129,7 +139,7 @@ export const getHeights = async ({
   if (!res.length) {
     return {
       latestPendingHeight: latestHeight ?? 0n,
-      latestFinalizedHeight: latestHeight ?? 0n,
+      latestFinalizedHeight: 0n,
     };
   }
 

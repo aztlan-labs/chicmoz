@@ -10,9 +10,10 @@ export const refreshWatchers = async () => {
   unwatchAllContracts = await watchContractsEvents();
 };
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export const ensureStarted = async () => {
-  if (started) return;
-  unwatchAllContracts = await watchContractsEvents();
+  if (started) {return;}
+  //unwatchAllContracts = await watchContractsEvents();
   started = true;
 };
 
