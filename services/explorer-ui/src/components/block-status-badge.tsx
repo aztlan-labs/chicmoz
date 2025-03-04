@@ -10,7 +10,6 @@ export const BlockStatusBadge: React.FC<BlockStatusBadgeProps> = ({ status, clas
   let badgeText = "Unknown";
   let badgeStyle = {};
 
-  // Set styling based on status
   switch (status) {
     case ChicmozL2BlockFinalizationStatus.L2_NODE_SEEN_PROPOSED:
       badgeText = "L2 Proposed";
