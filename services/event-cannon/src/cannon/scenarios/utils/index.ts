@@ -25,7 +25,6 @@ import { deriveSigningKey } from "@aztec/circuits.js";
 import { FunctionType } from "@aztec/foundation/abi";
 import { ContractClassRegisteredEvent } from "@aztec/protocol-contracts/class-registerer";
 import {
-  VerifyInstanceDeploymentPayload,
   generateVerifyArtifactPayload,
   generateVerifyArtifactUrl,
   generateVerifyInstancePayload,
@@ -292,7 +291,7 @@ export const verifyContractInstanceDeployment = async ({
   const postData = JSON.stringify({
     verifiedDeploymentArguments: generateVerifyInstancePayload(
       verifyArgs,
-    ) as VerifyInstanceDeploymentPayload,
+    ),
     deployerMetadata,
   });
   await callExplorerApi({
