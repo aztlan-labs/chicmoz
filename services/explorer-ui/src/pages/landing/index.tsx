@@ -7,7 +7,7 @@ import {
   HealthStatus,
   useAvarageBlockTime,
   useAvarageFees,
-  useGetTxEffectsByBlockHeightRange,
+  useGetLatestTxEffects,
   useLatestBlocks,
   usePendingTxs,
   useSubTitle,
@@ -19,7 +19,7 @@ import {
 } from "~/hooks";
 import { formatDuration, formatFees } from "~/lib/utils";
 import { routes } from "~/routes/__root";
-import { mapLatestBlocks, parseTxEffectsData } from "./util";
+import { mapLatestBlocks, mapLatestTxEffects } from "./util";
 
 export const Landing: FC = () => {
   const { systemHealth } = useSystemHealth();
@@ -57,23 +57,24 @@ export const Landing: FC = () => {
 
   useSubTitle(latestBlocks?.[0]?.height.toString() ?? routes.home.title);
 
-  const latestTxEffectsData = useGetTxEffectsByBlockHeightRange(
-    latestBlocks?.at(40)?.height ?? latestBlocks?.at(-1)?.height,
-    latestBlocks?.at(0)?.height
-  );
+  const {
+    data: latestTxEffectsData,
+    isLoading: isLoadingTxEffects,
+    error: txEffectsError,
+  } = useGetLatestTxEffects();
 
   const { data: pendingTxs } = usePendingTxs();
 
-  const {
-    isLoadingTxEffects,
-    txEffectsErrorMsg: txEffectsError,
-    latestTxEffects,
-  } = parseTxEffectsData(latestTxEffectsData, latestBlocks);
-
   const latestTxEffectsWithPending = useMemo(() => {
+    if (!latestTxEffectsData) {
+      return [];
+    }
+    if (!latestBlocks) {
+      return [];
+    }
     const disguisedPendingTxs =
       pendingTxs?.reduce((acc, tx) => {
-        if (!latestTxEffects.some((effect) => effect.txHash === tx.hash)) {
+        if (!latestTxEffectsData.some((effect) => effect.txHash === tx.hash)) {
           acc.push({
             txHash: tx.hash,
             transactionFee: -1,
@@ -83,12 +84,15 @@ export const Landing: FC = () => {
         }
         return acc;
       }, [] as TxEffectTableSchema[]) ?? [];
-    return [...disguisedPendingTxs, ...latestTxEffects];
-  }, [pendingTxs, latestTxEffects]);
+    return [
+      ...disguisedPendingTxs,
+      ...mapLatestTxEffects(latestTxEffectsData, latestBlocks),
+    ];
+  }, [pendingTxs, latestTxEffectsData, latestBlocks]);
 
   const averageBlockTimeFormatted = formatDuration(
     Number(avarageBlockTime) / 1000,
-    true
+    true,
   );
 
   const formattedFees = formatFees(avarageFees);

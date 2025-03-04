@@ -25,6 +25,7 @@ export const paths = {
   block: `/l2/blocks/:${heightOrHash}`,
   blocks: "/l2/blocks",
 
+  txEffects: "/l2/tx-effects",
   txEffectsByBlockHeight: `/l2/blocks/:${blockHeight}/tx-effects`,
   txEffectByBlockHeightAndIndex: `/l2/blocks/:${blockHeight}/tx-effects/:${txEffectIndex}`,
   txEffectsByTxEffectHash: `/l2/tx-effects/:${txEffectHash}`,

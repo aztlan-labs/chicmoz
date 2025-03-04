@@ -87,7 +87,7 @@ const checkDocsStatus = () => {
   } catch (e) {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     logger.error(
-      `⚠️  STARTING SERVER WITHOUT SUFFICIENT DOCS! ${totalPaths} - ${totalStatsPaths} !== ${totalOpenApiPaths} ⚠️`
+      `⚠️  STARTING SERVER WITHOUT SUFFICIENT DOCS! ${totalPaths} - ${totalStatsPaths} !== ${totalOpenApiPaths} ⚠️`,
     );
   }
 };
@@ -102,17 +102,18 @@ export const init = ({ router }: { router: Router }) => {
   router.get(paths.blocks, controller.GET_BLOCKS);
   router.get(paths.feeRecipients, controller.GET_L2_FEE_RECIPIENTS);
 
+  router.get(paths.txEffects, controller.GET_L2_TX_EFFECTS);
   router.get(
     paths.txEffectsByBlockHeight,
-    controller.GET_L2_TX_EFFECTS_BY_BLOCK_HEIGHT
+    controller.GET_L2_TX_EFFECTS_BY_BLOCK_HEIGHT,
   );
   router.get(
     paths.txEffectByBlockHeightAndIndex,
-    controller.GET_L2_TX_EFFECT_BY_BLOCK_HEIGHT_AND_INDEX
+    controller.GET_L2_TX_EFFECT_BY_BLOCK_HEIGHT_AND_INDEX,
   );
   router.get(
     paths.txEffectsByTxEffectHash,
-    controller.GET_L2_TX_EFFECT_BY_TX_EFFECT_HASH
+    controller.GET_L2_TX_EFFECT_BY_TX_EFFECT_HASH,
   );
 
   router.get(paths.txs, controller.GET_PENDING_TXS);
@@ -120,28 +121,28 @@ export const init = ({ router }: { router: Router }) => {
   router.get(paths.contractClass, controller.GET_L2_REGISTERED_CONTRACT_CLASS);
   router.get(
     paths.contractClassesByClassId,
-    controller.GET_L2_REGISTERED_CONTRACT_CLASSES_ALL_VERSIONS
+    controller.GET_L2_REGISTERED_CONTRACT_CLASSES_ALL_VERSIONS,
   );
   router.get(
     paths.contractClasses,
-    controller.GET_L2_REGISTERED_CONTRACT_CLASSES
+    controller.GET_L2_REGISTERED_CONTRACT_CLASSES,
   );
 
   router.get(
     paths.contractClassPrivateFunctions,
-    controller.GET_L2_CONTRACT_CLASS_PRIVATE_FUNCTIONS
+    controller.GET_L2_CONTRACT_CLASS_PRIVATE_FUNCTIONS,
   );
   router.get(
     paths.contractClassPrivateFunction,
-    controller.GET_L2_CONTRACT_CLASS_PRIVATE_FUNCTION
+    controller.GET_L2_CONTRACT_CLASS_PRIVATE_FUNCTION,
   );
   router.get(
     paths.contractClassUnconstrainedFunctions,
-    controller.GET_L2_CONTRACT_CLASS_UNCONSTRAINED_FUNCTIONS
+    controller.GET_L2_CONTRACT_CLASS_UNCONSTRAINED_FUNCTIONS,
   );
   router.get(
     paths.contractClassUnconstrainedFunction,
-    controller.GET_L2_CONTRACT_CLASS_UNCONSTRAINED_FUNCTION
+    controller.GET_L2_CONTRACT_CLASS_UNCONSTRAINED_FUNCTION,
   );
 
   router.post(
@@ -149,7 +150,7 @@ export const init = ({ router }: { router: Router }) => {
     bodyParser.json({
       limit: ARTIFACT_BODY_LIMIT,
     }),
-    controller.POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT
+    controller.POST_L2_REGISTERED_CONTRACT_CLASS_ARTIFACT,
   );
 
   router.post(
@@ -157,16 +158,16 @@ export const init = ({ router }: { router: Router }) => {
     bodyParser.json({
       limit: ARTIFACT_BODY_LIMIT,
     }),
-    controller.POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT
+    controller.POST_L2_VERIFY_CONTRACT_INSTANCE_DEPLOYMENT,
   );
 
   router.get(
     paths.contractInstancesByBlockHash,
-    controller.GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH
+    controller.GET_L2_CONTRACT_INSTANCES_BY_BLOCK_HASH,
   );
   router.get(
     paths.contractInstancesByContractClassId,
-    controller.GET_L2_CONTRACT_INSTANCES_BY_CONTRACT_CLASS_ID
+    controller.GET_L2_CONTRACT_INSTANCES_BY_CONTRACT_CLASS_ID,
   );
   router.get(paths.contractInstance, controller.GET_L2_CONTRACT_INSTANCE);
   router.get(paths.contractInstances, controller.GET_L2_CONTRACT_INSTANCES);
@@ -177,7 +178,7 @@ export const init = ({ router }: { router: Router }) => {
   router.get(paths.l1l2Validator, controller.GET_L1_L2_VALIDATOR);
   router.get(
     paths.l1l2ValidatorHistory,
-    controller.GET_L1_L2_VALIDATOR_HISTORY
+    controller.GET_L1_L2_VALIDATOR_HISTORY,
   );
 
   router.get(paths.l1ContractEvents, controller.GET_L1_CONTRACT_EVENTS);
