@@ -1,6 +1,6 @@
 import { PublicClient } from "viem";
 import { controllers as dbControllers } from "../../svcs/database/index.js";
-import { getPublicClient } from "../client.js";
+import { getPublicHttpClient } from "../client.js";
 import {
   l2BlockProposedEventCallbacks,
   l2ProofVerifiedEventCallbacks,
@@ -13,10 +13,12 @@ const getRollupL2BlockProposedLogs = async ({
   client,
   contracts,
   toBlock,
+  latestHeight,
 }: {
   client: PublicClient;
   contracts: AztecContracts;
   toBlock: "finalized";
+  latestHeight: bigint;
 }) => {
   const { fromBlock, updateHeight, storeHeight } =
     await dbControllers.inMemoryHeightTracker({
@@ -24,9 +26,10 @@ const getRollupL2BlockProposedLogs = async ({
       contractAddress: contracts.rollup.address,
       eventName: "L2BlockProposed",
       isFinalized: GET_EVENETS_DEFAULT_IS_FINALIZED,
+      latestHeight,
     });
   const rollupL2BlockProposedLogs = await client.getContractEvents({
-    fromBlock,
+    fromBlock: fromBlock === 1n ? "finalized" : fromBlock,
     toBlock,
     eventName: "L2BlockProposed",
     address: contracts.rollup.address,
@@ -43,10 +46,12 @@ const getRollupL2ProofVerifiedLogs = async ({
   client,
   contracts,
   toBlock,
+  latestHeight,
 }: {
   client: PublicClient;
   contracts: AztecContracts;
   toBlock: "finalized";
+  latestHeight: bigint;
 }) => {
   const { fromBlock, updateHeight, storeHeight } =
     await dbControllers.inMemoryHeightTracker({
@@ -54,9 +59,10 @@ const getRollupL2ProofVerifiedLogs = async ({
       contractAddress: contracts.rollup.address,
       eventName: "L2ProofVerified",
       isFinalized: GET_EVENETS_DEFAULT_IS_FINALIZED,
+      latestHeight,
     });
   const rollupL2ProofVerifiedLogs = await client.getContractEvents({
-    fromBlock,
+    fromBlock: fromBlock === 1n ? "finalized" : fromBlock,
     toBlock,
     eventName: "L2ProofVerified",
     address: contracts.rollup.address,
@@ -72,11 +78,24 @@ const getRollupL2ProofVerifiedLogs = async ({
 export const getAllContractsEvents = async ({
   contracts,
   toBlock,
+  latestHeight,
 }: {
   contracts: AztecContracts;
   toBlock: "finalized";
+  latestHeight: bigint;
 }) => {
-  const client = getPublicClient();
-  await getRollupL2BlockProposedLogs({ client, contracts, toBlock });
-  await getRollupL2ProofVerifiedLogs({ client, contracts, toBlock });
+  const client = getPublicHttpClient();
+  // TODO: batch-query if genesis-catcup
+  await getRollupL2BlockProposedLogs({
+    client,
+    contracts,
+    toBlock,
+    latestHeight,
+  });
+  await getRollupL2ProofVerifiedLogs({
+    client,
+    contracts,
+    toBlock,
+    latestHeight,
+  });
 };

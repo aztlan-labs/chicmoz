@@ -13,16 +13,19 @@ export const inMemoryHeightTracker = async ({
   contractName,
   eventName,
   isFinalized,
+  latestHeight,
 }: {
   contractAddress: string;
   contractName: string;
   eventName: string;
   isFinalized: boolean;
+  latestHeight: bigint;
 }) => {
   const { latestPendingHeight, latestFinalizedHeight } = await getHeights({
     contractName,
     contractAddress,
     eventName,
+    latestHeight,
   });
   const lastProcessedHeight = isFinalized
     ? latestFinalizedHeight
@@ -30,14 +33,16 @@ export const inMemoryHeightTracker = async ({
   let height = lastProcessedHeight;
   const finalizedString = isFinalized ? "✅" : "💤";
   logger.info(
-    `START ${lastProcessedHeight} ${finalizedString} ${contractName} ${eventName}`
+    `START ${lastProcessedHeight} ${finalizedString} ${contractName} ${eventName}`,
   );
   const updateMemory = (newHeight: bigint) => {
-    if (newHeight > height) height = newHeight;
+    if (newHeight > height) {
+      height = newHeight;
+    }
   };
   const updateDb = async () => {
     logger.info(
-      `END   ${height} ${finalizedString} ${contractName} ${eventName}`
+      `END   ${height} ${finalizedString} ${contractName} ${eventName}`,
     );
     await setHeight({
       contractName,
@@ -83,8 +88,8 @@ export const setHeight = async ({
       and(
         eq(heightsTable.contractName, contractName),
         eq(heightsTable.contractAddress, contractAddress),
-        eq(heightsTable.eventName, eventName)
-      )
+        eq(heightsTable.eventName, eventName),
+      ),
     )
     .returning();
   if (!updateRes.length) {
@@ -103,10 +108,12 @@ export const getHeights = async ({
   contractName,
   contractAddress,
   eventName,
+  latestHeight,
 }: {
   contractName: string;
   contractAddress: string;
   eventName: string;
+  latestHeight: bigint;
 }) => {
   const res = await db()
     .select(getTableColumns(heightsTable))
@@ -115,12 +122,16 @@ export const getHeights = async ({
       and(
         eq(heightsTable.contractName, contractName),
         eq(heightsTable.contractAddress, contractAddress),
-        eq(heightsTable.eventName, eventName)
-      )
+        eq(heightsTable.eventName, eventName),
+      ),
     )
     .limit(1);
-  if (!res.length)
-    return { latestPendingHeight: 0n, latestFinalizedHeight: 0n };
+  if (!res.length) {
+    return {
+      latestPendingHeight: latestHeight ?? 0n,
+      latestFinalizedHeight: latestHeight ?? 0n,
+    };
+  }
 
   return res[0];
 };

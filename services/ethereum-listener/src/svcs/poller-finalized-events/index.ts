@@ -7,12 +7,19 @@ let timoutId: NodeJS.Timeout | undefined;
 
 // eslint-disable-next-line @typescript-eslint/require-await
 const init = async () => {
-  if (started) return;
+  if (started) {
+    return;
+  }
   started = true;
   timoutId = setInterval(() => {
     getFinalizedContractEvents().catch((e) => {
-      if (!(e instanceof Error && e.message === "L1 contracts not initialized"))
-        logger.error(`🐻 error in recursive polling: ${(e as Error).stack}`);
+      if (
+        !(e instanceof Error && e.message === "L1 contracts not initialized")
+      ) {
+        logger.error(
+          `🐻 error getting finalized events: ${(e as Error).stack}`,
+        );
+      }
     });
   }, 5000);
   //await queryStakingStateAndEmitUpdates();
