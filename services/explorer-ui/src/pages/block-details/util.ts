@@ -1,4 +1,5 @@
 import {
+  ChicmozL2BlockFinalizationStatus,
   type ChicmozL2Block,
   type ChicmozL2BlockLight,
 } from "@chicmoz-pkg/types";
@@ -67,6 +68,10 @@ export const getBlockDetails = (
       value: "" + latestBlock.header.globalVariables.gasFees.feePerL2Gas,
     },
     {
+      label: " Block status",
+      value: "" + latestBlock.finalizationStatus,
+    },
+    {
       label: "Proposed on L1",
       value: proposedOnL1Date
         ? `${proposedOnL1Date.toLocaleString()} (${proposedTimeSince})`
@@ -90,7 +95,7 @@ export const getTxEffects = (
   txEffects?: ChicmozL2Block["body"]["txEffects"],
   latestBlock?: ChicmozL2BlockLight
 ) => {
-  if (!txEffects) return undefined;
-  if (!latestBlock) return undefined;
+  if (!txEffects) { return undefined; }
+  if (!latestBlock) { return undefined; }
   return txEffects.map((tx) => getTxEffectTableObj(tx, latestBlock));
 };

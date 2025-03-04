@@ -78,20 +78,20 @@ export const getArtifactData = (
       artifact = JSON.parse(selectedVersion.artifactJson) as SimpleArtifactData;
 
       artifact.functions.forEach((func) => {
-        if (!func.abi?.parameters) return;
+        if (!func.abi?.parameters) { return; }
         func.abi.parameters.forEach((param) => {
-          if (param.name === "inputs") return;
+          if (param.name === "inputs") { return; }
           const paramType = param.type?.kind || "unknown";
           if (func.is_unconstrained) {
-            if (!uncFunc[func.name]) uncFunc[func.name] = {};
+            if (!uncFunc[func.name]) { uncFunc[func.name] = {}; }
             uncFunc[func.name][param.name] = paramType;
           }
           if (func.custom_attributes?.includes("public")) {
-            if (!pubFunc[func.name]) pubFunc[func.name] = {};
+            if (!pubFunc[func.name]) { pubFunc[func.name] = {}; }
             pubFunc[func.name][param.name] = paramType;
           }
           if (func.custom_attributes?.includes("private")) {
-            if (!privFunc[func.name]) privFunc[func.name] = {};
+            if (!privFunc[func.name]) { privFunc[func.name] = {}; }
             privFunc[func.name][param.name] = paramType;
           }
         });
