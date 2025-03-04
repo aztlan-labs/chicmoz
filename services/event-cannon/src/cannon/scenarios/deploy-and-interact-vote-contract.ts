@@ -9,7 +9,6 @@ import { getAztecNodeClient, getPxe, getWallets } from "../pxe.js";
 import {
   deployContract,
   logAndWaitForTx,
-  registerContractClassArtifact,
   verifyContractInstanceDeployment,
 } from "./utils/index.js";
 
@@ -25,22 +24,17 @@ export async function run() {
   const votingAdmin = namedWallets.alice.getAddress();
 
   const contractLoggingName = contractId;
+  const constructorArgs = [votingAdmin];
+
   const contract = await deployContract({
     contractLoggingName,
     deployFn: (): DeploySentTx<EasyPrivateVotingContract> =>
-      EasyPrivateVotingContract.deploy(deployerWallet, votingAdmin).send(),
+      EasyPrivateVotingContract.deploy(
+        deployerWallet,
+        constructorArgs[0],
+      ).send(),
     broadcastWithWallet: deployerWallet, // NOTE: comment this out to not broadcast
     node: getAztecNodeClient(),
-  });
-  registerContractClassArtifact(
-    contractLoggingName,
-    contractArtifactJson,
-    contract.instance.contractClassId.toString(),
-    contract.instance.version,
-  ).catch((err) => {
-    logger.error(
-      `Failed to register contract class artifact: ${(err as Error).stack}`,
-    );
   });
 
   verifyContractInstanceDeployment({
@@ -51,7 +45,7 @@ export async function run() {
       publicKeysString: contract.instance.publicKeys.toString(),
       deployer: contract.instance.deployer.toString(),
       salt: contract.instance.salt.toString(),
-      constructorArgs: [votingAdmin.toString()],
+      constructorArgs: constructorArgs.map((arg) => arg.toString()),
     },
     deployerMetadata: {
       contractIdentifier: contractId,

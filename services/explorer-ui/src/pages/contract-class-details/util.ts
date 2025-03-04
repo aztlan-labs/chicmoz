@@ -3,7 +3,7 @@ import { routes } from "~/routes/__root";
 import { API_URL, aztecExplorer } from "~/service/constants";
 
 export const getContractClassKeyValueData = (
-  data: ChicmozL2ContractClassRegisteredEvent
+  data: ChicmozL2ContractClassRegisteredEvent,
 ) => {
   return [
     {
@@ -32,7 +32,7 @@ export const getContractClassKeyValueData = (
       value: "View raw data",
       extLink: `${API_URL}/${aztecExplorer.getL2ContractClassByIdAndVersion(
         data.contractClassId,
-        data.version.toString()
+        data.version.toString(),
       )}`,
     },
     {
@@ -45,7 +45,7 @@ export const getContractClassKeyValueData = (
       value: data.whyNotToken ? data.whyNotToken : "N/A",
     },
   ];
-}
+};
 
 export type SimpleArtifactData = {
   functions: {
@@ -63,15 +63,15 @@ export type SimpleArtifactData = {
   }[];
 };
 
-export type SimplifiedViewOfFunc = Record<string, Record<string, string>>;
+export type SimplifiedViewOfFunc = Map<string, Map<string, string>>;
 
 export const getArtifactData = (
-  selectedVersion: ChicmozL2ContractClassRegisteredEvent
+  selectedVersion: ChicmozL2ContractClassRegisteredEvent,
 ) => {
   let artifact: SimpleArtifactData = { functions: [] };
-  const privFunc: SimplifiedViewOfFunc = {};
-  const pubFunc: SimplifiedViewOfFunc = {};
-  const uncFunc: SimplifiedViewOfFunc = {};
+  const privFunc: SimplifiedViewOfFunc = new Map();
+  const pubFunc: SimplifiedViewOfFunc = new Map();
+  const uncFunc: SimplifiedViewOfFunc = new Map();
 
   if (selectedVersion.artifactJson) {
     try {
@@ -79,20 +79,29 @@ export const getArtifactData = (
 
       artifact.functions.forEach((func) => {
         if (!func.abi?.parameters) return;
+
+        // Use String() to ensure we have primitive string keys
+        const funcNameStr = String(func.name);
+
         func.abi.parameters.forEach((param) => {
           if (param.name === "inputs") return;
+          const paramNameStr = String(param.name);
           const paramType = param.type?.kind || "unknown";
+
           if (func.is_unconstrained) {
-            if (!uncFunc[func.name]) uncFunc[func.name] = {};
-            uncFunc[func.name][param.name] = paramType;
+            if (!uncFunc.has(funcNameStr)) uncFunc.set(funcNameStr, new Map());
+            uncFunc.get(funcNameStr)?.set(paramNameStr, paramType);
           }
+
           if (func.custom_attributes?.includes("public")) {
-            if (!pubFunc[func.name]) pubFunc[func.name] = {};
-            pubFunc[func.name][param.name] = paramType;
+            if (!pubFunc.has(funcNameStr)) pubFunc.set(funcNameStr, new Map());
+            pubFunc.get(funcNameStr)?.set(paramNameStr, paramType);
           }
+
           if (func.custom_attributes?.includes("private")) {
-            if (!privFunc[func.name]) privFunc[func.name] = {};
-            privFunc[func.name][param.name] = paramType;
+            if (!privFunc.has(funcNameStr))
+              privFunc.set(funcNameStr, new Map());
+            privFunc.get(funcNameStr)?.set(paramNameStr, paramType);
           }
         });
       });
@@ -100,6 +109,7 @@ export const getArtifactData = (
       console.error("Error parsing artifact JSON:", error);
     }
   }
+
   return {
     artifact,
     privFunc,
