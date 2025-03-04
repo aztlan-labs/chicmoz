@@ -1,13 +1,17 @@
-import { type ChicmozL2BlockLight } from "@chicmoz-pkg/types";
+import {
+  type ChicmozL2TxEffectDeluxe,
+  type ChicmozL2BlockLight,
+} from "@chicmoz-pkg/types";
 import { blockSchema } from "~/components/blocks/blocks-schema";
 import {
-  type TxEffectTableSchema,
   getTxEffectTableObj,
+  type TxEffectTableSchema,
 } from "~/components/tx-effects/tx-effects-schema";
-import { type useGetTxEffectsByBlockHeightRange } from "~/hooks";
 
 export const mapLatestBlocks = (latestBlocks?: ChicmozL2BlockLight[]) => {
-  if (!latestBlocks) return undefined;
+  if (!latestBlocks) {
+    return undefined;
+  }
   return latestBlocks.map((block) => {
     return blockSchema.parse({
       height: block.height,
@@ -19,30 +23,17 @@ export const mapLatestBlocks = (latestBlocks?: ChicmozL2BlockLight[]) => {
   });
 };
 
-export const parseTxEffectsData = (
-  txEffectsData: ReturnType<typeof useGetTxEffectsByBlockHeightRange>,
-  latestBlocks?: ChicmozL2BlockLight[]
+export const mapLatestTxEffects = (
+  latestTxEffects: ChicmozL2TxEffectDeluxe[],
+  latestBlocks: ChicmozL2BlockLight[],
 ) => {
-  let isLoadingTxEffects = false;
-  let txEffectsErrorMsg: string | undefined = undefined;
-
-  let latestTxEffects: TxEffectTableSchema[] = [];
-  txEffectsData.forEach((data, i) => {
-    if (data.isLoading) isLoadingTxEffects = true;
-    if (data.error) txEffectsErrorMsg = data.error.message;
-    if (data.data) {
-      if (!latestBlocks) return;
-      const newTxEffects = data.data.reduce((acc, txEffect) => {
-        if (txEffect === undefined) return acc;
-        if (latestBlocks[i] === undefined) return acc;
-        return acc.concat(getTxEffectTableObj(txEffect, latestBlocks[i]));
-      }, latestTxEffects);
-      latestTxEffects = newTxEffects;
+  return latestTxEffects.reduce((acc, txEffect) => {
+    const matchingBlock = latestBlocks.find(
+      (block) => block.height === txEffect.blockHeight,
+    );
+    if (!matchingBlock) {
+      return acc;
     }
-  });
-  return {
-    isLoadingTxEffects,
-    txEffectsErrorMsg,
-    latestTxEffects,
-  };
+    return acc.concat(getTxEffectTableObj(txEffect, matchingBlock));
+  }, [] as TxEffectTableSchema[]);
 };

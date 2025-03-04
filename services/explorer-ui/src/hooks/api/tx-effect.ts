@@ -8,7 +8,7 @@ import { TxEffectsAPI } from "~/api";
 import { queryKeyGenerator } from "./utils";
 
 export const useGetTxEffectByHash = (
-  hash: string
+  hash: string,
 ): UseQueryResult<ChicmozL2TxEffectDeluxe, Error> => {
   return useQuery<ChicmozL2TxEffectDeluxe, Error>({
     queryKey: queryKeyGenerator.txEffectByHash(hash),
@@ -17,7 +17,7 @@ export const useGetTxEffectByHash = (
 };
 
 export const useGetTxEffectsByBlockHeight = (
-  height: bigint | string | number | undefined
+  height: bigint | string | number | undefined,
 ): UseQueryResult<ChicmozL2TxEffectDeluxe[], Error> => {
   if (typeof height === "string" && height?.startsWith("0x"))
     throw new Error("Invalid block height");
@@ -32,7 +32,7 @@ export const useGetTxEffectsByBlockHeight = (
 
 export const useGetTxEffectsByBlockHeightRange = (
   from: bigint | undefined,
-  to: bigint | undefined
+  to: bigint | undefined,
 ): UseQueryResult<(ChicmozL2TxEffectDeluxe | undefined)[], Error>[] => {
   return useQueries({
     queries:
@@ -43,5 +43,15 @@ export const useGetTxEffectsByBlockHeightRange = (
             queryFn: () =>
               TxEffectsAPI.getTxEffectsByBlockHeight(to - BigInt(i)),
           })),
+  });
+};
+
+export const useGetLatestTxEffects = (): UseQueryResult<
+  ChicmozL2TxEffectDeluxe[] | undefined,
+  Error
+> => {
+  return useQuery<ChicmozL2TxEffectDeluxe[] | undefined, Error>({
+    queryKey: queryKeyGenerator.latestTxEffects,
+    queryFn: () => TxEffectsAPI.getLatestTxEffects(),
   });
 };
