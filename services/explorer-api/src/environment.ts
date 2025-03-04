@@ -1,22 +1,9 @@
 import {
   ApiKey,
-  NODE_ENV,
-  NodeEnv,
   apiKeySchema,
   l2NetworkIdSchema,
   type L2NetworkId,
 } from "@chicmoz-pkg/types";
-import {
-  DEFAULT_VERIFIED_CONTRACT_INSTANCES_DEV,
-  DEFAULT_VERIFIED_CONTRACT_INSTANCES_PROD,
-} from "./constants.js";
-
-const verifiedContractAddresses =
-  NODE_ENV === NodeEnv.PROD
-    ? DEFAULT_VERIFIED_CONTRACT_INSTANCES_PROD
-    : DEFAULT_VERIFIED_CONTRACT_INSTANCES_DEV;
-
-export const VERIFIED_CONTRACT_INSTANCES_CONTACT = verifiedContractAddresses;
 
 export const PUBLIC_API_KEY: ApiKey = apiKeySchema.parse(
   process.env.PUBLIC_API_KEY

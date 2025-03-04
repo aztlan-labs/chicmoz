@@ -58,7 +58,11 @@ export const KeyValueRow: FC<KeyValueRowProps> = ({
       {displayType === DisplayType.HEX && (
         <span className={commonTextClasses}>
           <CopyableText
-            text={truncateHashString(value)}
+            text={
+              value.startsWith("0x") && !value.includes(", ")
+                ? truncateHashString(value)
+                : value
+            }
             toCopy={value}
             additionalClassesIcon="justify-end"
           />

@@ -15,7 +15,7 @@ import {
   chicmozL2SequencerSchema,
   chicmozL2TxEffectDeluxeSchema,
   chicmozL2UnconstrainedFunctionBroadcastedEventSchema,
-  chicmozL2ContractInstanceDeployerMetadata,
+  chicmozL2ContractInstanceDeployerMetadataSchema,
   chicmozSearchResultsSchema,
 } from "@chicmoz-pkg/types";
 import { z } from "zod";
@@ -123,11 +123,11 @@ export const contractInstanceResponseArray = getResponse(
 );
 
 export const verifiedContractInstanceResponse = getResponse(
-  chicmozL2ContractInstanceDeployerMetadata,
+  chicmozL2ContractInstanceDeployerMetadataSchema,
   "verifiedContractInstance"
 );
 export const verifiedContractInstanceResponseArray = getResponse(
-  z.array(chicmozL2ContractInstanceDeployerMetadata),
+  z.array(chicmozL2ContractInstanceDeployerMetadataSchema),
   "verifiedContractInstanceArray"
 );
 
