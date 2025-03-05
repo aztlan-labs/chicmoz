@@ -37,7 +37,40 @@ data:
           "fieldConfig": {
             "defaults": {
               "color": {
-                "mode": "thresholds"
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
               },
               "mappings": [],
               "thresholds": {
@@ -46,18 +79,6 @@ data:
                   {
                     "color": "green",
                     "value": null
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 30
-                  },
-                  {
-                    "color": "orange",
-                    "value": 70
-                  },
-                  {
-                    "color": "red",
-                    "value": 90
                   }
                 ]
               }
@@ -70,23 +91,18 @@ data:
             "x": 0,
             "y": 0
           },
-          "id": 3,
+          "id": 5,
           "options": {
-            "colorMode": "value",
-            "graphMode": "area",
-            "justifyMode": "auto",
-            "orientation": "auto",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
             },
-            "showPercentChange": false,
-            "textMode": "auto",
-            "wideLayout": true
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
           },
           "pluginVersion": "11.3.0-pre",
           "targets": [
@@ -463,7 +479,7 @@ data:
             }
           ],
           "title": "L2-block finalization status",
-          "type": "stat"
+          "type": "timeseries"
         },
         {
           "datasource": {
@@ -712,20 +728,12 @@ data:
               },
               "editorMode": "builder",
               "format": "time_series",
-              "rawSql": "SELECT \"l1BlockNumber\", \"l2BlockNumber\", \"l1BlockTimestamp\" AS \"time\" FROM \"l1L2BlockProposed\" ORDER BY \"l1BlockTimestamp\" DESC LIMIT 50 ",
+              "rawSql": "SELECT \"l2BlockNumber\" AS \"L2 block number proposed on L1\", \"l1BlockTimestamp\" AS \"time\" FROM \"l1L2BlockProposed\" ORDER BY \"l1BlockTimestamp\" DESC LIMIT 50 ",
               "refId": "A",
               "sql": {
                 "columns": [
                   {
-                    "parameters": [
-                      {
-                        "name": "\"l1BlockNumber\"",
-                        "type": "functionParameter"
-                      }
-                    ],
-                    "type": "function"
-                  },
-                  {
+                    "alias": "\"L2 block number proposed on L1\"",
                     "parameters": [
                       {
                         "name": "\"l2BlockNumber\"",
@@ -766,9 +774,62 @@ data:
                 "orderByDirection": "DESC"
               },
               "table": "\"l1L2BlockProposed\""
+            },
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "aaaaaaaaaaaaaa"
+              },
+              "editorMode": "builder",
+              "format": "time_series",
+              "hide": false,
+              "rawSql": "SELECT \"l2BlockNumber\" AS \"L2 block number proven on L1\", \"l1BlockTimestamp\" AS \"time\" FROM \"l1L2ProofVerified\" ORDER BY \"l1BlockTimestamp\" DESC LIMIT 50 ",
+              "refId": "B",
+              "sql": {
+                "columns": [
+                  {
+                    "alias": "\"L2 block number proven on L1\"",
+                    "parameters": [
+                      {
+                        "name": "\"l2BlockNumber\"",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  },
+                  {
+                    "alias": "\"time\"",
+                    "parameters": [
+                      {
+                        "name": "\"l1BlockTimestamp\"",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50,
+                "orderBy": {
+                  "property": {
+                    "name": "\"l1BlockTimestamp\"",
+                    "type": "string"
+                  },
+                  "type": "property"
+                },
+                "orderByDirection": "DESC"
+              },
+              "table": "\"l1L2ProofVerified\""
             }
           ],
-          "title": "Panel Title",
+          "title": "L2 seen from L1",
           "type": "timeseries"
         },
         {
@@ -913,7 +974,7 @@ data:
         "list": []
       },
       "time": {
-        "from": "now-5m",
+        "from": "now-30m",
         "to": "now"
       },
       "timepicker": {},

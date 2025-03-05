@@ -124,7 +124,7 @@ const _getTxEffects = async (
           .limit(DB_MAX_TX_EFFECTS);
       } else {
         whereQuery = joinQuery
-          .orderBy(desc(l2Block.height), desc(txEffect.index))
+          .orderBy(desc(txEffect.index), desc(l2Block.height))
           .limit(DB_MAX_TX_EFFECTS);
       }
       break;

@@ -7,6 +7,7 @@ import {
 } from "@chicmoz-pkg/types";
 import { and, asc, desc, eq, getTableColumns } from "drizzle-orm";
 import { DB_MAX_BLOCKS } from "../../../../environment.js";
+import { logger } from "../../../../logger.js";
 import {
   archive,
   body,
@@ -28,7 +29,6 @@ import {
 } from "../../../database/schema/l2block/index.js";
 import { l2BlockFinalizationStatusTable } from "../../schema/l2block/finalization-status.js";
 import { getBlocksWhereRange, getTableColumnsWithoutId } from "../utils.js";
-import {logger} from "../../../../logger.js";
 
 enum GetTypes {
   BlockHeight,
@@ -70,7 +70,9 @@ export const getBlock = async (
       ? { height: heightOrHash, getType: GetTypes.BlockHeight }
       : { hash: heightOrHash, getType: GetTypes.BlockHash },
   );
-  if (res.length === 0) {return null;}
+  if (res.length === 0) {
+    return null;
+  }
   return res[0];
 };
 
@@ -82,8 +84,11 @@ const _getBlocks = async (
   const whereRange =
     args.getType === GetTypes.Range ? getBlocksWhereRange(args) : undefined;
 
-  if (args.getType === GetTypes.BlockHeight)
-    {if (args.height < -1) {throw new Error("Invalid height");}}
+  if (args.getType === GetTypes.BlockHeight) {
+    if (args.height < -1) {
+      throw new Error("Invalid height");
+    }
+  }
 
   const joinQuery = db()
     .select({
