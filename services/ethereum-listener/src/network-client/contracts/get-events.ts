@@ -9,7 +9,7 @@ import {
 import { AztecContracts } from "./utils.js";
 
 const GET_EVENETS_DEFAULT_IS_FINALIZED = true;
-const DEFAULT_BLOCK_CHUNK_SIZE = 100n;
+export const DEFAULT_BLOCK_CHUNK_SIZE = 500n;
 
 const getActualToBlock = (
   fromBlock: bigint,
@@ -50,6 +50,10 @@ const getRollupL2BlockProposedLogs = async ({
     isFinalized: GET_EVENETS_DEFAULT_IS_FINALIZED,
     latestHeight,
   });
+  if (fromBlock >= latestHeight) {
+    logger.info("Rollup L2BlockProposed logs up to date");
+    return 0n;
+  }
   const actualToBlock = getActualToBlock(fromBlock, latestHeight, toBlock);
   if (actualToBlock !== toBlock) {
     setOverrideStoreHeight(actualToBlock);

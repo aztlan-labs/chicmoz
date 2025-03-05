@@ -1,5 +1,6 @@
 import { MicroserviceBaseSvc } from "@chicmoz-pkg/microservice-base";
 import { logger } from "../../logger.js";
+import { DEFAULT_BLOCK_CHUNK_SIZE } from "../../network-client/contracts/get-events.js";
 import { getFinalizedContractEvents } from "../../network-client/contracts/index.js";
 
 let started = false;
@@ -50,7 +51,7 @@ const runCatchup = async () => {
         if (currSmallestDiff === undefined || diff < currSmallestDiff) {
           currSmallestDiff = diff;
         }
-        return diff < 100n;
+        return diff < DEFAULT_BLOCK_CHUNK_SIZE;
       });
     } catch (e) {
       if (e instanceof Error && e.message === "L1 contracts not initialized") {
@@ -87,6 +88,7 @@ const runCatchup = async () => {
       }
     }
   }
+  logger.info("🐻🐻🐻🐻🐻🐻🐻🐻🐻🐻🐻🐻🐻🐻🐻🐻🐻🐻 catchup complete");
   isCatchupComplete = true;
 };
 

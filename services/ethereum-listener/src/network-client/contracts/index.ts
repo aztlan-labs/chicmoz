@@ -6,7 +6,7 @@ import {
   RollupAbi,
 } from "@aztec/l1-artifacts";
 import { controllers as dbControllers } from "../../svcs/database/index.js";
-import { getLatestHeight, getPublicHttpClient } from "../client.js";
+import { getLatestFinalizedHeight, getPublicHttpClient } from "../client.js";
 import { getAllContractsEvents } from "./get-events.js";
 import { AztecContracts, UnwatchCallback, getTypedContract } from "./utils.js";
 import { watchAllContractsEvents } from "./watch-events.js";
@@ -45,13 +45,13 @@ export const getL1Contracts = async (): Promise<AztecContracts> => {
 
 export const startContractWatchers = async (): Promise<UnwatchCallback> => {
   const contracts = await getL1Contracts();
-  const latestHeight = await getLatestHeight();
+  const latestHeight = await getLatestFinalizedHeight();
   return watchAllContractsEvents({ contracts, latestHeight });
 };
 
 export const getFinalizedContractEvents = async () => {
   const contracts = await getL1Contracts();
-  const latestHeight = await getLatestHeight();
+  const latestHeight = await getLatestFinalizedHeight();
   return getAllContractsEvents({
     contracts,
     latestHeight,

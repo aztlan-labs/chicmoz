@@ -69,8 +69,13 @@ export const initClient = () => {
   publicHttpClient = createPublicClient({ chain, transport: http() });
 };
 
-export const getLatestHeight = async () => {
-  return await getPublicHttpClient().getBlockNumber();
+export const getLatestFinalizedHeight = async () => {
+  const block = await getPublicHttpClient().getBlock({
+    blockTag: "finalized",
+  });
+  //const latest = await getPublicHttpClient().getBlockNumber();
+  //logger.info(`Two blocks: latest=${latest}, finalized=${block.number}`);
+  return block.number;
 };
 
 export const getBlock = async (blockNumber: number) => {
