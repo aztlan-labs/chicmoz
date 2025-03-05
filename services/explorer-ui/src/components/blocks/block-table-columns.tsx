@@ -11,7 +11,6 @@ const text = {
   height: "HEIGHT",
   blockHash: "BLOCK HASH",
   txEffectsLength: "NBR OF TXS",
-  totalFees: "FEES (FPA)",
   timeSince: "AGE",
   blockStatus: "BLOCK STATUS"
 };
