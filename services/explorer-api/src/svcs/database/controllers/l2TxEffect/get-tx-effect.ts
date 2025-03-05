@@ -72,7 +72,7 @@ export const getTxEffectsByBlockHeight = async (
 ): Promise<ChicmozL2TxEffectDeluxe[]> => {
   return _getTxEffects({
     from: height,
-    to: height,
+    to: height + 1n,
     getType: GetTypes.BlockHeightRange,
   });
 };

@@ -19,7 +19,7 @@ export const ARTIFACT_BODY_LIMIT = process.env.ARTIFACT_BODY_LIMIT ?? "10mb";
 export const PARAMETER_LIMIT = Number(process.env.PARAMETER_LIMIT) || 100;
 
 export const DB_MAX_BLOCKS = 20;
-export const DB_MAX_TX_EFFECTS = 20;
+export const DB_MAX_TX_EFFECTS = 100;
 export const DB_MAX_CONTRACTS = 20;
 
 export const L2_NETWORK_ID: L2NetworkId = l2NetworkIdSchema.parse(
