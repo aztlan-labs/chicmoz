@@ -42,7 +42,7 @@ export const addL1L2BlockProposed = async (
     .limit(1);
   const l2BlockHash = l2BlockHashRes?.[0]?.l2BlockHash;
   if (!l2BlockHash) {
-    logger.debug(
+    logger.info(
       `addL1L2BlockProposed: L2 block ${proposedData.l2BlockNumber} not found, might not yet be stored, skipping...`,
     );
     return null;
@@ -84,7 +84,7 @@ export const ensureFinalizationStatusStored = async (
     )
     .limit(1);
   if (proposedData.length === 0) {
-    logger.debug(
+    logger.info(
       `ensureFinalizationStatusStored: L2 block ${l2BlockNumber} not found in proposed table, skipping...`,
     );
     return null;
@@ -118,7 +118,7 @@ export const ensureFinalizationStatusStored = async (
     .limit(1);
 
   if (verifiedData.length === 0) {
-    logger.debug(
+    logger.info(
       `ensureFinalizationStatusStored: L2 block ${l2BlockNumber} not found in verified table, skipping...`,
     );
     return null;
@@ -158,7 +158,7 @@ export const addL1L2ProofVerified = async (
       set: {
         isFinalized: proofVerifiedData.isFinalized,
       },
-    })
+    });
 
   const l2BlockHashResSimple = await db()
     .select({
@@ -169,7 +169,7 @@ export const addL1L2ProofVerified = async (
   let l2BlockHash;
 
   if (l2BlockHashResSimple.length === 0) {
-    logger.debug(
+    logger.info(
       `addL1L2ProofVerified: L2 block ${proofVerifiedData.l2BlockNumber} not found, might not yet be stored, skipping...`,
     );
     return null;
@@ -202,12 +202,14 @@ export const addL1L2ProofVerified = async (
   const status = proofVerifiedData.isFinalized
     ? ChicmozL2BlockFinalizationStatus.L1_MINED_PROVEN
     : ChicmozL2BlockFinalizationStatus.L1_SEEN_PROVEN;
-  await db().insert(l2BlockFinalizationStatusTable).values({
-    l2BlockHash,
-    l2BlockNumber: proofVerifiedData.l2BlockNumber,
-    status,
-  })
-  .onConflictDoNothing();
+  await db()
+    .insert(l2BlockFinalizationStatusTable)
+    .values({
+      l2BlockHash,
+      l2BlockNumber: proofVerifiedData.l2BlockNumber,
+      status,
+    })
+    .onConflictDoNothing();
   return {
     l2BlockHash,
     status,

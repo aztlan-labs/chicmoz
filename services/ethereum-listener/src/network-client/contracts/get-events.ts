@@ -20,9 +20,6 @@ const getActualToBlock = (
     latestHeight - fromBlock > DEFAULT_BLOCK_CHUNK_SIZE
       ? fromBlock + DEFAULT_BLOCK_CHUNK_SIZE
       : toBlock;
-  logger.info(
-    `fromBlock: ${fromBlock}, latestHeight: ${latestHeight}, actualToBlock: ${actualToBlock}`,
-  );
   return actualToBlock;
 };
 

@@ -31,13 +31,46 @@ data:
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "hhhhhhhhhhhhhh"
+            "uid": "aaaaaaaaaaaaaa"
           },
           "description": "TODO: automate translation of finalization-status",
           "fieldConfig": {
             "defaults": {
               "color": {
-                "mode": "thresholds"
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
               },
               "mappings": [],
               "thresholds": {
@@ -46,18 +79,6 @@ data:
                   {
                     "color": "green",
                     "value": null
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 30
-                  },
-                  {
-                    "color": "orange",
-                    "value": 70
-                  },
-                  {
-                    "color": "red",
-                    "value": 90
                   }
                 ]
               }
@@ -70,30 +91,25 @@ data:
             "x": 0,
             "y": 0
           },
-          "id": 3,
+          "id": 5,
           "options": {
-            "colorMode": "value",
-            "graphMode": "area",
-            "justifyMode": "auto",
-            "orientation": "auto",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
             },
-            "showPercentChange": false,
-            "textMode": "auto",
-            "wideLayout": true
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
           },
           "pluginVersion": "11.3.0-pre",
           "targets": [
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "hhhhhhhhhhhhhh"
+                "uid": "aaaaaaaaaaaaaa"
               },
               "editorMode": "code",
               "format": "table",
@@ -154,7 +170,7 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "hhhhhhhhhhhhhh"
+                "uid": "aaaaaaaaaaaaaa"
               },
               "editorMode": "code",
               "format": "table",
@@ -216,7 +232,7 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "hhhhhhhhhhhhhh"
+                "uid": "aaaaaaaaaaaaaa"
               },
               "editorMode": "code",
               "format": "table",
@@ -278,7 +294,7 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "hhhhhhhhhhhhhh"
+                "uid": "aaaaaaaaaaaaaa"
               },
               "editorMode": "code",
               "format": "table",
@@ -340,7 +356,7 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "hhhhhhhhhhhhhh"
+                "uid": "aaaaaaaaaaaaaa"
               },
               "editorMode": "code",
               "format": "table",
@@ -402,7 +418,7 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "hhhhhhhhhhhhhh"
+                "uid": "aaaaaaaaaaaaaa"
               },
               "editorMode": "code",
               "format": "table",
@@ -463,12 +479,12 @@ data:
             }
           ],
           "title": "L2-block finalization status",
-          "type": "stat"
+          "type": "timeseries"
         },
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "hhhhhhhhhhhhhh"
+            "uid": "aaaaaaaaaaaaaa"
           },
           "fieldConfig": {
             "defaults": {
@@ -529,7 +545,7 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "hhhhhhhhhhhhhh"
+                "uid": "aaaaaaaaaaaaaa"
               },
               "editorMode": "code",
               "format": "table",
@@ -576,7 +592,7 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "hhhhhhhhhhhhhh"
+                "uid": "aaaaaaaaaaaaaa"
               },
               "editorMode": "code",
               "format": "table",
@@ -627,7 +643,7 @@ data:
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "hhhhhhhhhhhhhh"
+            "uid": "aaaaaaaaaaaaaa"
           },
           "fieldConfig": {
             "defaults": {
@@ -708,7 +724,7 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "hhhhhhhhhhhhhh"
+                "uid": "aaaaaaaaaaaaaa"
               },
               "editorMode": "builder",
               "format": "time_series",
@@ -762,7 +778,7 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "hhhhhhhhhhhhhh"
+                "uid": "aaaaaaaaaaaaaa"
               },
               "editorMode": "builder",
               "format": "time_series",
@@ -819,7 +835,7 @@ data:
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "hhhhhhhhhhhhhh"
+            "uid": "aaaaaaaaaaaaaa"
           },
           "description": "(limit 50)",
           "fieldConfig": {
@@ -919,7 +935,7 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "hhhhhhhhhhhhhh"
+                "uid": "aaaaaaaaaaaaaa"
               },
               "editorMode": "code",
               "format": "table",
