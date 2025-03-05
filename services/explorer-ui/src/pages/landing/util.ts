@@ -17,8 +17,8 @@ export const mapLatestBlocks = (latestBlocks?: ChicmozL2BlockLight[]) => {
       height: block.height,
       blockHash: block.hash,
       txEffectsLength: block.body.txEffects.length,
-      totalFees: block.header.totalFees,
       timestamp: block.header.globalVariables.timestamp,
+      blockStatus: block.finalizationStatus,
     });
   });
 };
