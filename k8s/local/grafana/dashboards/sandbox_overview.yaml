@@ -31,7 +31,7 @@ data:
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "aaaaaaaaaaaaaa"
+            "uid": "hhhhhhhhhhhhhh"
           },
           "description": "TODO: automate translation of finalization-status",
           "fieldConfig": {
@@ -93,7 +93,7 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "aaaaaaaaaaaaaa"
+                "uid": "hhhhhhhhhhhhhh"
               },
               "editorMode": "code",
               "format": "table",
@@ -154,7 +154,7 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "aaaaaaaaaaaaaa"
+                "uid": "hhhhhhhhhhhhhh"
               },
               "editorMode": "code",
               "format": "table",
@@ -216,7 +216,7 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "aaaaaaaaaaaaaa"
+                "uid": "hhhhhhhhhhhhhh"
               },
               "editorMode": "code",
               "format": "table",
@@ -278,7 +278,7 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "aaaaaaaaaaaaaa"
+                "uid": "hhhhhhhhhhhhhh"
               },
               "editorMode": "code",
               "format": "table",
@@ -340,7 +340,7 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "aaaaaaaaaaaaaa"
+                "uid": "hhhhhhhhhhhhhh"
               },
               "editorMode": "code",
               "format": "table",
@@ -402,7 +402,7 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "aaaaaaaaaaaaaa"
+                "uid": "hhhhhhhhhhhhhh"
               },
               "editorMode": "code",
               "format": "table",
@@ -468,7 +468,7 @@ data:
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "aaaaaaaaaaaaaa"
+            "uid": "hhhhhhhhhhhhhh"
           },
           "fieldConfig": {
             "defaults": {
@@ -529,7 +529,7 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "aaaaaaaaaaaaaa"
+                "uid": "hhhhhhhhhhhhhh"
               },
               "editorMode": "code",
               "format": "table",
@@ -576,7 +576,7 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "aaaaaaaaaaaaaa"
+                "uid": "hhhhhhhhhhhhhh"
               },
               "editorMode": "code",
               "format": "table",
@@ -627,7 +627,7 @@ data:
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "aaaaaaaaaaaaaa"
+            "uid": "hhhhhhhhhhhhhh"
           },
           "fieldConfig": {
             "defaults": {
@@ -708,24 +708,16 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "aaaaaaaaaaaaaa"
+                "uid": "hhhhhhhhhhhhhh"
               },
               "editorMode": "builder",
               "format": "time_series",
-              "rawSql": "SELECT \"l1BlockNumber\", \"l2BlockNumber\", \"l1BlockTimestamp\" AS \"time\" FROM \"l1L2BlockProposed\" ORDER BY \"l1BlockTimestamp\" DESC LIMIT 50 ",
+              "rawSql": "SELECT \"l2BlockNumber\" AS \"L2 block number proposed on L1\", \"l1BlockTimestamp\" AS \"time\" FROM \"l1L2BlockProposed\" ORDER BY \"l1BlockTimestamp\" DESC LIMIT 50 ",
               "refId": "A",
               "sql": {
                 "columns": [
                   {
-                    "parameters": [
-                      {
-                        "name": "\"l1BlockNumber\"",
-                        "type": "functionParameter"
-                      }
-                    ],
-                    "type": "function"
-                  },
-                  {
+                    "alias": "\"L2 block number proposed on L1\"",
                     "parameters": [
                       {
                         "name": "\"l2BlockNumber\"",
@@ -766,15 +758,68 @@ data:
                 "orderByDirection": "DESC"
               },
               "table": "\"l1L2BlockProposed\""
+            },
+            {
+              "datasource": {
+                "type": "grafana-postgresql-datasource",
+                "uid": "hhhhhhhhhhhhhh"
+              },
+              "editorMode": "builder",
+              "format": "time_series",
+              "hide": false,
+              "rawSql": "SELECT \"l2BlockNumber\" AS \"L2 block number proven on L1\", \"l1BlockTimestamp\" AS \"time\" FROM \"l1L2ProofVerified\" ORDER BY \"l1BlockTimestamp\" DESC LIMIT 50 ",
+              "refId": "B",
+              "sql": {
+                "columns": [
+                  {
+                    "alias": "\"L2 block number proven on L1\"",
+                    "parameters": [
+                      {
+                        "name": "\"l2BlockNumber\"",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  },
+                  {
+                    "alias": "\"time\"",
+                    "parameters": [
+                      {
+                        "name": "\"l1BlockTimestamp\"",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50,
+                "orderBy": {
+                  "property": {
+                    "name": "\"l1BlockTimestamp\"",
+                    "type": "string"
+                  },
+                  "type": "property"
+                },
+                "orderByDirection": "DESC"
+              },
+              "table": "\"l1L2ProofVerified\""
             }
           ],
-          "title": "Panel Title",
+          "title": "L2 seen from L1",
           "type": "timeseries"
         },
         {
           "datasource": {
             "type": "grafana-postgresql-datasource",
-            "uid": "aaaaaaaaaaaaaa"
+            "uid": "hhhhhhhhhhhhhh"
           },
           "description": "(limit 50)",
           "fieldConfig": {
@@ -874,7 +919,7 @@ data:
             {
               "datasource": {
                 "type": "grafana-postgresql-datasource",
-                "uid": "aaaaaaaaaaaaaa"
+                "uid": "hhhhhhhhhhhhhh"
               },
               "editorMode": "code",
               "format": "table",
@@ -913,7 +958,7 @@ data:
         "list": []
       },
       "time": {
-        "from": "now-5m",
+        "from": "now-30m",
         "to": "now"
       },
       "timepicker": {},
